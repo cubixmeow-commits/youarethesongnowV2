@@ -15,11 +15,23 @@ This vault is the shared development memory for YouAreTheSongNow V2.
 
 Do not begin application implementation until the owners explicitly lift the freeze.
 
+## Delivery path
+
+**Web first -> Flutter/Dart iOS second.**
+
+1. Rebuild and refine the web application first on the V2 PHP backend.
+2. Build the iOS mobile application second in **Flutter + Dart**.
+3. The Flutter client should consume the same PHP backend through clean HTTP/JSON APIs rather than duplicate core business logic.
+4. The web rebuild is not a throwaway prototype; it establishes the shared backend and reference behavior for mobile.
+
+See [[02 Decisions/ADR-20260827-web-first-then-flutter-ios]].
+
 ## Current direction
 
 - Rebuild and refine **V1 functionality**, not V1 code.
 - Backend direction: **PHP**.
 - Initial database direction: **SQLite** while the product is small.
+- Mobile direction: **Flutter + Dart, iOS first**, after the web rebuild is validated.
 - V1 is evidence for behavior and product ideas, not an implementation template.
 - The creative engine should preserve staged song interpretation while simplifying and modernizing the pipeline.
 
