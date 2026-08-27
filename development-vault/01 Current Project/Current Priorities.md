@@ -22,6 +22,7 @@ This note is the daily “what matters now” list for CuBiX Meow and Brut. Keep
 - Later V1 stores static visual style prompts in `arcana_styles.prompt_text` with admin CRUD.
 - The older worker preserves a large inline style catalog that is strong evidence for the predecessor of the DB-managed prompt library.
 - Deep references: `docs/rebuild/13-prompting-functionality-reference.md` and `14-prompt-quality-and-refinement-analysis.md`.
+- **V2 systems inventory / build map** (planning only): `docs/rebuild/15-v2-systems-inventory.md` (detail) and `docs/rebuild/16-v2-build-map-summary.md` (glanceable skeleton, dependency map, phased order). Review against V1 audits before any freeze lift.
 
 ## Next
 
