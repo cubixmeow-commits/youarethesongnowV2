@@ -43,6 +43,8 @@ This is still a design direction, not implemented code.
 
 ## Read next
 
+- [[01 Current Project/Current Priorities]]
+- [[01 Current Project/Dashboard Snapshot]]
 - [[01 Current Project/Product Definition]]
 - [[01 Current Project/Current Architecture]]
 - [[01 Current Project/Creative Engine]]
@@ -52,7 +54,7 @@ This is still a design direction, not implemented code.
 
 ## Existing rebuild research
 
-The polished audit and planning documents remain under `docs/rebuild/` in the repository. The GitHub Pages dashboard in `/docs` is the public/project-facing summary. This vault is the working room.
+The polished audit and planning documents remain under `docs/rebuild/` in the repository. The GitHub Pages dashboard in `/docs` is the **Meow Control** command center for CuBiX Meow and Brut. This vault is the working room / workshop memory. When current truth changes, update Current Project notes and the dashboard snapshot so the Pages hub stays aligned.
 
 ## Information hierarchy
 

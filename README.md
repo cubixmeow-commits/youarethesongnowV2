@@ -6,15 +6,19 @@ This repository intentionally starts clean. The legacy repository, `cubixmeow-co
 
 ## Start here
 
+- `development-vault/START HERE.md` — shared working memory / current direction
 - `AGENTS.md` — working rules for Cursor and other coding agents
+- `docs/index.html` — **Meow Control**, CuBiX Meow & Brut daily command center (GitHub Pages)
 - `docs/rebuild/README.md` — assessment and planning index
-- `docs/rebuild/00-legacy-repo-assessment.md` — initial V1 assessment
-- `docs/rebuild/01-product-rebuild-brief.md` — product intent and discovery questions
-- `docs/rebuild/02-target-architecture.md` — provisional V2 architecture
-- `docs/rebuild/03-migration-plan.md` — staged rebuild plan
-- `docs/rebuild/04-initial-backlog.md` — first implementation backlog
-- `docs/rebuild/05-cursor-workflow.md` — Cursor/AI collaboration workflow
 
 ## Current status
 
-**Phase: assessment and rebuild planning.** Architecture is deliberately provisional until the Arcana-specific behavior, data model, prompts, media pipeline, and integrations in V1 are inventoried in more detail.
+**Phase: planning / creative-engine design. Build freeze active.**
+
+Accepted direction so far:
+
+- rebuild/refine **V1 functionality**, not V1 code;
+- backend: **PHP**;
+- initial database: **SQLite**.
+
+See accepted ADRs in `development-vault/02 Decisions/`.

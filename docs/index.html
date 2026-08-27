@@ -3,266 +3,378 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#090a12" />
-  <title>You Are The Song Now — V2 Rebuild Lab</title>
-  <meta name="description" content="Planning dashboard for the YouAreTheSongNow V2 rebuild, including the Arcana creative-engine audit and shared development vault." />
+  <meta name="theme-color" content="#0b0d10" />
+  <title>Meow Control // CuBiX Meow &amp; Brut</title>
+  <meta name="description" content="CuBiX Meow & Brut daily project console for YouAreTheSongNow V2 — technical, cat-powered, vault-aligned." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Sora:wght@500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="aurora aurora-one"></div>
-  <div class="aurora aurora-two"></div>
+  <a class="skip-link" href="#main">Skip to content</a>
 
-  <header class="hero shell">
-    <div class="eyebrow">YOU ARE THE SONG NOW · V2 REBUILD LAB</div>
-    <h1>Turning the old Arcana into<br><span>a modern creative engine.</span></h1>
-    <p class="lede">A living view of what we discovered in V1, what the prompts actually do, what deserves to survive, and what still needs a product decision before we build anything.</p>
-    <div class="hero-actions">
-      <a class="button primary" href="#development-vault">Development vault</a>
-      <a class="button secondary" href="#creative-engine">Inside the creative engine</a>
+  <div class="grid-bg" aria-hidden="true"></div>
+  <div class="glow glow-a" aria-hidden="true"></div>
+  <div class="glow glow-b" aria-hidden="true"></div>
+
+  <div class="app-shell">
+    <aside class="rail" id="side-nav" aria-label="Meow Control navigation">
+      <div class="rail-brand">
+        <div class="mascot" aria-hidden="true">
+          <svg viewBox="0 0 64 64" width="42" height="42" role="img">
+            <path fill="currentColor" d="M12 26c0-10 8-18 20-18s20 8 20 18v6c0 1.2-.4 2-1.2 2.4L46 40c-1.4.8-2.2 2.2-2.2 3.8V50c0 2.2-1.8 4-4 4H24c-2.2 0-4-1.8-4-4v-6.2c0-1.6-.8-3-2.2-3.8L14 34.4C13.2 34 12 33.2 12 32v-6z"/>
+            <path fill="#0b0d10" d="M24 28c1.6 0 2.8 1.6 2.2 3-.4.8-1.2 1.2-2.2 1.2s-1.8-.4-2.2-1.2c-.6-1.4.6-3 2.2-3zm16 0c1.6 0 2.8 1.6 2.2 3-.4.8-1.2 1.2-2.2 1.2s-1.8-.4-2.2-1.2c-.6-1.4.6-3 2.2-3z"/>
+            <path fill="none" stroke="#0b0d10" stroke-width="2" stroke-linecap="round" d="M28 38c2 2 6 2 8 0"/>
+            <path fill="currentColor" d="M18 10l4 10M46 10l-4 10"/>
+          </svg>
+        </div>
+        <div>
+          <div class="rail-title">Meow Control</div>
+          <div class="rail-sub">CuBiX Meow + Brut</div>
+        </div>
+      </div>
+
+      <nav class="rail-nav">
+        <a href="#overview">Overview</a>
+        <a href="#state">Project State</a>
+        <a href="#focus">Today’s Focus</a>
+        <a href="#decisions">Decision Center</a>
+        <a href="#engine">Creative Engine</a>
+        <a href="#vault">Cat Vault</a>
+        <a href="#links">Quick Links</a>
+        <a href="#library">Research Library</a>
+      </nav>
+
+      <div class="rail-foot">
+        <span class="pill freeze">BUILD FREEZE</span>
+        <p>Vault = workshop<br />/docs = command center</p>
+      </div>
+    </aside>
+
+    <div class="stage">
+      <header class="topbar">
+        <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="side-nav">Menu</button>
+        <div class="topbar-meta">
+          <span class="mono">youarethesongnowV2</span>
+          <span class="dot" aria-hidden="true"></span>
+          <span class="mono" data-meow="phase">Planning / creative-engine design</span>
+        </div>
+        <a class="ghost-link" href="https://github.com/cubixmeow-commits/youarethesongnowV2" target="_blank" rel="noreferrer">GitHub ↗</a>
+      </header>
+
+      <main id="main">
+        <section id="overview" class="panel hero-panel">
+          <div class="hero-copy">
+            <p class="eyebrow"><span class="ears" aria-hidden="true">△ △</span> MEOW CONTROL // BRUT TERMINAL</p>
+            <h1>CuBiX Meow &amp; Brut<br /><span>project command center</span></h1>
+            <p class="lede">A daily technical console for YouAreTheSongNow V2 — dark, precise, and just cat enough. The development vault is working memory; this page is the polished hub.</p>
+
+            <div class="status-grid">
+              <article>
+                <span class="label">Phase</span>
+                <strong data-meow="phase">Planning / creative-engine design</strong>
+              </article>
+              <article>
+                <span class="label">Build</span>
+                <strong class="warn-text">BUILD FREEZE</strong>
+              </article>
+              <article>
+                <span class="label">Backend</span>
+                <strong>PHP</strong>
+              </article>
+              <article>
+                <span class="label">Database</span>
+                <strong>SQLite initially</strong>
+              </article>
+            </div>
+
+            <p class="mission"><span class="label">Mission</span> Turn a song into an interpreted cinematic visual experience — optionally starring you.</p>
+          </div>
+
+          <aside class="cat-card" aria-label="Cat status">
+            <div class="cat-card-top">
+              <div class="cat-face" aria-hidden="true">
+                <svg viewBox="0 0 120 90" width="120" height="90">
+                  <path fill="#f0c987" d="M20 78c0-28 18-50 40-50s40 22 40 50v4H20v-4z"/>
+                  <path fill="#f0c987" d="M28 28l12 18M92 28L80 46"/>
+                  <circle cx="48" cy="52" r="5" fill="#1a1510"/>
+                  <circle cx="72" cy="52" r="5" fill="#1a1510"/>
+                  <path d="M56 62c3 3 5 3 8 0" stroke="#1a1510" stroke-width="3" fill="none" stroke-linecap="round"/>
+                  <path d="M30 58h-16M30 64h-18M90 58h16M90 64h18" stroke="#d7b06a" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div>
+                <div class="label">Cat says</div>
+                <p id="cat-says-text" class="speech">Paw status: planning mode.</p>
+                <button type="button" class="text-btn" id="refresh-cat-says">Another meowmemo</button>
+              </div>
+            </div>
+            <dl class="mini-stats">
+              <div><dt>Operators</dt><dd>CuBiX Meow · Brut</dd></div>
+              <div><dt>Strategy</dt><dd>Functionality ≠ legacy code</dd></div>
+              <div><dt>Snapshot</dt><dd id="snapshot-updated">2026-08-27</dd></div>
+            </dl>
+          </aside>
+        </section>
+
+        <section id="state" class="section">
+          <div class="section-head">
+            <p class="section-kicker">CURRENT PROJECT STATE</p>
+            <h2>Single-source overview from the vault.</h2>
+            <p class="section-intro">Pulled from Current Project notes and accepted ADRs. If something here drifts, the vault is wrong — or this dashboard needs a sync.</p>
+          </div>
+
+          <div class="card-grid three">
+            <article class="card">
+              <p class="card-kicker">Direction</p>
+              <h3>Rebuild the value, not the files</h3>
+              <p>V2 preserves Arcana’s product promise and creative intelligence while refusing to port V1 PHP structure, duplicate workers, or hardwired model IDs.</p>
+            </article>
+            <article class="card">
+              <p class="card-kicker">Architecture</p>
+              <h3>PHP + SQLite first</h3>
+              <p>Backend direction is PHP. Start on SQLite while small, keep domain logic portable, and put long-running generation behind a worker with explicit job state.</p>
+            </article>
+            <article class="card">
+              <p class="card-kicker">Creative engine</p>
+              <h3>Staged interpretation</h3>
+              <p>Song meaning → DNA → narrative plan → artist identity → portrait plan → scene → compiler → evaluate → controlled retry. Design direction, not implemented code.</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="focus" class="section">
+          <div class="section-head">
+            <p class="section-kicker">TODAY // PURRIORITY QUEUE</p>
+            <h2>What matters now.</h2>
+            <p class="section-intro">From <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/development-vault/01%20Current%20Project/Current%20Priorities.md">Current Priorities</a>. Keep this list short enough that Brut can scan it before coffee.</p>
+          </div>
+
+          <div class="focus-grid">
+            <article class="focus-panel active">
+              <h3><span>01</span> Active now</h3>
+              <ul>
+                <li>Settle creative-engine decisions: lore vs style, portrait promise, lyrics architecture.</li>
+                <li>Keep the vault as workshop memory; keep this page as Meow Control.</li>
+                <li>Treat V1 research as evidence — never as a copy-paste blueprint.</li>
+              </ul>
+            </article>
+            <article class="focus-panel next">
+              <h3><span>02</span> Next</h3>
+              <ul>
+                <li>Approve staged creative-engine contracts after decisions land.</li>
+                <li>Decide which inbox items must clear before any freeze lift.</li>
+                <li>Only then plan the first vertical slice.</li>
+              </ul>
+            </article>
+            <article class="focus-panel blocked">
+              <h3><span>03</span> Waiting</h3>
+              <ul>
+                <li>Owner workshop on Decision Inbox creative questions.</li>
+                <li>Explicit build-freeze lift before any scaffolding.</li>
+                <li>Catnap status: implementation still asleep on purpose.</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section id="decisions" class="section">
+          <div class="section-head">
+            <p class="section-kicker">DECISION CENTER</p>
+            <h2>Accepted pawprints &amp; open whisker-checks.</h2>
+          </div>
+
+          <div class="decision-grid">
+            <article class="decision-col accepted">
+              <header>
+                <span class="badge ok">Accepted Pawprints</span>
+                <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/development-vault/02%20Decisions/Decision%20Index.md">Decision Index ↗</a>
+              </header>
+              <ul>
+                <li>
+                  <strong>Rebuild functionality, not code</strong>
+                  <span>ADR-20260827-rebuild-functionality-not-code</span>
+                </li>
+                <li>
+                  <strong>PHP for V2</strong>
+                  <span>ADR-20260827-use-php-for-v2</span>
+                </li>
+                <li>
+                  <strong>SQLite initially</strong>
+                  <span>ADR-20260827-use-sqlite-initially</span>
+                </li>
+              </ul>
+            </article>
+
+            <article class="decision-col open">
+              <header>
+                <span class="badge open">Open Questions</span>
+                <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/development-vault/02%20Decisions/Decision%20Inbox.md">Decision Inbox ↗</a>
+              </header>
+              <ul>
+                <li>What should “Dynamic Band Lore” mean in V2?</li>
+                <li>Portrait fallback honesty when generation is blocked</li>
+                <li>Lyrics persistence vs transient processing</li>
+                <li>Branding in-image vs post-process</li>
+                <li>Should artist visual identity run by default?</li>
+              </ul>
+            </article>
+
+            <article class="decision-col proposed">
+              <header>
+                <span class="badge proposed">Purrposed Ideas</span>
+                <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/11-v2-prompt-refinement-plan.md">Prompt plan ↗</a>
+              </header>
+              <ul>
+                <li>Visual Narrative Plan between DNA and final prompt</li>
+                <li>Identity-preserving retry ladder</li>
+                <li>Honest split: lore subsystem ≠ visual identity</li>
+                <li>Post-process branding to end no-text contradictions</li>
+              </ul>
+              <p class="footnote">Proposed ≠ decided. Cat says: don’t ship a brainstorm.</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="engine" class="section engine-section">
+          <div class="section-head">
+            <p class="section-kicker">CREATIVE ENGINE // PROMPT LAB</p>
+            <h2>Staged intelligence, not one giant prompt.</h2>
+            <p class="section-intro">Meow memo: protect portrait identity before style flourishes. Whisker check: lore and style are still separate questions.</p>
+          </div>
+
+          <div class="pipeline" aria-label="Proposed V2 creative pipeline">
+            <div class="pipe-step"><b>01</b><span>Song DNA</span></div>
+            <div class="pipe-step"><b>02</b><span>Narrative Plan</span></div>
+            <div class="pipe-step"><b>03</b><span>Artist Identity</span></div>
+            <div class="pipe-step"><b>04</b><span>Portrait Plan</span></div>
+            <div class="pipe-step"><b>05</b><span>Compiler</span></div>
+            <div class="pipe-step"><b>06</b><span>Retry</span></div>
+          </div>
+
+          <div class="card-grid three engine-cards">
+            <article class="card compact-card">
+              <h3>Song DNA</h3>
+              <p>Structured song meaning before pixels. V1 proved the 12-field blueprint; V2 should keep the idea and slim the responsibilities.</p>
+            </article>
+            <article class="card compact-card">
+              <h3>Visual Narrative Plan</h3>
+              <p>Choose one readable moment. Stop asking the image model to invent the story, style, casting, and safety all at once.</p>
+            </article>
+            <article class="card compact-card">
+              <h3>Artist Visual Identity</h3>
+              <p>A visual brief — not a lore bible. Dynamic Band Style in V1 was StyleMap machinery wearing lore marketing.</p>
+            </article>
+            <article class="card compact-card">
+              <h3>Portrait Integration</h3>
+              <p>“Put me in the song” needs an explicit identity contract and no silent fallback drops.</p>
+            </article>
+            <article class="card compact-card">
+              <h3>Prompt Compiler</h3>
+              <p>Assemble ranked artifacts into provider-facing text. Testable. Versioned. Replaceable.</p>
+            </article>
+            <article class="card compact-card">
+              <h3>Retry Strategy</h3>
+              <p>Demote style and framing before identity. If identity can’t be kept, label the result honestly.</p>
+            </article>
+          </div>
+
+          <div class="link-row">
+            <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/09-v1-creative-engine-audit.md">Creative Engine Audit</a>
+            <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/10-v1-prompt-pipeline.md">Prompt Pipeline</a>
+            <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/11-v2-prompt-refinement-plan.md">V2 Prompt Refinement</a>
+            <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/development-vault/04%20Prompt%20Lab/Prompt%20Index.md">Prompt Lab Index</a>
+          </div>
+        </section>
+
+        <section id="vault" class="section vault-section">
+          <div class="vault-banner">
+            <div>
+              <p class="section-kicker">LIVE FROM THE CAT VAULT</p>
+              <h2>Working memory lives in <code>development-vault/</code>.</h2>
+              <p>The vault is the workshop. This dashboard is the polished command center. Current truth flows vault → snapshot → Meow Control. Never invent product law from a cute speech bubble.</p>
+            </div>
+            <div class="vault-rules">
+              <div><span>1</span> Owner instruction</div>
+              <div><span>2</span> Accepted ADRs</div>
+              <div><span>3</span> Current Project notes</div>
+              <div><span>4</span> Verified evidence / research</div>
+            </div>
+          </div>
+        </section>
+
+        <section id="links" class="section">
+          <div class="section-head">
+            <p class="section-kicker">QUICK LINKS</p>
+            <h2>Jump straight to the useful notes.</h2>
+          </div>
+          <div class="quick-grid">
+            <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/development-vault/START%20HERE.md"><b>START HERE</b><span>Vault front door</span></a>
+            <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/development-vault/01%20Current%20Project/Current%20Priorities.md"><b>Current Priorities</b><span>Today’s purriorities</span></a>
+            <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/development-vault/01%20Current%20Project/Product%20Definition.md"><b>Product Definition</b><span>Promise &amp; refine list</span></a>
+            <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/development-vault/01%20Current%20Project/Current%20Architecture.md"><b>Current Architecture</b><span>PHP · SQLite · shape</span></a>
+            <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/development-vault/01%20Current%20Project/Creative%20Engine.md"><b>Creative Engine</b><span>Staged pipeline</span></a>
+            <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/development-vault/02%20Decisions/Decision%20Index.md"><b>Decision Index</b><span>Accepted ADRs</span></a>
+            <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/development-vault/02%20Decisions/Decision%20Inbox.md"><b>Decision Inbox</b><span>Open questions</span></a>
+            <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/development-vault/04%20Prompt%20Lab/Prompt%20Index.md"><b>Prompt Lab</b><span>Experiment index</span></a>
+            <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/README.md"><b>Rebuild Docs</b><span>Audit library</span></a>
+            <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/AGENTS.md"><b>AGENTS.md</b><span>Agent operating rules</span></a>
+          </div>
+        </section>
+
+        <section id="next-reads" class="section">
+          <div class="section-head">
+            <p class="section-kicker">READ THIS NEXT</p>
+            <h2>Important active notes.</h2>
+          </div>
+          <ol class="next-list">
+            <li><a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/development-vault/START%20HERE.md">START HERE</a> — phase, direction, hierarchy</li>
+            <li><a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/development-vault/01%20Current%20Project/Current%20Priorities.md">Current Priorities</a> — daily focus</li>
+            <li><a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/development-vault/02%20Decisions/Decision%20Inbox.md">Decision Inbox</a> — settle these before building</li>
+            <li><a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/12-open-creative-decisions.md">Open Creative Decisions</a> — detailed option sets</li>
+            <li><a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/development-vault/01%20Current%20Project/Dashboard%20Snapshot.md">Dashboard Snapshot</a> — keep Meow Control honest</li>
+          </ol>
+        </section>
+
+        <section id="library" class="section">
+          <div class="section-head">
+            <p class="section-kicker">RESEARCH / AUDIT LIBRARY</p>
+            <h2>Polished evidence from the rebuild docs.</h2>
+          </div>
+          <div class="docs-list">
+            <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/09-v1-creative-engine-audit.md"><b>09</b><span><strong>Creative Engine Audit</strong><small>Song DNA, StyleMap, portraits, retries, lore vs style.</small></span></a>
+            <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/10-v1-prompt-pipeline.md"><b>10</b><span><strong>Prompt Pipeline</strong><small>Stage schemas and retention matrix.</small></span></a>
+            <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/11-v2-prompt-refinement-plan.md"><b>11</b><span><strong>V2 Prompt Refinement</strong><small>Proposed artifacts — not implemented.</small></span></a>
+            <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/12-open-creative-decisions.md"><b>12</b><span><strong>Open Creative Decisions</strong><small>Owner workshop queue.</small></span></a>
+            <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/06-v1-feature-map.md"><b>06</b><span><strong>V1 Feature Map</strong><small>Capability inventory.</small></span></a>
+            <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/08-v1-risks-and-decisions.md"><b>08</b><span><strong>Risks &amp; Decisions</strong><small>Traps and freeze rules.</small></span></a>
+            <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/00-legacy-repo-assessment.md"><b>00</b><span><strong>Legacy Assessment</strong><small>What not to trust blindly.</small></span></a>
+            <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/README.md"><b>Σ</b><span><strong>Rebuild Index</strong><small>Full planning library.</small></span></a>
+          </div>
+        </section>
+
+        <section class="closing panel">
+          <div>
+            <p class="section-kicker">OPERATOR NOTE</p>
+            <h2>Keep Meow Control synced with the vault.</h2>
+            <p>When Current Project truth changes: update vault notes → refresh <code>Dashboard Snapshot.md</code> → update <code>docs/dashboard-data.js</code> / this page. Cute copy is seasoning. Decisions are law.</p>
+          </div>
+          <div class="closing-badge" aria-hidden="true">
+            <span>PURR</span>
+            <small>systems<br />nominal</small>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <span>Meow Control · CuBiX Meow &amp; Brut · YouAreTheSongNow V2</span>
+        <span class="mono">static · GitHub Pages · no frameworks</span>
+      </footer>
     </div>
-    <div class="status-strip">
-      <div><strong>PHP</strong><span>V2 backend direction</span></div>
-      <div><strong>SQLite</strong><span>preferred initial database</span></div>
-      <div><strong>0</strong><span>V2 implementation started</span></div>
-      <div><strong>BUILD FREEZE</strong><span>planning only</span></div>
-    </div>
-  </header>
+  </div>
 
-  <main>
-    <section id="development-vault" class="shell section">
-      <div class="section-kicker">NEW · SHARED DEVELOPMENT MEMORY</div>
-      <h2>The project now has an Obsidian development vault.</h2>
-      <p class="section-intro">A Git-synced working room for both collaborators: current project truth, accepted decisions, unresolved questions, prompt experiments, development logs and research — kept separate from the polished Pages dashboard.</p>
-
-      <div class="grid four compact">
-        <article class="mini-card">
-          <h3>Current Project</h3>
-          <p>One concise source of truth for product direction, PHP + SQLite architecture, and the refined creative-engine plan.</p>
-        </article>
-        <article class="mini-card">
-          <h3>Decision Records</h3>
-          <p>Date-based ADRs preserve why decisions were made instead of rewriting project history later.</p>
-        </article>
-        <article class="mini-card">
-          <h3>Prompt Lab</h3>
-          <p>Version prompt experiments, hypotheses, failures and lessons so the creative engine improves deliberately.</p>
-        </article>
-        <article class="mini-card">
-          <h3>Shared Through GitHub</h3>
-          <p>Both collaborators can open <code>development-vault/</code> in Obsidian; noisy workspace state and runtime databases stay out of Git.</p>
-        </article>
-      </div>
-
-      <p class="callout"><b>Current accepted direction:</b> rebuild and refine V1 <b>functionality</b>, not V1 code; keep the V2 backend in <b>PHP</b>; start with <b>SQLite</b> while the product is small; preserve the staged creative-engine idea while fixing prompt, portrait and retry behavior.</p>
-
-      <div class="docs-list">
-        <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/development-vault/START%20HERE.md"><b>VAULT</b><span><strong>Start Here</strong><small>Current phase, accepted direction, creative pipeline and authority rules.</small></span></a>
-        <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/development-vault/02%20Decisions/Decision%20Index.md"><b>ADR</b><span><strong>Decision Index</strong><small>Accepted PHP, SQLite and rebuild-strategy decisions plus future supersession history.</small></span></a>
-        <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/development-vault/02%20Decisions/Decision%20Inbox.md"><b>OPEN</b><span><strong>Decision Inbox</strong><small>Unresolved choices about lore, portraits, lyrics, branding, style and product scope.</small></span></a>
-        <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/development-vault/04%20Prompt%20Lab/Prompt%20Index.md"><b>LAB</b><span><strong>Prompt Lab</strong><small>Experiment workflow for improving Song DNA, narrative planning, portrait integration and retries.</small></span></a>
-      </div>
-    </section>
-
-    <section id="discoveries" class="shell section">
-      <div class="section-kicker">WHAT WE FOUND</div>
-      <h2>Arcana was already more ambitious than a simple image generator.</h2>
-      <p class="section-intro">The legacy app had a real creative pipeline: interpret the song, derive structured visual meaning, build a cinematic prompt, generate the image, recover from failures, save the result, and manage the user's history.</p>
-
-      <div class="grid three">
-        <article class="card glow-purple">
-          <span class="card-number">01</span>
-          <h3>Song DNA</h3>
-          <p>Lyrics, artist and song context were analyzed into a fixed 12-field JSON blueprint before image generation began.</p>
-          <div class="tag">ALWAYS ON</div>
-        </article>
-        <article class="card glow-blue">
-          <span class="card-number">02</span>
-          <h3>Dynamic Band Style</h3>
-          <p>An optional StyleMap path could invent a band-specific visual brief from album-cover aesthetics — not a separate lore bible.</p>
-          <div class="tag">IMPLEMENTED · UI UNWIRED</div>
-        </article>
-        <article class="card glow-pink">
-          <span class="card-number">03</span>
-          <h3>You enter the image</h3>
-          <p>Users could provide one or two portrait references that were incorporated into the generated scene, one of the defining ideas behind YouAreTheSongNow.</p>
-          <div class="tag">PRODUCT DIFFERENTIATOR</div>
-        </article>
-      </div>
-    </section>
-
-    <section id="creative-engine" class="shell section process-section">
-      <div class="section-kicker">INSIDE THE ARCANA CREATIVE ENGINE</div>
-      <h2>What the source actually proves.</h2>
-      <p class="section-intro">Not a marketing diagram — the traced generation path from the best-evidence worker, including the optional style fork the default UI never triggers.</p>
-
-      <div class="engine-flow" aria-label="Verified Arcana creative pipeline">
-        <div class="engine-node">
-          <span>01</span>
-          <strong>Song Input</strong>
-          <small>artist · song · lyrics · options</small>
-        </div>
-        <div class="engine-arrow" aria-hidden="true">↓</div>
-        <div class="engine-node accent">
-          <span>02</span>
-          <strong>Song DNA</strong>
-          <small>12-field Gemini JSON blueprint</small>
-        </div>
-        <div class="engine-arrow" aria-hidden="true">↓</div>
-        <div class="engine-node">
-          <span>03</span>
-          <strong>Cinematic Prompt</strong>
-          <small>DNA · scene · camera · safety · branding</small>
-        </div>
-        <div class="engine-fork">
-          <div class="engine-node muted">
-            <span>04a</span>
-            <strong>No Style Key</strong>
-            <small>default UI path · style skipped</small>
-          </div>
-          <div class="engine-node warn">
-            <span>04b</span>
-            <strong>Dynamic StyleMap</strong>
-            <small>ANALYZE_BAND_STYLE only</small>
-          </div>
-          <div class="engine-node">
-            <span>04c</span>
-            <strong>Static Style</strong>
-            <small>arcana_styles.prompt_text</small>
-          </div>
-        </div>
-        <div class="engine-arrow" aria-hidden="true">↓</div>
-        <div class="engine-node accent">
-          <span>05</span>
-          <strong>Portrait Integration</strong>
-          <small>inline refs · CRITICAL identity text</small>
-        </div>
-        <div class="engine-arrow" aria-hidden="true">↓</div>
-        <div class="engine-node">
-          <span>06</span>
-          <strong>Image + Retry Chain</strong>
-          <small>Gemini image · 7 attempts · gallery</small>
-        </div>
-      </div>
-
-      <p class="callout"><b>Headline distinction:</b> “Dynamic Band Lore Engine™” is marketing for the overall pipeline. In code, lore is not a separate subsystem — Song DNA interprets the song, and Dynamic Band Style is an optional <b>visual-style</b> generator.</p>
-    </section>
-
-    <section class="shell section">
-      <div class="section-kicker">ENGINE COMPONENTS</div>
-      <h2>Cards from the forensic prompt audit.</h2>
-      <div class="grid four compact">
-        <article class="mini-card"><h3>Song DNA</h3><p>summary, narrative, themes, symbols, mood, metaphors, palette, lighting, camera, composition, influences, texture.</p></article>
-        <article class="mini-card"><h3>Dynamic Band Style</h3><p>Album-cover visual DNA → StyleMap headings (STYLE/MEDIUM/COLOR/…). Ignores lyrics and Song DNA.</p></article>
-        <article class="mini-card"><h3>Prompt Compiler</h3><p>PHP assembles a long ordered prompt: mission → DNA → character → cinematography → tech → safety → custom → style.</p></article>
-        <article class="mini-card"><h3>Portrait Integration</h3><p>One or two refs become protagonists with exact facial-match instructions — until retries drop them.</p></article>
-        <article class="mini-card"><h3>Retry Chain</h3><p>Attempts 1–3 keep portraits; attempt 4 removes them; 6–7 go abstract/landscape on IMAGE_SAFETY.</p></article>
-        <article class="mini-card"><h3>Major Weaknesses</h3><p>Lore/style naming gap, branding vs no-text, silent identity loss, lyric persistence, mega-prompt overload.</p></article>
-        <article class="mini-card"><h3>Strongest V1 Ideas</h3><p>Staged DNA, portrait-as-protagonist, soft custom rules, async jobs, StyleMap-as-design-brief.</p></article>
-        <article class="mini-card"><h3>V2 Opportunities</h3><p>Visual Narrative Plan, separate artist identity, identity-preserving retries, honest lore-or-style product language.</p></article>
-      </div>
-    </section>
-
-    <section id="prompt-lessons" class="shell section">
-      <div class="section-kicker">WHAT WE LEARNED FROM THE ACTUAL PROMPTS</div>
-      <h2>High-value findings without reading every Markdown file.</h2>
-      <ol class="findings">
-        <li><strong>Song DNA is real and always on</strong> — a 12-field JSON blueprint, not a vague slogan.</li>
-        <li><strong>“Dynamic Band Lore” ≠ a lore system</strong> — implementation is interpretation + optional visual StyleMap.</li>
-        <li><strong>Default UI never triggers StyleMap</strong> — empty <code>image_style</code> skips the whole style block.</li>
-        <li><strong>StyleMap ignores lyrics</strong> — it uses band + song title and album-cover knowledge only.</li>
-        <li><strong>“Cinematic” is concrete craft language</strong> — depth, motivated light, motion, filmic materials — not just adjectives.</li>
-        <li><strong>Portraits conflict with safety text</strong> — exact face match vs “no recognizable real people.”</li>
-        <li><strong>Identity dies at attempt 4</strong> — retries preserve mood longer than the user’s face.</li>
-        <li><strong>Branding fights “no text”</strong> — same prompt demands and forbids visible captions.</li>
-        <li><strong>Full lyrics persist in DB</strong> even though analysis is told not to quote them.</li>
-        <li><strong>One giant prompt does too many jobs</strong> — V2 should compile from intermediate artifacts.</li>
-      </ol>
-    </section>
-
-    <section class="shell section">
-      <div class="section-kicker">WHAT V1 ACTUALLY CONTAINED</div>
-      <h2>Eight product systems were intertwined in the old app.</h2>
-      <div class="grid four compact">
-        <article class="mini-card"><h3>Accounts</h3><p>Registration, login, verification, password reset, profile and maintenance access.</p></article>
-        <article class="mini-card"><h3>Plans & Credits</h3><p>Tier-gated features plus image/story credits and Stripe-backed purchasing.</p></article>
-        <article class="mini-card"><h3>Generator</h3><p>Song inputs, custom instructions, styles, portraits, aspect ratios and queue submission.</p></article>
-        <article class="mini-card"><h3>AI Workers</h3><p>Song analysis, prompt construction, image generation, retries and notifications.</p></article>
-        <article class="mini-card"><h3>Gallery</h3><p>Search, sorting, pagination, lightbox, email and deletion of renders.</p></article>
-        <article class="mini-card"><h3>Payments</h3><p>Checkout, subscriptions, credit packs and multiple legacy webhook paths.</p></article>
-        <article class="mini-card"><h3>Storage</h3><p>Local media plus Backblaze B2, thumbnails, portrait references and public URLs.</p></article>
-        <article class="mini-card"><h3>Admin & System</h3><p>Admin tools, maintenance mode, legal pages, feedback and transactional email.</p></article>
-      </div>
-    </section>
-
-    <section class="shell section split">
-      <div>
-        <div class="section-kicker">PRESERVE THE IDEA</div>
-        <h2>What looks worth carrying forward.</h2>
-        <ul class="checklist good">
-          <li>Song interpretation before image generation</li>
-          <li>Explicit Song DNA as a domain artifact</li>
-          <li>Artist/band visual identity as its own brief</li>
-          <li>Portrait-reference creation mode</li>
-          <li>Durable async generation jobs</li>
-          <li>Personal project/gallery history</li>
-          <li>Progressive retry — reordered to protect identity</li>
-        </ul>
-      </div>
-      <div>
-        <div class="section-kicker">LEAVE THE LEGACY BEHIND</div>
-        <h2>What should not be copied blindly.</h2>
-        <ul class="checklist warn">
-          <li>Multiple overlapping PHP worker scripts</li>
-          <li>Marketing “lore” without a lore subsystem</li>
-          <li>Silent portrait dropping on success</li>
-          <li>Contradictory branding / no-text prompts</li>
-          <li>Hardwired Gemini model versions</li>
-          <li>Full lyric persistence by default</li>
-          <li>One mega-prompt doing every creative job</li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="shell section">
-      <div class="section-kicker">CREATIVE AUDIT LIBRARY</div>
-      <h2>New deep-dive documents.</h2>
-      <div class="docs-list">
-        <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/09-v1-creative-engine-audit.md"><b>09</b><span><strong>Creative Engine Audit</strong><small>Forensic reconstruction of Song DNA, StyleMap, portraits, retries and lore vs style.</small></span></a>
-        <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/10-v1-prompt-pipeline.md"><b>10</b><span><strong>Prompt Pipeline</strong><small>Stage-by-stage transformations, schemas, retention matrix and worker variance.</small></span></a>
-        <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/11-v2-prompt-refinement-plan.md"><b>11</b><span><strong>V2 Prompt Refinement Plan</strong><small>Proposed multi-artifact pipeline — research only, not implemented.</small></span></a>
-        <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/12-open-creative-decisions.md"><b>12</b><span><strong>Open Creative Decisions</strong><small>Owner questions on lore, portraits, lyrics, branding and retries.</small></span></a>
-      </div>
-    </section>
-
-    <section class="shell section">
-      <div class="section-kicker">PLANNING LIBRARY</div>
-      <h2>Read the full rebuild analysis.</h2>
-      <div class="docs-list">
-        <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/00-legacy-repo-assessment.md"><b>00</b><span><strong>Legacy Repo Assessment</strong><small>What V1 tells us and what not to trust automatically.</small></span></a>
-        <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/01-product-rebuild-brief.md"><b>01</b><span><strong>Product Rebuild Brief</strong><small>The intended V2 direction and open product questions.</small></span></a>
-        <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/02-target-architecture.md"><b>02</b><span><strong>Target Architecture</strong><small>Earlier provisional architecture; current accepted PHP + SQLite direction is recorded in the development vault ADRs.</small></span></a>
-        <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/03-migration-plan.md"><b>03</b><span><strong>Migration Plan</strong><small>How to preserve V1 knowledge and data without porting the app.</small></span></a>
-        <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/04-initial-backlog.md"><b>04</b><span><strong>Initial Backlog</strong><small>Ordered discovery and future implementation tasks.</small></span></a>
-        <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/05-cursor-workflow.md"><b>05</b><span><strong>Cursor Workflow</strong><small>Rules for future agent-assisted development.</small></span></a>
-        <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/06-v1-feature-map.md"><b>06</b><span><strong>V1 Feature Map</strong><small>The detailed capability inventory and creative pipeline.</small></span></a>
-        <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/07-v1-data-integrations-audit.md"><b>07</b><span><strong>Data & Integrations Audit</strong><small>Database concepts, Gemini, Stripe, B2, SMTP and migration implications.</small></span></a>
-        <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/08-v1-risks-and-decisions.md"><b>08</b><span><strong>Risks & Decision Register</strong><small>Known traps, open decisions and the current build freeze.</small></span></a>
-      </div>
-    </section>
-
-    <section class="shell section final-panel">
-      <div>
-        <div class="section-kicker">CURRENT PHASE</div>
-        <h2>Shared development memory established. Decide next — then build.</h2>
-        <p>The creative engine is mapped, the vault now preserves current truth and decisions, and PHP + SQLite are the accepted starting direction. Next high-value work is resolving the open product decisions before implementation begins.</p>
-      </div>
-      <div class="freeze-badge">PLANNING<br>ONLY</div>
-    </section>
-  </main>
-
-  <footer class="shell footer">
-    <span>YouAreTheSongNow V2 · Rebuild Lab</span>
-    <a href="https://github.com/cubixmeow-commits/youarethesongnowV2">GitHub Repository ↗</a>
-  </footer>
+  <script src="dashboard-data.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>

@@ -48,6 +48,13 @@ git push
 
 Polished summaries intended to be easy to browse on GitHub Pages.
 
+The Pages site (`docs/index.html`, **Meow Control**) is the daily command center for CuBiX Meow and Brut. It should stay conceptually aligned with this vault:
+
+- vault = working memory / workshop
+- `/docs` = polished hub
+
+When current priorities, accepted decisions, or creative-engine direction change, update the relevant Current Project notes and refresh the dashboard snapshot / `docs/dashboard-data.js` (or equivalent dashboard content).
+
 ## Information labels
 
 Use these consistently when useful:

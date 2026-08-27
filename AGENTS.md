@@ -32,8 +32,9 @@ The project has a shared Obsidian vault at `development-vault/` for working deve
 Before planning or future implementation work, always read:
 
 1. `development-vault/START HERE.md`
-2. `development-vault/01 Current Project/Current Architecture.md`
-3. `development-vault/02 Decisions/Decision Index.md`
+2. `development-vault/01 Current Project/Current Priorities.md` (when present)
+3. `development-vault/01 Current Project/Current Architecture.md`
+4. `development-vault/02 Decisions/Decision Index.md`
 
 Then read only the vault notes relevant to the task. **Do not scan the entire vault by default.**
 
@@ -49,6 +50,23 @@ Vault information authority:
 8. Inbox/brainstorming
 
 Never turn an experiment, AI proposal, or brainstorming note into a requirement without an owner decision.
+
+## Meow Control dashboard (`/docs`)
+
+`docs/index.html` is the **Meow Control** GitHub Pages command center for CuBiX Meow and Brut.
+
+- `development-vault/` = workshop / working memory
+- `/docs` = polished daily project hub
+
+When Current Project truth changes in a way the dashboard should reflect:
+
+1. update the relevant vault notes;
+2. update `development-vault/01 Current Project/Dashboard Snapshot.md` if present;
+3. update `docs/dashboard-data.js` and/or `docs/index.html` so Meow Control stays aligned.
+
+Do **not** invent a second vault. Sync/rebase onto current `main` before assuming vault files are missing.
+
+Keep `/docs` static and GitHub Pages compatible: HTML/CSS/vanilla JS only. No frontend frameworks, no npm build for the dashboard.
 
 ## Current accepted direction
 
