@@ -19,10 +19,20 @@ Planning / creative-engine design
 
 BUILD FREEZE — planning only
 
+## Delivery path
+
+**Web first -> Flutter/Dart iOS second**
+
+- Phase 1: rebuild/refine the web application on the PHP backend with SQLite initially.
+- Phase 2: build the iOS application in Flutter + Dart.
+- Flutter should consume the same PHP backend through clean HTTP/JSON APIs.
+- The web rebuild is the shared backend/reference client foundation, not a throwaway prototype.
+
 ## Stack direction
 
-- Backend: PHP
+- Web/backend: PHP
 - Database (initial): SQLite
+- Mobile client: Flutter + Dart (iOS first, after web validation)
 - Strategy: rebuild/refine V1 functionality, not V1 code
 
 ## Mission
@@ -48,8 +58,9 @@ Source Context
 ## Accepted decisions
 
 - Rebuild functionality, not code
-- PHP backend
+- PHP backend/web app
 - SQLite initially
+- Web first, then Flutter/Dart iOS using the shared PHP backend
 
 ## Top open decisions
 
