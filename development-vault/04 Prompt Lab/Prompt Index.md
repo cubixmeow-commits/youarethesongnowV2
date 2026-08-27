@@ -9,6 +9,17 @@ area: prompt-lab
 
 Treat prompts like versioned product behavior, not disposable text snippets.
 
+## Current V1 reference
+
+Start with [[V1 Prompt Functionality Map]] for the recoverable V1 prompt architecture.
+
+Deep documentation:
+
+- [`13 — V1 Prompting Functionality Reference`](../../docs/rebuild/13-prompting-functionality-reference.md) — source/static/runtime/DB/model-generated/fallback prompt behavior.
+- [`14 — Prompt Quality & Refinement Analysis`](../../docs/rebuild/14-prompt-quality-and-refinement-analysis.md) — strengths, contradictions, prompt governance and V2 refinement recommendations.
+- [`10 — V1 Prompt Pipeline`](../../docs/rebuild/10-v1-prompt-pipeline.md) — stage-by-stage forensic pipeline.
+- [`11 — V2 Prompt Refinement Plan`](../../docs/rebuild/11-v2-prompt-refinement-plan.md) — proposed future multi-artifact design, not implemented.
+
 ## Experiment flow
 
 1. State a hypothesis.
@@ -28,6 +39,11 @@ Treat prompts like versioned product behavior, not disposable text snippets.
 - Portrait Integration
 - Prompt Compiler
 - Retry / Safety
+- Curated Style Presets
+
+## V2 prompt-governance goal
+
+When implementation begins, every important generation should eventually be traceable to the exact prompt/spec versions, style revision, compiler version, retry policy, provider/model, and experiment revision that produced it.
 
 ## Naming
 
