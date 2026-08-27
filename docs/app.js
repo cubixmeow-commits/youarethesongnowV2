@@ -21,14 +21,7 @@
       .delivery-path-banner strong{display:block;font:700 clamp(16px,2vw,22px)/1.2 "Outfit",sans-serif;color:#f8fafc;margin-bottom:3px}
       .delivery-path-banner p{margin:0;color:#cbd5e1;font-size:14px;line-height:1.45}
       .delivery-path-banner .delivery-stack{font:600 12px/1.2 "IBM Plex Mono",monospace;color:#c4b5fd;white-space:nowrap}
-      .prompt-update-banner{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;margin:18px 0 0;padding:18px 20px;border:1px solid rgba(167,139,250,.32);border-radius:16px;background:linear-gradient(100deg,rgba(91,33,182,.14),rgba(15,23,42,.5));box-shadow:0 0 28px rgba(124,58,237,.08)}
-      .prompt-update-banner .prompt-kicker{font:600 11px/1.2 "IBM Plex Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:#c4b5fd;margin:0 0 6px}
-      .prompt-update-banner strong{display:block;font:700 clamp(17px,2vw,23px)/1.2 "Outfit",sans-serif;color:#f8fafc;margin-bottom:5px}
-      .prompt-update-banner p{margin:0;color:#cbd5e1;font-size:14px;line-height:1.5}
-      .prompt-update-links{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
-      .prompt-update-links a{font:600 11px/1.2 "IBM Plex Mono",monospace;text-decoration:none;color:#e9d5ff;border:1px solid rgba(196,181,253,.3);border-radius:999px;padding:8px 10px;background:rgba(124,58,237,.11)}
-      .prompt-update-links a:hover{border-color:rgba(125,211,252,.55);color:#bae6fd}
-      @media(max-width:760px){.delivery-path-banner,.prompt-update-banner{grid-template-columns:1fr;gap:9px}.delivery-path-banner .delivery-stack{white-space:normal}.prompt-update-links{justify-content:flex-start}}
+      @media(max-width:760px){.delivery-path-banner{grid-template-columns:1fr;gap:7px}.delivery-path-banner .delivery-stack{white-space:normal}}
     `;
     document.head.appendChild(style);
 
@@ -48,32 +41,29 @@
   }
 
   function mountPromptSystemUpdate() {
-    const overview = document.getElementById("overview");
-    if (!overview || document.getElementById("prompt-system-update")) return;
+    const list = document.querySelector("#library .docs-list");
+    if (!list || document.getElementById("prompt-functionality-reference-link")) return;
 
-    const banner = document.createElement("div");
-    banner.id = "prompt-system-update";
-    banner.className = "prompt-update-banner";
-    banner.setAttribute("role", "note");
+    const refUrl = data.promptReferenceUrl || "https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/13-prompting-functionality-reference.md";
+    const analysisUrl = data.promptAnalysisUrl || "https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/14-prompt-quality-and-refinement-analysis.md";
+    const vaultUrl = data.promptVaultUrl || "https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/development-vault/04%20Prompt%20Lab/V1%20Prompt%20Functionality%20Map.md";
 
-    const refUrl = data.promptReferenceUrl || "#engine";
-    const analysisUrl = data.promptAnalysisUrl || "#engine";
-    const vaultUrl = data.promptVaultUrl || "#engine";
+    const ref = document.createElement("a");
+    ref.id = "prompt-functionality-reference-link";
+    ref.href = refUrl;
+    ref.innerHTML = '<b>13</b><span><strong>Prompt Functionality Reference</strong><small>Five prompt sources, DB-managed styles, runtime assembly, model artifacts and retries.</small></span>';
 
-    banner.innerHTML = `
-      <div>
-        <p class="prompt-kicker">NEW RESEARCH // PROMPT SYSTEM</p>
-        <strong>${data.promptSystemStatus || "V1 prompt functionality mapped"}</strong>
-        <p>${data.promptSystemDetail || "The legacy prompting system is now documented as application behavior rather than one giant prompt."}</p>
-      </div>
-      <div class="prompt-update-links">
-        <a href="${refUrl}">Functionality ↗</a>
-        <a href="${analysisUrl}">Refinement ↗</a>
-        <a href="${vaultUrl}">Vault Map ↗</a>
-      </div>
-    `;
+    const analysis = document.createElement("a");
+    analysis.href = analysisUrl;
+    analysis.innerHTML = '<b>14</b><span><strong>Prompt Quality &amp; Refinement</strong><small>What to preserve, conflicts to remove, and how to modernize prompt behavior.</small></span>';
 
-    overview.insertAdjacentElement("afterend", banner);
+    const vault = document.createElement("a");
+    vault.href = vaultUrl;
+    vault.innerHTML = '<b>V</b><span><strong>V1 Prompt Functionality Map</strong><small>Vault working map, historical evolution, database recovery notes and V2 implications.</small></span>';
+
+    list.appendChild(ref);
+    list.appendChild(analysis);
+    list.appendChild(vault);
   }
 
   function hydrate() {
