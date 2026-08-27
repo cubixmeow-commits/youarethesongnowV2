@@ -12,6 +12,7 @@ area: decisions
 - [[ADR-20260827-rebuild-functionality-not-code]]
 - [[ADR-20260827-use-php-for-v2]]
 - [[ADR-20260827-use-sqlite-initially]]
+- [[ADR-20260827-web-first-then-flutter-ios]]
 
 ## Discussing
 
