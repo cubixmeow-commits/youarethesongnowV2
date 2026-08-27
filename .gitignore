@@ -1,0 +1,18 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Obsidian machine-specific state
+development-vault/.obsidian/workspace.json
+development-vault/.obsidian/workspace-mobile.json
+development-vault/.obsidian/cache/
+development-vault/.trash/
+
+# Local environment / secrets
+.env
+.env.local
+
+# Future SQLite runtime databases should not be committed
+*.sqlite
+*.sqlite3
+*.db
