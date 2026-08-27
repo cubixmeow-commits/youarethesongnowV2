@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#090a12" />
   <title>You Are The Song Now — V2 Rebuild Lab</title>
-  <meta name="description" content="Planning dashboard for the YouAreTheSongNow V2 rebuild, including the Arcana creative-engine audit." />
+  <meta name="description" content="Planning dashboard for the YouAreTheSongNow V2 rebuild, including the Arcana creative-engine audit and shared development vault." />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -17,18 +17,52 @@
     <h1>Turning the old Arcana into<br><span>a modern creative engine.</span></h1>
     <p class="lede">A living view of what we discovered in V1, what the prompts actually do, what deserves to survive, and what still needs a product decision before we build anything.</p>
     <div class="hero-actions">
-      <a class="button primary" href="#creative-engine">Inside the creative engine</a>
-      <a class="button secondary" href="#discoveries">Explore the audit</a>
+      <a class="button primary" href="#development-vault">Development vault</a>
+      <a class="button secondary" href="#creative-engine">Inside the creative engine</a>
     </div>
     <div class="status-strip">
-      <div><strong>36</strong><span>V1 capabilities mapped</span></div>
-      <div><strong>12</strong><span>Song DNA fields traced</span></div>
+      <div><strong>PHP</strong><span>V2 backend direction</span></div>
+      <div><strong>SQLite</strong><span>preferred initial database</span></div>
       <div><strong>0</strong><span>V2 implementation started</span></div>
       <div><strong>BUILD FREEZE</strong><span>planning only</span></div>
     </div>
   </header>
 
   <main>
+    <section id="development-vault" class="shell section">
+      <div class="section-kicker">NEW · SHARED DEVELOPMENT MEMORY</div>
+      <h2>The project now has an Obsidian development vault.</h2>
+      <p class="section-intro">A Git-synced working room for both collaborators: current project truth, accepted decisions, unresolved questions, prompt experiments, development logs and research — kept separate from the polished Pages dashboard.</p>
+
+      <div class="grid four compact">
+        <article class="mini-card">
+          <h3>Current Project</h3>
+          <p>One concise source of truth for product direction, PHP + SQLite architecture, and the refined creative-engine plan.</p>
+        </article>
+        <article class="mini-card">
+          <h3>Decision Records</h3>
+          <p>Date-based ADRs preserve why decisions were made instead of rewriting project history later.</p>
+        </article>
+        <article class="mini-card">
+          <h3>Prompt Lab</h3>
+          <p>Version prompt experiments, hypotheses, failures and lessons so the creative engine improves deliberately.</p>
+        </article>
+        <article class="mini-card">
+          <h3>Shared Through GitHub</h3>
+          <p>Both collaborators can open <code>development-vault/</code> in Obsidian; noisy workspace state and runtime databases stay out of Git.</p>
+        </article>
+      </div>
+
+      <p class="callout"><b>Current accepted direction:</b> rebuild and refine V1 <b>functionality</b>, not V1 code; keep the V2 backend in <b>PHP</b>; start with <b>SQLite</b> while the product is small; preserve the staged creative-engine idea while fixing prompt, portrait and retry behavior.</p>
+
+      <div class="docs-list">
+        <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/development-vault/START%20HERE.md"><b>VAULT</b><span><strong>Start Here</strong><small>Current phase, accepted direction, creative pipeline and authority rules.</small></span></a>
+        <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/development-vault/02%20Decisions/Decision%20Index.md"><b>ADR</b><span><strong>Decision Index</strong><small>Accepted PHP, SQLite and rebuild-strategy decisions plus future supersession history.</small></span></a>
+        <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/development-vault/02%20Decisions/Decision%20Inbox.md"><b>OPEN</b><span><strong>Decision Inbox</strong><small>Unresolved choices about lore, portraits, lyrics, branding, style and product scope.</small></span></a>
+        <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/development-vault/04%20Prompt%20Lab/Prompt%20Index.md"><b>LAB</b><span><strong>Prompt Lab</strong><small>Experiment workflow for improving Song DNA, narrative planning, portrait integration and retries.</small></span></a>
+      </div>
+    </section>
+
     <section id="discoveries" class="shell section">
       <div class="section-kicker">WHAT WE FOUND</div>
       <h2>Arcana was already more ambitious than a simple image generator.</h2>
@@ -117,38 +151,14 @@
       <div class="section-kicker">ENGINE COMPONENTS</div>
       <h2>Cards from the forensic prompt audit.</h2>
       <div class="grid four compact">
-        <article class="mini-card">
-          <h3>Song DNA</h3>
-          <p>summary, narrative, themes, symbols, mood, metaphors, palette, lighting, camera, composition, influences, texture.</p>
-        </article>
-        <article class="mini-card">
-          <h3>Dynamic Band Style</h3>
-          <p>Album-cover visual DNA → StyleMap headings (STYLE/MEDIUM/COLOR/…). Ignores lyrics and Song DNA.</p>
-        </article>
-        <article class="mini-card">
-          <h3>Prompt Compiler</h3>
-          <p>PHP assembles a long ordered prompt: mission → DNA → character → cinematography → tech → safety → custom → style.</p>
-        </article>
-        <article class="mini-card">
-          <h3>Portrait Integration</h3>
-          <p>One or two refs become protagonists with exact facial-match instructions — until retries drop them.</p>
-        </article>
-        <article class="mini-card">
-          <h3>Retry Chain</h3>
-          <p>Attempts 1–3 keep portraits; attempt 4 removes them; 6–7 go abstract/landscape on IMAGE_SAFETY.</p>
-        </article>
-        <article class="mini-card">
-          <h3>Major Weaknesses</h3>
-          <p>Lore/style naming gap, branding vs no-text, silent identity loss, lyric persistence, mega-prompt overload.</p>
-        </article>
-        <article class="mini-card">
-          <h3>Strongest V1 Ideas</h3>
-          <p>Staged DNA, portrait-as-protagonist, soft custom rules, async jobs, StyleMap-as-design-brief.</p>
-        </article>
-        <article class="mini-card">
-          <h3>V2 Opportunities</h3>
-          <p>Visual Narrative Plan, separate artist identity, identity-preserving retries, honest lore-or-style product language.</p>
-        </article>
+        <article class="mini-card"><h3>Song DNA</h3><p>summary, narrative, themes, symbols, mood, metaphors, palette, lighting, camera, composition, influences, texture.</p></article>
+        <article class="mini-card"><h3>Dynamic Band Style</h3><p>Album-cover visual DNA → StyleMap headings (STYLE/MEDIUM/COLOR/…). Ignores lyrics and Song DNA.</p></article>
+        <article class="mini-card"><h3>Prompt Compiler</h3><p>PHP assembles a long ordered prompt: mission → DNA → character → cinematography → tech → safety → custom → style.</p></article>
+        <article class="mini-card"><h3>Portrait Integration</h3><p>One or two refs become protagonists with exact facial-match instructions — until retries drop them.</p></article>
+        <article class="mini-card"><h3>Retry Chain</h3><p>Attempts 1–3 keep portraits; attempt 4 removes them; 6–7 go abstract/landscape on IMAGE_SAFETY.</p></article>
+        <article class="mini-card"><h3>Major Weaknesses</h3><p>Lore/style naming gap, branding vs no-text, silent identity loss, lyric persistence, mega-prompt overload.</p></article>
+        <article class="mini-card"><h3>Strongest V1 Ideas</h3><p>Staged DNA, portrait-as-protagonist, soft custom rules, async jobs, StyleMap-as-design-brief.</p></article>
+        <article class="mini-card"><h3>V2 Opportunities</h3><p>Visual Narrative Plan, separate artist identity, identity-preserving retries, honest lore-or-style product language.</p></article>
       </div>
     </section>
 
@@ -230,7 +240,7 @@
       <div class="docs-list">
         <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/00-legacy-repo-assessment.md"><b>00</b><span><strong>Legacy Repo Assessment</strong><small>What V1 tells us and what not to trust automatically.</small></span></a>
         <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/01-product-rebuild-brief.md"><b>01</b><span><strong>Product Rebuild Brief</strong><small>The intended V2 direction and open product questions.</small></span></a>
-        <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/02-target-architecture.md"><b>02</b><span><strong>Target Architecture</strong><small>A provisional modern web/mobile architecture.</small></span></a>
+        <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/02-target-architecture.md"><b>02</b><span><strong>Target Architecture</strong><small>Earlier provisional architecture; current accepted PHP + SQLite direction is recorded in the development vault ADRs.</small></span></a>
         <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/03-migration-plan.md"><b>03</b><span><strong>Migration Plan</strong><small>How to preserve V1 knowledge and data without porting the app.</small></span></a>
         <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/04-initial-backlog.md"><b>04</b><span><strong>Initial Backlog</strong><small>Ordered discovery and future implementation tasks.</small></span></a>
         <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/05-cursor-workflow.md"><b>05</b><span><strong>Cursor Workflow</strong><small>Rules for future agent-assisted development.</small></span></a>
@@ -243,8 +253,8 @@
     <section class="shell section final-panel">
       <div>
         <div class="section-kicker">CURRENT PHASE</div>
-        <h2>Creative engine mapped. Decide next — then build.</h2>
-        <p>The forensic audit is in. Next high-value step is an owner workshop on lore-vs-style, portrait honesty, and lyrics architecture before any vertical slice.</p>
+        <h2>Shared development memory established. Decide next — then build.</h2>
+        <p>The creative engine is mapped, the vault now preserves current truth and decisions, and PHP + SQLite are the accepted starting direction. Next high-value work is resolving the open product decisions before implementation begins.</p>
       </div>
       <div class="freeze-badge">PLANNING<br>ONLY</div>
     </section>
