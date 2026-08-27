@@ -39,6 +39,26 @@ BUILD FREEZE — planning only
 
 Turn a song into an interpreted cinematic visual experience, optionally placing the user inside that world.
 
+## Prompt-system status
+
+**V1 prompting functionality is now mapped as a system, not a single prompt.**
+
+Five prompt origins are documented:
+
+1. hardcoded source templates/directives;
+2. runtime-assembled cinematic prompts;
+3. database-stored static style prompts (`arcana_styles.prompt_text`);
+4. model-generated artifacts (Song DNA, Band Visual DNA, StyleMap);
+5. fallback/retry prompt mutations.
+
+The older worker preserves a large inline style catalog that appears to be strong predecessor material for the later DB-managed style library. Exact final production DB rows still require a database export if one is recoverable.
+
+Deep references:
+
+- `docs/rebuild/13-prompting-functionality-reference.md`
+- `docs/rebuild/14-prompt-quality-and-refinement-analysis.md`
+- `development-vault/04 Prompt Lab/V1 Prompt Functionality Map.md`
+
 ## Creative-engine direction
 
 ```text
@@ -74,6 +94,8 @@ Source Context
 
 1. `START HERE.md`
 2. `01 Current Project/Current Priorities.md`
-3. `02 Decisions/Decision Inbox.md`
-4. `01 Current Project/Creative Engine.md`
-5. `docs/rebuild/12-open-creative-decisions.md`
+3. `04 Prompt Lab/V1 Prompt Functionality Map.md`
+4. `docs/rebuild/13-prompting-functionality-reference.md`
+5. `docs/rebuild/14-prompt-quality-and-refinement-analysis.md`
+6. `02 Decisions/Decision Inbox.md`
+7. `docs/rebuild/12-open-creative-decisions.md`
