@@ -3,20 +3,23 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#0b0d10" />
+  <meta name="theme-color" content="#7c3aed" />
   <title>Meow Control // CuBiX Meow &amp; Brut</title>
   <meta name="description" content="CuBiX Meow & Brut daily project console for YouAreTheSongNow V2 — technical, cat-powered, vault-aligned." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Sora:wght@500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260827b" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Orbitron:wght@400;700&family=Outfit:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20260827d" />
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <div class="grid-bg" aria-hidden="true"></div>
-  <div class="glow glow-a" aria-hidden="true"></div>
-  <div class="glow glow-b" aria-hidden="true"></div>
+  <div class="background-effects" aria-hidden="true">
+    <div class="bg-orb bg-orb-purple"></div>
+    <div class="bg-orb bg-orb-cyan"></div>
+    <div class="bg-grid"></div>
+    <div class="bg-vignette"></div>
+  </div>
 
   <button type="button" class="nav-backdrop" id="nav-backdrop" aria-label="Close menu" hidden></button>
 
@@ -79,11 +82,17 @@
       </header>
 
       <main id="main">
-        <section id="overview" class="panel hero-panel">
+        <section id="overview" class="panel hero-panel glass-strong">
           <div class="hero-copy">
             <p class="eyebrow"><span class="ears" aria-hidden="true">△ △</span> MEOW CONTROL // BRUT TERMINAL</p>
             <h1>CuBiX Meow &amp; Brut<br /><span>project command center</span></h1>
+            <p class="subhead">You Are The Song Now · V2 rebuild lab</p>
             <p class="lede">A daily technical console for YouAreTheSongNow V2 — dark, precise, and just cat enough. The development vault is working memory; this page is the polished hub.</p>
+
+            <div class="hero-cta-group">
+              <a class="btn btn-primary" href="#focus">Today’s Focus</a>
+              <a class="btn btn-secondary" href="#decisions">Decision Center</a>
+            </div>
 
             <div class="status-grid">
               <article>
@@ -107,16 +116,16 @@
             <p class="mission"><span class="label">Mission</span> Turn a song into an interpreted cinematic visual experience — optionally starring you.</p>
           </div>
 
-          <aside class="cat-card" aria-label="Cat status">
+          <aside class="cat-card glass-panel" aria-label="Cat status">
             <div class="cat-card-top">
               <div class="cat-face" aria-hidden="true">
                 <svg viewBox="0 0 120 90" width="120" height="90">
-                  <path fill="#f0c987" d="M20 78c0-28 18-50 40-50s40 22 40 50v4H20v-4z"/>
-                  <path fill="#f0c987" d="M28 28l12 18M92 28L80 46"/>
-                  <circle cx="48" cy="52" r="5" fill="#1a1510"/>
-                  <circle cx="72" cy="52" r="5" fill="#1a1510"/>
-                  <path d="M56 62c3 3 5 3 8 0" stroke="#1a1510" stroke-width="3" fill="none" stroke-linecap="round"/>
-                  <path d="M30 58h-16M30 64h-18M90 58h16M90 64h18" stroke="#d7b06a" stroke-width="2" stroke-linecap="round"/>
+                  <path fill="#a78bfa" d="M20 78c0-28 18-50 40-50s40 22 40 50v4H20v-4z"/>
+                  <path fill="#7c3aed" d="M28 28l12 18M92 28L80 46"/>
+                  <circle cx="48" cy="52" r="5" fill="#020617"/>
+                  <circle cx="72" cy="52" r="5" fill="#020617"/>
+                  <path d="M56 62c3 3 5 3 8 0" stroke="#020617" stroke-width="3" fill="none" stroke-linecap="round"/>
+                  <path d="M30 58h-16M30 64h-18M90 58h16M90 64h18" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"/>
                 </svg>
               </div>
               <div>
@@ -141,17 +150,20 @@
           </div>
 
           <div class="card-grid three">
-            <article class="card">
+            <article class="card step-card">
+              <p class="step-num">01</p>
               <p class="card-kicker">Direction</p>
               <h3>Rebuild the value, not the files</h3>
               <p>V2 preserves Arcana’s product promise and creative intelligence while refusing to port V1 PHP structure, duplicate workers, or hardwired model IDs.</p>
             </article>
-            <article class="card">
+            <article class="card step-card">
+              <p class="step-num">02</p>
               <p class="card-kicker">Architecture</p>
               <h3>PHP + SQLite first</h3>
               <p>Backend direction is PHP. Start on SQLite while small, keep domain logic portable, and put long-running generation behind a worker with explicit job state.</p>
             </article>
-            <article class="card">
+            <article class="card step-card">
+              <p class="step-num">03</p>
               <p class="card-kicker">Creative engine</p>
               <h3>Staged interpretation</h3>
               <p>Song meaning → DNA → narrative plan → artist identity → portrait plan → scene → compiler → evaluate → controlled retry. Design direction, not implemented code.</p>
@@ -389,7 +401,7 @@
     </div>
   </div>
 
-  <script src="dashboard-data.js?v=20260827b"></script>
-  <script src="app.js?v=20260827b"></script>
+  <script src="dashboard-data.js?v=20260827d"></script>
+  <script src="app.js?v=20260827d"></script>
 </body>
 </html>
