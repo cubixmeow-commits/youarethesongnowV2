@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#090a12" />
   <title>You Are The Song Now — V2 Rebuild Lab</title>
-  <meta name="description" content="Planning dashboard for the YouAreTheSongNow V2 rebuild." />
+  <meta name="description" content="Planning dashboard for the YouAreTheSongNow V2 rebuild, including the Arcana creative-engine audit." />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -15,14 +15,14 @@
   <header class="hero shell">
     <div class="eyebrow">YOU ARE THE SONG NOW · V2 REBUILD LAB</div>
     <h1>Turning the old Arcana into<br><span>a modern creative engine.</span></h1>
-    <p class="lede">A living view of what we discovered in V1, what deserves to survive, what needs redesign, and what still needs a product decision before we build anything.</p>
+    <p class="lede">A living view of what we discovered in V1, what the prompts actually do, what deserves to survive, and what still needs a product decision before we build anything.</p>
     <div class="hero-actions">
-      <a class="button primary" href="#discoveries">Explore the audit</a>
-      <a class="button secondary" href="https://github.com/cubixmeow-commits/youarethesongnowV2/tree/main/docs/rebuild">Open planning docs</a>
+      <a class="button primary" href="#creative-engine">Inside the creative engine</a>
+      <a class="button secondary" href="#discoveries">Explore the audit</a>
     </div>
     <div class="status-strip">
       <div><strong>36</strong><span>V1 capabilities mapped</span></div>
-      <div><strong>8</strong><span>major product areas</span></div>
+      <div><strong>12</strong><span>Song DNA fields traced</span></div>
       <div><strong>0</strong><span>V2 implementation started</span></div>
       <div><strong>BUILD FREEZE</strong><span>planning only</span></div>
     </div>
@@ -38,14 +38,14 @@
         <article class="card glow-purple">
           <span class="card-number">01</span>
           <h3>Song DNA</h3>
-          <p>Lyrics, artist and song context were analyzed into structured themes, mood, palette, camera and composition ideas before image generation began.</p>
-          <div class="tag">CORE CONCEPT</div>
+          <p>Lyrics, artist and song context were analyzed into a fixed 12-field JSON blueprint before image generation began.</p>
+          <div class="tag">ALWAYS ON</div>
         </article>
         <article class="card glow-blue">
           <span class="card-number">02</span>
           <h3>Dynamic Band Style</h3>
-          <p>A special analysis path could build a band-specific StyleMap so the imagery felt attached to the artist instead of using a generic visual preset.</p>
-          <div class="tag">PARTIALLY EXPOSED IN V1</div>
+          <p>An optional StyleMap path could invent a band-specific visual brief from album-cover aesthetics — not a separate lore bible.</p>
+          <div class="tag">IMPLEMENTED · UI UNWIRED</div>
         </article>
         <article class="card glow-pink">
           <span class="card-number">03</span>
@@ -56,21 +56,117 @@
       </div>
     </section>
 
-    <section class="shell section process-section">
-      <div class="section-kicker">THE V1 CREATIVE PIPELINE</div>
-      <h2>A staged interpretation engine, not one giant prompt.</h2>
-      <div class="pipeline">
-        <div class="step"><span>1</span><strong>Song Input</strong><small>artist · song · lyrics · instructions</small></div>
-        <div class="arrow">→</div>
-        <div class="step"><span>2</span><strong>Song DNA</strong><small>themes · mood · palette · camera</small></div>
-        <div class="arrow">→</div>
-        <div class="step"><span>3</span><strong>StyleMap</strong><small>static or dynamic band identity</small></div>
-        <div class="arrow">→</div>
-        <div class="step"><span>4</span><strong>Cinematic Prompt</strong><small>composition · portrait · framing</small></div>
-        <div class="arrow">→</div>
-        <div class="step"><span>5</span><strong>Image</strong><small>retry · store · gallery</small></div>
+    <section id="creative-engine" class="shell section process-section">
+      <div class="section-kicker">INSIDE THE ARCANA CREATIVE ENGINE</div>
+      <h2>What the source actually proves.</h2>
+      <p class="section-intro">Not a marketing diagram — the traced generation path from the best-evidence worker, including the optional style fork the default UI never triggers.</p>
+
+      <div class="engine-flow" aria-label="Verified Arcana creative pipeline">
+        <div class="engine-node">
+          <span>01</span>
+          <strong>Song Input</strong>
+          <small>artist · song · lyrics · options</small>
+        </div>
+        <div class="engine-arrow" aria-hidden="true">↓</div>
+        <div class="engine-node accent">
+          <span>02</span>
+          <strong>Song DNA</strong>
+          <small>12-field Gemini JSON blueprint</small>
+        </div>
+        <div class="engine-arrow" aria-hidden="true">↓</div>
+        <div class="engine-node">
+          <span>03</span>
+          <strong>Cinematic Prompt</strong>
+          <small>DNA · scene · camera · safety · branding</small>
+        </div>
+        <div class="engine-fork">
+          <div class="engine-node muted">
+            <span>04a</span>
+            <strong>No Style Key</strong>
+            <small>default UI path · style skipped</small>
+          </div>
+          <div class="engine-node warn">
+            <span>04b</span>
+            <strong>Dynamic StyleMap</strong>
+            <small>ANALYZE_BAND_STYLE only</small>
+          </div>
+          <div class="engine-node">
+            <span>04c</span>
+            <strong>Static Style</strong>
+            <small>arcana_styles.prompt_text</small>
+          </div>
+        </div>
+        <div class="engine-arrow" aria-hidden="true">↓</div>
+        <div class="engine-node accent">
+          <span>05</span>
+          <strong>Portrait Integration</strong>
+          <small>inline refs · CRITICAL identity text</small>
+        </div>
+        <div class="engine-arrow" aria-hidden="true">↓</div>
+        <div class="engine-node">
+          <span>06</span>
+          <strong>Image + Retry Chain</strong>
+          <small>Gemini image · 7 attempts · gallery</small>
+        </div>
       </div>
-      <p class="callout">The strongest architectural idea to preserve is the separation between <b>submission</b> and <b>generation</b>. The browser queued work and a background worker performed the expensive AI pipeline.</p>
+
+      <p class="callout"><b>Headline distinction:</b> “Dynamic Band Lore Engine™” is marketing for the overall pipeline. In code, lore is not a separate subsystem — Song DNA interprets the song, and Dynamic Band Style is an optional <b>visual-style</b> generator.</p>
+    </section>
+
+    <section class="shell section">
+      <div class="section-kicker">ENGINE COMPONENTS</div>
+      <h2>Cards from the forensic prompt audit.</h2>
+      <div class="grid four compact">
+        <article class="mini-card">
+          <h3>Song DNA</h3>
+          <p>summary, narrative, themes, symbols, mood, metaphors, palette, lighting, camera, composition, influences, texture.</p>
+        </article>
+        <article class="mini-card">
+          <h3>Dynamic Band Style</h3>
+          <p>Album-cover visual DNA → StyleMap headings (STYLE/MEDIUM/COLOR/…). Ignores lyrics and Song DNA.</p>
+        </article>
+        <article class="mini-card">
+          <h3>Prompt Compiler</h3>
+          <p>PHP assembles a long ordered prompt: mission → DNA → character → cinematography → tech → safety → custom → style.</p>
+        </article>
+        <article class="mini-card">
+          <h3>Portrait Integration</h3>
+          <p>One or two refs become protagonists with exact facial-match instructions — until retries drop them.</p>
+        </article>
+        <article class="mini-card">
+          <h3>Retry Chain</h3>
+          <p>Attempts 1–3 keep portraits; attempt 4 removes them; 6–7 go abstract/landscape on IMAGE_SAFETY.</p>
+        </article>
+        <article class="mini-card">
+          <h3>Major Weaknesses</h3>
+          <p>Lore/style naming gap, branding vs no-text, silent identity loss, lyric persistence, mega-prompt overload.</p>
+        </article>
+        <article class="mini-card">
+          <h3>Strongest V1 Ideas</h3>
+          <p>Staged DNA, portrait-as-protagonist, soft custom rules, async jobs, StyleMap-as-design-brief.</p>
+        </article>
+        <article class="mini-card">
+          <h3>V2 Opportunities</h3>
+          <p>Visual Narrative Plan, separate artist identity, identity-preserving retries, honest lore-or-style product language.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="prompt-lessons" class="shell section">
+      <div class="section-kicker">WHAT WE LEARNED FROM THE ACTUAL PROMPTS</div>
+      <h2>High-value findings without reading every Markdown file.</h2>
+      <ol class="findings">
+        <li><strong>Song DNA is real and always on</strong> — a 12-field JSON blueprint, not a vague slogan.</li>
+        <li><strong>“Dynamic Band Lore” ≠ a lore system</strong> — implementation is interpretation + optional visual StyleMap.</li>
+        <li><strong>Default UI never triggers StyleMap</strong> — empty <code>image_style</code> skips the whole style block.</li>
+        <li><strong>StyleMap ignores lyrics</strong> — it uses band + song title and album-cover knowledge only.</li>
+        <li><strong>“Cinematic” is concrete craft language</strong> — depth, motivated light, motion, filmic materials — not just adjectives.</li>
+        <li><strong>Portraits conflict with safety text</strong> — exact face match vs “no recognizable real people.”</li>
+        <li><strong>Identity dies at attempt 4</strong> — retries preserve mood longer than the user’s face.</li>
+        <li><strong>Branding fights “no text”</strong> — same prompt demands and forbids visible captions.</li>
+        <li><strong>Full lyrics persist in DB</strong> even though analysis is told not to quote them.</li>
+        <li><strong>One giant prompt does too many jobs</strong> — V2 should compile from intermediate artifacts.</li>
+      </ol>
     </section>
 
     <section class="shell section">
@@ -95,11 +191,11 @@
         <ul class="checklist good">
           <li>Song interpretation before image generation</li>
           <li>Explicit Song DNA as a domain artifact</li>
-          <li>Dynamic artist/band visual identity</li>
+          <li>Artist/band visual identity as its own brief</li>
           <li>Portrait-reference creation mode</li>
           <li>Durable async generation jobs</li>
           <li>Personal project/gallery history</li>
-          <li>Progressive retry and safety fallbacks</li>
+          <li>Progressive retry — reordered to protect identity</li>
         </ul>
       </div>
       <div>
@@ -107,13 +203,24 @@
         <h2>What should not be copied blindly.</h2>
         <ul class="checklist warn">
           <li>Multiple overlapping PHP worker scripts</li>
-          <li>Duplicate Stripe webhook implementations</li>
-          <li>Mutable credit columns as the accounting system</li>
+          <li>Marketing “lore” without a lore subsystem</li>
+          <li>Silent portrait dropping on success</li>
+          <li>Contradictory branding / no-text prompts</li>
           <li>Hardwired Gemini model versions</li>
-          <li>Inconsistent plan enforcement</li>
-          <li>Public storage assumptions for user media</li>
-          <li>Legacy mobile redirects and duplicated generators</li>
+          <li>Full lyric persistence by default</li>
+          <li>One mega-prompt doing every creative job</li>
         </ul>
+      </div>
+    </section>
+
+    <section class="shell section">
+      <div class="section-kicker">CREATIVE AUDIT LIBRARY</div>
+      <h2>New deep-dive documents.</h2>
+      <div class="docs-list">
+        <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/09-v1-creative-engine-audit.md"><b>09</b><span><strong>Creative Engine Audit</strong><small>Forensic reconstruction of Song DNA, StyleMap, portraits, retries and lore vs style.</small></span></a>
+        <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/10-v1-prompt-pipeline.md"><b>10</b><span><strong>Prompt Pipeline</strong><small>Stage-by-stage transformations, schemas, retention matrix and worker variance.</small></span></a>
+        <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/11-v2-prompt-refinement-plan.md"><b>11</b><span><strong>V2 Prompt Refinement Plan</strong><small>Proposed multi-artifact pipeline — research only, not implemented.</small></span></a>
+        <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/12-open-creative-decisions.md"><b>12</b><span><strong>Open Creative Decisions</strong><small>Owner questions on lore, portraits, lyrics, branding and retries.</small></span></a>
       </div>
     </section>
 
@@ -136,8 +243,8 @@
     <section class="shell section final-panel">
       <div>
         <div class="section-kicker">CURRENT PHASE</div>
-        <h2>Understand the creative engine first. Build second.</h2>
-        <p>The next high-value analysis is to extract the exact Song DNA schema, Dynamic StyleMap schema, prompt structure and retry chain so the unique creative intelligence of Arcana survives the rebuild.</p>
+        <h2>Creative engine mapped. Decide next — then build.</h2>
+        <p>The forensic audit is in. Next high-value step is an owner workshop on lore-vs-style, portrait honesty, and lyrics architecture before any vertical slice.</p>
       </div>
       <div class="freeze-badge">PLANNING<br>ONLY</div>
     </section>
