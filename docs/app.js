@@ -10,6 +10,36 @@
     return lines[Math.floor(Math.random() * lines.length)];
   }
 
+  function mountDeliveryBanner() {
+    const overview = document.getElementById("overview");
+    if (!overview || !data.deliveryPath || document.getElementById("delivery-path-banner")) return;
+
+    const style = document.createElement("style");
+    style.textContent = `
+      .delivery-path-banner{grid-column:1/-1;display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;margin:0 0 20px;padding:14px 18px;border:1px solid rgba(56,189,248,.35);border-radius:16px;background:linear-gradient(90deg,rgba(124,58,237,.18),rgba(56,189,248,.1));box-shadow:0 0 28px rgba(56,189,248,.08)}
+      .delivery-path-banner .delivery-kicker{font:600 11px/1.2 "IBM Plex Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:#7dd3fc;white-space:nowrap}
+      .delivery-path-banner strong{display:block;font:700 clamp(16px,2vw,22px)/1.2 "Outfit",sans-serif;color:#f8fafc;margin-bottom:3px}
+      .delivery-path-banner p{margin:0;color:#cbd5e1;font-size:14px;line-height:1.45}
+      .delivery-path-banner .delivery-stack{font:600 12px/1.2 "IBM Plex Mono",monospace;color:#c4b5fd;white-space:nowrap}
+      @media(max-width:760px){.delivery-path-banner{grid-template-columns:1fr;gap:7px}.delivery-path-banner .delivery-stack{white-space:normal}}
+    `;
+    document.head.appendChild(style);
+
+    const banner = document.createElement("div");
+    banner.id = "delivery-path-banner";
+    banner.className = "delivery-path-banner";
+    banner.setAttribute("role", "note");
+    banner.innerHTML = `
+      <div class="delivery-kicker">DELIVERY PATH // ACCEPTED PAWPRINT</div>
+      <div>
+        <strong>${data.deliveryPath}</strong>
+        <p>${data.deliveryDetail || "The web rebuild establishes the shared backend for the later mobile client."}</p>
+      </div>
+      <div class="delivery-stack">PHP + SQLite → Flutter + Dart</div>
+    `;
+    overview.insertBefore(banner, overview.firstChild);
+  }
+
   function hydrate() {
     const bubble = document.getElementById("cat-says-text");
     if (bubble) bubble.textContent = pickCatLine();
@@ -94,6 +124,7 @@
   }
 
   document.addEventListener("DOMContentLoaded", () => {
+    mountDeliveryBanner();
     hydrate();
     wireNav();
     wireRefreshCat();
