@@ -21,6 +21,8 @@ This directory is the durable planning area for rebuilding AISaga Arcana as YouA
 - `10-v1-prompt-pipeline.md` — stage-by-stage prompt transformations, schemas, and retention matrix
 - `11-v2-prompt-refinement-plan.md` — **PROPOSED — NOT IMPLEMENTED** multi-artifact creative pipeline and prompt specs
 - `12-open-creative-decisions.md` — unresolved creative/product questions for owner decisions
+- `13-prompting-functionality-reference.md` — comprehensive V1 prompt-system map covering hardcoded, runtime, database, model-generated and retry prompt behavior
+- `14-prompt-quality-and-refinement-analysis.md` — prompt-quality critique, governance recommendations, DB-style revisioning, and V2 refinement strategy
 
 ## Evidence labels
 
@@ -50,13 +52,22 @@ The traced V1 system includes accounts/authentication, invite registration, emai
 - The strongest V1 creative ideas to keep: staged DNA, portrait-as-protagonist, soft custom instructions, async jobs, StyleMap-as-design-brief.
 - The weakest: mega-prompt contradictions, lore/style naming confusion, silent identity loss, lyric persistence, corrupted v3 retry prompt text vs intact sequential workers.
 
+### Prompt-system headline (2026-08-27)
+
+- V1 prompting comes from **five distinct sources**: hardcoded source templates, runtime prompt assembly, database-stored style prompts, model-generated intermediate artifacts, and fallback/retry mutations.
+- Later V1 stores static style directives in `arcana_styles.prompt_text` and provides admin CRUD for those prompts.
+- An older worker preserves a **large inline style catalog** spanning artistic media, genres, eras, cinematic looks, and experimental dynamic-analysis styles; this is strong evidence for the lineage of the later DB catalog.
+- Without a final production database export, the exact final DB style rows cannot be proven from Git alone.
+- V2 should preserve the behavioral intelligence while giving prompts/specs immutable versions, revisions, hashes, tests, and generation provenance.
+
 ## Next assessment / design pass
 
 Continue without implementation by:
 
 1. owner workshop on `12-open-creative-decisions.md` (especially lore meaning, portrait promise, lyrics architecture);
-2. refining accepted contracts from `11-v2-prompt-refinement-plan.md` after decisions;
-3. complete user-facing route/screen inventory with keep/change/retire classification;
-4. provisional V1 schema map from referenced tables/columns;
-5. production schema comparison when a schema-only database export becomes available;
-6. product decisions about plans/credits, gallery/project model, privacy/sharing, and legacy migration.
+2. use `13` and `14` to define the prompt functionality we intentionally want to preserve/refine;
+3. recover/export the final V1 `arcana_styles` rows if the old database is available, then diff them against the inline style catalog;
+4. refine accepted contracts from `11-v2-prompt-refinement-plan.md` after decisions;
+5. complete user-facing route/screen inventory with keep/change/retire classification;
+6. provisional V1 schema map from referenced tables/columns;
+7. product decisions about plans/credits, gallery/project model, privacy/sharing, and legacy migration.
