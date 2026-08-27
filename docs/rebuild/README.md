@@ -23,6 +23,8 @@ This directory is the durable planning area for rebuilding AISaga Arcana as YouA
 - `12-open-creative-decisions.md` — unresolved creative/product questions for owner decisions
 - `13-prompting-functionality-reference.md` — comprehensive V1 prompt-system map covering hardcoded, runtime, database, model-generated and retry prompt behavior
 - `14-prompt-quality-and-refinement-analysis.md` — prompt-quality critique, governance recommendations, DB-style revisioning, and V2 refinement strategy
+- `15-v2-systems-inventory.md` — full V2 systems inventory / implementation map (planning only; auth through ops/testing)
+- `16-v2-build-map-summary.md` — short build-map summary, dependency diagram, and phased implementation order
 
 ## Evidence labels
 
@@ -60,6 +62,15 @@ The traced V1 system includes accounts/authentication, invite registration, emai
 - Without a final production database export, the exact final DB style rows cannot be proven from Git alone.
 - V2 should preserve the behavioral intelligence while giving prompts/specs immutable versions, revisions, hashes, tests, and generation provenance.
 
+## Systems inventory / build map (2026-08-27)
+
+Planning-only map of every major V2 piece (identity through Flutter/ops/testing), with MVP classification and phased order:
+
+- **Detail:** `15-v2-systems-inventory.md`
+- **Glanceable summary:** `16-v2-build-map-summary.md`
+
+Use these to see the product skeleton before any freeze lift. They separate V1 evidence, accepted ADRs, recommendations, and open decisions.
+
 ## Next assessment / design pass
 
 Continue without implementation by:
@@ -68,6 +79,7 @@ Continue without implementation by:
 2. use `13` and `14` to define the prompt functionality we intentionally want to preserve/refine;
 3. recover/export the final V1 `arcana_styles` rows if the old database is available, then diff them against the inline style catalog;
 4. refine accepted contracts from `11-v2-prompt-refinement-plan.md` after decisions;
-5. complete user-facing route/screen inventory with keep/change/retire classification;
-6. provisional V1 schema map from referenced tables/columns;
-7. product decisions about plans/credits, gallery/project model, privacy/sharing, and legacy migration.
+5. use `15` / `16` in owner review — trim anything overcomplicated, fill gaps against V1 audits;
+6. complete user-facing route/screen inventory with keep/change/retire classification;
+7. provisional V1 schema map from referenced tables/columns;
+8. product decisions about plans/credits, gallery/project model, privacy/sharing, and legacy migration.
