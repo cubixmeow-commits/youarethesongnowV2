@@ -25,7 +25,6 @@
 
   function wireNav() {
     const toggle = document.getElementById("nav-toggle");
-    const closeBtn = document.getElementById("nav-close");
     const panel = document.getElementById("side-nav");
     const backdrop = document.getElementById("nav-backdrop");
     if (!toggle || !panel) return;
@@ -36,20 +35,12 @@
       panel.classList.toggle("is-open", open);
       document.body.classList.toggle("nav-open", open);
       toggle.setAttribute("aria-expanded", open ? "true" : "false");
-      toggle.textContent = open ? "Close" : "Menu";
+      toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
       if (backdrop) {
-        backdrop.hidden = !open;
+        if (open) backdrop.removeAttribute("hidden");
+        else backdrop.setAttribute("hidden", "");
         backdrop.classList.toggle("is-visible", open);
       }
-      if (open && isMobileNav()) {
-        closeBtn?.focus();
-      } else if (!open) {
-        toggle.focus({ preventScroll: true });
-      }
-    }
-
-    function openNav() {
-      setOpen(true);
     }
 
     function closeNav() {
@@ -61,16 +52,17 @@
     }
 
     toggle.addEventListener("click", (event) => {
+      event.preventDefault();
       event.stopPropagation();
       toggleNav();
     });
 
-    closeBtn?.addEventListener("click", (event) => {
-      event.stopPropagation();
-      closeNav();
-    });
-
-    backdrop?.addEventListener("click", closeNav);
+    if (backdrop) {
+      backdrop.addEventListener("click", (event) => {
+        event.preventDefault();
+        closeNav();
+      });
+    }
 
     panel.querySelectorAll(".rail-nav a").forEach((link) => {
       link.addEventListener("click", () => {
@@ -84,9 +76,12 @@
       }
     });
 
-    window.matchMedia(MOBILE_NAV_MQ).addEventListener("change", (event) => {
+    const mq = window.matchMedia(MOBILE_NAV_MQ);
+    const onMq = (event) => {
       if (!event.matches) closeNav();
-    });
+    };
+    if (typeof mq.addEventListener === "function") mq.addEventListener("change", onMq);
+    else if (typeof mq.addListener === "function") mq.addListener(onMq);
   }
 
   function wireRefreshCat() {

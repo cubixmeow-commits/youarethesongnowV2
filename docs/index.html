@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Sora:wght@500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=20260827b" />
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -18,7 +18,20 @@
   <div class="glow glow-a" aria-hidden="true"></div>
   <div class="glow glow-b" aria-hidden="true"></div>
 
-  <div class="nav-backdrop" id="nav-backdrop" hidden></div>
+  <button type="button" class="nav-backdrop" id="nav-backdrop" aria-label="Close menu" hidden></button>
+
+  <button
+    class="nav-toggle"
+    id="nav-toggle"
+    type="button"
+    aria-expanded="false"
+    aria-controls="side-nav"
+    aria-label="Open menu"
+  >
+    <span class="nav-toggle-bars" aria-hidden="true">
+      <span></span><span></span><span></span>
+    </span>
+  </button>
 
   <div class="app-shell">
     <aside class="rail" id="side-nav" aria-label="Meow Control navigation">
@@ -35,7 +48,6 @@
           <div class="rail-title">Meow Control</div>
           <div class="rail-sub">CuBiX Meow + Brut</div>
         </div>
-        <button class="rail-close" id="nav-close" type="button" aria-label="Close menu">Close</button>
       </div>
 
       <nav class="rail-nav">
@@ -57,7 +69,7 @@
 
     <div class="stage">
       <header class="topbar">
-        <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="side-nav">Menu</button>
+        <div class="topbar-spacer" aria-hidden="true"></div>
         <div class="topbar-meta">
           <span class="mono">youarethesongnowV2</span>
           <span class="dot" aria-hidden="true"></span>
@@ -377,7 +389,7 @@
     </div>
   </div>
 
-  <script src="dashboard-data.js"></script>
-  <script src="app.js"></script>
+  <script src="dashboard-data.js?v=20260827b"></script>
+  <script src="app.js?v=20260827b"></script>
 </body>
 </html>
