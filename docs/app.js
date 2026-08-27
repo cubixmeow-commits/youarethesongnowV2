@@ -21,7 +21,14 @@
       .delivery-path-banner strong{display:block;font:700 clamp(16px,2vw,22px)/1.2 "Outfit",sans-serif;color:#f8fafc;margin-bottom:3px}
       .delivery-path-banner p{margin:0;color:#cbd5e1;font-size:14px;line-height:1.45}
       .delivery-path-banner .delivery-stack{font:600 12px/1.2 "IBM Plex Mono",monospace;color:#c4b5fd;white-space:nowrap}
-      @media(max-width:760px){.delivery-path-banner{grid-template-columns:1fr;gap:7px}.delivery-path-banner .delivery-stack{white-space:normal}}
+      .prompt-update-banner{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;margin:18px 0 0;padding:18px 20px;border:1px solid rgba(167,139,250,.32);border-radius:16px;background:linear-gradient(100deg,rgba(91,33,182,.14),rgba(15,23,42,.5));box-shadow:0 0 28px rgba(124,58,237,.08)}
+      .prompt-update-banner .prompt-kicker{font:600 11px/1.2 "IBM Plex Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:#c4b5fd;margin:0 0 6px}
+      .prompt-update-banner strong{display:block;font:700 clamp(17px,2vw,23px)/1.2 "Outfit",sans-serif;color:#f8fafc;margin-bottom:5px}
+      .prompt-update-banner p{margin:0;color:#cbd5e1;font-size:14px;line-height:1.5}
+      .prompt-update-links{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
+      .prompt-update-links a{font:600 11px/1.2 "IBM Plex Mono",monospace;text-decoration:none;color:#e9d5ff;border:1px solid rgba(196,181,253,.3);border-radius:999px;padding:8px 10px;background:rgba(124,58,237,.11)}
+      .prompt-update-links a:hover{border-color:rgba(125,211,252,.55);color:#bae6fd}
+      @media(max-width:760px){.delivery-path-banner,.prompt-update-banner{grid-template-columns:1fr;gap:9px}.delivery-path-banner .delivery-stack{white-space:normal}.prompt-update-links{justify-content:flex-start}}
     `;
     document.head.appendChild(style);
 
@@ -38,6 +45,35 @@
       <div class="delivery-stack">PHP + SQLite → Flutter + Dart</div>
     `;
     overview.insertBefore(banner, overview.firstChild);
+  }
+
+  function mountPromptSystemUpdate() {
+    const overview = document.getElementById("overview");
+    if (!overview || document.getElementById("prompt-system-update")) return;
+
+    const banner = document.createElement("div");
+    banner.id = "prompt-system-update";
+    banner.className = "prompt-update-banner";
+    banner.setAttribute("role", "note");
+
+    const refUrl = data.promptReferenceUrl || "#engine";
+    const analysisUrl = data.promptAnalysisUrl || "#engine";
+    const vaultUrl = data.promptVaultUrl || "#engine";
+
+    banner.innerHTML = `
+      <div>
+        <p class="prompt-kicker">NEW RESEARCH // PROMPT SYSTEM</p>
+        <strong>${data.promptSystemStatus || "V1 prompt functionality mapped"}</strong>
+        <p>${data.promptSystemDetail || "The legacy prompting system is now documented as application behavior rather than one giant prompt."}</p>
+      </div>
+      <div class="prompt-update-links">
+        <a href="${refUrl}">Functionality ↗</a>
+        <a href="${analysisUrl}">Refinement ↗</a>
+        <a href="${vaultUrl}">Vault Map ↗</a>
+      </div>
+    `;
+
+    overview.insertAdjacentElement("afterend", banner);
   }
 
   function hydrate() {
@@ -125,6 +161,7 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     mountDeliveryBanner();
+    mountPromptSystemUpdate();
     hydrate();
     wireNav();
     wireRefreshCat();
