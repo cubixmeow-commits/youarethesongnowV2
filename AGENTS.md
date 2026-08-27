@@ -8,7 +8,23 @@ YouAreTheSongNow V2 is a clean web + mobile rebuild of AISaga Arcana. The legacy
 
 V1 is a **reference implementation**, not a template to port wholesale.
 
-## Before changing code
+## CURRENT BUILD FREEZE
+
+**Do not scaffold, implement, install frameworks, create application source, create migrations, or otherwise begin building V2 until the project owners explicitly end this freeze.**
+
+Allowed work during the freeze:
+
+- inspect V1 source;
+- document verified behavior;
+- create feature/route/data/integration inventories;
+- write assessment and migration Markdown;
+- create architecture diagrams/ADRs marked proposed;
+- record product questions and owner decisions;
+- compare legacy schemas/configuration without modifying production.
+
+If asked to work in this repository without an explicit instruction to begin implementation, default to planning/analysis only.
+
+## Before changing code after the freeze is lifted
 
 1. Read `docs/rebuild/README.md`.
 2. Read the relevant architecture/migration notes.
@@ -39,4 +55,4 @@ V1 is a **reference implementation**, not a template to port wholesale.
 
 ## Immediate objective
 
-Complete the V1 feature/data/integration inventory, then build one thin V2 vertical slice that proves the web/mobile/shared-backend architecture before expanding scope.
+Continue the V1 assessment: extract exact Song DNA and Dynamic Band Style behavior, map routes and schema, identify migration-worthy data, and capture owner product decisions. Do not begin the vertical slice until the owners explicitly approve implementation.
