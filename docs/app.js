@@ -21,7 +21,18 @@
       .delivery-path-banner strong{display:block;font:700 clamp(16px,2vw,22px)/1.2 "Outfit",sans-serif;color:#f8fafc;margin-bottom:3px}
       .delivery-path-banner p{margin:0;color:#cbd5e1;font-size:14px;line-height:1.45}
       .delivery-path-banner .delivery-stack{font:600 12px/1.2 "IBM Plex Mono",monospace;color:#c4b5fd;white-space:nowrap}
-      @media(max-width:760px){.delivery-path-banner{grid-template-columns:1fr;gap:7px}.delivery-path-banner .delivery-stack{white-space:normal}}
+      .workshop-panel{margin:26px 0;padding:24px;border:1px solid rgba(167,139,250,.32);border-radius:20px;background:linear-gradient(135deg,rgba(91,33,182,.14),rgba(15,23,42,.74));box-shadow:0 0 34px rgba(124,58,237,.08)}
+      .workshop-panel .workshop-grid{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center}
+      .workshop-panel .workshop-kicker{font:600 11px/1.2 "IBM Plex Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:#c4b5fd;margin:0 0 7px}
+      .workshop-panel h2{margin:0 0 8px;font:700 clamp(22px,3vw,32px)/1.1 "Outfit",sans-serif;color:#f8fafc}
+      .workshop-panel p{margin:0;color:#cbd5e1;line-height:1.55;max-width:820px}
+      .workshop-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+      .workshop-meta span{font:600 11px/1.2 "IBM Plex Mono",monospace;color:#bae6fd;border:1px solid rgba(125,211,252,.25);border-radius:999px;padding:7px 9px;background:rgba(2,6,23,.34)}
+      .workshop-actions{display:flex;flex-direction:column;gap:9px;min-width:190px}
+      .workshop-actions a{text-align:center;text-decoration:none;font:600 12px/1.2 "IBM Plex Mono",monospace;border-radius:12px;padding:11px 14px}
+      .workshop-actions .primary{color:#fff;border:1px solid rgba(125,211,252,.42);background:linear-gradient(90deg,rgba(124,58,237,.35),rgba(56,189,248,.18))}
+      .workshop-actions .secondary{color:#d8b4fe;border:1px solid rgba(196,181,253,.25);background:rgba(15,23,42,.45)}
+      @media(max-width:760px){.delivery-path-banner{grid-template-columns:1fr;gap:7px}.delivery-path-banner .delivery-stack{white-space:normal}.workshop-panel .workshop-grid{grid-template-columns:1fr}.workshop-actions{min-width:0}}
     `;
     document.head.appendChild(style);
 
@@ -38,6 +49,45 @@
       <div class="delivery-stack">PHP + SQLite → Flutter + Dart</div>
     `;
     overview.insertBefore(banner, overview.firstChild);
+  }
+
+  function mountFeatureWorkshop() {
+    const focus = document.getElementById("focus");
+    if (!focus || document.getElementById("feature-workshop")) return;
+
+    const section = document.createElement("section");
+    section.id = "feature-workshop";
+    section.className = "workshop-panel";
+    section.innerHTML = `
+      <div class="workshop-grid">
+        <div>
+          <p class="workshop-kicker">TONIGHT // FEATURE DEFINITION WORKSHOP</p>
+          <h2>Turn 515 exploratory questions into the exact first-build contract.</h2>
+          <p>A guided facilitator prompt now walks CuBiX Meow and Brut through one owner-gate question at a time, classifying each feature as FIRST BUILD, SOON AFTER, LATER, MAYBE / RESEARCH, or NO / RETIRE. The final output is a concrete build-one feature contract, not a wish list.</p>
+          <div class="workshop-meta">
+            <span>515-question vault source</span>
+            <span>one question at a time</span>
+            <span>copy-ready prompt</span>
+            <span>build freeze stays active</span>
+          </div>
+        </div>
+        <div class="workshop-actions">
+          <a class="primary" href="feature-workshop.html">Open + Copy Prompt →</a>
+          <a class="secondary" href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/development-vault/05%20Product%20Design/First%20Build%20Feature%20Workshop.md">Full Vault Workshop ↗</a>
+        </div>
+      </div>
+    `;
+    focus.insertAdjacentElement("afterend", section);
+
+    const nav = document.querySelector(".rail-nav");
+    if (nav && !nav.querySelector('a[href="#feature-workshop"]')) {
+      const link = document.createElement("a");
+      link.href = "#feature-workshop";
+      link.textContent = "Feature Workshop";
+      const decisionsLink = nav.querySelector('a[href="#decisions"]');
+      if (decisionsLink) nav.insertBefore(link, decisionsLink);
+      else nav.appendChild(link);
+    }
   }
 
   function mountPromptSystemUpdate() {
@@ -151,6 +201,7 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     mountDeliveryBanner();
+    mountFeatureWorkshop();
     mountPromptSystemUpdate();
     hydrate();
     wireNav();
