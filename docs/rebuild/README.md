@@ -17,6 +17,10 @@ This directory is the durable planning area for rebuilding AISaga Arcana as YouA
 - `06-v1-feature-map.md` — verified V1 capability map and canonical creative/generation flow
 - `07-v1-data-integrations-audit.md` — V1 tables, storage, Gemini, Stripe, email, Turnstile and migration implications
 - `08-v1-risks-and-decisions.md` — implementation risks, unknowns, deferred decisions, and explicit build freeze
+- `09-v1-creative-engine-audit.md` — forensic audit of Song DNA, Dynamic Band Style/Lore, portraits, retries, and prompt behavior
+- `10-v1-prompt-pipeline.md` — stage-by-stage prompt transformations, schemas, and retention matrix
+- `11-v2-prompt-refinement-plan.md` — **PROPOSED — NOT IMPLEMENTED** multi-artifact creative pipeline and prompt specs
+- `12-open-creative-decisions.md` — unresolved creative/product questions for owner decisions
 
 ## Evidence labels
 
@@ -26,6 +30,7 @@ Use these labels in future assessment notes:
 - **Inferred** — strongly suggested by evidence but not yet traced end-to-end.
 - **Proposed** — a V2 design recommendation, not a statement about V1.
 - **Decision** — explicitly accepted for V2 by the project owners.
+- **Open Question** — requires a product decision or unavailable production evidence.
 
 ## Important warning
 
@@ -35,16 +40,23 @@ The V1 repository contains documentation that is not consistently about Arcana. 
 
 The traced V1 system includes accounts/authentication, invite registration, email verification, plans and credits, a queued image-generation form, Song DNA analysis, static and Dynamic Band Style logic, cinematic prompt construction, portrait references, Gemini image generation, multi-step safety/retry fallbacks, gallery/history, local + Backblaze B2 media storage, Stripe checkout/subscriptions/credit packs, email/notifications, admin tools, maintenance mode, and public/system pages.
 
-The strongest V1 design concept to retain is asynchronous generation: submission creates durable queued work, while background workers perform creative analysis and rendering. The weakest areas are duplicated legacy worker/payment paths, plan-model drift, incomplete schema provenance, mutable credit accounting, and production configuration that cannot be proven from source alone.
+### Creative-engine headline (2026-08-27)
 
-## Next assessment pass
+- **Song DNA** is a real 12-field Gemini JSON blueprint and is the always-on interpretation stage.
+- **Dynamic Band Style** (`ANALYZE_BAND_STYLE`) is a real optional StyleMap path derived from album-cover visual knowledge — a **visual-style generator**, not a lore bible.
+- **“Dynamic Band Lore Engine™”** is primarily marketing language for the overall pipeline; V1 does **not** implement a separate song lore/story subsystem in the queue workers.
+- The generator UI default is labeled as the Lore Engine but submits an empty `image_style`, so StyleMap analysis does **not** run for default users.
+- Portraits are dropped at retry attempt 4; users are not clearly told when a successful image abandoned their identity.
+- The strongest V1 creative ideas to keep: staged DNA, portrait-as-protagonist, soft custom instructions, async jobs, StyleMap-as-design-brief.
+- The weakest: mega-prompt contradictions, lore/style naming confusion, silent identity loss, lyric persistence, corrupted v3 retry prompt text vs intact sequential workers.
 
-Continue without implementation by extracting and documenting:
+## Next assessment / design pass
 
-1. exact Song DNA schema and prompt;
-2. exact Dynamic Band StyleMap schema/prompt/fallback;
-3. ordered image retry/safety chain;
-4. complete user-facing route/screen inventory with keep/change/retire classification;
-5. referenced DB tables/columns into a provisional V1 schema map;
-6. production schema comparison when a schema-only database export becomes available;
-7. product decisions about inputs, portraits, plans/credits, gallery/project model, privacy/sharing, and legacy migration.
+Continue without implementation by:
+
+1. owner workshop on `12-open-creative-decisions.md` (especially lore meaning, portrait promise, lyrics architecture);
+2. refining accepted contracts from `11-v2-prompt-refinement-plan.md` after decisions;
+3. complete user-facing route/screen inventory with keep/change/retire classification;
+4. provisional V1 schema map from referenced tables/columns;
+5. production schema comparison when a schema-only database export becomes available;
+6. product decisions about plans/credits, gallery/project model, privacy/sharing, and legacy migration.
