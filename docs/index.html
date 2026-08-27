@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#090a12" />
+  <title>You Are The Song Now — V2 Rebuild Lab</title>
+  <meta name="description" content="Planning dashboard for the YouAreTheSongNow V2 rebuild." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="aurora aurora-one"></div>
+  <div class="aurora aurora-two"></div>
+
+  <header class="hero shell">
+    <div class="eyebrow">YOU ARE THE SONG NOW · V2 REBUILD LAB</div>
+    <h1>Turning the old Arcana into<br><span>a modern creative engine.</span></h1>
+    <p class="lede">A living view of what we discovered in V1, what deserves to survive, what needs redesign, and what still needs a product decision before we build anything.</p>
+    <div class="hero-actions">
+      <a class="button primary" href="#discoveries">Explore the audit</a>
+      <a class="button secondary" href="https://github.com/cubixmeow-commits/youarethesongnowV2/tree/main/docs/rebuild">Open planning docs</a>
+    </div>
+    <div class="status-strip">
+      <div><strong>36</strong><span>V1 capabilities mapped</span></div>
+      <div><strong>8</strong><span>major product areas</span></div>
+      <div><strong>0</strong><span>V2 implementation started</span></div>
+      <div><strong>BUILD FREEZE</strong><span>planning only</span></div>
+    </div>
+  </header>
+
+  <main>
+    <section id="discoveries" class="shell section">
+      <div class="section-kicker">WHAT WE FOUND</div>
+      <h2>Arcana was already more ambitious than a simple image generator.</h2>
+      <p class="section-intro">The legacy app had a real creative pipeline: interpret the song, derive structured visual meaning, build a cinematic prompt, generate the image, recover from failures, save the result, and manage the user's history.</p>
+
+      <div class="grid three">
+        <article class="card glow-purple">
+          <span class="card-number">01</span>
+          <h3>Song DNA</h3>
+          <p>Lyrics, artist and song context were analyzed into structured themes, mood, palette, camera and composition ideas before image generation began.</p>
+          <div class="tag">CORE CONCEPT</div>
+        </article>
+        <article class="card glow-blue">
+          <span class="card-number">02</span>
+          <h3>Dynamic Band Style</h3>
+          <p>A special analysis path could build a band-specific StyleMap so the imagery felt attached to the artist instead of using a generic visual preset.</p>
+          <div class="tag">PARTIALLY EXPOSED IN V1</div>
+        </article>
+        <article class="card glow-pink">
+          <span class="card-number">03</span>
+          <h3>You enter the image</h3>
+          <p>Users could provide one or two portrait references that were incorporated into the generated scene, one of the defining ideas behind YouAreTheSongNow.</p>
+          <div class="tag">PRODUCT DIFFERENTIATOR</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="shell section process-section">
+      <div class="section-kicker">THE V1 CREATIVE PIPELINE</div>
+      <h2>A staged interpretation engine, not one giant prompt.</h2>
+      <div class="pipeline">
+        <div class="step"><span>1</span><strong>Song Input</strong><small>artist · song · lyrics · instructions</small></div>
+        <div class="arrow">→</div>
+        <div class="step"><span>2</span><strong>Song DNA</strong><small>themes · mood · palette · camera</small></div>
+        <div class="arrow">→</div>
+        <div class="step"><span>3</span><strong>StyleMap</strong><small>static or dynamic band identity</small></div>
+        <div class="arrow">→</div>
+        <div class="step"><span>4</span><strong>Cinematic Prompt</strong><small>composition · portrait · framing</small></div>
+        <div class="arrow">→</div>
+        <div class="step"><span>5</span><strong>Image</strong><small>retry · store · gallery</small></div>
+      </div>
+      <p class="callout">The strongest architectural idea to preserve is the separation between <b>submission</b> and <b>generation</b>. The browser queued work and a background worker performed the expensive AI pipeline.</p>
+    </section>
+
+    <section class="shell section">
+      <div class="section-kicker">WHAT V1 ACTUALLY CONTAINED</div>
+      <h2>Eight product systems were intertwined in the old app.</h2>
+      <div class="grid four compact">
+        <article class="mini-card"><h3>Accounts</h3><p>Registration, login, verification, password reset, profile and maintenance access.</p></article>
+        <article class="mini-card"><h3>Plans & Credits</h3><p>Tier-gated features plus image/story credits and Stripe-backed purchasing.</p></article>
+        <article class="mini-card"><h3>Generator</h3><p>Song inputs, custom instructions, styles, portraits, aspect ratios and queue submission.</p></article>
+        <article class="mini-card"><h3>AI Workers</h3><p>Song analysis, prompt construction, image generation, retries and notifications.</p></article>
+        <article class="mini-card"><h3>Gallery</h3><p>Search, sorting, pagination, lightbox, email and deletion of renders.</p></article>
+        <article class="mini-card"><h3>Payments</h3><p>Checkout, subscriptions, credit packs and multiple legacy webhook paths.</p></article>
+        <article class="mini-card"><h3>Storage</h3><p>Local media plus Backblaze B2, thumbnails, portrait references and public URLs.</p></article>
+        <article class="mini-card"><h3>Admin & System</h3><p>Admin tools, maintenance mode, legal pages, feedback and transactional email.</p></article>
+      </div>
+    </section>
+
+    <section class="shell section split">
+      <div>
+        <div class="section-kicker">PRESERVE THE IDEA</div>
+        <h2>What looks worth carrying forward.</h2>
+        <ul class="checklist good">
+          <li>Song interpretation before image generation</li>
+          <li>Explicit Song DNA as a domain artifact</li>
+          <li>Dynamic artist/band visual identity</li>
+          <li>Portrait-reference creation mode</li>
+          <li>Durable async generation jobs</li>
+          <li>Personal project/gallery history</li>
+          <li>Progressive retry and safety fallbacks</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-kicker">LEAVE THE LEGACY BEHIND</div>
+        <h2>What should not be copied blindly.</h2>
+        <ul class="checklist warn">
+          <li>Multiple overlapping PHP worker scripts</li>
+          <li>Duplicate Stripe webhook implementations</li>
+          <li>Mutable credit columns as the accounting system</li>
+          <li>Hardwired Gemini model versions</li>
+          <li>Inconsistent plan enforcement</li>
+          <li>Public storage assumptions for user media</li>
+          <li>Legacy mobile redirects and duplicated generators</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="shell section">
+      <div class="section-kicker">PLANNING LIBRARY</div>
+      <h2>Read the full rebuild analysis.</h2>
+      <div class="docs-list">
+        <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/00-legacy-repo-assessment.md"><b>00</b><span><strong>Legacy Repo Assessment</strong><small>What V1 tells us and what not to trust automatically.</small></span></a>
+        <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/01-product-rebuild-brief.md"><b>01</b><span><strong>Product Rebuild Brief</strong><small>The intended V2 direction and open product questions.</small></span></a>
+        <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/02-target-architecture.md"><b>02</b><span><strong>Target Architecture</strong><small>A provisional modern web/mobile architecture.</small></span></a>
+        <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/03-migration-plan.md"><b>03</b><span><strong>Migration Plan</strong><small>How to preserve V1 knowledge and data without porting the app.</small></span></a>
+        <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/04-initial-backlog.md"><b>04</b><span><strong>Initial Backlog</strong><small>Ordered discovery and future implementation tasks.</small></span></a>
+        <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/05-cursor-workflow.md"><b>05</b><span><strong>Cursor Workflow</strong><small>Rules for future agent-assisted development.</small></span></a>
+        <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/06-v1-feature-map.md"><b>06</b><span><strong>V1 Feature Map</strong><small>The detailed capability inventory and creative pipeline.</small></span></a>
+        <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/07-v1-data-integrations-audit.md"><b>07</b><span><strong>Data & Integrations Audit</strong><small>Database concepts, Gemini, Stripe, B2, SMTP and migration implications.</small></span></a>
+        <a href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/08-v1-risks-and-decisions.md"><b>08</b><span><strong>Risks & Decision Register</strong><small>Known traps, open decisions and the current build freeze.</small></span></a>
+      </div>
+    </section>
+
+    <section class="shell section final-panel">
+      <div>
+        <div class="section-kicker">CURRENT PHASE</div>
+        <h2>Understand the creative engine first. Build second.</h2>
+        <p>The next high-value analysis is to extract the exact Song DNA schema, Dynamic StyleMap schema, prompt structure and retry chain so the unique creative intelligence of Arcana survives the rebuild.</p>
+      </div>
+      <div class="freeze-badge">PLANNING<br>ONLY</div>
+    </section>
+  </main>
+
+  <footer class="shell footer">
+    <span>YouAreTheSongNow V2 · Rebuild Lab</span>
+    <a href="https://github.com/cubixmeow-commits/youarethesongnowV2">GitHub Repository ↗</a>
+  </footer>
+</body>
+</html>
