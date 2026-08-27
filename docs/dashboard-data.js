@@ -1,7 +1,6 @@
 /**
  * Meow Control — curated dashboard snapshot
  * Source of working truth: development-vault/
- * When vault current-state changes, update this file (and Dashboard Snapshot.md).
  */
 window.MEOW_CONTROL = {
   updated: "2026-08-27",
@@ -9,13 +8,16 @@ window.MEOW_CONTROL = {
   project: "YouAreTheSongNow V2",
   phase: "Planning / creative-engine design",
   buildStatus: "BUILD FREEZE",
-  buildStatusDetail: "planning only — no application scaffolding",
+  buildStatusDetail: "planning only",
   backend: "PHP",
   database: "SQLite (initial)",
+  mobile: "Flutter + Dart (iOS second)",
+  deliveryPath: "Web first → Flutter/Dart iOS second",
+  deliveryDetail: "Build and validate the PHP web app first. Then build the iOS client in Flutter/Dart using the same PHP API.",
   strategy: "Rebuild/refine V1 functionality, not V1 code",
-  mission:
-    "Turn a song into an interpreted cinematic visual experience, optionally placing the user inside that visual world.",
+  mission: "Turn a song into an interpreted cinematic visual experience, optionally placing the user inside that visual world.",
   catSays: [
+    "Web first. Then the cat goes mobile.",
     "Keep the scope tidy.",
     "Keep prompts modular.",
     "Protect portrait identity before style flourishes.",
@@ -23,8 +25,6 @@ window.MEOW_CONTROL = {
     "Vault first, then polish the dashboard.",
     "Brut-approved feline systems online."
   ],
-  vaultBase:
-    "https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/development-vault/",
-  docsRebuildBase:
-    "https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/"
+  vaultBase: "https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/development-vault/",
+  docsRebuildBase: "https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/"
 };
