@@ -16,6 +16,8 @@ window.MEOW_CONTROL = {
   deliveryDetail: "Build and validate the PHP web app first. Then build the iOS client in Flutter/Dart using the same PHP API.",
   strategy: "Rebuild/refine V1 functionality, not V1 code",
   mission: "Turn a song into an interpreted cinematic visual experience, optionally placing the user inside that visual world.",
+  workshopStatus: "Feature contract owner-approved",
+  workshopDetail: "CuBiX Meow and Brut approved the 35-decision First Build Feature Contract on 2026-08-27. The remaining movable build-freeze exit checklist is active.",
   promptSystemStatus: "V1 prompt functionality mapped",
   promptSystemDetail: "Five origins documented: source templates, runtime assembly, DB styles, model-generated artifacts, and retry mutations.",
   promptReferenceUrl: "https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/13-prompting-functionality-reference.md",

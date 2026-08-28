@@ -61,19 +61,19 @@
     section.innerHTML = `
       <div class="workshop-grid">
         <div>
-          <p class="workshop-kicker">TONIGHT // FEATURE DEFINITION WORKSHOP</p>
-          <h2>Turn 515 exploratory questions into the exact first-build contract.</h2>
-          <p>A guided facilitator prompt now walks CuBiX Meow and Brut through one owner-gate question at a time, classifying each feature as FIRST BUILD, SOON AFTER, LATER, MAYBE / RESEARCH, or NO / RETIRE. The final output is a concrete build-one feature contract, not a wish list.</p>
+          <p class="workshop-kicker">WORKSHOP COMPLETE // CONTRACT APPROVED</p>
+          <h2>Work the remaining movable freeze-exit checklist.</h2>
+          <p>CuBiX Meow and Brut approved the 35-decision first-build contract on 2026-08-27. It covers the paid invite-only beta, accounts, lyrics, portraits, creative stages, fifteen active launch styles plus 37 inactive admin-ready styles, model routing, credits, gallery/sharing, admin and Flutter-ready APIs.</p>
           <div class="workshop-meta">
-            <span>515-question vault source</span>
-            <span>one question at a time</span>
-            <span>copy-ready prompt</span>
+            <span>35 decisions completed</span>
+            <span>owner-approved contract</span>
+            <span>movable checklist</span>
             <span>build freeze stays active</span>
           </div>
         </div>
         <div class="workshop-actions">
-          <a class="primary" href="feature-workshop.html">Open + Copy Prompt →</a>
-          <a class="secondary" href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/development-vault/05%20Product%20Design/First%20Build%20Feature%20Workshop.md">Full Vault Workshop ↗</a>
+          <a class="primary" href="https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/development-vault/05%20Product%20Design/First%20Build%20Feature%20Contract.md">Open Approved Contract →</a>
+          <a class="secondary" href="feature-workshop.html">Open Workshop Record</a>
         </div>
       </div>
     `;
