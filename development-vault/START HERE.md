@@ -1,7 +1,7 @@
 ---
 type: current-state
 status: active
-updated: 2026-08-27
+updated: 2026-08-28
 area: project
 ---
 
@@ -11,9 +11,9 @@ This vault is the shared development memory for YouAreTheSongNow V2.
 
 ## Current phase
 
-**Planning / creative-engine design. Build freeze remains active.**
+**Private Development Build 1 preparation and implementation.**
 
-Do not begin application implementation until the owners explicitly lift the freeze.
+CuBiX Meow and Brut authorized Private Development Build 1 on 2026-08-28. External beta access, live Stripe charges and commercial use of protected lyrics remain gated.
 
 ## Delivery path
 
@@ -51,7 +51,7 @@ Song / source context
   -> Controlled retry
 ```
 
-This is still a design direction, not implemented code.
+This is the approved direction for the private Build 1 implementation. Provider assignments and final quality tiers remain provisional until benchmarked.
 
 ## Read next
 

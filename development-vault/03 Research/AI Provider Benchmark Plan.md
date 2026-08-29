@@ -17,17 +17,21 @@ Resolve build-freeze checklist item 4 by measuring candidate providers for creat
 
 ## Available provider: Groq
 
-CuBiX Meow has a Groq account and can create an API key when implementation/testing is authorized.
+CuBiX Meow has a Groq account. A project API key named `yatsn-v2-development` was created in the Groq Default Project on 2026-08-28 with a 90-day expiration of 2026-11-26.
 
 Current official Groq documentation shows production text/reasoning models and multimodal models that accept images but produce text. Groq is therefore a candidate for inexpensive reasoning and evaluation stages, not final image generation.
 
-No API key has been created, exposed or stored for this project. Key creation and secret configuration wait until the build freeze permits testing; use an environment secret rather than committing credentials.
+The secret value is stored in the owner's password manager and has not been placed in the repository, chat, website directory or Hostinger configuration. Installing or using the key waits for private-development authorization and protected server configuration.
 
 ## Tentative primary image hub: fal.ai
 
 CuBiX Meow and Brut tentatively selected fal.ai as the primary image-provider hub so the project can test multiple commercial image models through one queue/API integration. This is a benchmark starting point, not a final provider commitment.
 
 fal.ai remains acceptable only if testing confirms portrait privacy, commercial terms, deletion behavior, reliability and total cost. The application must call fal.ai only from the PHP server; never expose the fal API key to the web or Flutter client.
+
+A restricted API-scope key described as `DEVELOPMENT: yatsn-v2-development` was created on 2026-08-28. It can call inference endpoints but cannot manage keys, billing, usage or compute. The secret value is stored only in the owner's password manager and has not been placed in the repository, chat, website directory or Hostinger configuration. Installation and use wait for private-development authorization and protected server configuration.
+
+The owner purchased a one-time $25.00 fal.ai testing balance. The dashboard confirms a $25.00 current balance, no usage and automatic top-up off. Purchased credits currently show an expiration of 2027-08-28. Do not enable automatic top-up during initial benchmarking.
 
 ### Initial reference-image benchmark set
 

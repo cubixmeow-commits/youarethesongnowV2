@@ -48,6 +48,23 @@ Checked 2026-08-27:
 
 This is a clean starting point.
 
+## Verified sandbox configuration
+
+Configured and verified in the existing `Logan White sandbox` on 2026-08-28. Live mode remains unchanged.
+
+- Product: `You Are The Song Now Membership`
+- Product ID: `prod_V9u7U5J5YBam2F`
+- Description: `Monthly membership with credits for creating personalized artwork inspired by meaningful songs. Renews monthly until canceled.`
+- Recurring price: $20.00 USD per month
+- Price ID: `price_1U9aJb4PfCyRenfaFAn58fhb`
+- Lookup key: `yatsn_v2_membership_monthly`
+- Trial: none
+- Stripe automatically applied sandbox tax code `txcd_10000000`, General - Electronically Supplied Services. This remains provisional and must not be copied to live mode without the required qualified tax review.
+
+The sandbox Customer Portal is saved with invoice history, payment-method updates, billing-name updates, billing-address updates, cancellation at the end of the billing period and cancellation-reason collection enabled. Plan switching, quantity changes, phone editing and Stripe-side email editing are disabled. Email changes remain an application action so the new address can be verified. The portal header is `Manage your You Are The Song Now membership and billing.`
+
+The portal redirect remains unset until the application account route exists. Terms and Privacy links remain unset until the approved legal pages exist. The no-code test link is not activated because the application will create authenticated portal sessions through its server API.
+
 ## Recommended first-beta architecture
 
 1. One Stripe Product for the YouAreTheSongNow beta membership.

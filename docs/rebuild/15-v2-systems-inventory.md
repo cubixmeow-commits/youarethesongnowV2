@@ -1,9 +1,13 @@
 # 15 — V2 Systems Inventory & Implementation Map
 
 **Purpose:** comprehensive but practical inventory of every major system V2 will eventually need to build or integrate.  
-**Status:** planning / documentation only — **no implementation**. Build freeze remains active.  
+**Status:** implementation guidance for authorized Private Development Build 1. External and commercial launch gates remain active.
 **Assessment date:** 2026-08-27  
 **Companion summary:** `16-v2-build-map-summary.md`
+
+> **Superseding decision notice, 2026-08-28:** identity, invitations, sessions, API transport, privacy, deletion, sharing, abuse protection, owner audit and initial local-storage behavior are now owner-approved in `development-vault/05 Product Design/Implementation Readiness Contract.md` and `development-vault/07 Development/Shared API, Security and Data Contract.md`. Open or proposed statements on those topics below are historical inventory notes and must not override the approved contracts.
+
+> **Deployment decision notice, 2026-08-28:** Hostinger Premium Web Hosting, SQLite, a one-minute Cron Jobs worker, controlled `main` releases, Hostinger SMTP, local-media staging and the approved beta cost limits are defined in `development-vault/07 Development/Deployment and Operating Cost Contract.md`. VPS is the larger-deployment path.
 
 ---
 
@@ -38,7 +42,7 @@ Evidence hierarchy: accepted ADRs > Current Project notes > verified V1 behavior
 | SQLite initially; portable domain design | ADR-20260827-use-sqlite-initially | Accepted V2 direction |
 | Web first → Flutter + Dart iOS second; shared PHP HTTP/JSON APIs | ADR-20260827-web-first-then-flutter-ios | Accepted V2 direction |
 | Staged creative engine (design direction, not implemented) | Creative Engine / Product Definition | Accepted V2 direction (pipeline shape); stage contracts still open |
-| Build freeze active | AGENTS.md / owners | Accepted V2 direction |
+| Private Development Build 1 authorized | Owners, 2026-08-28 | Current V2 direction |
 
 ---
 
@@ -165,7 +169,7 @@ Treat **Project** as the user-facing owned object and **GenerationJob** as the e
 
 ### V2 product direction (Accepted intent, not full contracts)
 
-- Prefer **not** persisting raw lyrics by default unless explicitly chosen (Product Definition).
+- V2 decision: **never persist raw lyrics**. Process them only in volatile memory for one analysis, then discard them immediately.
 - Persist derived artifacts (interpretation / DNA) instead when possible.
 
 ### Inventory
@@ -174,7 +178,7 @@ Treat **Project** as the user-facing owned object and **GenerationJob** as the e
 |---|---|---|---|
 | Artist | Yes | Required | |
 | Song title | Yes | Required | |
-| Lyrics / input text | Open | Required as input path | Transient processing vs store — **Open Decision** |
+| Lyrics / input text | Resolved | Required as input path | Memory-only processing; never stored, logged, cached or backed up |
 | User instructions | Snapshot on job | Required | Soft steering |
 | Source provenance | Yes if multi-source | Later / Open | typed paste vs licensed vs search |
 | Metadata (aspect, style, flags) | Job snapshot | Required | Immutable after enqueue |

@@ -62,13 +62,13 @@
       <div class="workshop-grid">
         <div>
           <p class="workshop-kicker">WORKSHOP COMPLETE // CONTRACT APPROVED</p>
-          <h2>Work the remaining movable freeze-exit checklist.</h2>
+          <h2>Build privately while finishing the external-release gates.</h2>
           <p>CuBiX Meow and Brut approved the 35-decision first-build contract on 2026-08-27. It covers the paid invite-only beta, accounts, lyrics, portraits, creative stages, fifteen active launch styles plus 37 inactive admin-ready styles, model routing, credits, gallery/sharing, admin and Flutter-ready APIs.</p>
           <div class="workshop-meta">
             <span>35 decisions completed</span>
             <span>owner-approved contract</span>
             <span>movable checklist</span>
-            <span>build freeze stays active</span>
+            <span>private Build 1 authorized</span>
           </div>
         </div>
         <div class="workshop-actions">

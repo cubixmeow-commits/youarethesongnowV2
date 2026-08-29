@@ -14,11 +14,11 @@ source: First Build Feature Workshop
 
 ## Status
 
-**Approved by CuBiX Meow and Brut on 2026-08-27. Build freeze remains active.**
+**Approved by CuBiX Meow and Brut on 2026-08-27. The owners lifted the freeze for Private Development Build 1 on 2026-08-28. External beta and commercial launch gates remain active.**
 
-This contract records the decisions made in the focused 35-decision workshop. It defines the intended first web build and the backend foundation for the later Flutter/Dart iOS client. It does not authorize implementation until the freeze-exit checklist is complete and the owners explicitly lift the freeze.
+This contract records the decisions made in the focused 35-decision workshop. It defines the intended first web build and the backend foundation for the later Flutter/Dart iOS client. Private Development Build 1 is now authorized. Unfinished checklist items continue to block external beta, live charging and commercial launch rather than the private implementation foundation.
 
-After the checklist is complete and the freeze is explicitly lifted, the owners intend to use Cursor to implement the first version from the approved vault contracts, research, acceptance criteria and decision records. Conversation history is supporting context; the synchronized vault is the implementation source of truth.
+The owners intend to use Cursor to implement Private Development Build 1 from the approved vault contracts, research, acceptance criteria and decision records. Conversation history is supporting context; the synchronized vault is the implementation source of truth.
 
 ## Product promise
 
@@ -48,7 +48,7 @@ YouAreTheSongNow V2 lets a person turn a meaningful song into original, personal
 6. The user enters the artist/band and song title as free text.
 7. The system identifies the intended song, obtains legally usable lyrics or song context, and prepares the hidden creative analysis.
 8. On the same creation page, the user uploads or selects one or two saved portraits.
-9. The user chooses a curated style, low/medium/high quality, square/portrait/landscape orientation, and optional Special instructions.
+9. The user chooses a curated style, low/medium/high quality, square/portrait/landscape orientation, an optional `No text in image` setting, and optional Special instructions.
 10. The interface shows the credit price before submission.
 11. On the user's first generation attempt, an unsubscribed user sees the $20.00 monthly paywall after configuring the creation but before generation begins or a result is delivered.
 12. Successful Stripe payment grants the monthly credits and resumes the preserved creation; payment cancellation/failure preserves the inputs and performs no image generation.
@@ -95,7 +95,7 @@ YouAreTheSongNow V2 lets a person turn a meaningful song into original, personal
 - The paywall must clearly communicate the outcome and included value before sending the user to Stripe Checkout.
 - Do not begin paid image generation or reveal a finished result before payment confirmation.
 - Preserve the prepared creation if Checkout is cancelled or fails.
-- A dedicated onboarding-design workshop is required before implementation.
+- CuBiX Meow and Brut approved the dedicated onboarding and first-creation paywall design on 2026-08-28. Its philosophy, screen flow, recovery behavior and copy foundation are recorded in [[Onboarding and First-Creation Paywall Contract]]. Final V2 examples, credit values and qualified legal language remain dependencies of their separate checklist gates.
 - Every account, including complimentary reviewers, accepts the Terms of Service and Privacy Policy during activation or payment.
 - The later mobile onboarding should build on what is learned from the web beta rather than mechanically copy it.
 
@@ -105,8 +105,8 @@ YouAreTheSongNow V2 lets a person turn a meaningful song into original, personal
 - An inexpensive model or lookup service resolves the intended song or closest reliable match.
 - The system attempts to obtain the actual lyrics through a legally permitted source.
 - Lyrics are never displayed to the user.
-- Lyrics are temporary by default and deleted immediately after derived analysis is produced.
-- Raw lyrics may be stored or cached only if a chosen provider's written license explicitly permits that use and retention.
+- Raw lyrics are memory-only and deleted immediately after derived analysis is produced.
+- Raw lyrics are never stored or cached, even if a future provider license would permit retention. This applies to Git, databases, queues, temporary files, stored prompt histories, logs, analytics, error reports and backups. A protected in-memory request may send them to the approved analysis provider with provider-side storage disabled.
 - Persist only the entered artist/title, retrieval source/status, match confidence and original derived Song DNA unless a license permits more.
 - If lyrics are unavailable, use reliable information about the song, themes and meaning.
 - Label fallback results as inspired by available song information rather than implying that lyrics were analyzed.
@@ -170,8 +170,11 @@ Song information
 - Low, medium or high quality; medium is default and recommended
 - Square, portrait or landscape orientation
 - One or two portraits
+- Optional `No text in image` checkbox. It starts unchecked; when selected, the completed image must contain no readable text or lettering.
 - Optional Special instructions checkbox revealing a short field with examples
 - One image per submitted generation
+
+When `No text in image` is not selected, deliberate fitting text may appear only when it is original, user-owned, licensed, public-domain or otherwise lawful. Copyrighted lyrics, unauthorized artist/band branding, third-party logos and misleading endorsement signals remain prohibited in every mode.
 
 Advanced model, camera, palette, era, seed and technical settings remain hidden.
 
@@ -220,7 +223,7 @@ Advanced model, camera, palette, era, seed and technical settings remain hidden.
 
 - Stripe is the approved first-beta payment and subscription provider.
 - Use Stripe-hosted Checkout for signup, the hosted Customer Portal for billing management, and verified idempotent webhooks as the subscription-state authority.
-- Development uses Stripe's sandbox/testing tools. Do not create live charges until the payment rules, build freeze and launch gates are cleared.
+- Development uses Stripe's sandbox/testing tools. Do not create live charges until the payment rules and launch gates are cleared.
 - Stripe product name: **You Are The Song Now Membership**.
 - Card statement descriptor: **YOU ARE THE SONG**; disclose this recognizable descriptor before payment and in billing help.
 - The invite-only beta subscription is $20.00 USD per month, charged immediately with no free trial.
@@ -316,12 +319,15 @@ Keep the first admin deliberately small:
 - Advanced admin analytics
 - Backblaze B2 before the core build functions
 - Additional credit packs before the core build functions
+- Gallery upscaling and print-master preparation
+- Poster, art-print and T-shirt ordering or fulfillment
 - Android client
 
 ## SOON AFTER
 
 - Backblaze B2 migration through the storage adapter
 - Additional credit-pack purchases
+- Provider-neutral gallery upscaling, print-master preparation and poster/T-shirt functionality after the core V2 web build works and receives owner approval
 - Further styles and style/provider benchmark updates
 - Flutter/Dart iOS application after web/API/quality approval
 - Continued onboarding experiments and optimization
@@ -367,8 +373,22 @@ Work these in the most useful order. If one item is blocked, move to another wit
 - [ ] Candidate AI providers are benchmarked for quality, portrait fidelity, reliability and total cost.
 - [x] Fifteen launch style candidates are selected and all 52 recovered styles are classified for database/admin access.
 - [ ] Launch prompts, previews and style-to-model/quality routing are tested and owner-approved.
-- [ ] Web onboarding and the core screen flow are designed and owner-approved.
-- [ ] API, authentication, privacy, deletion, sharing, rate limiting and local-storage contracts are implementation-ready.
-- [ ] Deployment target and operating-cost model fit the intended subscription.
-- [ ] Acceptance tests cover the complete web journey and Flutter-facing API.
-- [ ] CuBiX Meow and Brut explicitly lift the build freeze and authorize implementation.
+- [x] Web onboarding and the core screen flow are designed and owner-approved. Approved 2026-08-28; see [[Onboarding and First-Creation Paywall Contract]].
+- [x] API, authentication, privacy, deletion, sharing, rate limiting and local-storage contracts are implementation-ready. Approved 2026-08-28; see [[Implementation Readiness Contract]] and [[../07 Development/Shared API, Security and Data Contract]].
+- [x] Deployment target and operating-cost model fit the intended subscription. Approved 2026-08-28; see [[../07 Development/Deployment and Operating Cost Contract]].
+- [x] Acceptance tests cover the complete web journey and Flutter-facing API. Approved 2026-08-28; see [[../07 Development/Acceptance Test Contract]].
+- [x] CuBiX Meow and Brut lift the build freeze for Private Development Build 1. Approved 2026-08-28. This does not authorize external beta access, paid users, live Stripe charges or commercial protected-lyrics use; the unfinished gates above remain launch blockers.
+
+## Private Development Build 1 authorization
+
+Build 1 may implement the approved architecture using Stripe sandbox, configurable development credits, protected server-side development credentials, private internal song-analysis tests, local SQLite and local image storage.
+
+Build 1 must not enable:
+
+- public or invited external access;
+- live Stripe charges;
+- commercial processing of protected lyrics;
+- unrestricted account registration;
+- final provider, style or credit claims not supported by completed benchmarks.
+
+Provider routing, credit values, style routes and eligible song sources remain configuration-driven and provisional. The purpose of Build 1 is to create the working foundation needed to test and refine those decisions.

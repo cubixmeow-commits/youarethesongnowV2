@@ -13,11 +13,11 @@ Agents and humans: when Current Project truth changes, update this snapshot **an
 
 ## Phase
 
-Planning / creative-engine design
+Private Development Build 1 preparation
 
 ## Build status
 
-BUILD FREEZE — planning only
+PRIVATE DEVELOPMENT BUILD 1 AUTHORIZED: external beta and commercial launch gates remain active
 
 ## Delivery path
 
@@ -41,17 +41,25 @@ Turn a song into an interpreted cinematic visual experience, optionally placing 
 
 ## First-build workshop status
 
-The focused workshop is complete. CuBiX Meow and Brut approved its consolidated First Build Feature Contract on 2026-08-27. Checklist item 1 is complete; the build freeze remains active.
+The focused workshop is complete. CuBiX Meow and Brut approved its consolidated First Build Feature Contract on 2026-08-27 and authorized Private Development Build 1 on 2026-08-28.
 
 Core scope: invite-only paid beta; $20 monthly subscription with fixed non-rolling credits; complimentary reviewers; accounts and immediate deletion; reusable one/two-person portraits; legally permitted song/lyrics context; hidden cost-optimized creative engine; fifteen active launch styles plus 37 inactive admin-ready styles; style- and quality-aware model routing; background generation; gallery/download/regeneration; one-time email and revocable link sharing; simple admin; local storage first; shared web/Flutter API.
 
-The movable freeze-exit checklist now covers contract approval, lyrics/legal work, subscription economics, provider benchmarks, launch styles/routing, onboarding/screens, implementation-ready contracts, deployment/costs, acceptance tests and an explicit owner freeze lift.
+The implementation checklist covers contract approval, private song-analysis feasibility, subscription economics, provider benchmarks, launch styles/routing, onboarding/screens, implementation-ready contracts, deployment/costs and acceptance tests. Unfinished legal, economics and provider items remain external-release gates.
+
+The owners recovered an omitted product direction and resolved its phase boundary. Gallery upscaling, print-master preparation and poster/T-shirt functionality will be added through replaceable provider adapters after the core V2 web build works and receives owner approval. V1 provider integrations are evidence only. This deferred phase does not block the first Cursor build.
 
 Checklist item 2 is split into two gates. First, owners and authorized developers privately prove a terms-compliant, ephemeral AI/search-provider workflow, preferably with authorized test material. Then the owners make a go/no-go decision. If proceeding, a licensed lyrics API, written permission for temporary AI processing and qualified legal review are required before any invited tester, reviewer or paid user receives access. Musixmatch is the leading verified commercial candidate.
 
-Longer-term commercial direction favors direct band partnerships and verified indie artists supplying lyrics they own or control. Public lyrics are primarily a development aid. Artist onboarding, rights verification, revocation and catalog management are strategic follow-on work unless explicitly added to the first-build scope.
+The rights-aware research now defines two commercial paths behind the same creative engine. The general-song path runs only when a provider or rightsholder explicitly permits retrieval, temporary AI analysis, retained non-reconstructive Song DNA and commercial image generation. The band and verified indie-artist path uses directly authorized catalogs and can proceed independently if broad popular-song licensing is unavailable or uneconomic.
 
-Stripe is approved for the beta. A read-only account audit found a live-capable account with an empty product catalog. The price is $20.00 USD monthly, charged immediately with no free trial. The value-focused paywall appears after the invited user configures the first creation but before generation/result delivery; successful Checkout resumes the preserved creation. Hosted Checkout, Customer Portal, signed idempotent webhooks and sandbox/test-clock validation remain the planned architecture.
+The owners will not purchase broad lyrics licensing during development. Owners and authorized developers may privately compare context-only and ephemeral full-lyric analysis using the approved popular-song benchmark, with no persistence, public access, external testing, distribution or commercial use. This is an owner-selected development risk boundary, not a copyright exemption or permission to violate source terms. Any user-accessible release remains limited to verified public-domain or permissively licensed works, owner-controlled songs and directly authorized artist catalogs unless the owners later approve broad commercial licensing.
+
+CuBiX Meow and Brut approved a fixed 12-song private-development benchmark on 2026-08-28. It covers wedding, romance, celebration, narrative, symbolism, tonal shifts and ambiguous lookup behavior while storing no lyrics in the repository. The benchmark does not remove the later licensing and legal gates, and rights-controlled owner or indie-artist fixtures must be added before external beta use.
+
+Longer-term commercial direction favors direct band partnerships and verified indie artists supplying lyrics they own or control. Public availability is not treated as permission. Artist onboarding, rights verification, revocation and catalog management are strategic follow-on work unless explicitly added to the first-build scope.
+
+Stripe is approved for the beta. The live product catalog remains unchanged and clean. The existing `Logan White sandbox` now contains the approved `You Are The Song Now Membership` at $20.00 USD monthly with no trial, lookup key `yatsn_v2_membership_monthly`, and the approved Customer Portal controls. The value-focused paywall appears after the invited user configures the first creation but before generation/result delivery; successful Checkout resumes the preserved creation. Hosted Checkout, signed idempotent webhooks and sandbox/test-clock validation remain the planned architecture.
 
 Ordinary cancellation now keeps access and remaining credits until the paid period ends. If a user chooses permanent account deletion instead, access ends immediately, Stripe renewal is cancelled and application content is permanently removed. Legally required payment records are the disclosed exception. Credit economics remain open.
 
@@ -63,17 +71,43 @@ Paid beta enrollment is limited to U.S. billing addresses and USD. Complimentary
 
 The business is California-based. Current CDTFA guidance preliminarily supports treating this electronic-only subscription and its digitally delivered images as nontaxable in California when no tangible property is transferred. Qualified confirmation, the final Stripe tax code and other-state nexus monitoring remain launch requirements.
 
-Groq is available as the first text/reasoning benchmark candidate for song matching, authorized lyrics/context analysis, Song DNA and structured prompt work. Its current APIs provide text output, including from vision inputs, rather than final image generation. Separate image providers must be benchmarked. No project API key has been created or stored.
+Groq is available as the first text/reasoning benchmark candidate for song matching, authorized lyrics/context analysis, Song DNA and structured prompt work. Its current APIs provide text output, including from vision inputs, rather than final image generation. Separate image providers must be benchmarked. A 90-day `yatsn-v2-development` key exists in the Default Project, expires 2026-11-26 and is stored only in the owner's password manager. It is not installed in the repository or hosting configuration.
+
+A separate Google AI Studio project and API key named `yatsn-v2-development` are verified on the Free tier. The owners selected it for cost-controlled private development using only synthetic, public-domain, owner-authorized and nonconfidential material. The secret remains only in the owner's password manager and is not installed in the repository or hosting configuration. Because unpaid prompts/responses may improve Google products and receive human review, it is not approved for customer portraits, personal data or external/paid beta traffic.
 
 fal.ai is the tentative primary image-provider hub. The initial reference-image comparison will include Seedream V4 Edit, FLUX.2 Pro, Nano Banana, Nano Banana 2 and GPT Image 2. Low/medium/high assignments wait for blind portrait, couples, style, reliability, privacy and total-cost results.
 
+A restricted fal.ai API-only development key exists and is stored only in the owner's password manager. It cannot manage billing, keys, usage or compute and is not installed in the repository or hosting configuration.
+
+The fal.ai account has a verified $25.00 one-time testing balance with automatic top-up disabled and no recorded usage. The purchased credits currently show an expiration of 2027-08-28.
+
 Fifteen balanced launch style candidates are selected across cinematic realism, fine art, romance, music, surrealism, dark romance and fantasy. All 52 recoverable V1 styles will live in the database and owner admin; 37 start inactive for later activation. Prompt rewrites, previews and routing remain open.
 
-Session handoff: resume with the dedicated onboarding and first-creation paywall design workshop on the morning of 2026-08-29. After the complete freeze-exit checklist and explicit owner freeze lift, Cursor will build the first version from the approved vault as the implementation source of truth.
+The onboarding and first-creation paywall design is owner-approved as of 2026-08-28. The first creation itself serves as onboarding: promise, three real examples, song, portraits, configuration, personalized summary, $20 paywall, generation and reveal. The four-part screen grouping, honest progress language, recovery behavior, disclosure placement and complete screen-by-screen copy foundation are recorded in `development-vault/05 Product Design/Onboarding and First-Creation Paywall Contract.md`. Product copy will not use em dashes.
+
+Final V2 example files, the exact monthly credit allowance and qualified legal wording remain dependencies of their separate provider, economics and legal gates. They do not reopen the approved onboarding structure.
+
+The implementation-readiness contracts are owner-approved as of 2026-08-28. They define the shared versioned PHP service for web and Flutter, secure passwordless and optional-password access, owner two-step verification, private media, immediate live deletion, secure email/link sharing, idempotent billing and generation work, abuse and spending limits, owner audit history and local storage with application-managed media backups deferred until B2.
+
+The deployment and operating-cost contract is owner-approved as of 2026-08-28. Hostinger Premium Web Hosting is the beta target. `https://youarethesongnow.com/` currently redirects to the synchronized V2 site at `/yatsnV2/site/`, which responds successfully. The approved plan covers the one-minute Cron Jobs worker, local SQLite and media staging, deployment/rollback, secret handling, monitoring, capacity limits, the single `support@youarethesongnow.com` beta mailbox and operating budgets. A larger deployment moves to a VPS.
+
+The beta mailbox is active. Hostinger reports green MX, SPF, DKIM and DMARC status, with secure authenticated SMTP at `smtp.hostinger.com:465`. Application SMTP delivery and reply testing remain part of implementation acceptance. Hostinger currently displays a 2026-10-08 domain expiration warning, so renewal or automatic renewal must be confirmed before beta launch.
+
+A read-only hPanel review confirmed 25 GB disk, 2 GB RAM, one CPU core, 40 PHP workers, 80 maximum processes, unlimited bandwidth, weekly backups and Cron Jobs. SQLite is already working. Hostinger-managed disaster backups receive a beta-only 45-day deletion exception while live deletion remains immediate.
+
+The Acceptance Test Contract is owner-approved as of 2026-08-28. It defines the complete web journey, final image quality, reliability, paid and complimentary access, authentication, Stripe and credits, privacy and deletion, abuse controls, admin auditing, Hostinger deployment and rollback, Flutter API compatibility and WCAG 2.2 Level AA gates.
+
+The final quality set contains 90 generations, tests every launch-style and quality-tier combination twice, balances all three orientations and emphasizes couples and wedding/celebration use. At least 81 images must preserve recognizable identity and be usable, with no visible lyrics, song titles, band names, unwanted logos or other prohibited text.
+
+CuBiX Meow and Brut lifted the freeze for Private Development Build 1 on 2026-08-28. Cursor may now build the internal V2 foundation from the approved vault using Stripe sandbox, configurable development credits, private provider credentials, SQLite and local image storage. External access, live charges and commercial protected-lyrics use remain blocked until their unfinished gates are completed.
+
+The approved Build 1 visual direction preserves V1's dark cinematic atmosphere and artwork-led reveal while replacing its futuristic typography, blue-purple neon gradients, glass panels, glowing borders, emoji controls and AI-console presentation. The direction is a modern record sleeve and cinematic photo book with matte dark surfaces, warm editorial text, one stage-light accent, full-bleed artwork and restrained track/playhead motion.
 
 ## Prompt-system status
 
 **V1 prompting functionality is now mapped as a system, not a single prompt.**
+
+The newest V1 prompt-bearing worker was reviewed directly and is now the approved foundation for the V2 Song DNA and Prompt Pipeline Contract. V2 preserves the strong 12-field interpretation, one/two-person portrait direction, cinematic scene construction, soft user steering and StyleMap. It replaces raw-lyric persistence, prompt-only leakage protection, album-art-dependent general styling, conflicting text/portrait instructions, weak schema handling and retries that silently removed portraits.
 
 Five prompt origins are documented:
 
@@ -118,7 +152,7 @@ Source Context
 
 - Meaning of “Dynamic Band Lore” in V2
 - Portrait fallback honesty
-- Lyrics persistence architecture
+- Lyrics retrieval method and user-accessible catalog rights. Persistence is resolved: raw lyrics are never saved.
 - Branding in-image vs post-process
 - Whether artist visual identity runs by default
 

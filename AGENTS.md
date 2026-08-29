@@ -8,22 +8,22 @@ YouAreTheSongNow V2 is a clean web + mobile rebuild of AISaga Arcana. The legacy
 
 V1 is a **behavioral and product reference**, not a template to port wholesale.
 
-## CURRENT BUILD FREEZE
+## CURRENT BUILD AUTHORIZATION
 
-**Do not scaffold, implement, install frameworks, create application source, create migrations, or otherwise begin building V2 until the project owners explicitly end this freeze.**
+**CuBiX Meow and Brut authorized Private Development Build 1 on 2026-08-28. Application scaffolding, implementation, migrations, local tests and protected sandbox integrations are now allowed.**
 
-Allowed work during the freeze:
+Build 1 may use PHP, SQLite, local private media storage, Stripe test mode, configurable development credits and protected server-side AI-provider credentials.
 
-- inspect V1 source;
-- document verified behavior;
-- create feature/route/data/integration inventories;
-- write assessment and migration Markdown;
-- create architecture diagrams/ADRs marked proposed;
-- record product questions and owner decisions;
-- maintain the development vault and GitHub Pages documentation;
-- compare legacy schemas/configuration without modifying production.
+Build 1 must not enable:
 
-If asked to work in this repository without an explicit instruction to begin implementation, default to planning/analysis only.
+- public registration or external tester access;
+- live Stripe charges;
+- commercial processing of protected lyrics;
+- client-side provider credentials;
+- unrestricted provider spending;
+- final provider, quality-tier or credit claims before benchmarking.
+
+Raw lyrics are memory-only. Never write them to Git, SQLite, queues, temporary files, prompt histories, logs, analytics, errors or backups.
 
 ## Shared development vault
 
@@ -35,6 +35,17 @@ Before planning or future implementation work, always read:
 2. `development-vault/01 Current Project/Current Priorities.md` (when present)
 3. `development-vault/01 Current Project/Current Architecture.md`
 4. `development-vault/02 Decisions/Decision Index.md`
+
+For Build 1, also read:
+
+- `CURSOR-BUILD-1.md`
+- `development-vault/05 Product Design/First Build Feature Contract.md`
+- `development-vault/05 Product Design/V2 Song DNA and Prompt Pipeline Contract.md`
+- `development-vault/05 Product Design/Onboarding and First-Creation Paywall Contract.md`
+- `development-vault/05 Product Design/V2 Visual Design Direction.md`
+- `development-vault/07 Development/Shared API, Security and Data Contract.md`
+- `development-vault/07 Development/Deployment and Operating Cost Contract.md`
+- `development-vault/07 Development/Acceptance Test Contract.md`
 
 Then read only the vault notes relevant to the task. **Do not scan the entire vault by default.**
 
@@ -74,11 +85,11 @@ Keep `/docs` static and GitHub Pages compatible: HTML/CSS/vanilla JS only. No fr
 - Use **PHP** for V2.
 - Use **SQLite initially** while the product is small, keeping domain/data design portable.
 - Preserve the staged creative-engine idea while refining Song DNA, narrative planning, artist visual identity, portrait handling and retries.
-- The build freeze remains active.
+- Private Development Build 1 is authorized. External beta and commercial launch gates remain active.
 
 See the accepted ADRs in `development-vault/02 Decisions/`.
 
-## Before changing code after the freeze is lifted
+## Before changing code
 
 1. Read the shared vault current-state and accepted decisions above.
 2. Read `docs/rebuild/README.md` and relevant architecture/migration notes.
@@ -113,4 +124,4 @@ See the accepted ADRs in `development-vault/02 Decisions/`.
 
 ## Immediate objective
 
-Continue product and creative-engine refinement, use the decision inbox to resolve owner choices, and maintain the shared development memory. Do not begin the vertical slice until the owners explicitly approve implementation.
+Implement the private web Build 1 as a small end-to-end vertical slice, following `CURSOR-BUILD-1.md`. Do not stop after planning or broad scaffolding. Produce a runnable, tested local application while keeping unfinished external-release gates disabled.

@@ -13,12 +13,16 @@ This repository intentionally starts clean. The legacy repository, `cubixmeow-co
 
 ## Current status
 
-**Phase: planning / creative-engine design. Build freeze active.**
+**Phase: Private Development Build 1 authorized. External beta and commercial launch remain gated.**
 
 Accepted direction so far:
 
 - rebuild/refine **V1 functionality**, not V1 code;
 - backend: **PHP**;
 - initial database: **SQLite**.
+- web client: **plain HTML/CSS/JavaScript where practical**;
+- background generation: **bounded PHP worker with explicit job state**.
+
+Cursor and other coding agents should begin with `CURSOR-BUILD-1.md` and `AGENTS.md`.
 
 See accepted ADRs in `development-vault/02 Decisions/`.

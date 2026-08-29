@@ -1,7 +1,7 @@
 ---
 type: current-project
 status: active
-updated: 2026-08-27
+updated: 2026-08-28
 area: architecture
 ---
 
@@ -9,7 +9,7 @@ area: architecture
 
 ## Status
 
-**Direction only. Not implemented. Build freeze active.**
+**Approved direction for Private Development Build 1. Implementation is beginning.**
 
 ## Delivery path
 
@@ -28,6 +28,8 @@ area: architecture
 - Consume the same PHP backend rather than duplicate creative/business logic in the client.
 
 The web rebuild is not a disposable prototype. It establishes the shared backend, domain behavior and API contracts for the later Flutter client.
+
+The owner-approved shared-service specification is maintained in `development-vault/07 Development/Shared API, Security and Data Contract.md`. It defines the versioned resource surface, web and Flutter authentication transports, authorization, idempotency, job states, stable errors, media privacy and deletion behavior. It governs Private Development Build 1.
 
 ## Current preferred stack
 

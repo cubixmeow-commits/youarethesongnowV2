@@ -51,7 +51,7 @@ After a cancelled paid period or unresolved seven-day payment grace expires, the
 - distinguish artist visual identity from actual lore;
 - remove contradictory prompt instructions;
 - reduce dependence on one giant provider-facing prompt;
-- avoid persisting raw lyrics by default unless explicitly chosen;
+- never persist raw lyrics anywhere; process them in volatile memory for one analysis and immediately discard them;
 - keep provider/model implementation replaceable.
 
 ## Do not inherit automatically

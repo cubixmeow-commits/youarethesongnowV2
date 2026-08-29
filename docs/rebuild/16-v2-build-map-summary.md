@@ -1,9 +1,13 @@
 # 16 — V2 Build Map Summary
 
 **Purpose:** short, readable answer to “What are all the major pieces we need to build?”  
-**Status:** planning only — build freeze active.  
+**Status:** implementation guidance for authorized Private Development Build 1.
 **Detail:** `15-v2-systems-inventory.md`  
 **Date:** 2026-08-27
+
+> **Superseding decision notice, 2026-08-28:** identity, invitations, sessions, API transport, privacy, deletion, sharing, abuse protection, owner audit and initial local-storage behavior are now owner-approved in `development-vault/05 Product Design/Implementation Readiness Contract.md` and `development-vault/07 Development/Shared API, Security and Data Contract.md`. Older open-decision labels below are historical and do not override those contracts.
+
+> **Deployment decision notice, 2026-08-28:** Hostinger Premium Web Hosting, SQLite, a one-minute Cron Jobs worker, controlled `main` releases, Hostinger SMTP, local-media staging and the approved beta cost limits are defined in `development-vault/07 Development/Deployment and Operating Cost Contract.md`. VPS is the larger-deployment path.
 
 ---
 
@@ -19,7 +23,7 @@ Accounts and projects feed a staged creative engine that runs as background jobs
 - **PHP** + **SQLite** initially  
 - **Web first** → **Flutter/Dart iOS** second on the same APIs  
 - Staged creative engine (contracts still open)  
-- **No scaffolding** until owners lift the freeze  
+- **Private scaffolding and implementation authorized**; external and commercial launch remain gated
 
 ---
 
@@ -143,7 +147,7 @@ API → Web + Flutter
 
 ## Phased implementation recommendation
 
-**Do not build yet.** When the freeze lifts, a sensible order:
+**Build the private version in this order:**
 
 ### Phase A — Foundation
 

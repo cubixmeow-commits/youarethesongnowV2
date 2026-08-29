@@ -10,9 +10,18 @@ development-vault/.trash/
 
 # Local environment / secrets
 .env
-.env.local
+.env.*
+!.env.example
 
 # Future SQLite runtime databases should not be committed
 *.sqlite
 *.sqlite3
 *.db
+
+# Private runtime data
+/var/data/
+/var/storage/
+/var/log/
+/var/tmp/
+/private/
+/public/uploads/

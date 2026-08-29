@@ -1,7 +1,7 @@
 ---
 type: research
 status: in-progress
-updated: 2026-08-27
+updated: 2026-08-28
 area: lyrics-legal
 owners:
   - CuBiX Meow
@@ -25,9 +25,16 @@ Musixmatch is the leading candidate verified so far. Its official API materials 
 
 Google Search grounding is not an acceptable raw-lyrics path under the current published Google Cloud terms. Those terms restrict caching, analyzing, learning from and repurposing grounded results. The V2 workflow intentionally analyzes source material into Song DNA, so Google grounding should be limited to permitted song identification/context uses, if used at all, unless Google grants written permission for the exact use.
 
+The approved commercial strategy now has two independent paths behind the same creative engine:
+
+1. A general-song path only where a licensed provider or rightsholder expressly permits the exact workflow.
+2. A direct band and verified indie-artist catalog path based on material the partner controls and authorizes.
+
+The artist-partner path remains a viable product even if broad public-song rights do not scale economically or contractually. See `Public Song Information to Original Visual Art Report.md` for the architecture and staged test plan.
+
 ## Owner decision: development before licensing
 
-CuBiX Meow and Brut will first build and test the lyrics-to-Song-DNA workflow privately with an AI/search provider before deciding whether to proceed with the commercial project and pay for lyrics licensing.
+CuBiX Meow and Brut will first build and test the lyrics-to-Song-DNA workflow privately with an AI/search provider before deciding whether to proceed with the commercial project and pay for broad-catalog lyrics licensing. They will not purchase lyrics licensing for development.
 
 This is a **development-only feasibility path**, not launch clearance:
 
@@ -37,14 +44,35 @@ This is a **development-only feasibility path**, not launch clearance:
 - raw lyrics are processed ephemerally and are not retained in the database, prompts, logs or backups;
 - retained Song DNA must avoid quotations and close paraphrases;
 - provider terms still apply during development, so implementation may use only methods allowed by the selected AI/search provider;
-- public-domain, owner-controlled or otherwise authorized songs should be used for repeatable development and evaluation whenever practical;
+- protected popular-song lyrics may be used ephemerally by the owners for private, noncommercial feasibility testing, but must not be committed, persisted, logged, shared, publicly displayed or used to sell or promote the service;
+- access methods must still comply with provider and website terms; this decision does not authorize scraping or bypassing access controls;
+- public-domain, owner-controlled, indie-authorized and synthetic songs should also be used so the system has repeatable fixtures suitable for later user-accessible testing;
 - no commercial launch or external beta occurs until the owners make a go/no-go decision and the licensed workflow receives provider and legal approval.
 
 The build-freeze checklist may separate **development feasibility confirmed** from **commercial licensing confirmed**, but checklist item 2 remains incomplete until the commercial exit conditions are satisfied.
 
+## Gemini private-development credential
+
+On 2026-08-28, the owners created a separate Google AI Studio project and API key, both named `yatsn-v2-development`. The masked key/project listing was verified without opening or copying the secret. The secret is stored only in the owner's password manager and is not installed in the repository or hosting configuration.
+
+The project currently shows Google AI Studio's Free tier with no billing attached. CuBiX Meow and Brut selected this free credential for cost-controlled private development on 2026-08-28, subject to the constraints below.
+
+Google's current Gemini API terms say unpaid-service prompts and responses may be used to provide, improve and develop Google products and machine-learning technologies, and may be reviewed by humans. Google instructs users not to submit personal, sensitive or confidential information through unpaid services. Therefore:
+
+- use the free tier only with synthetic fixtures, song/artist metadata, general nonconfidential context, public-domain material and lyrics the owners are authorized to submit;
+- do not submit customer portraits, personal data, confidential business material or external beta traffic;
+- do not use the credential as the production or paid-beta provider configuration;
+- do not enable request/response sharing or create shared datasets;
+- keep application logs free of raw prompts, responses and lyrics;
+- re-evaluate a paid Gemini tier or another provider before any workflow needs no-training handling.
+
+Gemini Free tier is selected as the private development model, but it is not treated as a commercial lyrics license or as proof that Google Search grounded results may be repurposed into Song DNA.
+
+The older unused Gemini key and project were removed by the owner.
+
 ## Artist-direct commercial direction
 
-The intended commercial model may rely primarily on direct relationships with bands and verified indie artists rather than a general public-lyrics catalog.
+The intended user-accessible model may initially rely on verified public-domain or permissively licensed works and direct relationships with bands and verified indie artists rather than a paid general-lyrics catalog.
 
 Preferred source hierarchy:
 
@@ -53,7 +81,7 @@ Preferred source hierarchy:
 3. A commercially licensed lyrics API for broader catalog coverage, if the owners choose to purchase it.
 4. Legally permitted factual song context when authorized lyrics are unavailable.
 
-Publicly available lyrics are expected to serve mainly as private development material, subject to provider terms and the development safeguards above.
+Protected popular lyrics may serve as private development material under the owner-selected controls above. Public availability alone is not treated as commercial permission.
 
 Artist-submitted lyrics cannot be treated as an unrestricted consumer paste box. The eventual artist workflow needs:
 
@@ -140,7 +168,7 @@ Send these questions to candidate providers before contracting:
 
 ## Exit conditions for checklist item 2
 
-- [ ] A development-only AI/search provider and its permitted-use constraints are selected.
+- [x] A development-only AI provider and its permitted-use constraints are selected. Gemini Free tier was selected on 2026-08-28 for synthetic, public-domain, owner-authorized and nonconfidential tests only; it is not commercial clearance.
 - [ ] The private, ephemeral lyrics-to-Song-DNA workflow is proven technically with authorized test material.
 - [ ] CuBiX Meow and Brut make a go/no-go decision after reviewing development results and expected licensing cost.
 - [ ] At least one provider confirms the complete licensed workflow in a signed agreement or clear written terms.

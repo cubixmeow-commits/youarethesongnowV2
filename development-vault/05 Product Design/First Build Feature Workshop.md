@@ -16,7 +16,7 @@ This focused workshop turns the owners' V2 goal into a precise **First Build Fea
 
 The goal is to resolve only the decisions that can materially change the first build. Do not reopen settled scope unless CuBiX Meow or Brut explicitly asks to reconsider it.
 
-The build freeze remains active until the completed contract is approved and the owners explicitly lift the freeze.
+Historical note: this workshop required a freeze until contract approval. CuBiX Meow and Brut later authorized Private Development Build 1 on 2026-08-28; external and commercial launch gates remain active.
 
 ## Starting point: already established by the owners
 
@@ -151,4 +151,4 @@ When the questions are complete, produce a concise **First Build Feature Contrac
 15. Explicit **SOON AFTER**, **LATER**, **MAYBE / RESEARCH** and **NO / RETIRE** lists
 16. Remaining blockers, if any
 
-The contract must be specific enough to test. It does not authorize application implementation until CuBiX Meow and Brut explicitly approve it and lift the build freeze.
+The contract had to be specific enough to test. CuBiX Meow and Brut subsequently approved it and authorized Private Development Build 1 on 2026-08-28.
