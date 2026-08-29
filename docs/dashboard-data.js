@@ -3,12 +3,12 @@
  * Source of working truth: development-vault/
  */
 window.MEOW_CONTROL = {
-  updated: "2026-08-28",
+  updated: "2026-08-29",
   owners: ["CuBiX Meow", "Brut"],
   project: "YouAreTheSongNow V2",
-  phase: "Private Development Build 1 preparation",
-  buildStatus: "PRIVATE BUILD 1 AUTHORIZED",
-  buildStatusDetail: "external beta and commercial launch gates remain active",
+  phase: "Private Development Build 1 local implementation",
+  buildStatus: "PRIVATE BUILD 1 LOCAL SLICE RUNNING",
+  buildStatusDetail: "local PHP/SQLite vertical slice is runnable; external beta and commercial launch gates remain active",
   backend: "PHP",
   database: "SQLite (initial)",
   mobile: "Flutter + Dart (iOS second)",
@@ -16,8 +16,8 @@ window.MEOW_CONTROL = {
   deliveryDetail: "Build and validate the PHP web app first. Then build the iOS client in Flutter/Dart using the same PHP API.",
   strategy: "Rebuild/refine V1 functionality, not V1 code",
   mission: "Turn a song into an interpreted cinematic visual experience, optionally placing the user inside that visual world.",
-  workshopStatus: "Acceptance-test contract approved",
-  workshopDetail: "Private Development Build 1 is authorized using Stripe sandbox, configurable credits, SQLite, local media and private provider adapters. The approved visual direction is music-led and editorial rather than neon AI-console styling. External beta, live charges, commercial protected-lyrics use, provider routing, credit economics and legal review remain gated.",
+  workshopStatus: "Build 1 local vertical slice implemented",
+  workshopDetail: "Invite-only auth, creation page, credits ledger, deterministic adapters, worker, gallery/sharing and owner area are running locally behind /api/v1. Stripe test, SMTP and real AI providers remain unconfigured until protected credentials are installed. External beta, live charges and commercial protected-lyrics use stay gated.",
   promptSystemStatus: "V2 Song DNA contract approved for Build 1",
   promptSystemDetail: "The proven V1 Song DNA, portrait direction and StyleMap are preserved. One provider-neutral creative package is compiled through separately benchmarked model adapters instead of reusing Gemini-specific wording. V2 also adds memory-only lyrics, leakage sanitization, strict schemas, immutable versions, portrait-preserving retries and output inspection. Provider routing and benchmark results remain provisional.",
   promptReferenceUrl: "https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/docs/rebuild/13-prompting-functionality-reference.md",

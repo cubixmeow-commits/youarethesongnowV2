@@ -9,7 +9,21 @@ area: architecture
 
 ## Status
 
-**Approved direction for Private Development Build 1. Implementation is beginning.**
+**Private Development Build 1 local vertical slice is implemented.** External beta and commercial launch remain gated.
+
+Implemented local shape:
+
+```text
+public/                 # web document root
+src/                    # Auth, Api, Credits, Generation, CreativeEngine, Storage, ...
+database/migrations/    # versioned SQLite schema
+worker/run.php          # one-minute bounded cron worker
+bin/console.php         # migrate, seed-owner, seed-styles, worker, setup-status
+tests/run.php           # Build 1 automated checks
+var/                    # private SQLite, media and logs (gitignored)
+```
+
+Development substitutes identify themselves honestly when Stripe/SMTP/AI credentials are absent. Live payments, public registration and external users remain configuration-gated off.
 
 ## Delivery path
 

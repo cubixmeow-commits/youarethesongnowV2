@@ -13,6 +13,7 @@ area: decisions
 - [[ADR-20260827-use-php-for-v2]]
 - [[ADR-20260827-use-sqlite-initially]]
 - [[ADR-20260827-web-first-then-flutter-ios]]
+- [[ADR-20260829-small-php-app-without-heavy-framework]]
 
 ## Discussing
 

@@ -13,11 +13,11 @@ Agents and humans: when Current Project truth changes, update this snapshot **an
 
 ## Phase
 
-Private Development Build 1 preparation
+Private Development Build 1 local implementation
 
 ## Build status
 
-PRIVATE DEVELOPMENT BUILD 1 AUTHORIZED: external beta and commercial launch gates remain active
+PRIVATE DEVELOPMENT BUILD 1 LOCAL SLICE RUNNING: external beta and commercial launch gates remain active
 
 ## Delivery path
 
