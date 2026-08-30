@@ -25,9 +25,20 @@ final class GeminiCreativeAdapter implements CreativeAdapterInterface
         if (!$this->isAvailable()) {
             throw new \RuntimeException('gemini_unavailable');
         }
-        $model = (string) Config::get('ai.gemini_model', 'gemini-2.5-flash-lite');
+        $model = (string) Config::get('ai.gemini_model', 'gemini-3.6-flash');
         if (!preg_match('/^[A-Za-z0-9._-]+$/', $model)) {
             throw new \RuntimeException('gemini_model_invalid');
+        }
+        $selectedAnalysis = is_array($snapshot['derivedSongAnalysis'] ?? null)
+            ? $snapshot['derivedSongAnalysis']
+            : null;
+        if ($selectedAnalysis !== null && $selectedAnalysis !== []) {
+            return CreativePackageBuilder::build(
+                $selectedAnalysis,
+                $snapshot,
+                $this->name() . ':' . $model . ':selected-song-dna',
+                0
+            );
         }
         if (Config::getBool('development.gemini_lyrics_search')) {
             $research = GeminiLyricsResearchService::analyze(

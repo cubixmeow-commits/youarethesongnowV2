@@ -169,6 +169,21 @@ assert_true($blocked, 'user cannot access another account portrait');
 
 $lookup = SongLookupService::create((int) $user['id'], 'Owner Test Band', 'Midnight Harbor');
 assert_true($lookup['state'] === 'found', 'deterministic song lookup found');
+$selectedDnaFixture = [
+    'essence' => 'A safe derived emotional interpretation.',
+    'themes' => ['belonging'],
+    'mood' => ['hopeful'],
+    'originalVisualMoment' => 'A protagonist crosses a rain-bright threshold into warm light.',
+];
+Database::exec(
+    'UPDATE song_lookups SET derived_analysis_json = :analysis, analysis_basis = :basis, analysis_provider = :provider WHERE public_id = :pid',
+    [
+        'analysis' => json_encode($selectedDnaFixture, JSON_THROW_ON_ERROR),
+        'basis' => 'lyrics',
+        'provider' => 'gemini-search',
+        'pid' => $lookup['id'],
+    ]
+);
 $notFound = SongLookupService::create((int) $user['id'], 'x', 'y');
 assert_true($notFound['state'] === 'notFound', 'short/unknown song returns notFound');
 
@@ -188,6 +203,10 @@ $before = CreditService::balance((int) $user['id']);
 $job = GenerationJobService::submit((int) $user['id'], $draft['id'], 'idem-job-1');
 assert_true($job['status'] === 'queued', 'job submitted as queued');
 assert_true(CreditService::balance((int) $user['id']) === $before - 2, 'credits reserved on submit');
+$jobSnapshotRow = Database::one('SELECT snapshot_json FROM generation_jobs WHERE public_id = :pid', ['pid' => $job['id']]);
+$jobSnapshot = json_decode((string) ($jobSnapshotRow['snapshot_json'] ?? ''), true);
+assert_true(($jobSnapshot['derivedSongAnalysis']['originalVisualMoment'] ?? '') === $selectedDnaFixture['originalVisualMoment'], 'generation snapshot reuses selected derived Song DNA');
+assert_true(($jobSnapshot['songAnalysisBasis'] ?? '') === 'lyrics', 'generation snapshot preserves song analysis basis');
 
 $dup = GenerationJobService::submit((int) $user['id'], $draft['id'], 'idem-job-1');
 assert_true($dup['id'] === $job['id'], 'idempotent generation submit returns same job');
@@ -305,6 +324,15 @@ foreach ($artifacts as $a) {
     }
 }
 assert_true($leak === false, 'no raw lyric fixtures in stored creative artifacts');
+$selectedAnalyses = Database::all('SELECT derived_analysis_json FROM song_lookups WHERE derived_analysis_json IS NOT NULL');
+$selectedLeak = false;
+foreach ($selectedAnalyses as $selected) {
+    $stored = (string) ($selected['derived_analysis_json'] ?? '');
+    if (str_contains($stored, '"lyrics"') || str_contains($stored, 'LYRIC TEXT:')) {
+        $selectedLeak = true;
+    }
+}
+assert_true($selectedLeak === false, 'selected Song DNA storage contains no raw lyric field');
 $mailLog = @file_get_contents($testLog . '/mail.log') ?: '';
 assert_true(!str_contains($mailLog, 'STRIPE_SECRET') && !str_contains($mailLog, 'GROQ_API_KEY'), 'mail log has no provider secrets');
 

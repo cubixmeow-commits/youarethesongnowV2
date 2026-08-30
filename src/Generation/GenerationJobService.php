@@ -63,6 +63,7 @@ final class GenerationJobService
         $portraitIds = json_decode((string) $draft['portrait_ids_json'], true) ?: [];
         $creditCost = CreditService::priceForQuality($draft['quality']);
         $jobPublicId = opaque_id();
+        $derivedAnalysis = json_decode((string) ($lookup['derived_analysis_json'] ?? ''), true);
 
         $snapshot = [
             'draftId' => $draft['public_id'],
@@ -80,6 +81,11 @@ final class GenerationJobService
             'portraitIds' => $portraitIds,
             'portraitCount' => count($portraitIds),
         ];
+        if (is_array($derivedAnalysis) && $derivedAnalysis !== []) {
+            $snapshot['derivedSongAnalysis'] = $derivedAnalysis;
+            $snapshot['songAnalysisBasis'] = (string) ($lookup['analysis_basis'] ?? 'v1-model-analysis');
+            $snapshot['songAnalysisProvider'] = (string) ($lookup['analysis_provider'] ?? 'gemini-search');
+        }
 
         Database::begin();
         try {

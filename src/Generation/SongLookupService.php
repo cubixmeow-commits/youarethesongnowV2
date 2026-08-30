@@ -62,11 +62,28 @@ final class SongLookupService
             ]
         );
 
+        $research = GeminiLyricsResearchService::analyze($artist, $title);
+        if (!empty($research['analyzed']) && is_array($research['analysis'] ?? null)) {
+            // Persist only the abstract derived analysis. Raw lyrics, excerpts,
+            // search payloads, prompts, and provider responses never enter storage.
+            Database::exec(
+                'UPDATE song_lookups SET derived_analysis_json = :analysis, analysis_basis = :basis,
+                    analysis_provider = :provider, updated_at = :u WHERE public_id = :pid',
+                [
+                    'analysis' => json_encode($research['analysis'], JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES),
+                    'basis' => (string) ($research['analysisBasis'] ?? 'v1-model-analysis'),
+                    'provider' => 'gemini-search',
+                    'u' => now_utc(),
+                    'pid' => $publicId,
+                ]
+            );
+        }
+
         $row = Database::one('SELECT * FROM song_lookups WHERE public_id = :pid', ['pid' => $publicId]);
         $public = self::public($row);
-        // Returned to the current browser request for inspection only. This is
-        // deliberately fetched after all database writes and is never persisted.
-        $public['developmentAnalysis'] = GeminiLyricsResearchService::analyze($artist, $title);
+        // Inspection data is returned only to this browser request. The worker
+        // later reuses derived_analysis_json rather than repeating the search.
+        $public['developmentAnalysis'] = $research;
         return $public;
     }
 

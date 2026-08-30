@@ -7,6 +7,7 @@ namespace Yatsn\Generation;
 use Yatsn\Credits\CreditService;
 use Yatsn\Portraits\PortraitService;
 use Yatsn\Styles\StyleService;
+use Yatsn\Support\Config;
 use Yatsn\Support\Database;
 
 final class DraftService
@@ -182,6 +183,9 @@ final class DraftService
             $lookup = Database::one('SELECT * FROM song_lookups WHERE id = :id', ['id' => $draft['song_lookup_id']]);
             if ($lookup === null || !in_array($lookup['state'], ['found', 'fallbackFound'], true)) {
                 $issues['songLookupId'] = 'We could not find enough reliable information about that song. Check the artist and title, or choose another song. No generation credits were used.';
+            } elseif (Config::getBool('development.gemini_lyrics_search')
+                && trim((string) ($lookup['derived_analysis_json'] ?? '')) === '') {
+                $issues['songLookupId'] = 'The song analysis did not complete. Search for the song again before generating an image.';
             }
         }
 
