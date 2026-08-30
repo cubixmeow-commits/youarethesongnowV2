@@ -77,7 +77,7 @@ final class Config
                 'gemini_model' => env_value('GEMINI_MODEL', 'gemini-2.5-flash-lite'),
                 'groq_model' => env_value('GROQ_MODEL', 'openai/gpt-oss-20b'),
                 'fal_image_model' => env_value('FAL_IMAGE_MODEL', 'fal-ai/flux-pro/kontext/multi'),
-                'replicate_image_model' => env_value('REPLICATE_IMAGE_MODEL', 'black-forest-labs/flux-schnell'),
+                'replicate_image_model' => env_value('REPLICATE_IMAGE_MODEL', 'prunaai/p-image-edit'),
                 'groq_live_calls' => self::toBool(env_value('GROQ_LIVE_CALLS', 'false')),
                 'gemini_live_calls' => self::toBool(env_value('GEMINI_LIVE_CALLS', 'false')),
                 'fal_live_calls' => self::toBool(env_value('FAL_LIVE_CALLS', 'false')),

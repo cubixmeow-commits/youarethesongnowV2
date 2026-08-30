@@ -429,6 +429,10 @@ $replicateUrl = \Yatsn\AI\ReplicateImageAdapter::outputUrl([
     'output' => ['https://replicate.delivery/example/output.jpg'],
 ]);
 assert_true($replicateUrl === 'https://replicate.delivery/example/output.jpg', 'Replicate prediction output parser handles file arrays');
+$portraitDataUri = \Yatsn\AI\ReplicateImageAdapter::privatePortraitDataUri($largePng);
+$portraitPayload = base64_decode(substr($portraitDataUri, strpos($portraitDataUri, ',') + 1), true);
+assert_true(str_starts_with($portraitDataUri, 'data:image/jpeg;base64,'), 'Replicate portrait reference is an ephemeral JPEG data URI');
+assert_true(is_string($portraitPayload) && strlen($portraitPayload) <= 245760, 'Replicate portrait reference stays below private data-URI ceiling');
 
 // Regeneration prepopulates draft
 $regen = GenerationJobService::recreateDraftFromImage((int) $user['id'], $imageId);

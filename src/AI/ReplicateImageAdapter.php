@@ -4,17 +4,21 @@ declare(strict_types=1);
 
 namespace Yatsn\AI;
 
+use Yatsn\Portraits\PortraitService;
+use Yatsn\Storage\LocalStorage;
 use Yatsn\Support\Config;
 
 /**
- * Low-cost, text-only internal testing adapter.
- * FLUX Schnell has no portrait/reference-image input and must not be treated as identity-preserving output.
+ * Low-cost Replicate image adapter.
+ * P-Image-Edit accepts private portrait references; FLUX Schnell remains text-only testing.
  */
 final class ReplicateImageAdapter implements ImageAdapterInterface
 {
     public function name(): string
     {
-        return 'replicate-flux-schnell-test-image';
+        return Config::get('ai.replicate_image_model') === 'prunaai/p-image-edit'
+            ? 'replicate-p-image-edit'
+            : 'replicate-flux-schnell-test-image';
     }
 
     public function isAvailable(): bool
@@ -29,44 +33,46 @@ final class ReplicateImageAdapter implements ImageAdapterInterface
         if (!$this->isAvailable()) {
             throw new \RuntimeException('replicate_unavailable');
         }
-        $model = (string) Config::get('ai.replicate_image_model', 'black-forest-labs/flux-schnell');
+        $model = (string) Config::get('ai.replicate_image_model', 'prunaai/p-image-edit');
         if (!preg_match('#^[A-Za-z0-9._-]+/[A-Za-z0-9._-]+$#', $model)) {
             throw new \RuntimeException('replicate_model_invalid');
         }
         [$owner, $name] = explode('/', $model, 2);
-        $orientation = (string) ($snapshot['orientation'] ?? 'square');
-        $aspect = match ($orientation) {
+        $aspect = match ((string) ($snapshot['orientation'] ?? 'square')) {
             'portrait' => '3:4',
             'landscape' => '4:3',
             default => '1:1',
         };
-        $prompt = implode("\n", [
-            (string) ($package['compiledPromptSafe'] ?? ''),
-            'INTERNAL COMPOSITION TEST: No identity reference images are supplied to this model.',
-            'Use anonymous, entirely fictional protagonists. Do not imply that their faces represent the uploaded people.',
-            'Judge this render only for prompt interpretation, visual style, composition, lighting, and orientation.',
-        ]);
-        $headers = [
-            'Authorization: Bearer ' . (string) Config::get('ai.replicate_api_token'),
-            'Prefer: wait=60',
-            'Cancel-After: 75s',
-        ];
+        $prompt = (string) ($package['compiledPromptSafe'] ?? '');
+        $input = match ($model) {
+            'prunaai/p-image-edit' => $this->portraitEditInput($prompt, $snapshot, $aspect),
+            'black-forest-labs/flux-schnell' => [
+                'prompt' => implode("\n", [
+                    $prompt,
+                    'INTERNAL COMPOSITION TEST: No identity reference images are supplied to this model.',
+                    'Use anonymous, entirely fictional protagonists. Do not imply that their faces represent the uploaded people.',
+                    'Judge this render only for prompt interpretation, visual style, composition, lighting, and orientation.',
+                ]),
+                'go_fast' => true,
+                'num_outputs' => 1,
+                'num_inference_steps' => 4,
+                'aspect_ratio' => $aspect,
+                'output_format' => 'jpg',
+                'output_quality' => 85,
+                'disable_safety_checker' => false,
+                'megapixels' => '1',
+            ],
+            default => throw new \RuntimeException('replicate_model_not_supported'),
+        };
+
         $prediction = ProviderHttp::postJson(
             'https://api.replicate.com/v1/models/' . $owner . '/' . $name . '/predictions',
+            ['input' => $input],
             [
-                'input' => [
-                    'prompt' => $prompt,
-                    'go_fast' => true,
-                    'num_outputs' => 1,
-                    'num_inference_steps' => 4,
-                    'aspect_ratio' => $aspect,
-                    'output_format' => 'jpg',
-                    'output_quality' => 85,
-                    'disable_safety_checker' => false,
-                    'megapixels' => '1',
-                ],
+                'Authorization: Bearer ' . (string) Config::get('ai.replicate_api_token'),
+                'Prefer: wait=60',
+                'Cancel-After: 75s',
             ],
-            $headers,
             Config::getInt('ai.image_timeout_seconds', 85)
         );
 
@@ -87,12 +93,12 @@ final class ReplicateImageAdapter implements ImageAdapterInterface
                 }
             }
         }
-        if (self::outputUrl($prediction) === '' && !in_array((string) ($prediction['status'] ?? ''), ['successful', 'succeeded'], true)) {
+        if (self::outputUrl($prediction) === '') {
             throw new \RuntimeException('replicate_prediction_incomplete');
         }
         $url = self::outputUrl($prediction);
         $host = strtolower((string) parse_url($url, PHP_URL_HOST));
-        if ($url === '' || !($host === 'replicate.delivery' || str_ends_with($host, '.replicate.delivery'))) {
+        if (!($host === 'replicate.delivery' || str_ends_with($host, '.replicate.delivery'))) {
             throw new \RuntimeException('replicate_output_url_invalid');
         }
         $download = ProviderHttp::getBinary($url, Config::getInt('ai.image_download_timeout_seconds', 30));
@@ -108,5 +114,69 @@ final class ReplicateImageAdapter implements ImageAdapterInterface
     {
         $output = $prediction['output'] ?? null;
         return is_array($output) ? (string) ($output[0] ?? '') : (string) $output;
+    }
+
+    /** @return array<string, mixed> */
+    private function portraitEditInput(string $prompt, array $snapshot, string $aspect): array
+    {
+        $userId = (int) ($snapshot['userId'] ?? 0);
+        if ($userId <= 0) {
+            throw new \RuntimeException('replicate_missing_user_context');
+        }
+        $portraitIds = array_slice(is_array($snapshot['portraitIds'] ?? null) ? $snapshot['portraitIds'] : [], 0, 2);
+        if ($portraitIds === []) {
+            throw new \RuntimeException('replicate_portrait_required');
+        }
+        $images = [];
+        foreach ($portraitIds as $portraitId) {
+            $row = PortraitService::findOwned($userId, (string) $portraitId);
+            if ($row === null) {
+                throw new \RuntimeException('replicate_portrait_not_found');
+            }
+            $images[] = self::privatePortraitDataUri(LocalStorage::get((string) $row['storage_key']));
+        }
+        $identity = count($images) === 1
+            ? 'Image 1 is the sole protagonist identity reference. Preserve that person’s recognizable facial identity while creating the entirely new scene.'
+            : 'Image 1 and image 2 are two different protagonist identity references. Include both people, preserve each recognizable face separately, and never merge or swap their identities.';
+        return [
+            'images' => $images,
+            'prompt' => implode("\n", [$identity, $prompt]),
+            // Pruna recommends disabling turbo for complicated multi-image edits.
+            'turbo' => false,
+            'aspect_ratio' => $aspect,
+            'disable_safety_checker' => false,
+        ];
+    }
+
+    /** Produces an ephemeral data URI under Replicate's recommended small-file ceiling. */
+    public static function privatePortraitDataUri(string $bytes): string
+    {
+        $src = @imagecreatefromstring($bytes);
+        if (!$src instanceof \GdImage) {
+            throw new \RuntimeException('replicate_portrait_invalid');
+        }
+        $width = imagesx($src);
+        $height = imagesy($src);
+        $scale = min(1.0, 768 / max($width, $height));
+        $newWidth = max(1, (int) round($width * $scale));
+        $newHeight = max(1, (int) round($height * $scale));
+        $dst = imagecreatetruecolor($newWidth, $newHeight);
+        $white = imagecolorallocate($dst, 255, 255, 255);
+        imagefilledrectangle($dst, 0, 0, $newWidth, $newHeight, $white);
+        imagecopyresampled($dst, $src, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+
+        $jpeg = '';
+        foreach ([84, 76, 68, 60, 52] as $quality) {
+            ob_start();
+            imagejpeg($dst, null, $quality);
+            $jpeg = (string) ob_get_clean();
+            if ($jpeg !== '' && strlen($jpeg) <= 245760) {
+                break;
+            }
+        }
+        if ($jpeg === '' || strlen($jpeg) > 245760) {
+            throw new \RuntimeException('replicate_portrait_too_large');
+        }
+        return 'data:image/jpeg;base64,' . base64_encode($jpeg);
     }
 }
