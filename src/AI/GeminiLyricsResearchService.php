@@ -54,9 +54,7 @@ final class GeminiLyricsResearchService
                 Config::getInt('ai.text_timeout_seconds', 45)
             );
         } catch (\Throwable $e) {
-            $status = $e->getMessage() === 'provider_http_400'
-                ? 'grounding-request-rejected'
-                : 'search-failed';
+            $status = self::safeFailureStatus($e->getMessage());
             return self::emptyResult($artist, $title, $status);
         }
 
@@ -101,6 +99,20 @@ final class GeminiLyricsResearchService
                 'maxOutputTokens' => 4200,
             ],
         ];
+    }
+
+    public static function safeFailureStatus(string $providerError): string
+    {
+        return match ($providerError) {
+            'provider_http_400' => 'grounding-request-rejected',
+            'provider_http_401', 'provider_http_403' => 'provider-auth-or-permission-failed',
+            'provider_http_404' => 'provider-model-unavailable',
+            'provider_http_429' => 'provider-rate-limited',
+            'provider_timeout' => 'provider-timeout',
+            'provider_network_error', 'provider_empty_response' => 'provider-network-failed',
+            'provider_http_500', 'provider_http_502', 'provider_http_503', 'provider_http_504' => 'provider-temporarily-unavailable',
+            default => 'search-failed',
+        };
     }
 
     /** @param array<string, mixed> $response @return array<string, mixed> */

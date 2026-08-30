@@ -27,10 +27,14 @@ final class ProviderHttp
         ]);
         $response = curl_exec($ch);
         $status = (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
+        $errno = curl_errno($ch);
         $error = curl_error($ch);
         curl_close($ch);
 
         if (!is_string($response)) {
+            if ($errno === CURLE_OPERATION_TIMEDOUT) {
+                throw new \RuntimeException('provider_timeout');
+            }
             throw new \RuntimeException($error !== '' ? 'provider_network_error' : 'provider_empty_response');
         }
         if ($status < 200 || $status >= 300) {

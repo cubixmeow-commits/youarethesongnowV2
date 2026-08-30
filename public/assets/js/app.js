@@ -238,11 +238,18 @@
       if (wrap) wrap.hidden = false;
     } else {
       if (status) {
-        status.textContent = research.status === 'grounding-request-rejected'
-          ? 'Gemini rejected the Google Search request before analyzing the song. This is a provider-request problem, not a song-not-found result.'
-          : research.status === 'search-failed'
-            ? 'Gemini or Google Search could not complete the request. This is a provider connection failure, not a confirmed song-not-found result.'
-            : 'Gemini could not complete a grounded lyric analysis for this exact artist and song. Generation will stop rather than pretend that metadata-only Song DNA came from the lyrics.';
+        const failureMessages = {
+          'grounding-request-rejected': 'Gemini rejected the Google Search request before analyzing the song. This is a provider-request problem, not a song-not-found result.',
+          'provider-auth-or-permission-failed': 'Gemini rejected the API key or this project does not have permission for Google Search grounding.',
+          'provider-model-unavailable': 'The configured Gemini model is not available to this API project.',
+          'provider-rate-limited': 'The Gemini project has reached a request or Google Search grounding limit. Wait briefly, then try again or inspect the project quota in Google AI Studio.',
+          'provider-timeout': 'Gemini Search took longer than the server allows. The song was not classified as missing.',
+          'provider-network-failed': 'The Hostinger server could not connect reliably to Gemini. The song was not classified as missing.',
+          'provider-temporarily-unavailable': 'Gemini is temporarily unavailable. The song was not classified as missing.',
+          'search-failed': 'Gemini or Google Search could not complete the request. This is a provider failure, not a confirmed song-not-found result.',
+        };
+        status.textContent = failureMessages[research.status]
+          || 'Gemini could not complete a grounded lyric analysis for this exact artist and song. Generation will stop rather than pretend that metadata-only Song DNA came from the lyrics.';
       }
       if (excerpt) {
         excerpt.textContent = '';
