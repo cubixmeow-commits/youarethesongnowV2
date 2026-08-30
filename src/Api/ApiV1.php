@@ -142,8 +142,15 @@ final class ApiV1
         $router->delete('/api/v1/portraits/{portraitId}', function (Request $request, array $params) {
             $session = self::requireSession();
             self::requireCsrf($request);
-            PortraitService::delete((int) $session['user_id'], $params['portraitId']);
-            JsonResponse::data(['deleted' => true]);
+            try {
+                PortraitService::delete((int) $session['user_id'], $params['portraitId']);
+                JsonResponse::data(['deleted' => true]);
+            } catch (\RuntimeException $e) {
+                if ($e->getMessage() === 'not_found') {
+                    JsonResponse::error('not_found', 'Portrait not found.', 404);
+                }
+                throw $e;
+            }
         });
 
         $router->post('/api/v1/song-lookups', function (Request $request) {

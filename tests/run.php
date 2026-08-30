@@ -81,6 +81,7 @@ use Yatsn\Generation\SongLookupService;
 use Yatsn\Mail\Mailer;
 use Yatsn\Portraits\PortraitService;
 use Yatsn\Sharing\GalleryService;
+use Yatsn\Storage\LocalStorage;
 use Yatsn\Styles\StyleService;
 use Yatsn\Support\Config;
 use Yatsn\Support\Database;
@@ -166,6 +167,50 @@ try {
     $blocked = true;
 }
 assert_true($blocked, 'user cannot access another account portrait');
+
+$portraitRow = Database::one('SELECT * FROM portraits WHERE public_id = :pid', ['pid' => $portrait['id']]);
+assert_true(is_array($portraitRow), 'portrait row exists before delete');
+$storageKey = (string) $portraitRow['storage_key'];
+$thumbKey = (string) $portraitRow['thumb_key'];
+assert_true(\Yatsn\Storage\LocalStorage::exists($storageKey), 'portrait storage file exists before delete');
+assert_true(\Yatsn\Storage\LocalStorage::exists($thumbKey), 'portrait thumb file exists before delete');
+
+$foreignDeleteBlocked = false;
+try {
+    PortraitService::delete((int) $other['id'], $portrait['id']);
+} catch (Throwable $e) {
+    $foreignDeleteBlocked = $e->getMessage() === 'not_found';
+}
+assert_true($foreignDeleteBlocked, 'user cannot delete another account portrait');
+assert_true(\Yatsn\Storage\LocalStorage::exists($storageKey), 'foreign delete attempt leaves owned portrait file intact');
+
+PortraitService::delete((int) $user['id'], $portrait['id']);
+$deletedRow = Database::one('SELECT * FROM portraits WHERE public_id = :pid', ['pid' => $portrait['id']]);
+assert_true($deletedRow !== null && $deletedRow['deleted_at'] !== null, 'portrait soft-delete sets deleted_at');
+assert_true(!\Yatsn\Storage\LocalStorage::exists($storageKey), 'portrait storage file removed after delete');
+assert_true(!\Yatsn\Storage\LocalStorage::exists($thumbKey), 'portrait thumb file removed after delete');
+$listAfterDelete = PortraitService::list((int) $user['id']);
+assert_true(count(array_filter($listAfterDelete, fn ($p) => $p['id'] === $portrait['id'])) === 0, 'deleted portrait absent from list');
+
+$missingDeleteBlocked = false;
+try {
+    PortraitService::delete((int) $user['id'], $portrait['id']);
+} catch (Throwable $e) {
+    $missingDeleteBlocked = $e->getMessage() === 'not_found';
+}
+assert_true($missingDeleteBlocked, 'deleting already-deleted portrait is rejected');
+
+// Fresh owned portrait for the rest of the creative-path tests.
+$uploadTmp = $testStorage . '/tmp/upload.jpg';
+copy($fixture, $uploadTmp);
+$portrait = PortraitService::upload((int) $user['id'], [
+    'tmp_name' => $uploadTmp,
+    'error' => UPLOAD_ERR_OK,
+    'size' => filesize($uploadTmp),
+    'name' => 'face.jpg',
+    'type' => 'image/jpeg',
+]);
+assert_true(isset($portrait['id']), 'replacement portrait upload succeeds after delete');
 
 $lookup = SongLookupService::create((int) $user['id'], 'Owner Test Band', 'Midnight Harbor');
 assert_true($lookup['state'] === 'found', 'deterministic song lookup found');

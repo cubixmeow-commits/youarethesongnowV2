@@ -111,12 +111,18 @@ final class PortraitService
         if ($row === null) {
             throw new \RuntimeException('not_found');
         }
-        LocalStorage::delete($row['storage_key']);
-        LocalStorage::delete($row['thumb_key']);
+        // Soft-delete the record first so content endpoints stop serving it,
+        // then remove files if still present (missing files are tolerated).
         Database::exec(
-            'UPDATE portraits SET deleted_at = :d WHERE id = :id',
-            ['d' => now_utc(), 'id' => $row['id']]
+            'UPDATE portraits SET deleted_at = :d WHERE id = :id AND user_id = :uid',
+            ['d' => now_utc(), 'id' => $row['id'], 'uid' => $userId]
         );
+        if (!empty($row['storage_key'])) {
+            LocalStorage::delete((string) $row['storage_key']);
+        }
+        if (!empty($row['thumb_key'])) {
+            LocalStorage::delete((string) $row['thumb_key']);
+        }
     }
 
     public static function content(int $userId, string $publicId, bool $thumb = false): array

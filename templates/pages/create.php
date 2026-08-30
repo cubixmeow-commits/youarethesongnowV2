@@ -20,17 +20,19 @@
       <section class="movement movement--primary" id="the-song" aria-labelledby="song-heading">
         <p class="movement__num">01</p>
         <h2 id="song-heading">The song</h2>
-        <p class="movement__lead">Choose your song</p>
-        <form id="song-form" class="stack">
-          <label>
-            <span>Artist or band</span>
-            <input type="text" name="artist" required placeholder="Enter the artist or band" autocomplete="off">
-          </label>
-          <label>
-            <span>Song title</span>
-            <input type="text" name="title" required placeholder="Enter the song title" autocomplete="off">
-          </label>
-          <button class="btn btn--secondary" type="submit">Find my song</button>
+        <p class="movement__lead">Set the track that opens this world.</p>
+        <form id="song-form" class="stack track-source">
+          <div class="track-source__fields">
+            <label>
+              <span>Artist or band</span>
+              <input type="text" name="artist" required placeholder="Enter the artist or band" autocomplete="off">
+            </label>
+            <label>
+              <span>Song title</span>
+              <input type="text" name="title" required placeholder="Enter the song title" autocomplete="off">
+            </label>
+          </div>
+          <button class="btn btn--secondary btn--retrieve" type="submit">Find my song</button>
           <p class="status" data-song-status role="status" aria-live="polite"></p>
         </form>
         <div class="development-source" data-development-analysis-panel hidden>
@@ -53,7 +55,7 @@
       <section class="movement" id="the-people" aria-labelledby="people-heading" hidden>
         <p class="movement__num">02</p>
         <h2 id="people-heading">The people</h2>
-        <p class="movement__lead">Who belongs in this story?</p>
+        <p class="movement__lead">Add source portraits for the cast of this world.</p>
         <p class="quiet">Add one or two clear portraits. We will use their faces to place them naturally inside your cinematic world.</p>
         <form id="portrait-form" class="stack">
           <label class="file">
@@ -64,26 +66,26 @@
           <p class="quiet">Only upload photos you have permission to use. Your photos remain private and are processed only to create your artwork. See <a href="/privacy">Privacy</a>.</p>
           <p class="status" data-portrait-status role="status" aria-live="polite"></p>
         </form>
-        <div class="portrait-grid" data-portrait-grid></div>
+        <div class="portrait-tray" data-portrait-grid role="list" aria-label="Portrait source material"></div>
       </section>
 
       <section class="movement" id="the-direction" aria-labelledby="direction-heading" hidden>
         <p class="movement__num">03</p>
         <h2 id="direction-heading">The direction</h2>
 
-        <div class="stack">
+        <div class="stack direction-controls">
           <div>
             <h3>Choose your world</h3>
-            <p class="quiet">Select the visual style that will lead your image.</p>
+            <p class="quiet">Select the visual treatment that will lead your image.</p>
             <div class="style-grid" data-style-grid role="listbox" aria-label="Styles"></div>
           </div>
 
-          <fieldset>
+          <fieldset class="direction-fieldset">
             <legend>Choose image quality</legend>
             <div class="choice-row" data-quality-row></div>
           </fieldset>
 
-          <fieldset>
+          <fieldset class="direction-fieldset">
             <legend>Choose a format</legend>
             <div class="choice-row" data-orientation-row></div>
           </fieldset>
@@ -146,4 +148,15 @@
       </div>
     </aside>
   </div>
+
+  <dialog class="confirm-sheet" data-portrait-delete-dialog>
+    <form method="dialog" class="confirm-sheet__panel stack">
+      <h3>Delete this portrait?</h3>
+      <p class="quiet">This removes the uploaded portrait from your creative materials. It cannot be undone.</p>
+      <div class="confirm-sheet__actions">
+        <button class="btn btn--secondary" value="cancel" type="submit">Cancel</button>
+        <button class="btn btn--danger" value="confirm" type="submit" data-portrait-delete-confirm>Delete</button>
+      </div>
+    </form>
+  </dialog>
 </section>

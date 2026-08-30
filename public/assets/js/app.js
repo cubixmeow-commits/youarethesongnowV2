@@ -142,12 +142,17 @@
     if (!grid) return;
     grid.innerHTML = '';
     state.portraits.forEach((p) => {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'portrait-chip' + (state.selectedPortraitIds.includes(p.id) ? ' is-selected' : '');
-      btn.setAttribute('aria-pressed', state.selectedPortraitIds.includes(p.id) ? 'true' : 'false');
-      btn.innerHTML = `<img src="${p.thumbnailUrl}" alt="Saved portrait">`;
-      btn.addEventListener('click', async () => {
+      const tile = document.createElement('div');
+      tile.className = 'portrait-chip' + (state.selectedPortraitIds.includes(p.id) ? ' is-selected' : '');
+      tile.setAttribute('role', 'listitem');
+
+      const selectBtn = document.createElement('button');
+      selectBtn.type = 'button';
+      selectBtn.className = 'portrait-chip__select';
+      selectBtn.setAttribute('aria-pressed', state.selectedPortraitIds.includes(p.id) ? 'true' : 'false');
+      selectBtn.setAttribute('aria-label', state.selectedPortraitIds.includes(p.id) ? 'Deselect portrait' : 'Include portrait in session');
+      selectBtn.innerHTML = `<img src="${p.thumbnailUrl}" alt="">`;
+      selectBtn.addEventListener('click', async () => {
         if (state.selectedPortraitIds.includes(p.id)) {
           state.selectedPortraitIds = state.selectedPortraitIds.filter((id) => id !== p.id);
         } else if (state.selectedPortraitIds.length < 2) {
@@ -160,8 +165,54 @@
         updateSummary();
         maybeShowDirection();
       });
-      grid.appendChild(btn);
+
+      const deleteBtn = document.createElement('button');
+      deleteBtn.type = 'button';
+      deleteBtn.className = 'portrait-chip__delete';
+      deleteBtn.setAttribute('aria-label', 'Delete portrait');
+      deleteBtn.innerHTML = '<span aria-hidden="true">×</span>';
+      deleteBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        openPortraitDeleteDialog(p.id);
+      });
+
+      tile.appendChild(selectBtn);
+      tile.appendChild(deleteBtn);
+      grid.appendChild(tile);
     });
+  }
+
+  let pendingPortraitDeleteId = null;
+
+  function openPortraitDeleteDialog(portraitId) {
+    pendingPortraitDeleteId = portraitId;
+    const dialog = $('[data-portrait-delete-dialog]');
+    if (!dialog) return;
+    if (typeof dialog.showModal === 'function') {
+      dialog.showModal();
+    } else {
+      dialog.setAttribute('open', 'open');
+    }
+  }
+
+  async function deletePortrait(portraitId) {
+    const status = $('[data-portrait-status]');
+    try {
+      await api(`/api/v1/portraits/${encodeURIComponent(portraitId)}`, { method: 'DELETE' });
+      state.portraits = state.portraits.filter((p) => p.id !== portraitId);
+      const wasSelected = state.selectedPortraitIds.includes(portraitId);
+      state.selectedPortraitIds = state.selectedPortraitIds.filter((id) => id !== portraitId);
+      if (wasSelected) {
+        await patchDraft({ portraitIds: state.selectedPortraitIds });
+      }
+      renderPortraits();
+      updateSummary();
+      maybeShowDirection();
+      setStatus(status, 'Portrait deleted.');
+    } catch (err) {
+      setStatus(status, err.message || 'Could not delete this portrait.', true);
+    }
   }
 
   function renderStyles() {
@@ -219,8 +270,8 @@
     if (state.songLookup && ['found', 'fallbackFound'].includes(state.songLookup.state)) {
       if (people) people.hidden = false;
     }
-    if (state.selectedPortraitIds.length > 0 && direction) {
-      direction.hidden = false;
+    if (direction) {
+      direction.hidden = !(state.selectedPortraitIds.length > 0);
     }
   }
 
@@ -399,6 +450,17 @@
       } catch (err) {
         setStatus(status, 'We could not upload this photo. Choose another photo or try again.', true);
       }
+    });
+
+    const deleteDialog = $('[data-portrait-delete-dialog]');
+    deleteDialog?.addEventListener('close', async () => {
+      const portraitId = pendingPortraitDeleteId;
+      pendingPortraitDeleteId = null;
+      if (!portraitId || deleteDialog.returnValue !== 'confirm') return;
+      await deletePortrait(portraitId);
+    });
+    deleteDialog?.querySelector('[data-portrait-delete-confirm]')?.addEventListener('click', () => {
+      deleteDialog.returnValue = 'confirm';
     });
 
     $('[data-special-toggle]')?.addEventListener('change', (e) => {
