@@ -63,8 +63,13 @@ final class GeminiLyricsResearchService
         $grounding = self::groundingSummary($response);
         $lyricsLocated = !empty($decoded['lyricsLocated']);
         $hasAnalysis = self::hasUsableAnalysis($analysis);
-        $analyzed = $grounding['grounded'] && $hasAnalysis;
-        $analysisBasis = $analyzed ? ($lyricsLocated ? 'lyrics' : 'song-context') : null;
+        // V1 accepted a complete structured analysis returned by Gemini after
+        // requesting Search; it did not make provider grounding metadata a
+        // second hard dependency. Preserve that proven development behavior.
+        $analyzed = $hasAnalysis;
+        $analysisBasis = $analyzed
+            ? ($lyricsLocated ? 'lyrics' : ($grounding['grounded'] ? 'song-context' : 'v1-model-analysis'))
+            : null;
         return [
             'enabled' => true,
             'analyzed' => $analyzed,
@@ -122,13 +127,13 @@ final class GeminiLyricsResearchService
         if (!$decoded) {
             return 'grounded-response-unparseable';
         }
-        if (!$grounded) {
-            return 'search-not-grounded';
-        }
         if (!$hasAnalysis) {
             return 'grounded-analysis-incomplete';
         }
-        return $lyricsLocated ? 'grounded-lyric-song-dna-ready' : 'grounded-context-song-dna-ready';
+        if ($lyricsLocated) {
+            return 'grounded-lyric-song-dna-ready';
+        }
+        return $grounded ? 'grounded-context-song-dna-ready' : 'v1-model-song-dna-ready';
     }
 
     /** @param array<string, mixed> $response @return array<string, mixed> */

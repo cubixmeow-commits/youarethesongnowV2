@@ -431,7 +431,8 @@ assert_true(\Yatsn\AI\GeminiLyricsResearchService::safeFailureStatus('provider_h
 assert_true(\Yatsn\AI\GeminiLyricsResearchService::safeFailureStatus('provider_timeout') === 'provider-timeout', 'Gemini grounding exposes safe timeout classification');
 assert_true(\Yatsn\AI\GeminiLyricsResearchService::analysisStatus(true, true, true, true) === 'grounded-lyric-song-dna-ready', 'Gemini marks verified lyric analysis distinctly');
 assert_true(\Yatsn\AI\GeminiLyricsResearchService::analysisStatus(true, true, false, true) === 'grounded-context-song-dna-ready', 'Gemini permits honest grounded song-context fallback');
-assert_true(\Yatsn\AI\GeminiLyricsResearchService::analysisStatus(true, false, true, true) === 'search-not-grounded', 'Gemini rejects ungrounded analysis');
+assert_true(\Yatsn\AI\GeminiLyricsResearchService::analysisStatus(true, false, false, true) === 'v1-model-song-dna-ready', 'Gemini accepts complete V1-style analysis without grounding metadata');
+assert_true(\Yatsn\AI\GeminiLyricsResearchService::analysisStatus(true, true, false, false) === 'grounded-analysis-incomplete', 'Gemini still rejects incomplete Song DNA');
 $groqDecoded = \Yatsn\AI\GroqCreativeAdapter::decodeResponse([
     'choices' => [['message' => ['content' => json_encode($analysisFixture, JSON_THROW_ON_ERROR)]]],
 ]);

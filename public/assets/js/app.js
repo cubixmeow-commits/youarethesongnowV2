@@ -215,7 +215,9 @@
       if (status) {
         status.textContent = research.analysisBasis === 'lyrics'
           ? `Gemini used Google Search to locate the lyrics and created lyric-based Song DNA with ${confidence}% match confidence. The worker will repeat this analysis when you generate the image.`
-          : `Gemini could not confirm the exact lyrics, so it created grounded Song DNA from reliable public information about the song with ${confidence}% match confidence. This is the approved song-context fallback, not a claim that lyrics were analyzed.`;
+          : research.analysisBasis === 'song-context'
+            ? `Gemini could not confirm the exact lyrics, so it created grounded Song DNA from reliable public information about the song with ${confidence}% match confidence. This is the approved song-context fallback, not a claim that lyrics were analyzed.`
+            : `Gemini created complete Song DNA using the proven V1 development method with ${confidence}% match confidence. Google Search verification metadata was unavailable, so this result is not labeled as confirmed lyric analysis.`;
       }
       if (excerpt) {
         excerpt.textContent = research.verificationExcerpt ? `Short verification fingerprint: “${research.verificationExcerpt}”` : '';
@@ -251,7 +253,6 @@
           'provider-network-failed': 'The Hostinger server could not connect reliably to Gemini. The song was not classified as missing.',
           'provider-temporarily-unavailable': 'Gemini is temporarily unavailable. The song was not classified as missing.',
           'grounded-response-unparseable': 'Gemini completed Google Search but did not return Song DNA in the required structure.',
-          'search-not-grounded': 'Gemini returned a response without verifiable Google Search grounding, so generation stopped.',
           'grounded-analysis-incomplete': 'Gemini completed Google Search but did not return enough reliable Song DNA to generate an image.',
           'search-failed': 'Gemini or Google Search could not complete the request. This is a provider failure, not a confirmed song-not-found result.',
         };
