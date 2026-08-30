@@ -463,6 +463,9 @@ assert_true(strlen($compactEditPrompt) <= 3800, 'Replicate P-Image-Edit prompt s
 assert_true(str_contains($compactEditPrompt, $analysisFixture['originalVisualMoment']), 'Replicate compact prompt preserves the Song DNA visual moment');
 assert_true(str_contains($compactEditPrompt, 'image 1 and image 2'), 'Replicate compact prompt anchors both portrait identities imperatively');
 assert_true(str_contains($compactEditPrompt, 'no readable text'), 'Replicate compact prompt puts no-text rule near the start');
+assert_true(str_contains($compactEditPrompt, 'large enough to recognize at gallery size'), 'Replicate requires visible portrait-scale identity');
+assert_true(str_contains($compactEditPrompt, 'must not visually overwhelm or hide them'), 'Replicate keeps the cinematic environment subordinate to the protagonists');
+assert_true(str_contains($compactEditPrompt, 'tiny, distant, obscured'), 'Replicate explicitly rejects silhouette-scale protagonists');
 assert_true(\Yatsn\AI\ReplicateImageAdapter::aspectMatches(1024, 1024, '1:1'), 'Replicate accepts matching square output');
 assert_true(!\Yatsn\AI\ReplicateImageAdapter::aspectMatches(1344, 768, '1:1'), 'Replicate rejects wrong landscape placeholder for square request');
 

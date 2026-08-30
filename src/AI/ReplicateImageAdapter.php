@@ -171,8 +171,8 @@ final class ReplicateImageAdapter implements ImageAdapterInterface
         };
         $environment = is_array($dna['environment'] ?? null) ? $dna['environment'] : [];
         $identity = $imageCount >= 2
-            ? 'Using the distinct people from image 1 and image 2, replace both source photos with one unified artwork. Preserve both recognizable faces separately and make them equal protagonists. Never merge, swap, duplicate, average, or omit either identity.'
-            : 'Using the person from image 1, replace the entire source photo with one unified artwork. Preserve their recognizable face and make them the sole primary protagonist. Do not add or substitute another main person.';
+            ? 'Using the distinct people from image 1 and image 2, replace both source photos with one unified artwork. Preserve both recognizable faces separately and make them equal, prominent protagonists. Show both people waist-up or full-body in the foreground or near middle ground, with unobstructed, naturally lit faces large enough to recognize at gallery size. Never merge, swap, duplicate, average, omit, silhouette, or push either person into the distant background.'
+            : 'Using the person from image 1, replace the entire source photo with one unified artwork. Preserve their recognizable face and make them the sole prominent protagonist. Show them waist-up or full-body in the foreground or near middle ground, front-facing or three-quarter view, with an unobstructed, naturally lit face large enough to recognize at gallery size. Do not add or substitute another main person, reduce them to a silhouette, or push them into the distant background.';
         $textRule = !empty($snapshot['noTextInImage'])
             ? 'Generate no readable text of any kind: no words, letters, signs, captions, error messages, logos, signatures, or watermarks.'
             : 'Do not generate lyrics, song or performer names, album text, logos, brands, or copyrighted phrases.';
@@ -188,6 +188,7 @@ final class ReplicateImageAdapter implements ImageAdapterInterface
             $textRule,
             'Do not show the source photo as an inset, collage, frame, card, screen, or visible reference. Change its background, crop, pose, lighting, and clothing to belong naturally in the new world.',
             'Create this exact original dramatic moment: ' . $line($narrative['moment'] ?? ($dna['originalVisualMoment'] ?? ''), 520),
+            'Re-stage that moment around the referenced person or people. Their face, emotion, pose, and action must carry the story; the environment supports them and must not visually overwhelm or hide them.',
             'Emotional meaning: ' . $line($dna['essence'] ?? '', 320),
             'Themes and mood: ' . $line(array_merge(
                 is_array($dna['themes'] ?? null) ? $dna['themes'] : [],
@@ -204,7 +205,7 @@ final class ReplicateImageAdapter implements ImageAdapterInterface
             ), 300) . '.',
             'Dominant selected style: ' . $line($style['styleName'] ?? ($narrative['styleLead'] ?? ''), 120) . '. ' . $line($style['medium'] ?? '', 240) . '. ' . $line($style['color'] ?? '', 200) . '. ' . $line($style['lighting'] ?? '', 200) . '. ' . $line($style['surface'] ?? '', 180) . '.',
             $quality,
-            'Return exactly one finished original scene. The person or people must be clearly recognizable, naturally integrated, and visibly driving the story.',
+            'Return exactly one finished original scene. Identity fidelity is the first acceptance requirement: every referenced face must be clearly recognizable, prominent, naturally integrated, and visibly driving the story. Reject any composition where a required person is tiny, distant, obscured, back-facing, or only a silhouette.',
         ]));
 
         return substr($prompt, 0, 3800);
