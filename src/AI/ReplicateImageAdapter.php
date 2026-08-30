@@ -45,7 +45,7 @@ final class ReplicateImageAdapter implements ImageAdapterInterface
         };
         $prompt = (string) ($package['compiledPromptSafe'] ?? '');
         $input = match ($model) {
-            'prunaai/p-image-edit' => $this->portraitEditInput($prompt, $snapshot, $aspect),
+            'prunaai/p-image-edit' => $this->portraitEditInput($package, $snapshot, $aspect),
             'black-forest-labs/flux-schnell' => [
                 'prompt' => implode("\n", [
                     $prompt,
@@ -102,11 +102,15 @@ final class ReplicateImageAdapter implements ImageAdapterInterface
             throw new \RuntimeException('replicate_output_url_invalid');
         }
         $download = ProviderHttp::getBinary($url, Config::getInt('ai.image_download_timeout_seconds', 30));
-        return FalImageAdapter::normalizeImage(
+        $normalized = FalImageAdapter::normalizeImage(
             $download['bytes'],
             $this->name() . ':' . $model,
             Config::getInt('ai.replicate_image_cost_cents', 1)
         );
+        if (!self::aspectMatches((int) $normalized['width'], (int) $normalized['height'], $aspect)) {
+            throw new \RuntimeException('replicate_output_aspect_mismatch');
+        }
+        return $normalized;
     }
 
     /** @param array<string, mixed> $prediction */
@@ -117,7 +121,7 @@ final class ReplicateImageAdapter implements ImageAdapterInterface
     }
 
     /** @return array<string, mixed> */
-    private function portraitEditInput(string $prompt, array $snapshot, string $aspect): array
+    private function portraitEditInput(array $package, array $snapshot, string $aspect): array
     {
         $userId = (int) ($snapshot['userId'] ?? 0);
         if ($userId <= 0) {
@@ -135,30 +139,88 @@ final class ReplicateImageAdapter implements ImageAdapterInterface
             }
             $images[] = self::privatePortraitDataUri(LocalStorage::get((string) $row['storage_key']));
         }
-        $identity = count($images) === 1
-            ? implode("\n", [
-                'P-IMAGE-EDIT TASK: Use image 1 only as the authorized facial-identity reference for the sole protagonist.',
-                'Preserve the person’s recognizable face and stable identity cues, but completely replace the reference background, crop, pose, lighting, and clothing as required by the new scene.',
-                'Do not reproduce the source photograph as an inset, collage layer, framed picture, or visible reference image.',
-            ])
-            : implode("\n", [
-                'P-IMAGE-EDIT TASK: Image 1 and image 2 are two different authorized facial-identity references for two equal protagonists.',
-                'Preserve each recognizable face separately. Never blend, average, duplicate, or swap their identities.',
-                'Completely replace both source backgrounds, crops, poses, lighting, and clothing as required by the new shared scene.',
-                'Do not reproduce either source photograph as an inset, collage layer, framed picture, or visible reference image.',
-            ]);
         return [
             'images' => $images,
-            'prompt' => implode("\n\n", [
-                $identity,
-                $prompt,
-                'Return only one finished, unified artwork. Identity fidelity and the selected StyleMap are both mandatory.',
-            ]),
+            'prompt' => self::compactPortraitEditPrompt($package, $snapshot, count($images)),
             // Pruna recommends disabling turbo for complicated multi-image edits.
             'turbo' => false,
             'aspect_ratio' => $aspect,
             'disable_safety_checker' => false,
         ];
+    }
+
+    /**
+     * P-Image-Edit responds best to a concise imperative edit instruction, not
+     * the complete provider-neutral prompt. Keep the canonical package intact
+     * while compiling only its highest-value controls for this provider.
+     *
+     * @param array<string, mixed> $package
+     * @param array<string, mixed> $snapshot
+     */
+    public static function compactPortraitEditPrompt(array $package, array $snapshot, int $imageCount): string
+    {
+        $dna = is_array($package['dna'] ?? null) ? $package['dna'] : [];
+        $narrative = is_array($package['narrative'] ?? null) ? $package['narrative'] : [];
+        $style = is_array($package['styleMap'] ?? null) ? $package['styleMap'] : [];
+        $line = static function (mixed $value, int $max = 260): string {
+            if (is_array($value)) {
+                $value = implode(', ', array_filter(array_map('strval', $value)));
+            }
+            $value = preg_replace('/\s+/u', ' ', trim(is_scalar($value) ? (string) $value : '')) ?? '';
+            return substr($value, 0, $max);
+        };
+        $environment = is_array($dna['environment'] ?? null) ? $dna['environment'] : [];
+        $identity = $imageCount >= 2
+            ? 'Using the distinct people from image 1 and image 2, replace both source photos with one unified artwork. Preserve both recognizable faces separately and make them equal protagonists. Never merge, swap, duplicate, average, or omit either identity.'
+            : 'Using the person from image 1, replace the entire source photo with one unified artwork. Preserve their recognizable face and make them the sole primary protagonist. Do not add or substitute another main person.';
+        $textRule = !empty($snapshot['noTextInImage'])
+            ? 'Generate no readable text of any kind: no words, letters, signs, captions, error messages, logos, signatures, or watermarks.'
+            : 'Do not generate lyrics, song or performer names, album text, logos, brands, or copyrighted phrases.';
+        $quality = match ((string) ($snapshot['quality'] ?? 'medium')) {
+            'high' => 'Finish as premium poster-ready artwork with excellent facial fidelity, dimensional materials, rich dynamic range, and coherent fine detail.',
+            'low' => 'Prioritize identity, scene clarity, composition, and style over micro-detail.',
+            default => 'Finish as refined production artwork with strong facial fidelity, dimensional lighting, coherent materials, and clean detail.',
+        };
+
+        $prompt = implode("\n", array_filter([
+            'P-IMAGE-EDIT INSTRUCTION',
+            $identity,
+            $textRule,
+            'Do not show the source photo as an inset, collage, frame, card, screen, or visible reference. Change its background, crop, pose, lighting, and clothing to belong naturally in the new world.',
+            'Create this exact original dramatic moment: ' . $line($narrative['moment'] ?? ($dna['originalVisualMoment'] ?? ''), 520),
+            'Emotional meaning: ' . $line($dna['essence'] ?? '', 320),
+            'Themes and mood: ' . $line(array_merge(
+                is_array($dna['themes'] ?? null) ? $dna['themes'] : [],
+                is_array($dna['mood'] ?? null) ? $dna['mood'] : []
+            ), 360),
+            'Build a dimensional foreground, middle ground, and background. Environment: ' . $line(array_merge(
+                is_array($environment['settingTypes'] ?? null) ? $environment['settingTypes'] : [],
+                is_array($environment['weather'] ?? null) ? $environment['weather'] : [],
+                is_array($environment['spatialCharacter'] ?? null) ? $environment['spatialCharacter'] : []
+            ), 360),
+            'Visual direction: palette ' . $line($dna['palette'] ?? [], 220) . '; lighting ' . $line($dna['lighting'] ?? [], 220) . '; camera and composition ' . $line(array_merge(
+                is_array($dna['camera'] ?? null) ? $dna['camera'] : [],
+                is_array($dna['composition'] ?? null) ? $dna['composition'] : []
+            ), 300) . '.',
+            'Dominant selected style: ' . $line($style['styleName'] ?? ($narrative['styleLead'] ?? ''), 120) . '. ' . $line($style['medium'] ?? '', 240) . '. ' . $line($style['color'] ?? '', 200) . '. ' . $line($style['lighting'] ?? '', 200) . '. ' . $line($style['surface'] ?? '', 180) . '.',
+            $quality,
+            'Return exactly one finished original scene. The person or people must be clearly recognizable, naturally integrated, and visibly driving the story.',
+        ]));
+
+        return substr($prompt, 0, 3800);
+    }
+
+    public static function aspectMatches(int $width, int $height, string $aspect): bool
+    {
+        if ($width <= 0 || $height <= 0) {
+            return false;
+        }
+        $expected = match ($aspect) {
+            '3:4' => 0.75,
+            '4:3' => 4 / 3,
+            default => 1.0,
+        };
+        return abs(($width / $height) - $expected) <= 0.12;
     }
 
     /** Produces an ephemeral data URI under Replicate's recommended small-file ceiling. */

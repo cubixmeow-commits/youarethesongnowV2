@@ -455,6 +455,16 @@ $portraitDataUri = \Yatsn\AI\ReplicateImageAdapter::privatePortraitDataUri($larg
 $portraitPayload = base64_decode(substr($portraitDataUri, strpos($portraitDataUri, ',') + 1), true);
 assert_true(str_starts_with($portraitDataUri, 'data:image/jpeg;base64,'), 'Replicate portrait reference is an ephemeral JPEG data URI');
 assert_true(is_string($portraitPayload) && strlen($portraitDataUri) <= 245760, 'Replicate portrait reference stays below complete data-URI ceiling');
+$compactEditPrompt = \Yatsn\AI\ReplicateImageAdapter::compactPortraitEditPrompt($safePackage, [
+    'quality' => 'high',
+    'noTextInImage' => true,
+], 2);
+assert_true(strlen($compactEditPrompt) <= 3800, 'Replicate P-Image-Edit prompt stays below provider long-prompt ceiling');
+assert_true(str_contains($compactEditPrompt, $analysisFixture['originalVisualMoment']), 'Replicate compact prompt preserves the Song DNA visual moment');
+assert_true(str_contains($compactEditPrompt, 'image 1 and image 2'), 'Replicate compact prompt anchors both portrait identities imperatively');
+assert_true(str_contains($compactEditPrompt, 'no readable text'), 'Replicate compact prompt puts no-text rule near the start');
+assert_true(\Yatsn\AI\ReplicateImageAdapter::aspectMatches(1024, 1024, '1:1'), 'Replicate accepts matching square output');
+assert_true(!\Yatsn\AI\ReplicateImageAdapter::aspectMatches(1344, 768, '1:1'), 'Replicate rejects wrong landscape placeholder for square request');
 
 // Regeneration prepopulates draft
 $regen = GenerationJobService::recreateDraftFromImage((int) $user['id'], $imageId);
