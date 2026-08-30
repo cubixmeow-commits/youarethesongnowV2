@@ -3,9 +3,13 @@
 # ChatGPT ↔ Cursor Design Handoff
 
 **Branch:** `cursor/visual-music-adventure-94fc`  
-**PR:** https://github.com/cubixmeow-commits/youarethesongnowV2/pull/9  
-**Last updated by Cursor:** 2026-08-30  
-**Active round:** 001 (awaiting ChatGPT → Cursor)
+**Last updated by Cursor:** 2026-08-30 (Pass 2 / Round 002)  
+**Active round:** 002 (awaiting ChatGPT visual review)
+
+**Workflow roles**
+
+- `design/CHATGPT_CURSOR_DESIGN_HANDOFF.md` = **canonical history** (this file), maintained by Cursor after each round.
+- `design/CHATGPT_NEXT_PASS.md` = **ChatGPT inbox** for the next pass instructions.
 
 ---
 
@@ -13,242 +17,103 @@
 
 Transform the existing application into a premium mobile-app-first experience inspired by music, creativity, cinematic imagery, and adventure, while preserving application functionality.
 
-The long-term product shape:
-
-- primary: Flutter/Dart iOS app
-- same design system: Flutter Android
-- web: desktop/web expression of the same app identity
-- ChatGPT creates custom visual assets Cursor requests
-- Cursor integrates assets and iterates from visual review
+Target read: **song → imagination → visual journey → collection**  
+UI should feel like a premium creative instrument wrapped around artwork, not a membership funnel.
 
 ---
 
 ## Current Design State
 
-Pass 1 of the mobile-app-first system is implemented in CSS + app chrome markup. Functionality is unchanged.
+Pass 2 builds on Pass 1 tokens/chrome.
 
 ### Navigation model
 
-- **Mobile (<900px):** fixed **bottom tab bar** with icon + label (`Create`, `Gallery`, `Account`, optional `Owner`, or `Sign in` when logged out). Same routes as before.
-- **Desktop (≥900px):** same destinations as a **left app rail** (88px). Compact sticky top brand bar remains.
-- Brand mark + wordmark in top chrome; legal links in a quiet footer.
+- Mobile: bottom tabs (`Create`, `Gallery`, `Account`; `Owner` de-emphasized as secondary/private)
+- Desktop: compact ~88px left rail (unchanged width per ChatGPT)
+- Guest: `Sign in` tab only
 
 ### Color system
 
-Dark graphite / midnight navy foundation. Accent is warm **amber stage light**. Atmospheric **indigo haze** used as light, not paint. Warm paper text. Artwork supplies most chroma.
+Unchanged foundation: graphite/midnight + amber stage-light accent + indigo haze. Artwork supplies vivid color. Amber used as light/selection/action, not large brand fill.
 
 ### Typography
 
-- Display / titles: **Instrument Serif**
-- UI / body: **DM Sans**
-- Roles: Display, Large title, Title, Headline, Body, Callout, Caption, Metadata (tokenized in CSS)
+Instrument Serif + DM Sans; tokenized roles unchanged.
 
 ### Surfaces
 
-Hierarchy: `bg` → `surface` → `surface-elevated` → chrome (blurred top/tab/rail) → artwork stages. Hairline borders + restrained shadows. Auth panels use elevated sheet surfaces; Create summary is a sticky elevated panel on desktop.
+Open composition preferred. Auth uses hairline sheet framing (less floating card). Create summary = **session board** (album/sleeve feel). Session header sits above movements.
 
 ### Artwork treatment
 
-- Welcome hero: near full-bleed cinematic image with veil + copy over calm tonal area
-- Examples: horizontal snap carousel on phone; 3-up grid on tablet+
-- Gallery: square collection tiles (2-col phone → denser desktop), not dating circles
-- Reveal: near edge-to-edge on phone; large rounded frame on desktop
-- Portraits: **square album crops** (not circular profile chips)
+- Guest hero now uses **adventure/solo** launch imagery (`example-solo`), not couple embrace as brand identity
+- Examples ordered: solo → energy → intimate (shared worlds last, still valid)
+- Gallery/reveal/portraits remain square album-style
 
 ### Mobile layout
 
-~390–430 CSS px conceptual width. 48px touch targets. Safe-area insets on top bar and tab bar. Single-column Create with summary below. Content shell padded; artwork may bleed.
+Launchpad home; Create session header + progress chips; stacked session board; bottom tabs; safe areas.
 
 ### Desktop layout
 
-Body offset for left rail. Create becomes split: main movements + sticky summary. Gallery denser. Same tokens/controls/typography as mobile.
+Left rail preserved; Create = workspace + session board; intentional separators; atmosphere still CSS-only pending assets.
 
 ### Creation interface
 
-Still one-page Create flow with movements `01 The song` / `02 The people` / `03 The direction`. Visually framed as a **creative session** (backdrop hooks, numbered liner-note style, session summary) rather than a signup form. All fields/actions behave as before.
+Presentation-only **Creative Session**: header (art placeholder, title synced to song lookup, progress 01/02/03), movements as one composition, session board instead of “Summary/checkout” framing. **All fields and submit behavior preserved.** Tiny JS presentation sync updates session title + progress emphasis when sections unhide—no business logic changes.
 
 ### Responsive behavior
 
-Phone → tablet → desktop expands the same app chrome. Prefer app-like max widths for reading; wider for artwork grids.
-
-### Important reusable components / classes
-
-`app`, `app-topbar`, `app-nav`, `app-nav__item`, `brand`, `btn` (+ primary/secondary/ghost/danger), `panel.narrow`, `create`, `movement`, `create__summary`, `portrait-chip`, `style-option`, `choice-row`, `gallery-item`, `reveal__figure`, `playhead`, type tokens `--type-*`, color tokens `--color-*`
-
-Canonical detail: `design/DESIGN_SYSTEM.md`  
-CSS source of truth: `public/assets/css/app.css`  
-Chrome: `templates/layouts/main.php`
+Same as Pass 1 (phone → tablet → desktop expansion of one app).
 
 ---
 
 ## Design System
 
-### Colors
+Unchanged core tokens from Pass 1 (`design/DESIGN_SYSTEM.md` + `public/assets/css/app.css`).
 
-| Token | Role |
-| --- | --- |
-| `--color-bg` | Base scaffold |
-| `--color-surface` / `--color-surface-elevated` | Content / sheets |
-| `--color-surface-chrome` | Top bar / tabs / rail |
-| `--color-text` / `--color-text-secondary` / `--color-text-tertiary` | Text hierarchy |
-| `--color-accent` / `--color-accent-soft` | Primary action / selection |
-| `--color-haze` | Atmospheric indigo light |
-| `--color-border` / `--color-border-strong` | Hairlines |
-| `--color-success` / `--color-warning` / `--color-destructive` | Semantics |
+Pass 2 additions (presentation classes):
 
-### Typography
-
-Instrument Serif (emotional) + DM Sans (UI). See roles above. Body ~16px; inputs ≥16px to avoid iOS zoom.
-
-### Spacing
-
-4 / 8 / 12 / 16 / 24 / 32 / 48 / 64 px (`--space-1` … `--space-8`). Touch min 48px.
-
-### Radii
-
-8 / 14 / 20 / 28 / pill (`--radius-sm` … `--radius-pill`).
-
-### Elevation
-
-0 flat · 1 hairline · 2 soft panel shadow · 3 artwork/modal depth.
-
-### Controls
-
-Primary filled amber · Secondary outlined · Ghost text · Danger quiet outline · Icon buttons 48×48 · Segmented choice chips · Style tiles · Square portrait chips.
-
-### Navigation
-
-Bottom tabs (phone) / left rail (desktop). Active = accent color + `aria-current`.
-
-### Artwork presentation
-
-Large, immersive, minimal chrome over art. Collection/contact-sheet gallery. Album-like square crops.
-
-### Motion
-
-140ms press · 220ms hover · 420ms cover reveal. `prefers-reduced-motion` honored. No nightclub animation.
-
-### Mobile behavior
-
-Bottom tabs, safe areas, horizontal example snap, stacked Create, edge-aware reveal.
-
-### Desktop behavior
-
-Left rail, split Create, denser gallery, larger framed reveal. Same visual language.
+- `.hero--launchpad`
+- `.session-header`, `.session-progress`, `.session-board`
+- `.movement--primary`, `.movement__lead`
+- `.app-nav__item--secondary` (Owner)
+- `.btn--generate`, `.paywall-panel`
+- `.examples__intro`
 
 ---
 
 ## Asset Inventory
 
-| Filename | Path | Dimensions | Format | Purpose | Where used | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| `hero-listening-room-*.webp` | `public/assets/images/launch/` | 960 / 1672 wide | WebP | Welcome hero photography | Home hero | integrated (pre-existing) |
-| `example-intimate-*.webp` | `public/assets/images/launch/` | 560 / 1122 | WebP | Example artwork | Home examples | integrated (pre-existing) |
-| `example-solo-*.webp` | `public/assets/images/launch/` | 560 / 1122 | WebP | Example artwork | Home examples | integrated (pre-existing) |
-| `example-energy-*.webp` | `public/assets/images/launch/` | 560 / 1122 | WebP | Example artwork | Home examples | integrated (pre-existing) |
-| `layout-interlude-*.webp` | `public/assets/images/launch/` | 960 / 1774 | WebP | Interlude backdrop | Home interlude | integrated (pre-existing) |
-| `layout-groove-*.webp` | `public/assets/images/launch/` | 640 / 1254 | WebP | Create session backdrop (temp) | `.create` CSS hook | integrated (legacy stand-in) |
-| `layout-mobile-*.webp` | `public/assets/images/launch/` | 480 / 941 | WebP | Mobile create backdrop (temp) | `.create` CSS hook | integrated (legacy stand-in) |
-| *(none yet)* | `public/assets/images/system/` | — | — | System design assets folder (empty, ready) | CSS hooks await drop-in | proposed |
+| Filename | Path | Purpose | Status |
+| --- | --- | --- | --- |
+| `example-solo-*.webp` | `public/assets/images/launch/` | Now primary guest hero + example | integrated |
+| `example-energy-*.webp` | `public/assets/images/launch/` | Example adventure | integrated |
+| `example-intimate-*.webp` | `public/assets/images/launch/` | Example shared world (de-emphasized in order) | integrated |
+| `hero-listening-room-*.webp` | `public/assets/images/launch/` | Former couple hero | retired from primary hero (file retained) |
+| `layout-groove-*` / `layout-mobile-*` | `public/assets/images/launch/` | Temp create backdrop | integrated stand-in |
+| `layout-interlude-*` | `public/assets/images/launch/` | Interlude | integrated |
+| system assets | `public/assets/images/system/` | ChatGPT deliveries | **empty / awaiting** |
 
-CSS asset hooks already exist (`--asset-atmosphere`, `--asset-session-phone`, `--asset-session-desktop`) for ChatGPT deliveries under `public/assets/images/system/`.
+CSS hooks remain: `--asset-atmosphere`, `--asset-session-phone`, `--asset-session-desktop`.
 
 ---
 
 ## Open Asset Requests
 
-Full specs also live in `design/ASSET_REQUESTS.md`. Summary for ChatGPT generation:
+Priority unchanged per ChatGPT Pass 2:
 
-### 1. app-atmosphere-haze
+1. **`app-atmosphere-haze`** (phone + desktop) — highest global impact  
+2. **`launch-mark-tile`** — replace CSS brand mark placeholder  
+3. `creative-session-backdrop`  
+4. `empty-collection-still`  
+5. `paywall-world-preview` (defer until Create/home identity is solid)
 
-**Purpose:** Subtle full-bleed atmospheric texture behind the app scaffold.  
-**Component/Page:** Global `body.app` background.  
-**Dimensions:** phone 1290×2796; desktop 2400×1600.  
-**Aspect Ratio:** ~9:19.5 and 3:2.  
-**Format:** WebP (~80).  
-**Transparent Background:** no (opaque dark).  
-**Composition:** Soft indigo–violet pool upper-right; warm amber spill lower-left; calm dark graphite center for UI readability. No subjects.  
-**Visual Style:** Cinematic concert haze through soft glass; restrained grain OK.  
-**Palette:** Midnight navy/graphite; indigo haze; warm amber. No rainbow, no dating red/black.  
-**Safe Areas / Overlay Requirements:** Mid/lower ~60% must stay quiet for text/forms.  
-**Must Include:** Abstract light only.  
-**Must Avoid:** People, text, logos, notes, vinyl, headphones, EQ bars, album covers, UI chrome.  
-**Desktop Usage:** Fixed/cover backdrop.  
-**Mobile Usage:** Same, phone crop.  
-**Flutter Future Usage:** Raster `DecorationImage` on scaffold (or later procedural).  
-**Suggested File Path:** `public/assets/images/system/app-atmosphere-haze-phone.webp` + `...-desktop.webp`
+Full specs: `design/ASSET_REQUESTS.md`. No spec changes required after Pass 2 composition, except:
 
-### 2. empty-collection-still
-
-**Purpose:** Premium empty Gallery state.  
-**Component/Page:** Gallery zero-state.  
-**Dimensions:** 1200×1200 (optional 1800×1800).  
-**Aspect Ratio:** 1:1.  
-**Format:** WebP with alpha preferred, else PNG.  
-**Transparent Background:** yes preferred.  
-**Composition:** Dark square “unopened journey” / empty album slot / unlit stage portal; soft rim light; tiny amber spark; ~12% outer margin.  
-**Visual Style:** Editorial photo-book empty plate; not cartoon.  
-**Palette:** Graphite, indigo rim, amber spark.  
-**Safe Areas / Overlay Requirements:** Outer margin for caption below.  
-**Must Include:** Abstract empty frame/portal.  
-**Must Avoid:** People, text, folder icons, sad tropes, music-note stickers.  
-**Desktop/Mobile Usage:** Centered above empty copy.  
-**Flutter Future Usage:** Empty-state illustration widget.  
-**Suggested File Path:** `public/assets/images/system/empty-collection-still.webp`
-
-### 3. creative-session-backdrop
-
-**Purpose:** Quiet studio/listening-room backdrop for Create (replace legacy groove photos).  
-**Component/Page:** `.create` session.  
-**Dimensions:** phone 1290×2200; desktop 2200×1600.  
-**Aspect Ratio:** tall phone / landscape desktop.  
-**Format:** WebP.  
-**Transparent Background:** no.  
-**Composition:** Very dark matte surface; soft concentric falloff from top center; micro-grain; center 60% low-contrast for forms.  
-**Visual Style:** Record-sleeve liner / dark studio wall.  
-**Palette:** Charcoal, soft indigo edge, faint amber crown.  
-**Safe Areas / Overlay Requirements:** Lower two-thirds quiet.  
-**Must Include:** Matte tactile darkness + soft light falloff.  
-**Must Avoid:** Text, faces, literal instruments, busy waveforms.  
-**Desktop/Mobile Usage:** CSS background stack via `--asset-session-*`.  
-**Flutter Future Usage:** `BoxDecoration` image behind create flow.  
-**Suggested File Path:** `public/assets/images/system/creative-session-backdrop-phone.webp` + `...-desktop.webp`
-
-### 4. launch-mark-tile
-
-**Purpose:** App-like brand mark for chrome / future splash exploration.  
-**Component/Page:** `.app-topbar` brand mark (CSS placeholder today).  
-**Dimensions:** 1024×1024 (+ 128/256 derivatives).  
-**Aspect Ratio:** 1:1.  
-**Format:** PNG master + WebP.  
-**Transparent Background:** opaque for icon tests; optional transparent chrome version.  
-**Composition:** Abstract luminous aperture/portal (“enter the song”); amber core; indigo field; 10% safe margin.  
-**Visual Style:** Premium app-icon family; simple; no skeuomorphic vinyl.  
-**Palette:** Indigo field, amber core, graphite rim.  
-**Safe Areas / Overlay Requirements:** Works at ~28–32px UI size.  
-**Must Include:** Abstract portal/glow only.  
-**Must Avoid:** Letterforms, music notes, faces, banding gradients.  
-**Desktop/Mobile Usage:** Beside wordmark.  
-**Flutter Future Usage:** In-app mark; store icons later separate.  
-**Suggested File Path:** `public/assets/images/system/launch-mark-tile.png` (+ `.webp`)
-
-### 5. paywall-world-preview (optional / defer if capacity limited)
-
-**Purpose:** Emotional still for membership panel.  
-**Component/Page:** Create paywall (`[data-paywall]`).  
-**Dimensions:** 1600×1000 and 1200×1200 crop.  
-**Aspect Ratio:** 16:10 + 1:1.  
-**Format:** WebP.  
-**Transparent Background:** no.  
-**Composition:** Cinematic doorway into luminous landscape; silhouettes only if any; left third darker for text.  
-**Visual Style:** Adventurous cinematic still; non-dating.  
-**Palette:** Indigo dusk + amber horizon.  
-**Safe Areas / Overlay Requirements:** Left ~30% text-safe.  
-**Must Include:** Threshold / world-entry feeling.  
-**Must Avoid:** Logos, pricing text, seductive/dating couple framing.  
-**Desktop/Mobile Usage:** Background or adjacent image on paywall panel.  
-**Flutter Future Usage:** Paywall sheet header.  
-**Suggested File Path:** `public/assets/images/system/paywall-world-preview.webp`
+- Brand mark should drop into `.brand__mark` / optional `.session-header__art` once delivered
+- Atmosphere should assign to `--asset-atmosphere`
+- Session backdrop should replace groove stand-ins via `--asset-session-*`
 
 ---
 
@@ -258,81 +123,94 @@ Full specs also live in `design/ASSET_REQUESTS.md`. Summary for ChatGPT generati
 
 #### Work Completed
 
-Completed **Pass 1: premium mobile-app-first design system** on the existing PHP/HTML/CSS web app as a visual prototype for the future Flutter product.
+Implemented **Pass 2** exactly from `design/CHATGPT_NEXT_PASS.md`:
 
-- Established Flutter-portable design tokens in CSS
-- Rebuilt app chrome: mobile bottom tabs + desktop left rail (same IA/routes)
-- Applied premium type hierarchy and control system
-- Restyled Create as a creative session, Gallery as collection, auth as elevated sheets, reveal as artwork-first
-- Wrote `design/DESIGN_SYSTEM.md` and `design/ASSET_REQUESTS.md`
-- Earlier pass also moved palette away from dating red/black and AI-console purple/cyan
+- Preserved Pass 1 foundation (tabs/rail/tokens/palette/square crops/functionality)
+- Guest Home → app launchpad (adventure hero, Start with a song, example reorder)
+- Create → Creative Session instrument presentation (header, progress, session board)
+- Reduced dating/membership visual cues (hero, auth framing, people remain square chips, paywall quieter panel framing)
+- Owner nav visually secondary
+- Asset hooks kept ready; no fake decorative substitutes invented
+- Screenshot protocol + review pack added
+- Handoff workflow roles documented
 
 #### Files Changed
 
-- `public/assets/css/app.css` — full token + component system
-- `templates/layouts/main.php` — app shell (top bar + tab/rail nav); presentation only; routes unchanged
-- `design/DESIGN_SYSTEM.md` — system reference
-- `design/ASSET_REQUESTS.md` — asset specs
-- `design/CHATGPT_CURSOR_DESIGN_HANDOFF.md` — this file
-- `site/index.html` — landing CSS cache-bust (marketing page separate from app shell)
+- `templates/pages/welcome.php`
+- `templates/pages/create.php`
+- `templates/layouts/main.php`
+- `public/assets/css/app.css`
+- `public/assets/js/app.js` (presentation-only: session title + progress emphasis sync)
+- `design/CHATGPT_NEXT_PASS.md` (marked consumed)
+- `design/CHATGPT_CURSOR_DESIGN_HANDOFF.md` (this update)
+- `design/review/round-002/*` (screenshots + README)
 
 #### Visual Decisions
 
-- Mobile app is the primary canvas; desktop expands the same product
-- Bottom tabs / left rail replace website-style primary nav
-- Amber accent as stage light; indigo as atmosphere; artwork carries emotion
-- Square portrait chips and gallery tiles (anti dating-profile circles)
-- Restrained radii and fewer floating cards; one elevated summary/sheet where interaction needs grouping
-- CSS hooks for system assets so ChatGPT files can drop in without functional work
+- Couple hero retired from brand identity; solo/adventure defines launch
+- CTA label “Start with a song” (same `/sign-in` href)
+- Create reads as session assembly; summary renamed/framed as session board
+- Owner remains available but visually quieter
+- Palette not re-litigated
 
 #### Mobile Result
 
-At ~390px: compact top brand, bottom tab bar with safe area, Create as stacked session + summary, example art as horizontal snap on home, no horizontal overflow in QA. Feels closer to a native creative app shell than a responsive marketing site.
+See `design/review/round-002/home-mobile-390.png`, `create-mobile-390.png`, `gallery-mobile-390.png`.
+
+Launchpad hero + bottom Sign in; Create shows Creative Session header and 01/02/03 chips; Owner label muted/uppercase.
 
 #### Desktop Result
 
-Left rail + sticky top brand; Create split workspace; denser gallery; same tokens/controls. Intentionally still sparse in places—ChatGPT should judge whether desktop needs richer artwork density or more “expanded phone” composition.
+See `home-desktop-1440.png`, `create-desktop-1440.png`, `gallery-desktop-1440.png` (actual ~1240px wide browser capture).
+
+Left rail retained; Create shows session board on the right; guest home shows adventure hero with Sign in in rail.
+
+#### Dating / SaaS cue audit
+
+| Cue | Action |
+| --- | --- |
+| Couple-as-brand hero | Reduced — replaced with solo adventure hero |
+| Intimate example first | Reduced — moved last |
+| Create as form sections | Reduced — session header + movements + board |
+| Summary as checkout card | Reduced — session board framing |
+| Auth floating membership card | Reduced — hairline open panel |
+| Circular portraits | Already square — kept |
+| Owner as equal consumer tab | Reduced — secondary styling |
+| Flat dark website emptiness | Partially addressed via composition; still needs atmosphere asset |
+| Paywall membership tone | Lightly quieted visually; copy untouched; asset deferred |
 
 #### Functionality Audit
 
-**No intentional functional changes.** APIs, backend, DB, auth behavior, generation, routes, form submits, and JS application logic were not rewritten. Layout markup for chrome was restructured for presentation only; hrefs match prior IA.
-
-#### Questions for ChatGPT
-
-1. Does the amber-on-graphite + indigo haze read as **music/adventure premium**, or still too close to membership/dating when paired with couple hero photography?
-2. Should welcome/home for guests keep the cinematic marketing hero, or become more **app-home / library** like a signed-in product?
-3. Is the Create flow still too “form-like”? If yes, what presentation pattern should Pass 2 pursue **without removing fields** (e.g., progressive sheets, song “now playing” header, artwork stage first)?
-4. Desktop rail at 88px—keep, widen with labels beside icons, or move to a collapsible side sheet?
-5. Which **two assets** should ChatGPT generate first for maximum impact (Cursor recommends: `app-atmosphere-haze` + `empty-collection-still` or `launch-mark-tile`)?
-6. Any must-keep / must-change notes after reviewing screenshots from PR #9?
+**No intentional backend/API/database/auth/generation/route/business-logic changes.**  
+Forms, fields, submits, and permissions unchanged. JS only syncs presentational session header/progress from existing create state.
 
 #### Assets Needed From ChatGPT
 
-See **Open Asset Requests** above (and `design/ASSET_REQUESTS.md`). Priority suggestion: **1 → 2 → 4 → 3 → 5**.
+Still: **1) app-atmosphere-haze**, **2) launch-mark-tile** first.
 
 #### Problems / Uncertainties
 
-- Create can still feel like a conventional dark form with a summary card—session metaphor needs stronger visual proof
-- Guest home still leans marketing-poster; app-home identity for logged-out users is unclear
-- Brand mark is a CSS gradient placeholder—needs real `launch-mark-tile`
-- Atmosphere is CSS gradients only—needs real haze asset
-- Gallery empty state is text-only
-- Owner tab in primary nav may feel odd for a consumer app chrome (keep for private Build 1, restyle later?)
-- Hero couple imagery may still trigger dating associations regardless of chrome
-- Desktop create still has a lot of empty dark field; may need intentional artwork/atmosphere fill
+- Session art placeholder is still CSS glow (awaits launch-mark / session art)
+- Empty gallery still text-only (awaits empty-collection-still)
+- Desktop capture width ~1240 not full 1440
+- Create may still feel somewhat form-like until atmosphere/backdrop assets land
+- Paywall not screenshot (needs unsubscribed path)
+
+#### Questions for ChatGPT (max 3)
+
+1. After screenshots, does guest Home read as a creative app launchpad, or still marketing?
+2. Is Create’s session header + board enough of an “instrument,” or should Pass 3 push further **presentation-only** densification (without field removal)?
+3. Confirm next asset generation order is still haze → mark, or switch after seeing screenshots?
 
 #### Recommended Next Pass
 
-1. ChatGPT critiques Pass 1 and answers the questions above  
-2. ChatGPT generates priority system assets into paths listed  
-3. Cursor integrates assets via existing CSS hooks  
-4. Pass 2 refinements: Create “instrument” presentation, empty collection, stronger brand mark, optional guest home decision—**still design-only**
+Do **not** start Pass 3 until ChatGPT reviews `design/review/round-002/` and writes new instructions into `design/CHATGPT_NEXT_PASS.md`.
 
 ---
 
 ### ChatGPT → Cursor
 
-*(Awaiting ChatGPT. Place critique, next refinement instructions, asset delivery notes, keep/change/don’t-touch lists, and experiments here.)*
+*(Awaiting ChatGPT visual review of Round 002 screenshots and next inbox in `design/CHATGPT_NEXT_PASS.md`.)*
 
 ---
 
@@ -341,13 +219,24 @@ See **Open Asset Requests** above (and `design/ASSET_REQUESTS.md`). Priority sug
 ### Round 001 — Mobile-app-first system foundation (2026-08-30)
 
 **Cursor Report**  
-Implemented Pass 1 design system + app chrome (bottom tabs / left rail), tokenized CSS, creative-session styling, design docs, asset request manifest. PR #9. Functionality preserved.
+Tokens, bottom tabs / left rail, creative-session CSS foundation, design docs, asset request manifest. PR #9 merged.
+
+**ChatGPT Response**  
+Recorded in `design/CHATGPT_NEXT_PASS.md` (Pass 2 instructions): keep foundation; fix visual story; launchpad home; Create as instrument; keep 88px rail; prioritize atmosphere + mark assets; add screenshot protocol; split inbox vs canonical handoff.
+
+**Outcome**  
+Accepted → implemented as Round 002 / Pass 2.
+
+### Round 002 — Creative session + launchpad (2026-08-30)
+
+**Cursor Report**  
+See CURRENT HANDOFF above. Screenshots in `design/review/round-002/`.
 
 **ChatGPT Response**  
 *(pending)*
 
 **Outcome**  
-*(pending — awaiting ChatGPT review and assets)*
+*(pending visual review)*
 
 ---
 
@@ -355,74 +244,72 @@ Implemented Pass 1 design system + app chrome (bottom tabs / left rail), tokeniz
 
 | Screen / Area | Status | Last Changed | Notes |
 | --- | --- | --- | --- |
-| Global shell | In progress | Round 001 | Tokens + chrome; atmosphere asset pending |
-| Mobile navigation | In progress | Round 001 | Bottom tabs live; needs visual polish review |
-| Desktop shell | In progress | Round 001 | Left rail live; density/emptiness TBD |
-| Home (guest welcome) | In progress | Round 001 | Cinematic hero; may still read marketing/dating |
-| Create | In progress | Round 001 | Session framing started; still form-heavy |
-| Find My Song (within Create) | Not deeply reviewed | Round 001 | Same controls; presentation only |
-| Image result / Reveal | Lightly styled | Round 001 | Artwork-first; needs visual review |
-| Gallery / Collection | In progress | Round 001 | Grid OK; empty state needs asset |
-| Account | Lightly styled | Round 001 | Sheet/panel; clarity > atmosphere |
-| Sign-in / Activate | In progress | Round 001 | Elevated narrow panel |
-| Paywall (in Create) | Not reviewed | Round 001 | Optional world-preview asset |
-| Owner admin | Minimal | Round 001 | Operational; not premium marketing |
-| Public `site/` landing | Separate | Prior | Marketing static page; not app shell |
+| Global shell | In progress | Round 002 | Atmosphere asset still pending |
+| Mobile navigation | Improved | Round 002 | Owner secondary |
+| Desktop shell | Stable | Round 002 | 88px rail kept |
+| Home (guest) | Needs review | Round 002 | Launchpad + adventure hero |
+| Create | Needs review | Round 002 | Session instrument presentation |
+| Find My Song | Unchanged behavior | Round 002 | Same fields |
+| Reveal | Lightly styled | Round 001 | Not re-shot (no images) |
+| Gallery | Needs empty asset | Round 002 | Empty state text only |
+| Account | Light | Round 001 | Clarity first |
+| Sign-in | Improved | Round 002 | Less card funnel |
+| Paywall | Deferred polish | Round 002 | Presentation quieted only |
+| Owner | De-emphasized | Round 002 | Route intact |
+| Review screenshots | Added | Round 002 | `design/review/round-002/` |
 
 ---
 
 ## DESIGN ISSUES / BACKLOG
 
-- Create still risks reading as a conventional form / membership step
-- Guest home may still feel like a dating-adjacent cinematic landing (couple hero)
-- Atmosphere currently CSS-only; lacks photographic depth
-- Empty gallery lacks premium illustration
-- Brand mark is placeholder CSS, not a real mark tile
-- Desktop Create wastes horizontal darkness; needs intentional fill or composition
-- Owner item in consumer tab bar may dilute product feel
-- Progressive disclosure / “instrument” presentation for Create not yet explored visually
-- Premium micro-interaction pass (beyond cover reveal / playhead) not started
-- Flutter widget map not yet drawn as a separate component inventory beyond tokens
-- `site/` marketing landing not fully aligned with app shell identity
+- Atmosphere still CSS gradients (needs `app-atmosphere-haze`)
+- Brand mark still CSS placeholder (needs `launch-mark-tile`)
+- Empty gallery needs premium still
+- Create may still read partly as a form until backdrop/ denser instrument pass
+- Desktop emptiness partially improved; needs haze + possible session backdrop
+- Paywall world preview deferred
+- Flutter component inventory still thin beyond tokens
+- `site/` marketing landing still separate from app shell identity
 
 ---
 
 ## DESIGN DECISIONS — DO NOT REGRESS
 
 - Mobile app is the primary design target.
-- Desktop is an expanded expression of the mobile app, not a different product.
-- Future implementation will be Flutter/Dart (iOS first, then Android).
-- Generated imagery should visually dominate the experience.
-- Avoid dating-site aesthetics (profile circles, glossy red CTAs, seductive membership chrome).
-- Avoid generic SaaS dashboard aesthetics.
-- Avoid excessive glassmorphism.
-- Avoid excessive gradients / rainbow UI.
-- Avoid unnecessary cards; elevate only when interaction grouping needs it.
+- Desktop is an expanded expression of the mobile app.
+- Future implementation will be Flutter/Dart.
+- Generated imagery should visually dominate.
+- Avoid dating-site aesthetics.
+- Avoid generic SaaS aesthetics.
+- Avoid excessive glassmorphism / rainbow gradients / unnecessary cards.
 - Preserve existing functionality while refining design.
-- Prefer reusable visual primitives that translate cleanly to Flutter.
-- Prefer calm UI structure; emotional complexity comes from music + artwork.
-- Bottom tabs (mobile) / left rail (desktop) for primary IA—do not revert to website top-nav-as-primary without an explicit decision.
-- Square album-style portrait/gallery crops preferred over circular profile chips.
-- Accent = stage-light amber; haze = indigo atmosphere; foundations = midnight/graphite.
-- Raw lyrics remain memory-only (product rule; not a visual rule but do not invent UI that implies lyric storage).
-- Design communication for ChatGPT ↔ Cursor lives in this file going forward.
+- Prefer Flutter-portable primitives.
+- Bottom tabs (mobile) / compact ~88px left rail (desktop).
+- Square album-style crops (not profile circles).
+- Accent = amber stage light; haze = indigo; foundations = midnight/graphite.
+- **Do not solve dating associations by changing the palette again** — fix imagery/composition/story.
+- Guest Home should feel like an **app launchpad**, not a marketing/dating landing.
+- Create should feel like a **creative session/instrument**; fields remain; no accordion/wizard logic in design-only passes unless later authorized.
+- Owner may remain for private Build 1 but must not read as a primary consumer destination.
+- ChatGPT writes next instructions to `CHATGPT_NEXT_PASS.md`; Cursor consolidates into this canonical handoff.
+- Significant rounds include screenshots under `design/review/round-XXX/` when environment allows.
 
 ---
 
 ## CURSOR OPERATING RULES
 
-When instructed: **“Read the ChatGPT/Cursor design handoff and continue.”**
+When instructed to continue from the design handoff:
 
-1. Open `design/CHATGPT_CURSOR_DESIGN_HANDOFF.md`
-2. Read the entire current **ChatGPT → Cursor** section
-3. Inspect any relevant assets mentioned
-4. Implement the requested design pass
-5. Do not make unrelated functional changes
-6. Update **Current Design State** if necessary
-7. Update **Asset Inventory**
-8. Add new **Open Asset Requests** if necessary
-9. Write a detailed report into **Cursor → ChatGPT**
-10. Archive the completed exchange into **Round History** when appropriate
-11. Leave the project so ChatGPT can understand what happened by reading this file alone
+1. Read `design/CHATGPT_NEXT_PASS.md` (ChatGPT inbox) **and** this canonical handoff.
+2. Read **ChatGPT → Cursor** / inbox instructions fully.
+3. Inspect referenced assets/screenshots.
+4. Implement the requested design pass (design-only unless explicitly told otherwise).
+5. Do not make unrelated functional changes.
+6. Update Current Design State, Asset Inventory, Open Asset Requests.
+7. Capture screenshots into `design/review/round-XXX/` when possible; add README.
+8. Write Cursor → ChatGPT report here; archive prior exchange into Round History.
+9. Mark `CHATGPT_NEXT_PASS.md` consumed (or leave for ChatGPT to overwrite).
+10. Commit/push so ChatGPT can review via GitHub.
+11. Stop for visual review — do not speculate Pass N+1.
 
-Detailed design communication belongs in this Markdown file. Cursor’s chat reply to the human should stay very short.
+Detailed design communication belongs in these Markdown files. Cursor’s chat reply to the human should stay very short.
