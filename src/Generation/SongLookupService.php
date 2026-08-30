@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Yatsn\Generation;
 
+use Yatsn\AI\GeminiLyricsResearchService;
 use Yatsn\Support\Database;
 use Yatsn\Support\RateLimiter;
 
 final class SongLookupService
 {
-    /** Deterministic development catalog. No lyrics stored or returned. */
+    /** Deterministic development catalog. Any development lyrics remain transient. */
     private const FIXTURES = [
         ['artist' => 'Public Domain Demo', 'title' => 'Amazing Grace', 'confidence' => 0.96, 'state' => 'found'],
         ['artist' => 'Owner Test Band', 'title' => 'Midnight Harbor', 'confidence' => 0.91, 'state' => 'found'],
@@ -62,7 +63,11 @@ final class SongLookupService
         );
 
         $row = Database::one('SELECT * FROM song_lookups WHERE public_id = :pid', ['pid' => $publicId]);
-        return self::public($row);
+        $public = self::public($row);
+        // Returned to the current browser request for inspection only. This is
+        // deliberately fetched after all database writes and is never persisted.
+        $public['developmentLyrics'] = GeminiLyricsResearchService::lookup($artist, $title);
+        return $public;
     }
 
     public static function findOwned(int $userId, string $publicId): ?array

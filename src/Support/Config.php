@@ -50,6 +50,9 @@ final class Config
             'budget' => [
                 'monthly_ai_cents' => (int) (env_value('MONTHLY_AI_BUDGET_CENTS', '10000') ?? '10000'),
             ],
+            'development' => [
+                'gemini_lyrics_search' => self::toBool(env_value('DEVELOPMENT_GEMINI_LYRICS_SEARCH', 'false')),
+            ],
             'stripe' => [
                 'mode' => env_value('STRIPE_MODE', 'test'),
                 'secret_key' => env_value('STRIPE_SECRET_KEY', ''),
@@ -200,6 +203,7 @@ final class Config
             'ownerSeedConfigured' => self::get('owner.email') !== '',
             'developmentCredits' => self::getInt('credits.development_monthly'),
             'monthlyAiBudgetCents' => self::getInt('budget.monthly_ai_cents'),
+            'developmentGeminiLyricsSearch' => self::getBool('development.gemini_lyrics_search'),
             'creativeAdapter' => $ai['creativeAdapter'],
             'imageAdapter' => $ai['imageAdapter'],
             'ai' => $ai,

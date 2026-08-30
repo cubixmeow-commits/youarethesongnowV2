@@ -29,11 +29,24 @@ final class GeminiCreativeAdapter implements CreativeAdapterInterface
         if (!preg_match('/^[A-Za-z0-9._-]+$/', $model)) {
             throw new \RuntimeException('gemini_model_invalid');
         }
+        // The cron worker repeats the grounded lookup because raw lyrics cannot
+        // cross the request boundary without being stored. They remain in memory
+        // only for this call and are discarded after Song DNA is built.
+        $analysisSnapshot = $snapshot;
+        $research = GeminiLyricsResearchService::lookup(
+            (string) ($snapshot['artist'] ?? ''),
+            (string) ($snapshot['title'] ?? '')
+        );
+        if (!empty($research['lyricsFound']) && is_string($research['lyrics'] ?? null)) {
+            $analysisSnapshot['_developmentLyrics'] = $research['lyrics'];
+            $analysisSnapshot['_developmentLyricsGrounded'] = !empty($research['grounded']);
+        }
+
         $response = ProviderHttp::postJson(
             'https://generativelanguage.googleapis.com/v1beta/models/' . $model . ':generateContent',
             [
                 'systemInstruction' => ['parts' => [['text' => CreativePackageBuilder::systemPrompt()]]],
-                'contents' => [['role' => 'user', 'parts' => [['text' => CreativePackageBuilder::userPrompt($snapshot)]]]],
+                'contents' => [['role' => 'user', 'parts' => [['text' => CreativePackageBuilder::userPrompt($analysisSnapshot)]]]],
                 'generationConfig' => [
                     'temperature' => 0.7,
                     'maxOutputTokens' => 2600,

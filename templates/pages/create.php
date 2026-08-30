@@ -22,6 +22,20 @@
           <button class="btn btn--secondary" type="submit">Find my song</button>
           <p class="status" data-song-status role="status" aria-live="polite"></p>
         </form>
+        <div class="development-source" data-development-lyrics-panel hidden>
+          <h3>Development lyric inspection</h3>
+          <p><strong data-development-lyrics-song></strong></p>
+          <p class="quiet" data-development-lyrics-status></p>
+          <details data-development-lyrics-wrap hidden>
+            <summary>Show lyrics used for Song DNA</summary>
+            <pre data-development-lyrics-text></pre>
+          </details>
+          <div data-development-lyrics-sources hidden>
+            <p class="quiet"><strong>Google Search grounding sources</strong></p>
+            <ul data-development-lyrics-source-list></ul>
+          </div>
+          <p class="quiet">Private development aid. The lyric text is held only in memory for this request and is not saved by You Are The Song Now.</p>
+        </div>
       </section>
 
       <section class="movement" id="the-people" aria-labelledby="people-heading" hidden>

@@ -196,6 +196,46 @@
     }
   }
 
+  function renderDevelopmentLyrics(lookup) {
+    const panel = $('[data-development-lyrics-panel]');
+    const research = lookup?.developmentLyrics;
+    if (!panel || !research?.enabled) return;
+    panel.hidden = false;
+    const song = $('[data-development-lyrics-song]');
+    const status = $('[data-development-lyrics-status]');
+    const wrap = $('[data-development-lyrics-wrap]');
+    const lyrics = $('[data-development-lyrics-text]');
+    const sources = $('[data-development-lyrics-sources]');
+    const sourceList = $('[data-development-lyrics-source-list]');
+
+    if (song) song.textContent = `${research.matchedTitle || lookup.title} by ${research.matchedArtist || lookup.artist}`;
+    if (research.lyricsFound && research.lyrics) {
+      const confidence = Math.round((Number(research.matchConfidence) || 0) * 100);
+      if (status) status.textContent = `Gemini found grounded lyrics and matched them with ${confidence}% confidence. These lyrics will be searched again in memory when Song DNA is created.`;
+      if (lyrics) lyrics.textContent = research.lyrics;
+      if (wrap) wrap.hidden = false;
+    } else {
+      if (status) status.textContent = 'Gemini did not return reliable lyrics for this artist and song. Song DNA will use the available song information and mark the match as uncertain.';
+      if (lyrics) lyrics.textContent = '';
+      if (wrap) wrap.hidden = true;
+    }
+
+    if (sourceList) {
+      sourceList.innerHTML = '';
+      (research.sources || []).forEach((source) => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = source.url;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.textContent = source.title || 'Grounding source';
+        li.appendChild(a);
+        sourceList.appendChild(li);
+      });
+    }
+    if (sources) sources.hidden = !(research.sources || []).length;
+  }
+
   async function initCreate() {
     const root = $('[data-create]');
     if (!root) return;
@@ -248,6 +288,7 @@
           body: { artist: fd.get('artist'), title: fd.get('title') },
         });
         state.songLookup = res.data;
+        renderDevelopmentLyrics(res.data);
         await patchDraft({ songLookupId: res.data.id });
         if (res.data.state === 'notFound') {
           setStatus(status, 'We could not find enough reliable information about that song. Check the artist and title, or choose another song. No generation credits were used.', true);

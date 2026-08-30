@@ -194,6 +194,31 @@ h3 {
   font-size: 0.98rem;
 }
 
+.development-source {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid color-mix(in oklab, var(--accent) 35%, transparent);
+  background: color-mix(in oklab, var(--charcoal) 84%, transparent);
+}
+
+.development-source summary {
+  cursor: pointer;
+  color: var(--paper);
+}
+
+.development-source pre {
+  max-height: 24rem;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding: 0.85rem;
+  background: color-mix(in oklab, var(--ink) 88%, black);
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
 .eyebrow {
   text-transform: uppercase;
   letter-spacing: 0.14em;

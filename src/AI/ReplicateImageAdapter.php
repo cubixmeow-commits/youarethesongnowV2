@@ -133,10 +133,7 @@ final class ReplicateImageAdapter implements ImageAdapterInterface
             if ($row === null) {
                 throw new \RuntimeException('replicate_portrait_not_found');
             }
-            // Replicate's direct HTTP API represents file-array entries as value objects.
-            $images[] = [
-                'value' => self::privatePortraitDataUri(LocalStorage::get((string) $row['storage_key'])),
-            ];
+            $images[] = self::privatePortraitDataUri(LocalStorage::get((string) $row['storage_key']));
         }
         $identity = count($images) === 1
             ? 'Image 1 is the sole protagonist identity reference. Preserve that person’s recognizable facial identity while creating the entirely new scene.'
