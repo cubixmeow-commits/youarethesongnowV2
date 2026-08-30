@@ -3,7 +3,7 @@ type: design-system
 status: active
 updated: 2026-08-30
 area: visual-design
-phase: mobile-app-first-pass-1
+phase: round-004-premium-venue
 ---
 
 # You Are The Song Now — Design System (Pass 1)
@@ -38,6 +38,10 @@ CSS variables live in `public/assets/css/app.css` under `:root`. Flutter should 
 | `accent` | Primary creative action / selected | `--color-accent` | `primary` |
 | `accent-soft` | Soft accent wash | `--color-accent-soft` | `primaryContainer` |
 | `haze` | Atmospheric indigo light | `--color-haze` | decorative only |
+| `surface-lacquer` | Charcoal lacquer panels | `--color-surface-lacquer` | `surfaceContainerHigh` |
+| `surface-stone` | Honed stone inputs/trays | `--color-surface-stone` | `surfaceContainerHighest` |
+| `accent-brass` | Warm architectural light | `--color-accent-brass` | `primary` (refined) |
+| `border-hairline` | Ultra-quiet structure | `--color-border-hairline` | `outlineVariant` (lighter) |
 | `border` | Quiet hairline | `--color-border` | `outlineVariant` |
 | `border-strong` | Interactive outline | `--color-border-strong` | `outline` |
 | `success` | Success | `--color-success` | `tertiary` / custom |
@@ -129,7 +133,7 @@ Routes and labels match existing IA. Do not invent destinations.
 
 - Artwork prefers edge-to-edge or large framed stages (`.artwork`, `.reveal__figure`, `.gallery-item`, `.hero`).
 - Gallery = collection / contact sheet, not profile grid.
-- Create = creative session: numbered movements, quiet secondary controls, sticky session summary.
+- Create = private creative suite: curated stages, quiet secondary controls, session overview panel.
 
 ## Motion
 
@@ -165,4 +169,4 @@ Prefer `max-width` content shells (~430–720 for reading; wider for artwork gri
 
 ## Pass status
 
-Pass 1 establishes tokens, app chrome, controls, surfaces, create/gallery/auth presentation, and asset requests. Further polish waits for visual review and ChatGPT asset delivery.
+Round 004 evolves tokens toward premium venue materials (lacquer, stone, brass light), refines Create/Gallery/Home presentation, and updates asset requests. Further polish waits for visual review and ChatGPT asset delivery.
