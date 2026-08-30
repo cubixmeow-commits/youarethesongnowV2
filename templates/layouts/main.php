@@ -4,8 +4,25 @@
 /** @var array|null $session */
 /** @var bool $isHome */
 $isHome = !empty($isHome);
+$authed = !empty($session);
+$isOwner = $authed && (($session['role'] ?? '') === 'owner');
+$path = (string) (parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/');
 $cssVersion = (string) (filemtime(YATSN_ROOT . '/public/assets/css/app.css') ?: '1');
 $jsVersion = (string) (filemtime(YATSN_ROOT . '/public/assets/js/app.js') ?: '1');
+
+$navItems = [];
+if ($authed) {
+    $navItems[] = ['href' => '/create', 'label' => 'Create', 'icon' => 'create'];
+    $navItems[] = ['href' => '/gallery', 'label' => 'Gallery', 'icon' => 'gallery'];
+    $navItems[] = ['href' => '/account', 'label' => 'Account', 'icon' => 'account'];
+    if ($isOwner) {
+        $navItems[] = ['href' => '/owner', 'label' => 'Owner', 'icon' => 'owner'];
+    }
+} else {
+    $navItems[] = ['href' => '/sign-in', 'label' => 'Sign in', 'icon' => 'signin'];
+}
+
+$bodyClass = trim(($layoutClass ?? '') . ($isHome ? ' is-home' : '') . ($authed ? ' is-authed' : ' is-guest'));
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,31 +37,44 @@ $jsVersion = (string) (filemtime(YATSN_ROOT . '/public/assets/js/app.js') ?: '1'
   <link rel="preload" as="image" href="/assets/images/launch/hero-listening-room-960.webp" imagesrcset="/assets/images/launch/hero-listening-room-960.webp 960w, /assets/images/launch/hero-listening-room-1672.webp 1672w" imagesizes="100vw" fetchpriority="high">
   <?php endif; ?>
   <link rel="stylesheet" href="/assets/css/app.css?v=<?= e($cssVersion) ?>">
-  <meta name="theme-color" content="#121526">
+  <meta name="theme-color" content="#0E1118">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
-<body class="<?= e(trim(($layoutClass ?? '') . ($isHome ? ' is-home' : ''))) ?>">
+<body class="app <?= e($bodyClass) ?>">
   <a class="skip-link" href="#main">Skip to content</a>
-  <header class="site-header">
-    <div class="site-header__inner">
-      <a class="brand" href="<?= !empty($session) ? '/create' : '/' ?>">You Are The Song Now</a>
-      <nav class="site-nav" aria-label="Primary">
-        <?php if (!empty($session)): ?>
-          <a href="/create">Create</a>
-          <a href="/gallery">Gallery</a>
-          <a href="/account">Account</a>
-          <?php if (($session['role'] ?? '') === 'owner'): ?>
-            <a href="/owner">Owner</a>
-          <?php endif; ?>
-        <?php else: ?>
-          <a href="/sign-in">Sign in</a>
-        <?php endif; ?>
-      </nav>
+
+  <header class="app-topbar">
+    <div class="app-topbar__inner">
+      <a class="brand" href="<?= $authed ? '/create' : '/' ?>">
+        <span class="brand__mark" aria-hidden="true"></span>
+        <span class="brand__text">You Are The Song Now</span>
+      </a>
     </div>
   </header>
-  <main id="main">
+
+  <main id="main" class="app-main">
     <?= $content ?>
   </main>
-  <footer class="site-footer">
+
+  <nav class="app-nav" aria-label="Primary">
+    <?php foreach ($navItems as $item): ?>
+      <?php
+        $href = $item['href'];
+        $current = $path === $href || ($href !== '/' && str_starts_with($path, $href));
+      ?>
+      <a
+        class="app-nav__item<?= $current ? ' is-active' : '' ?>"
+        href="<?= e($href) ?>"
+        <?php if ($current): ?>aria-current="page"<?php endif; ?>
+      >
+        <span class="app-nav__icon app-nav__icon--<?= e($item['icon']) ?>" aria-hidden="true"></span>
+        <span class="app-nav__label"><?= e($item['label']) ?></span>
+      </a>
+    <?php endforeach; ?>
+  </nav>
+
+  <footer class="app-legal">
     <a href="/terms">Terms</a>
     <a href="/privacy">Privacy</a>
   </footer>
