@@ -349,13 +349,15 @@
       const status = $('[data-paywall-status]');
       setStatus(status, 'Opening checkout...');
       try {
-        await api('/api/v1/billing/checkout-sessions', {
+        const checkout = await api('/api/v1/billing/checkout-sessions', {
           method: 'POST',
           body: { draftId: state.draftId },
           idempotencyKey: idem(),
         });
+        if (!checkout.data?.url) throw new Error('Stripe did not return a checkout URL.');
+        window.location.href = checkout.data.url;
       } catch (err) {
-        setStatus(status, (err.message || 'Checkout unavailable') + ' Your creation is saved.', true);
+        setStatus(status, err.message || 'Checkout is unavailable. Your creation is saved.', true);
       }
     });
   }

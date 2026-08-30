@@ -79,7 +79,7 @@ final class StripeService
                 'quantity' => 1,
             ]],
             'client_reference_id' => $user['public_id'],
-            'customer' => [
+            'metadata' => [
                 'draft_id' => $draftId,
                 'user_public_id' => $user['public_id'],
             ],

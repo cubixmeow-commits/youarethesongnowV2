@@ -257,13 +257,15 @@ final class ApiV1
             ));
         });
 
-        $router->post('/api/v1/webhooks/stripe', function (Request $request) {
+        $stripeWebhook = function (Request $request): void {
             try {
                 JsonResponse::data(StripeService::handleWebhook($request->rawBody, $request->header('Stripe-Signature')));
             } catch (\Throwable $e) {
                 JsonResponse::error('webhook_rejected', 'Webhook rejected.', 400);
             }
-        });
+        };
+        $router->post('/api/v1/webhooks/stripe', $stripeWebhook);
+        $router->post('/api/v1/billing/stripe-webhook', $stripeWebhook);
 
         $router->post('/api/v1/generation-jobs', function (Request $request) {
             $session = self::requireSession();
