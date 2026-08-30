@@ -1,7 +1,7 @@
 # Round 002 — Visual review pack
 
 **Branch:** `cursor/visual-music-adventure-94fc`  
-**Commit:** *(filled at commit time — see git log)*  
+**Commit:** *30244e0*  
 **Date:** 2026-08-30  
 **Source instructions:** `design/CHATGPT_NEXT_PASS.md` (Pass 2)
 
