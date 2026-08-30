@@ -133,7 +133,10 @@ final class ReplicateImageAdapter implements ImageAdapterInterface
             if ($row === null) {
                 throw new \RuntimeException('replicate_portrait_not_found');
             }
-            $images[] = self::privatePortraitDataUri(LocalStorage::get((string) $row['storage_key']));
+            // Replicate's direct HTTP API represents file-array entries as value objects.
+            $images[] = [
+                'value' => self::privatePortraitDataUri(LocalStorage::get((string) $row['storage_key'])),
+            ];
         }
         $identity = count($images) === 1
             ? 'Image 1 is the sole protagonist identity reference. Preserve that person’s recognizable facial identity while creating the entirely new scene.'
@@ -166,17 +169,44 @@ final class ReplicateImageAdapter implements ImageAdapterInterface
         imagecopyresampled($dst, $src, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
 
         $jpeg = '';
-        foreach ([84, 76, 68, 60, 52] as $quality) {
+        // The 256 KB ceiling applies to the complete Base64 data URL, not only
+        // to the JPEG bytes. Keep enough headroom for Base64 expansion.
+        $maxDataUriBytes = 245760;
+        foreach ([84, 76, 68, 60, 52, 44] as $quality) {
             ob_start();
             imagejpeg($dst, null, $quality);
             $jpeg = (string) ob_get_clean();
-            if ($jpeg !== '' && strlen($jpeg) <= 245760) {
-                break;
+            if ($jpeg !== '') {
+                $dataUri = 'data:image/jpeg;base64,' . base64_encode($jpeg);
+                if (strlen($dataUri) <= $maxDataUriBytes) {
+                    return $dataUri;
+                }
             }
         }
-        if ($jpeg === '' || strlen($jpeg) > 245760) {
-            throw new \RuntimeException('replicate_portrait_too_large');
+
+        // Large or noisy portraits may need smaller dimensions as well as lower
+        // JPEG quality to stay within Replicate's inline-file limit.
+        foreach ([640, 512] as $maxDimension) {
+            $scale = min(1.0, $maxDimension / max($width, $height));
+            $retryWidth = max(1, (int) round($width * $scale));
+            $retryHeight = max(1, (int) round($height * $scale));
+            $retry = imagecreatetruecolor($retryWidth, $retryHeight);
+            $retryWhite = imagecolorallocate($retry, 255, 255, 255);
+            imagefilledrectangle($retry, 0, 0, $retryWidth, $retryHeight, $retryWhite);
+            imagecopyresampled($retry, $src, 0, 0, 0, 0, $retryWidth, $retryHeight, $width, $height);
+            ob_start();
+            imagejpeg($retry, null, 60);
+            $jpeg = (string) ob_get_clean();
+            imagedestroy($retry);
+            $dataUri = $jpeg === '' ? '' : 'data:image/jpeg;base64,' . base64_encode($jpeg);
+            if ($dataUri !== '' && strlen($dataUri) <= $maxDataUriBytes) {
+                return $dataUri;
+            }
         }
-        return 'data:image/jpeg;base64,' . base64_encode($jpeg);
+
+        if ($jpeg === '') {
+            throw new \RuntimeException('replicate_portrait_invalid');
+        }
+        throw new \RuntimeException('replicate_portrait_too_large');
     }
 }

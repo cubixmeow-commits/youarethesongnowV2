@@ -365,6 +365,8 @@
   async function startGeneration() {
     $('[data-summary-actions]').hidden = true;
     $('[data-progress]').hidden = false;
+    const progressNote = $('[data-progress-note]');
+    if (progressNote) progressNote.hidden = false;
     const copy = $('[data-progress-copy]');
     try {
       const res = await api('/api/v1/generation-jobs', {
@@ -395,6 +397,8 @@
         }
         if (job.status === 'failed') {
           if (copyEl) copyEl.textContent = job.message || 'We could not deliver a usable image. Your credits were returned. You can try again.';
+          const progressNote = $('[data-progress-note]');
+          if (progressNote) progressNote.hidden = true;
           return;
         }
         state.pollTimer = setTimeout(tick, 1200);

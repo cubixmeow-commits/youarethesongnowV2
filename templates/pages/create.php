@@ -115,7 +115,7 @@
       <div data-progress hidden>
         <div class="playhead" aria-hidden="true"><span data-playhead></span></div>
         <p data-progress-copy>Finding the heart of your song</p>
-        <p class="quiet">Your image is still being created. You can leave this page and find it in your gallery when it is ready.</p>
+        <p class="quiet" data-progress-note>Your image is still being created. You can leave this page and find it in your gallery when it is ready.</p>
       </div>
     </aside>
   </div>
