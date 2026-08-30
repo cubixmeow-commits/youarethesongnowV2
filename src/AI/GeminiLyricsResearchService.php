@@ -32,38 +32,32 @@ final class GeminiLyricsResearchService
 
         $schema = json_encode(CreativePackageBuilder::schema(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         $prompt = implode("\n", [
-            CreativePackageBuilder::systemPrompt(),
-            '',
+            'You are an expert musicologist, narrative analyst, and visual director translating music into original cinematic imagery.',
             'PRIVATE DEVELOPMENT SEARCH-AND-ANALYSIS TASK:',
             'Band/Artist: ' . self::singleLine($artist, 180),
             'Song: ' . self::singleLine($title, 180),
             'Use Google Search to locate and verify the actual lyrics for this exact artist and song before analyzing it.',
-            'Analyze the complete lyrics internally. Base the Song DNA on their emotional arc, narrative, themes, mood, symbols, relationships, setting cues, and visual metaphors.',
-            'Do not reproduce, quote, or closely paraphrase lyrics in the analysis.',
+            'Use the lyrics only inside this transient request. Base the Song DNA on their complete emotional arc, narrative, themes, mood, symbols, relationships, setting cues, and visual metaphors.',
+            'Do not reproduce, quote, closely paraphrase, or return the lyrics. Do not return the song title, artist name, album material, or music-video imagery inside the analysis object.',
+            'Invent one original visual moment rather than illustrating a distinctive lyric sequence.',
             'Return only valid JSON with these keys:',
-            'matchedArtist (string), matchedTitle (string), matchConfidence (number 0 to 1), lyricsLocated (boolean), verificationExcerpt (string, optional and no more than 12 words), analysis (object).',
+            'matchedArtist (string), matchedTitle (string), matchConfidence (number 0 to 1), lyricsLocated (boolean), analysis (object).',
             'The analysis object must follow this JSON schema: ' . $schema,
-            'If the exact lyrics cannot be reliably located, set lyricsLocated false and verificationExcerpt to an empty string.',
+            'Set lyricsLocated true only if the search results let you analyze the lyrics for this exact recording. Otherwise set it false.',
         ]);
 
         try {
             $response = ProviderHttp::postJson(
                 'https://generativelanguage.googleapis.com/v1beta/models/' . $model . ':generateContent',
-                [
-                    'contents' => [['role' => 'user', 'parts' => [['text' => $prompt]]]],
-                    'tools' => [['google_search' => (object) []]],
-                    'generationConfig' => [
-                        'temperature' => 0.65,
-                        'topP' => 0.95,
-                        'maxOutputTokens' => 4200,
-                        'responseMimeType' => 'application/json',
-                    ],
-                ],
+                self::groundedRequestPayload($prompt),
                 ['x-goog-api-key: ' . (string) Config::get('ai.gemini_api_key')],
                 Config::getInt('ai.text_timeout_seconds', 45)
             );
         } catch (\Throwable $e) {
-            return self::emptyResult($artist, $title, 'search-failed');
+            $status = $e->getMessage() === 'provider_http_400'
+                ? 'grounding-request-rejected'
+                : 'search-failed';
+            return self::emptyResult($artist, $title, $status);
         }
 
         $decoded = self::decodeJsonText($response);
@@ -86,6 +80,26 @@ final class GeminiLyricsResearchService
             'searchQueries' => $grounding['queries'],
             'sources' => $grounding['sources'],
             'status' => $analyzed ? 'grounded-song-dna-ready' : 'grounded-song-dna-unavailable',
+        ];
+    }
+
+    /**
+     * Google Search grounding and JSON response MIME mode cannot be combined on
+     * the generateContent endpoint. The prompt still requests JSON, and the
+     * tolerant decoder below handles plain and fenced JSON responses.
+     *
+     * @return array<string, mixed>
+     */
+    public static function groundedRequestPayload(string $prompt): array
+    {
+        return [
+            'contents' => [['role' => 'user', 'parts' => [['text' => $prompt]]]],
+            'tools' => [['google_search' => (object) []]],
+            'generationConfig' => [
+                'temperature' => 0.65,
+                'topP' => 0.95,
+                'maxOutputTokens' => 4200,
+            ],
         ];
     }
 

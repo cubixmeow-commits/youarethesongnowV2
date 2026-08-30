@@ -424,6 +424,9 @@ $lyricsResearchDecoded = \Yatsn\AI\GeminiLyricsResearchService::decodeJsonText([
     'candidates' => [['content' => ['parts' => [['text' => "```json\n{\"lyricsLocated\":true,\"matchedArtist\":\"Fixture Band\"}\n```"]]]]],
 ]);
 assert_true(($lyricsResearchDecoded['matchedArtist'] ?? '') === 'Fixture Band', 'Gemini grounded Song DNA JSON parser handles fenced output');
+$groundedPayload = \Yatsn\AI\GeminiLyricsResearchService::groundedRequestPayload('fixture prompt');
+assert_true(isset($groundedPayload['tools'][0]['google_search']), 'Gemini lyric research enables current Google Search grounding tool');
+assert_true(!isset($groundedPayload['generationConfig']['responseMimeType']), 'Gemini grounding request avoids unsupported JSON MIME mode');
 $groqDecoded = \Yatsn\AI\GroqCreativeAdapter::decodeResponse([
     'choices' => [['message' => ['content' => json_encode($analysisFixture, JSON_THROW_ON_ERROR)]]],
 ]);

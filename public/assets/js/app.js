@@ -237,7 +237,13 @@
       }
       if (wrap) wrap.hidden = false;
     } else {
-      if (status) status.textContent = 'Gemini could not complete a grounded lyric analysis for this exact artist and song. Generation will stop rather than pretend that metadata-only Song DNA came from the lyrics.';
+      if (status) {
+        status.textContent = research.status === 'grounding-request-rejected'
+          ? 'Gemini rejected the Google Search request before analyzing the song. This is a provider-request problem, not a song-not-found result.'
+          : research.status === 'search-failed'
+            ? 'Gemini or Google Search could not complete the request. This is a provider connection failure, not a confirmed song-not-found result.'
+            : 'Gemini could not complete a grounded lyric analysis for this exact artist and song. Generation will stop rather than pretend that metadata-only Song DNA came from the lyrics.';
+      }
       if (excerpt) {
         excerpt.textContent = '';
         excerpt.hidden = true;
