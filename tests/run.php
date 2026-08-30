@@ -496,6 +496,8 @@ assert_true(str_contains($compactEditPrompt, 'must not visually overwhelm or hid
 assert_true(str_contains($compactEditPrompt, 'tiny, distant, obscured'), 'Replicate explicitly rejects silhouette-scale protagonists');
 assert_true(\Yatsn\AI\ReplicateImageAdapter::aspectMatches(1024, 1024, '1:1'), 'Replicate accepts matching square output');
 assert_true(!\Yatsn\AI\ReplicateImageAdapter::aspectMatches(1344, 768, '1:1'), 'Replicate rejects wrong landscape placeholder for square request');
+assert_true(\Yatsn\AI\ReplicateImageAdapter::aspectMatches(768, 1024, '3:4'), 'shared portrait-provider validation accepts 3:4 output');
+assert_true(\Yatsn\AI\ReplicateImageAdapter::aspectMatches(1024, 768, '4:3'), 'shared portrait-provider validation accepts 4:3 output');
 
 // Regeneration prepopulates draft
 $regen = GenerationJobService::recreateDraftFromImage((int) $user['id'], $imageId);

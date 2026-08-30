@@ -46,7 +46,7 @@ final class FalImageAdapter implements ImageAdapterInterface
                 throw new \RuntimeException('fal_portrait_not_found');
             }
             $bytes = LocalStorage::get((string) $row['storage_key']);
-            $imageUrls[] = 'data:image/jpeg;base64,' . base64_encode($bytes);
+            $imageUrls[] = ReplicateImageAdapter::privatePortraitDataUri($bytes);
         }
 
         $orientation = (string) ($snapshot['orientation'] ?? 'square');
@@ -55,18 +55,7 @@ final class FalImageAdapter implements ImageAdapterInterface
             'landscape' => '4:3',
             default => '1:1',
         };
-        $quality = (string) ($snapshot['quality'] ?? 'medium');
-        $qualityDirection = match ($quality) {
-            'low' => 'Efficient preview quality with a clean, coherent composition.',
-            'high' => 'Exceptional detail, nuanced facial identity, sophisticated depth, and print-ready visual craft.',
-            default => 'Polished premium detail, convincing facial identity, and strong cinematic depth.',
-        };
-        $prompt = trim((string) ($package['compiledPromptSafe'] ?? '')) . "\n" . $qualityDirection;
-        if (count($imageUrls) === 1) {
-            $prompt .= "\nImage 1 is the sole protagonist identity reference.";
-        } else {
-            $prompt .= "\nImage 1 and Image 2 are two distinct protagonist identity references. Preserve both people and do not merge their faces.";
-        }
+        $prompt = ReplicateImageAdapter::compactPortraitEditPrompt($package, $snapshot, count($imageUrls));
 
         $response = ProviderHttp::postJson(
             'https://fal.run/' . $model,
@@ -77,6 +66,8 @@ final class FalImageAdapter implements ImageAdapterInterface
                 'num_images' => 1,
                 'output_format' => 'jpeg',
                 'safety_tolerance' => '2',
+                'guidance_scale' => 3.5,
+                'enhance_prompt' => false,
                 'sync_mode' => true,
             ],
             ['Authorization: Key ' . (string) Config::get('ai.fal_key')],
@@ -98,7 +89,15 @@ final class FalImageAdapter implements ImageAdapterInterface
             }
             $download = ProviderHttp::getBinary($url, Config::getInt('ai.image_download_timeout_seconds', 30));
         }
-        return self::normalizeImage($download['bytes'], $this->name() . ':' . $model, Config::getInt('ai.fal_image_cost_cents', 4));
+        $normalized = self::normalizeImage(
+            $download['bytes'],
+            $this->name() . ':' . $model,
+            Config::getInt('ai.fal_image_cost_cents', 4)
+        );
+        if (!ReplicateImageAdapter::aspectMatches((int) $normalized['width'], (int) $normalized['height'], $aspect)) {
+            throw new \RuntimeException('fal_output_aspect_mismatch');
+        }
+        return $normalized;
     }
 
     /** @return array{adapter:string,mime:string,width:int,height:int,bytes:string,costCents:int} */
