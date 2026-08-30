@@ -136,11 +136,24 @@ final class ReplicateImageAdapter implements ImageAdapterInterface
             $images[] = self::privatePortraitDataUri(LocalStorage::get((string) $row['storage_key']));
         }
         $identity = count($images) === 1
-            ? 'Image 1 is the sole protagonist identity reference. Preserve that person’s recognizable facial identity while creating the entirely new scene.'
-            : 'Image 1 and image 2 are two different protagonist identity references. Include both people, preserve each recognizable face separately, and never merge or swap their identities.';
+            ? implode("\n", [
+                'P-IMAGE-EDIT TASK: Use image 1 only as the authorized facial-identity reference for the sole protagonist.',
+                'Preserve the person’s recognizable face and stable identity cues, but completely replace the reference background, crop, pose, lighting, and clothing as required by the new scene.',
+                'Do not reproduce the source photograph as an inset, collage layer, framed picture, or visible reference image.',
+            ])
+            : implode("\n", [
+                'P-IMAGE-EDIT TASK: Image 1 and image 2 are two different authorized facial-identity references for two equal protagonists.',
+                'Preserve each recognizable face separately. Never blend, average, duplicate, or swap their identities.',
+                'Completely replace both source backgrounds, crops, poses, lighting, and clothing as required by the new shared scene.',
+                'Do not reproduce either source photograph as an inset, collage layer, framed picture, or visible reference image.',
+            ]);
         return [
             'images' => $images,
-            'prompt' => implode("\n", [$identity, $prompt]),
+            'prompt' => implode("\n\n", [
+                $identity,
+                $prompt,
+                'Return only one finished, unified artwork. Identity fidelity and the selected StyleMap are both mandatory.',
+            ]),
             // Pruna recommends disabling turbo for complicated multi-image edits.
             'turbo' => false,
             'aspect_ratio' => $aspect,

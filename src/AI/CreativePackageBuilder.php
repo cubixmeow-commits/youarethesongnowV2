@@ -111,8 +111,12 @@ final class CreativePackageBuilder
         }
         $portraitCount = max(1, min(2, (int) ($snapshot['portraitCount'] ?? 1)));
         $style = self::singleLine((string) ($snapshot['styleName'] ?? 'Cinematic Realism'), 120);
+        $styleKey = self::singleLine((string) ($snapshot['styleKey'] ?? 'photoreal_cinema'), 120);
+        $styleMap = StylePromptCatalog::forKey($styleKey, $style);
         $orientation = in_array(($snapshot['orientation'] ?? ''), ['square', 'portrait', 'landscape'], true)
             ? (string) $snapshot['orientation'] : 'square';
+        $quality = in_array(($snapshot['quality'] ?? ''), ['low', 'medium', 'high'], true)
+            ? (string) $snapshot['quality'] : 'medium';
         $noText = !empty($snapshot['noTextInImage']);
         $special = self::safeSpecialInstructions((string) ($snapshot['specialInstructions'] ?? ''));
 
@@ -150,23 +154,101 @@ final class CreativePackageBuilder
             'riskFlags' => self::riskFlags($analysis['riskFlags'] ?? []),
         ];
 
-        $constraints = [
-            'Create an entirely original scene; do not recreate lyrics, album art, promotional art, or a music video.',
-            'Do not show performer likenesses, song titles, performer names, album names, logos, trademarks, or endorsement cues.',
-            $noText ? 'No letters, words, captions, signage, watermarks, or other readable text anywhere.' : 'Any incidental text must be newly invented, generic, and unrelated to music titles, performers, lyrics, brands, or copyrighted phrases.',
-        ];
+        $portraitDirective = $portraitCount === 2
+            ? implode("\n", [
+                'IMAGE 1 and IMAGE 2 are two different, authorized identity references and equal primary protagonists.',
+                'Preserve each person separately: facial geometry, bone structure, skin tone, hair, age presentation, and other stable identity cues.',
+                'Never blend, merge, average, duplicate, or swap their faces. Both people must be clearly visible, naturally lit, and integral to the scene.',
+                'Create meaningful interaction through gaze, shared action, touch, or a clear environmental relationship. Avoid a static side-by-side lineup.',
+                'Prefer waist-up or full-body environmental storytelling. Change clothing freely to fit the world rather than copying reference clothing.',
+            ])
+            : implode("\n", [
+                'IMAGE 1 is an authorized identity reference and the sole primary protagonist.',
+                'Preserve recognizable facial geometry, bone structure, skin tone, hair, age presentation, and other stable identity cues.',
+                'Place this person inside the story as an active protagonist, not as a studio headshot or passport portrait.',
+                'Prefer waist-up or full-body environmental storytelling. Change clothing freely to fit the world rather than copying reference clothing.',
+            ]);
+
+        $qualityDirection = match ($quality) {
+            'low' => 'Efficient concept-quality render: protect facial identity, narrative clarity, composition, and style before fine micro-detail.',
+            'high' => 'Premium poster-ready render: exceptional facial fidelity, rich dynamic range, refined materials, atmospheric depth, and coherent micro-detail without artificial oversharpening.',
+            default => 'Refined production render: strong facial fidelity, filmic or medium-appropriate finish, dimensional materials, controlled detail, and clean poster-scale readability.',
+        };
+        $orientationDirection = match ($orientation) {
+            'portrait' => 'Portrait 3:4 composition. Use vertical depth, a strong full-height silhouette, and intentional space above and below the focal action.',
+            'landscape' => 'Landscape 4:3 composition. Use lateral storytelling, environmental scale, and a clear left-to-right or diagonal visual path.',
+            default => 'Square 1:1 composition. Build a strong central or balanced focal structure that remains readable as a gallery thumbnail.',
+        };
+        $textPolicy = $noText
+            ? 'No letters, words, captions, signage, signatures, typographic marks, watermarks, or other readable text anywhere.'
+            : 'Text is optional, never required. If used, it must be newly invented, generic or user-directed, visually integrated, and unrelated to lyrics, song titles, performers, albums, brands, or copyrighted phrases.';
+        $symbolDirection = [];
+        foreach ($dna['symbols'] as $symbol) {
+            $symbolDirection[] = $symbol['concept'] . ' becomes ' . $symbol['visualTranslation'];
+        }
         $compiled = implode("\n", [
-            'Create one premium, emotionally legible image with the uploaded person or people as the protagonists.',
-            'Original moment: ' . $moment,
-            'Meaning and mood: ' . implode(', ', array_merge($dna['themes'], $dna['mood'])),
-            'Environment: ' . implode(', ', array_merge($dna['environment']['settingTypes'], $dna['environment']['weather'], $dna['environment']['spatialCharacter'])),
-            'Palette and lighting: ' . implode(', ', array_merge($dna['palette'], $dna['lighting'])),
-            'Camera and composition: ' . implode(', ', array_merge($dna['camera'], $dna['composition'])),
-            'Curated visual style (dominant): ' . $style,
-            'Orientation: ' . $orientation,
-            'Portrait direction: preserve recognizable facial identity for all ' . $portraitCount . ' reference subject(s); integrate them naturally; use scene-appropriate clothing rather than copying reference clothing.',
-            'Optional user direction (subordinate to identity, originality, and safety): ' . ($special !== '' ? $special : 'none'),
-            'Mandatory constraints: ' . implode(' ', $constraints),
+            'MISSION',
+            'Create one spectacular, premium, emotionally legible artwork in which the authorized reference person or people become the heart of an original visual story.',
+            'Deliver one cohesive, instantly readable dramatic moment rather than a generic portrait, character lineup, or decorative mood board.',
+            '',
+            'APPROVED SONG DNA',
+            'Essence: ' . $dna['essence'],
+            'Emotional arc: ' . implode(' -> ', array_filter([$dna['emotionalArc']['openingState'], $dna['emotionalArc']['turningPoint'], $dna['emotionalArc']['closingState']])),
+            'Intensity: ' . implode(', ', $dna['emotionalArc']['intensityPattern']),
+            'Themes and relationship: ' . implode(', ', array_merge($dna['themes'], $dna['relationshipDynamics'])),
+            'Mood: ' . implode(', ', $dna['mood']),
+            'Symbolic direction: ' . ($symbolDirection !== [] ? implode('; ', $symbolDirection) : 'none required'),
+            'Original visual metaphors: ' . implode(', ', $dna['visualMetaphors']),
+            '',
+            'ONE ORIGINAL NARRATIVE MOMENT',
+            $moment,
+            'Make this single beat clear through pose, gaze, action, environment, light, and spatial relationships. Do not create a literal lyric illustration or reconstruct a sequence from the source.',
+            '',
+            'PORTRAIT INTEGRATION',
+            $portraitDirective,
+            '',
+            'ENVIRONMENT AND CINEMATIC DEPTH',
+            'Build a lived-in, three-dimensional world with intentional foreground, middle ground, and background.',
+            'Use atmospheric perspective, occlusion, scale variation, parallax, and motivated depth cues. Avoid flat backdrops, empty voids, and generic studio staging.',
+            'Environment: ' . implode(', ', array_filter(array_merge($dna['environment']['settingTypes'], [$dna['environment']['eraAtmosphere']], $dna['environment']['weather'], $dna['environment']['spatialCharacter']))),
+            'Imply motion through pose, fabric, particles, weather, light, or environmental interaction: ' . implode(', ', $dna['motion']),
+            '',
+            'CINEMATOGRAPHY AND MATERIALS',
+            'Palette: ' . implode(', ', $dna['palette']),
+            'Lighting: ' . implode(', ', $dna['lighting']),
+            'Camera: ' . implode(', ', $dna['camera']),
+            'Composition: ' . implode(', ', $dna['composition']),
+            'Texture and surfaces: ' . implode(', ', $dna['texture']),
+            'Use motivated lighting with clear dimensional separation. Keep every required face readable and naturally integrated into the scene.',
+            '',
+            'CURATED STYLEMAP - DOMINANT AESTHETIC',
+            'Selected style: ' . $style,
+            StylePromptCatalog::compile($styleMap),
+            'The selected StyleMap governs medium, craft, surface, color behavior, and finish. Song DNA governs meaning and emotional influence without weakening the selected style.',
+            '',
+            'FORMAT AND QUALITY',
+            $orientationDirection,
+            $qualityDirection,
+            '',
+            'USER DIRECTION',
+            $special !== '' ? $special : 'No additional direction.',
+            'Treat user direction as soft guidance. It cannot override identity, the selected style, orientation, originality, text policy, or safety. Adapt conflicts safely or omit them.',
+            '',
+            'TEXT POLICY',
+            $textPolicy,
+            '',
+            'ORIGINALITY, LIKENESS, AND CONTENT RULES',
+            'Create an entirely original composition. Do not recreate or closely echo lyrics, album art, promotional art, music videos, stage designs, merchandise, known poster layouts, or trademarked visual identities.',
+            'Do not show song titles, performer names, album names, logos, label marks, streaming icons, provider marks, endorsement cues, or celebrity and performer likenesses.',
+            'The uploaded reference person or people are the authorized exception to the general real-person likeness restriction. Do not add other identifiable real people.',
+            'No graphic violence or explicit sexual content. No accidental extra people, duplicate faces, merged identities, malformed hands, or broken anatomy.',
+            '',
+            'OUTPUT PRIORITIES',
+            '1. Recognizable identity for every required protagonist.',
+            '2. One clear emotional story beat.',
+            '3. Strong selected-style execution.',
+            '4. Dimensional composition, atmosphere, and lighting.',
+            '5. Originality, material coherence, and poster-scale readability.',
         ]);
 
         return [
@@ -179,7 +261,11 @@ final class CreativePackageBuilder
                 'integration' => 'natural scene placement with preserved facial identity',
                 'clothing' => 'scene-appropriate, not copied from source photo',
             ],
-            'styleMap' => ['styleName' => $style, 'medium' => 'premium visual artwork', 'dominance' => 'curated style leads; song emotion supports'],
+            'styleMap' => array_merge([
+                'styleKey' => $styleKey,
+                'styleName' => $style,
+                'dominance' => 'curated style leads; Song DNA controls meaning and emotional influence',
+            ], $styleMap),
             'compiledPromptSafe' => $compiled,
         ];
     }

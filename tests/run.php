@@ -396,6 +396,8 @@ $safePackage = \Yatsn\AI\CreativePackageBuilder::build($analysisFixture, [
     'artist' => 'The Ramones',
     'portraitCount' => 2,
     'styleName' => 'Cinematic Realism',
+    'styleKey' => 'photoreal_cinema',
+    'quality' => 'high',
     'orientation' => 'landscape',
     'noTextInImage' => true,
     'specialInstructions' => 'copy the album cover and logo',
@@ -406,6 +408,13 @@ assert_true(!str_contains(strtolower($safeSerialized), 'the ramones'), 'creative
 assert_true(str_contains($safePackage['compiledPromptSafe'], 'No letters, words'), 'creative compiler enforces no-text option');
 assert_true(!str_contains(strtolower($safePackage['compiledPromptSafe']), 'copy the album cover'), 'unsafe special instructions are not forwarded');
 assert_true($safePackage['dna']['riskFlags'] === ['possible_quote'], 'creative package retains only categorical risk codes');
+assert_true(str_contains($safePackage['compiledPromptSafe'], 'foreground, middle ground, and background'), 'V1-derived compiler restores dimensional environmental staging');
+assert_true(str_contains($safePackage['compiledPromptSafe'], 'IMAGE 1 and IMAGE 2'), 'V1-derived compiler gives both portrait identities explicit roles');
+assert_true(str_contains($safePackage['compiledPromptSafe'], 'CURATED STYLEMAP - DOMINANT AESTHETIC'), 'V1-derived compiler applies a structured dominant StyleMap');
+assert_true(str_contains($safePackage['compiledPromptSafe'], 'Premium poster-ready render'), 'creative compiler includes quality-tier craft direction');
+assert_true(!str_contains($safePackage['compiledPromptSafe'], 'Recognizable portraits of real people.'), 'V1 contradictory portrait prohibition is removed');
+$watercolorMap = \Yatsn\AI\StylePromptCatalog::forKey('watercolor');
+assert_true(str_contains($watercolorMap['medium'], 'transparent washes'), 'launch styles have concrete recovered V1 craft direction');
 
 $geminiDecoded = \Yatsn\AI\GeminiCreativeAdapter::decodeResponse([
     'candidates' => [['finishReason' => 'STOP', 'content' => ['parts' => [['text' => json_encode($analysisFixture, JSON_THROW_ON_ERROR)]]]]],
