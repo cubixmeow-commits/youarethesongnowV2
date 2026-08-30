@@ -13,10 +13,14 @@ $jsVersion = (string) (filemtime(YATSN_ROOT . '/public/assets/js/app.js') ?: '1'
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title><?= e($title ?? 'You Are The Song Now') ?></title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
   <?php if ($isHome): ?>
   <link rel="preload" as="image" href="/assets/images/launch/hero-listening-room-960.webp" imagesrcset="/assets/images/launch/hero-listening-room-960.webp 960w, /assets/images/launch/hero-listening-room-1672.webp 1672w" imagesizes="100vw" fetchpriority="high">
   <?php endif; ?>
   <link rel="stylesheet" href="/assets/css/app.css?v=<?= e($cssVersion) ?>">
+  <meta name="theme-color" content="#121526">
 </head>
 <body class="<?= e(trim(($layoutClass ?? '') . ($isHome ? ' is-home' : ''))) ?>">
   <a class="skip-link" href="#main">Skip to content</a>
