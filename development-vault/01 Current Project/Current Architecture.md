@@ -1,7 +1,7 @@
 ---
 type: current-project
 status: active
-updated: 2026-08-28
+updated: 2026-08-30
 area: architecture
 ---
 
@@ -9,9 +9,9 @@ area: architecture
 
 ## Status
 
-**Private Development Build 1 local vertical slice is implemented.** External beta and commercial launch remain gated.
+**Private Development Build 1 is implemented and deployed on Hostinger for owner-only testing.** External beta and commercial launch remain gated.
 
-Implemented local shape:
+Implemented shape:
 
 ```text
 public/                 # web document root
@@ -24,6 +24,8 @@ var/                    # private SQLite, media and logs (gitignored)
 ```
 
 Development substitutes identify themselves honestly when Stripe/SMTP/AI credentials are absent. Live payments, public registration and external users remain configuration-gated off.
+
+Current deployed creative path uses Gemini Interactions (`gemini-3.6-flash`, Google Search + strict schema, `store=false`) for transient private-development Song DNA and native Gemini image generation with inline portrait references. Hostinger SMTP, Stripe test checkout, the one-minute worker and local private media storage are active in the private test environment.
 
 ## Delivery path
 

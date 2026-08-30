@@ -1,7 +1,7 @@
 ---
 type: research-plan
 status: in-progress
-updated: 2026-08-28
+updated: 2026-08-30
 area: ai-provider-benchmarks
 owners:
   - CuBiX Meow
@@ -23,9 +23,17 @@ Current official Groq documentation shows production text/reasoning models and m
 
 The secret value is stored in the owner's password manager and has not been placed in the repository, chat, website directory or Hostinger configuration. Installing or using the key waits for private-development authorization and protected server configuration.
 
-## Tentative primary image hub: fal.ai
+## Live benchmark update: native Gemini selected provisionally
 
-CuBiX Meow and Brut tentatively selected fal.ai as the primary image-provider hub so the project can test multiple commercial image models through one queue/API integration. This is a benchmark starting point, not a final provider commitment.
+Native Gemini multimodal image generation is the current portrait path. `gemini-3.1-flash-lite-image` is the low-cost candidate at approximately $0.0336 per 1K output; `gemini-3.1-flash-image` is the quality anchor at approximately $0.067 per 1K output. Four live Flash Lite generations were reported at about $0.14 total. Flash Lite has produced one weaker but functional two-person image and one excellent dynamic two-person image. The sample is too small for final routing.
+
+Replicate P-Image-Edit and fal Kontext Multi produced strong scenes but omitted or minimized the uploaded people in live tests. They remain disabled experimental adapters and are not acceptable default portrait routes unless later evidence reverses that finding.
+
+See [[../01 Current Project/Build 1 Assessment 2026-08-30]].
+
+## Historical tentative image hub: fal.ai
+
+CuBiX Meow and Brut originally selected fal.ai as a convenient image-provider benchmark hub. Live portrait testing did not meet the defining identity requirement, so this is historical benchmark context rather than the current selected route.
 
 fal.ai remains acceptable only if testing confirms portrait privacy, commercial terms, deletion behavior, reliability and total cost. The application must call fal.ai only from the PHP server; never expose the fal API key to the web or Flutter client.
 

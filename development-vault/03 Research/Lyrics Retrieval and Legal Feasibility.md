@@ -55,18 +55,18 @@ The build-freeze checklist may separate **development feasibility confirmed** fr
 
 On 2026-08-28, the owners created a separate Google AI Studio project and API key, both named `yatsn-v2-development`. The masked key/project listing was verified without opening or copying the secret. The secret is stored only in the owner's password manager and is not installed in the repository or hosting configuration.
 
-The project currently shows Google AI Studio's Free tier with no billing attached. CuBiX Meow and Brut selected this free credential for cost-controlled private development on 2026-08-28, subject to the constraints below.
+Historical setup on 2026-08-28 began on Google AI Studio's Free tier. On 2026-08-30 the owner enabled paid Gemini API development billing and installed the protected key server-side. V2 now uses the Gemini Interactions API with Google Search, strict Song DNA schema and mandatory `store=false`. This technical change does not provide lyrics rights or commercial clearance.
 
-Google's current Gemini API terms say unpaid-service prompts and responses may be used to provide, improve and develop Google products and machine-learning technologies, and may be reviewed by humans. Google instructs users not to submit personal, sensitive or confidential information through unpaid services. Therefore:
+The original free-tier restrictions remain historical evidence for unpaid testing. Current paid provider terms, project settings, retention and model-improvement treatment must be verified again before any external beta. Therefore:
 
-- use the free tier only with synthetic fixtures, song/artist metadata, general nonconfidential context, public-domain material and lyrics the owners are authorized to submit;
+- use only private-development fixtures permitted by the selected provider and source terms;
 - do not submit customer portraits, personal data, confidential business material or external beta traffic;
 - do not use the credential as the production or paid-beta provider configuration;
 - do not enable request/response sharing or create shared datasets;
 - keep application logs free of raw prompts, responses and lyrics;
-- re-evaluate a paid Gemini tier or another provider before any workflow needs no-training handling.
+- require paid provider settings and agreements that do not use customer images or personal data for model training before external beta.
 
-Gemini Free tier is selected as the private development model, but it is not treated as a commercial lyrics license or as proof that Google Search grounded results may be repurposed into Song DNA.
+Paid Gemini development access is selected for current private testing, but it is not treated as a commercial lyrics license or as proof that Google Search results may be commercially repurposed into Song DNA.
 
 The older unused Gemini key and project were removed by the owner.
 
@@ -168,7 +168,7 @@ Send these questions to candidate providers before contracting:
 
 ## Exit conditions for checklist item 2
 
-- [x] A development-only AI provider and its permitted-use constraints are selected. Gemini Free tier was selected on 2026-08-28 for synthetic, public-domain, owner-authorized and nonconfidential tests only; it is not commercial clearance.
+- [x] A development-only AI provider and technical privacy boundary are selected. Paid Gemini development access uses Interactions `store=false`; it is not commercial clearance.
 - [ ] The private, ephemeral lyrics-to-Song-DNA workflow is proven technically with authorized test material.
 - [ ] CuBiX Meow and Brut make a go/no-go decision after reviewing development results and expected licensing cost.
 - [ ] At least one provider confirms the complete licensed workflow in a signed agreement or clear written terms.

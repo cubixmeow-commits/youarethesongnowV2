@@ -13,11 +13,19 @@ Agents and humans: when Current Project truth changes, update this snapshot **an
 
 ## Phase
 
-Private Development Build 1 — Gemini native portrait identity
+Private Development Build 1 — live quality and reliability testing
 
 ## Build status
 
-GEMINI NATIVE IMAGE PATH SELECTED; SONG DNA ON INTERACTIONS API: song → Gemini Interactions (`gemini-3.6-flash`, Google Search + JSON Schema, `store=false`) → saved derived DNA → portrait inlineData → `gemini-3.1-flash-image` → gallery. Uploaded people must be recognizable central subjects. Legacy generateContent Search/JSON conflict caused incomplete Springsteen DNA; V1 JSON-repair is historical only. Automated tests **146 passed**. External beta and commercial gates remain active.
+CORE PRIVATE PIPELINE WORKING: song → Gemini Interactions (`gemini-3.6-flash`, Google Search + JSON Schema, `store=false`) → saved derived DNA → portrait inlineData → Gemini image → Hostinger worker → gallery. One- and two-person identity have succeeded live. Flash Lite is the low-cost candidate; full Flash is the quality anchor. Automated tests **162 passed, 0 failed**. No-text, quality consistency, provider routing, live operational checks, rights and commercial gates remain open. See `Build 1 Assessment 2026-08-30.md`.
+
+## Assessment headline
+
+- **Continue private development:** yes; the core product premise works.
+- **Begin Flutter:** not yet; web quality and live acceptance are incomplete.
+- **Invite external users or charge live customers:** no; rights, reliability, operations and commercial gates remain active.
+- **Live evidence:** health, SMTP sign-in/invite, Stripe test membership and credits, cron worker, gallery, Interactions Song DNA, one-person Gemini identity and two-person Flash Lite identity.
+- **Known creative defects:** Flash Lite quality variance, occasional unwanted text, and no automatic identity/OCR acceptance layer.
 
 ## Delivery path
 
@@ -85,7 +93,7 @@ Final V2 example files, the exact monthly credit allowance and qualified legal w
 
 The implementation-readiness contracts are owner-approved as of 2026-08-28. They define the shared versioned PHP service for web and Flutter, secure passwordless and optional-password access, owner two-step verification, private media, immediate live deletion, secure email/link sharing, idempotent billing and generation work, abuse and spending limits, owner audit history and local storage with application-managed media backups deferred until B2.
 
-The deployment and operating-cost contract is owner-approved as of 2026-08-28. Hostinger Premium Web Hosting is the beta target. `https://youarethesongnow.com/` currently redirects to the synchronized V2 site at `/yatsnV2/site/`, which responds successfully. The approved plan covers the one-minute Cron Jobs worker, local SQLite and media staging, deployment/rollback, secret handling, monitoring, capacity limits, the single `support@youarethesongnow.com` beta mailbox and operating budgets. A larger deployment moves to a VPS.
+The deployment and operating-cost contract is owner-approved as of 2026-08-28. Hostinger Premium Web Hosting is the private Build 1 target. `https://youarethesongnow.com/` now routes into the PHP application under `/yatsnV2/public/`; the health endpoint and one-minute Cron Jobs worker are working. The approved plan covers local SQLite and media staging, deployment/rollback, secret handling, monitoring, capacity limits, the single `support@youarethesongnow.com` beta mailbox and operating budgets. A larger deployment moves to a VPS.
 
 The beta mailbox is active. Hostinger reports green MX, SPF, DKIM and DMARC status, with secure authenticated SMTP at `smtp.hostinger.com:465`. Application SMTP delivery and reply testing remain part of implementation acceptance. Hostinger currently displays a 2026-10-08 domain expiration warning, so renewal or automatic renewal must be confirmed before beta launch.
 

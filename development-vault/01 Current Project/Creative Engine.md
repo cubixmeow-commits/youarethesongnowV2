@@ -30,8 +30,8 @@ Source Context
 Build 1 active vertical slice:
 
 ```text
-song selection → Gemini Song DNA → saved derived DNA → locked snapshot
-  → selected portrait(s) → Gemini 3.1 Flash Image (inline portraits) → gallery
+song selection → Gemini Interactions Song DNA → saved derived DNA → locked snapshot
+  → selected portrait(s) → Gemini Flash Lite / Flash Image (inline portraits) → gallery
 ```
 
 V1 comparison: `development-vault/04 Prompt Lab/V1 to V2 Creative Engine Comparison.md`.
@@ -39,7 +39,7 @@ V1 comparison: `development-vault/04 Prompt Lab/V1 to V2 Creative Engine Compari
 ## Current provider path
 
 - **Analysis:** `gemini-3.6-flash` via Interactions API (Google Search + strict JSON Schema, `store=false`); transient lyric use in private development only; never persist lyrics; worker reuses saved DNA. Legacy generateContent Search/JSON conflict and V1 JSON-repair are historical notes only.
-- **Image (selected):** native Gemini multimodal `gemini-3.1-flash-image` — text + portrait `inlineData` in one request; V1-style identity-first prompt; no second Song DNA call.
+- **Image (selected family):** native Gemini multimodal image — text + portrait `inlineData` in one request; one authoritative identity section; no second Song DNA call. `gemini-3.1-flash-lite-image` is the low-cost benchmark candidate and `gemini-3.1-flash-image` is the current quality anchor.
 - **Rejected for portrait workflow:** Replicate P-Image-Edit (scenes OK, people omitted/minimized); fal Kontext Multi (scenes OK, people omitted). Both retained for later benchmarking only.
 - **Deferred:** print / poster / T-shirt / upscaling.
 
@@ -48,6 +48,15 @@ V1 comparison: `development-vault/04 Prompt Lab/V1 to V2 Creative Engine Compari
 Multiple two-person Gemini generations defaulted to a similar layout: one person toward the left/middle ground and the other larger in the right foreground. Cause: identity, crop, placement, interaction, and FG/MG rules were repeated in both `GeminiImageAdapter` and the appended `compiledPromptSafe`, overweighting a safe generic couple arrangement and suppressing Song DNA-driven staging.
 
 **Fix:** one authoritative identity section; narrative/emotional “central” (not geometric); Song DNA camera/composition/roles/relationships/motion/environment choose staging; explicit freedom over scale, distance, separation, and depth; stop appending duplicate portrait-placement directives from `compiledPromptSafe`.
+
+## Live benchmark observations (2026-08-30)
+
+- Full Flash produced an excellent initial one-person result with the uploaded person recognizable and naturally integrated.
+- Four Flash Lite generations cost about $0.14 total, consistent with roughly $0.0336 per 1K output plus small input costs.
+- Flash Lite included both people in the Alestorm `Mexico` test but produced a weaker, collage-like composition.
+- After the spatial-prompt fix, Flash Lite produced a strong, dynamic two-person `Battle Against Time` / Wintersun result.
+- A successful no-text generation still rendered `TICKET`; prompt-only suppression is not an acceptance-grade solution.
+- These samples prove feasibility but do not establish the 90-percent identity/usability requirement. Controlled same-input A/B tests and the formal 90-image set remain outstanding.
 
 ## Priorities
 
@@ -71,4 +80,4 @@ Multiple two-person Gemini generations defaulted to a similar layout: one person
 
 ## Open
 
-Live Gemini image identity acceptance on Hostinger. See [[../02 Decisions/Decision Inbox]] for other product choices.
+Provider/tier routing, no-text enforcement, automatic required-person/identity checks, controlled retries, the formal 90-image benchmark and the remaining live acceptance checklist. See [[Build 1 Assessment 2026-08-30]] and [[../02 Decisions/Decision Inbox]].

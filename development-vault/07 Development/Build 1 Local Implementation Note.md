@@ -5,7 +5,7 @@ updated: 2026-08-30
 area: build-1
 ---
 
-# Private Development Build 1 — Local Implementation Note
+# Private Development Build 1 — Implementation Note
 
 ## End-to-end pipeline (current)
 
@@ -15,7 +15,7 @@ song selection
   → saved derived Song DNA (never raw lyrics)
   → locked generation snapshot
   → selected portrait(s)
-  → Gemini native multimodal image (gemini-3.1-flash-image)
+  → Gemini native multimodal image (Flash Lite or Flash Image)
   → gallery image
 ```
 
@@ -61,7 +61,7 @@ php bin/console.php setup-status
 
 ## Automated test result
 
-`php tests/run.php` → **146 passed, 0 failed** after Interactions API Song DNA path.
+`php tests/run.php` → **162 passed, 0 failed** after Interactions Song DNA, Gemini native image and spatial-prompt refinement.
 
 ## Development substitutes vs real integrations
 
@@ -75,6 +75,8 @@ php bin/console.php setup-status
 ## Remaining blockers / not claimed
 
 - External beta, live payments, commercial protected-lyrics use remain disabled.
-- Live Gemini image identity acceptance still requires a Hostinger/private live test.
+- One- and two-person Gemini identity have passed initial Hostinger/private live tests; the formal quality and reliability benchmark remains incomplete.
+- No-text prompting has produced unwanted signage in one live result; OCR/enforcement is unresolved.
+- Automatic required-person/identity acceptance is not implemented; current live review is human.
 - Gallery upscaling / print merchandise deferred.
 - fal and Replicate kept as optional experimental providers only.

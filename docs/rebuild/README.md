@@ -4,7 +4,7 @@ This directory is the durable planning area for rebuilding AISaga Arcana as YouA
 
 ## Current mode
 
-**Assessment/planning only. Do not build or scaffold V2 yet.** Source analysis, inventories, diagrams, decision records, and migration planning are allowed; application implementation waits for an explicit owner decision to begin.
+**Historical rebuild-planning library.** CuBiX Meow and Brut authorized Private Development Build 1 on 2026-08-28, and the working PHP/SQLite vertical slice is now deployed for private Hostinger testing. These documents remain evidence and design history; current truth lives in `development-vault/01 Current Project/`, especially `Build 1 Assessment 2026-08-30.md`.
 
 ## Documents
 

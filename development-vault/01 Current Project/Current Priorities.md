@@ -11,13 +11,13 @@ This note is the daily “what matters now” list for CuBiX Meow and Brut. Keep
 
 ## Active now
 
-1. **Prove Gemini native portrait identity live:** song → Gemini Song DNA → saved DNA → portrait(s) → `gemini-3.1-flash-image` (inline portraits) → gallery with recognizable central subject(s). An image without the uploaded person is not usable.
-2. **Portrait provider decision (current):** Replicate P-Image-Edit and fal Kontext Multi produced strong scenes but failed people (minimized/omitted). Retained for later benchmarking only. Gemini multimodal image is the selected path.
-3. **Private Development Build 1 foundation:** PHP/SQLite vertical slice running. Automated suite: **146 passed** after Interactions Song DNA + Gemini image adapter. External beta, live Stripe and commercial protected-lyrics use remain blocked.
-4. **Lyrics boundary unchanged:** private-development Google Search may analyze lyrics transiently; never save or commit lyrics.
-5. **Install protected credentials only when spending budget:** Gemini text + image live flags are separate (`GEMINI_LIVE_CALLS`, `GEMINI_IMAGE_LIVE_CALLS`).
-6. **Print/poster/T-shirt/upscaling remain post-Build-1.**
-7. Vault = workshop; `/docs` = Meow Control.
+1. **Run controlled private image tests:** compare the same one- and two-person inputs on Flash Lite and full Flash; change one variable at a time and record identity, narrative fidelity, coherence, prohibited text, latency, cost and usability.
+2. **Resolve no-text and unusable-image detection:** one otherwise successful no-text image rendered `TICKET`. Prompt-only enforcement and human-only identity acceptance are not sufficient for the final 90-image gate.
+3. **Provisional routing only:** Flash Lite is the low-cost candidate at about $0.0336 per 1K output; full Flash is the quality anchor at about $0.067. Medium/default and high routing are not decided.
+4. **Complete live functional checks:** share/revoke, deletion, failure/refund, account recovery/change, Stripe lifecycle, complimentary access, admin, mobile API, accessibility and Hostinger operational drills.
+5. **Keep release gates closed:** external beta, live Stripe and commercial protected-lyrics use remain blocked. Lyrics remain transient and never saved.
+6. **Automated foundation healthy:** **162 passed, 0 failed** on 2026-08-30. See [[Build 1 Assessment 2026-08-30]].
+7. **Print/poster/T-shirt/upscaling remain post-Build-1.** Vault = workshop; `/docs` = Meow Control.
 
 ## Newly documented
 
@@ -34,7 +34,7 @@ This note is the daily “what matters now” list for CuBiX Meow and Brut. Keep
 - **Build 1 visual direction approved:** preserve V1's dark cinematic atmosphere and artwork-first reveal, but replace futuristic type, blue-purple gradients, glass panels, glowing borders, emojis and AI-console language. The approved direction is a modern record sleeve and cinematic photo book with matte dark surfaces, warm paper text, one stage-light accent, editorial typography and restrained track/playhead motion.
 - **Print/merchandise phase boundary approved:** V1 proves the intended functionality through a working gallery upscale action, separate upscale-credit concepts, T-shirt transparency tools and fulfillment demonstrations. V2 will rebuild that functionality behind replaceable adapters after the core V2 web build works and receives owner approval. No V1 provider is selected by default, and the deferred phase does not block the first Cursor build.
 - **Acceptance-test checklist item complete:** CuBiX Meow and Brut approved the complete web, quality, reliability, user-journey, authentication, Stripe, privacy, deletion, abuse, admin, Hostinger, Flutter API and WCAG 2.2 Level AA acceptance gates on 2026-08-28.
-- **Hostinger deployment direction approved:** use the existing Hostinger service when capable, otherwise use a small Hostinger VPS. The root domain redirects to `/yatsnV2/site/`, which successfully serves the current site. Direct `/yatsnV2/` directory access remains blocked as expected.
+- **Hostinger deployment live:** the existing shared-hosting account serves Build 1 through `/yatsnV2/public/`; the root domain redirects into the application. PHP 8.2, SQLite, required extensions, health endpoint and one-minute cron worker are working. Move to a VPS if a larger deployment proceeds.
 - **Hostinger beta email ready:** use `support@youarethesongnow.com` as the single transactional sender, reply-to address and customer-help mailbox. The mailbox is active, MX/SPF/DKIM/DMARC are green, and secure SMTP is verified at `smtp.hostinger.com:465`. Confirm renewal or automatic renewal before the domain's displayed 2026-10-08 expiration.
 - **Deployment checklist item complete:** the verified Hostinger plan, release/rollback process, worker, storage thresholds, monitoring, fixed-cost limits and variable AI-spend safeguards are owner-approved.
 - **Hostinger beta capacity verified:** Premium Web Hosting provides 25 GB disk, 2 GB RAM, one CPU core, 40 PHP workers, 80 maximum processes, unlimited bandwidth, weekly backups and Cron Jobs. SQLite is already working. Hostinger-managed beta backups may retain deleted data for up to 45 days; live deletion remains immediate. A larger deployment moves to a VPS if the owners proceed.
@@ -59,8 +59,8 @@ This note is the daily “what matters now” list for CuBiX Meow and Brut. Keep
 - **Tax posture under review:** California-based, electronic-only service/digital images, provisionally not subject to California sales tax under current CDTFA guidance. Tax-code selection, professional confirmation and other-state nexus monitoring remain required before live charging.
 - **Stripe customer names:** `You Are The Song Now Membership` is the product; `YOU ARE THE SONG` is the card statement descriptor and will be disclosed before payment.
 - **Groq development credential ready:** a 90-day `yatsn-v2-development` key was created in the Default Project and stored only in the owner's password manager. It expires 2026-11-26. Installation and use wait for private-development authorization and protected secret configuration.
-- **Gemini Free tier selected for private development:** a separate project and key named `yatsn-v2-development` are verified, and the secret remains only in the owner's password manager. Because unpaid prompts/responses may improve Google products and receive human review, use only synthetic, public-domain, owner-authorized and nonconfidential test material. Do not use it for customer portraits, personal data or external/paid beta traffic.
-- **fal.ai tentative:** use one server-side adapter to benchmark multiple reference-capable image models. Final provider and tier routing remain contingent on portrait/couples, style, reliability, privacy and total-cost evidence.
+- **Paid Gemini development API active:** the protected `yatsn-v2-development` key is installed server-side. `gemini-3.6-flash` performs stateless Interactions Song DNA and native Gemini image models receive private inline portraits. Paid-tier data terms, current provider settings and customer-data restrictions must be reverified before external beta.
+- **Gemini portrait path selected provisionally:** Replicate P-Image-Edit and fal Kontext Multi remain disabled experimental adapters after live tests omitted or minimized people. Final quality-tier routing remains contingent on controlled portrait, couples, style, reliability, privacy and total-cost evidence.
 - **fal.ai development credential ready:** a restricted API-only `DEVELOPMENT: yatsn-v2-development` key is stored only in the owner's password manager. It cannot manage billing, keys, usage or compute and is not installed in the repository or hosting configuration.
 - **fal.ai test budget ready:** the account has a verified $25.00 one-time credit balance, no recorded usage and automatic top-up disabled. Credits currently show an expiration of 2027-08-28.
 - **Style catalog selected:** fifteen balanced launch candidates are chosen. All 52 recoverable V1 styles will be database-seeded and admin-accessible; 37 start inactive for future activation. Prompt rewrites, previews and routing remain required. See `development-vault/05 Product Design/Launch Style Catalog.md`.
@@ -73,9 +73,10 @@ This note is the daily “what matters now” list for CuBiX Meow and Brut. Keep
 
 ## Next
 
-1. Live Hostinger test: one song + one portrait + one style + medium quality through Gemini `gemini-3.1-flash-image`; accept only if the uploaded person is the recognizable central subject.
-2. If identity passes, refine in Creative Engine priority order (one variable at a time).
-3. Keep fal/Replicate off the default path; use only for later benchmarks.
+1. Controlled same-input Flash Lite versus full Flash comparison for one and two people.
+2. Design no-text enforcement and unusable-image detection before the formal benchmark.
+3. Complete the live functional and Hostinger operational checks listed above.
+4. Keep fal/Replicate off the default path; use only for later benchmarks.
 
 ## Waiting / blocked
 
