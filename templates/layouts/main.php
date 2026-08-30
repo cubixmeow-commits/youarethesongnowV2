@@ -4,6 +4,8 @@
 /** @var array|null $session */
 /** @var bool $isHome */
 $isHome = !empty($isHome);
+$cssVersion = (string) (filemtime(YATSN_ROOT . '/public/assets/css/app.css') ?: '1');
+$jsVersion = (string) (filemtime(YATSN_ROOT . '/public/assets/js/app.js') ?: '1');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -14,7 +16,7 @@ $isHome = !empty($isHome);
   <?php if ($isHome): ?>
   <link rel="preload" as="image" href="/assets/images/launch/hero-listening-room-960.webp" imagesrcset="/assets/images/launch/hero-listening-room-960.webp 960w, /assets/images/launch/hero-listening-room-1672.webp 1672w" imagesizes="100vw" fetchpriority="high">
   <?php endif; ?>
-  <link rel="stylesheet" href="/assets/css/app.css">
+  <link rel="stylesheet" href="/assets/css/app.css?v=<?= e($cssVersion) ?>">
 </head>
 <body class="<?= e(trim(($layoutClass ?? '') . ($isHome ? ' is-home' : ''))) ?>">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -42,6 +44,6 @@ $isHome = !empty($isHome);
     <a href="/terms">Terms</a>
     <a href="/privacy">Privacy</a>
   </footer>
-  <script src="/assets/js/app.js" defer></script>
+  <script src="/assets/js/app.js?v=<?= e($jsVersion) ?>" defer></script>
 </body>
 </html>
