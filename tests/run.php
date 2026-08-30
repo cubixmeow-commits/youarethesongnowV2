@@ -362,6 +362,69 @@ $gd = imagecreatefromstring($noTextImage['bytes']);
 assert_true(!str_contains($noTextImage['bytes'], 'DEVELOPMENT IMAGE'), 'no-text output omits development label bytes');
 assert_true(!str_contains($noTextImage['bytes'], 'deterministic-development'), 'no-text output omits adapter label bytes');
 
+// Live-adapter parsing and safety transformations are tested without network calls or real keys.
+$analysisFixture = [
+    'essence' => 'A Blitzkrieg Bop feeling becomes shared momentum.',
+    'openingState' => 'restless anticipation',
+    'turningPoint' => 'collective release',
+    'closingState' => 'joyful resolve',
+    'intensityPattern' => ['rising', 'surging'],
+    'themes' => ['belonging', 'release'],
+    'relationshipDynamics' => ['partners', 'shared courage'],
+    'narrativeArchetype' => 'transformation',
+    'originalVisualMoment' => 'Two people step into a rain-bright avenue as a wave of warm light opens ahead.',
+    'symbols' => [['concept' => 'threshold', 'visualTranslation' => 'an opening corridor of amber light']],
+    'visualMetaphors' => ['weather becoming momentum'],
+    'mood' => ['electric', 'hopeful'],
+    'settingTypes' => ['night avenue'],
+    'eraAtmosphere' => 'timeless contemporary',
+    'weather' => ['rain'],
+    'spatialCharacter' => ['deep perspective'],
+    'palette' => ['amber', 'near black'],
+    'lighting' => ['strong rim light'],
+    'camera' => ['35mm eye-level'],
+    'composition' => ['two centered protagonists'],
+    'motion' => ['wind-driven rain'],
+    'texture' => ['matte film grain'],
+    'subjectRoles' => ['partners'],
+    'ambiguities' => [],
+    'confidence' => 0.9,
+    'riskFlags' => ['possible_quote', 'not_an_allowed_code'],
+];
+$safePackage = \Yatsn\AI\CreativePackageBuilder::build($analysisFixture, [
+    'title' => 'Blitzkrieg Bop',
+    'artist' => 'The Ramones',
+    'portraitCount' => 2,
+    'styleName' => 'Cinematic Realism',
+    'orientation' => 'landscape',
+    'noTextInImage' => true,
+    'specialInstructions' => 'copy the album cover and logo',
+], 'fixture-adapter');
+$safeSerialized = json_encode($safePackage, JSON_THROW_ON_ERROR);
+assert_true(!str_contains(strtolower($safeSerialized), 'blitzkrieg bop'), 'creative sanitizer removes song title from stored package');
+assert_true(!str_contains(strtolower($safeSerialized), 'the ramones'), 'creative sanitizer removes performer from stored package');
+assert_true(str_contains($safePackage['compiledPromptSafe'], 'No letters, words'), 'creative compiler enforces no-text option');
+assert_true(!str_contains(strtolower($safePackage['compiledPromptSafe']), 'copy the album cover'), 'unsafe special instructions are not forwarded');
+assert_true($safePackage['dna']['riskFlags'] === ['possible_quote'], 'creative package retains only categorical risk codes');
+
+$geminiDecoded = \Yatsn\AI\GeminiCreativeAdapter::decodeResponse([
+    'candidates' => [['finishReason' => 'STOP', 'content' => ['parts' => [['text' => json_encode($analysisFixture, JSON_THROW_ON_ERROR)]]]]],
+]);
+assert_true($geminiDecoded['narrativeArchetype'] === 'transformation', 'Gemini structured response parser works');
+$groqDecoded = \Yatsn\AI\GroqCreativeAdapter::decodeResponse([
+    'choices' => [['message' => ['content' => json_encode($analysisFixture, JSON_THROW_ON_ERROR)]]],
+]);
+assert_true($groqDecoded['themes'][0] === 'belonging', 'Groq structured response parser works');
+
+$largeFixture = imagecreatetruecolor(512, 512);
+$largeBg = imagecolorallocate($largeFixture, 32, 28, 35);
+imagefilledrectangle($largeFixture, 0, 0, 511, 511, $largeBg);
+ob_start();
+imagepng($largeFixture);
+$largePng = (string) ob_get_clean();
+$normalizedFal = \Yatsn\AI\FalImageAdapter::normalizeImage($largePng, 'fal-test', 4);
+assert_true($normalizedFal['mime'] === 'image/jpeg' && $normalizedFal['width'] === 512, 'fal output is validated and normalized to JPEG');
+
 // Regeneration prepopulates draft
 $regen = GenerationJobService::recreateDraftFromImage((int) $user['id'], $imageId);
 assert_true(!empty($regen['songLookup']['title']), 'regeneration draft includes song');

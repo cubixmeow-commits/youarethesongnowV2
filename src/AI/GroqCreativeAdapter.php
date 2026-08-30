@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yatsn\AI;
 
 use Yatsn\Support\Config;
-use Yatsn\Support\Security;
 
 final class GroqCreativeAdapter implements CreativeAdapterInterface
 {
@@ -17,6 +16,7 @@ final class GroqCreativeAdapter implements CreativeAdapterInterface
     public function isAvailable(): bool
     {
         return Config::getBool('gates.ai_providers_enabled')
+            && Config::getBool('ai.groq_live_calls')
             && (string) Config::get('ai.groq_api_key') !== '';
     }
 
@@ -25,18 +25,41 @@ final class GroqCreativeAdapter implements CreativeAdapterInterface
         if (!$this->isAvailable()) {
             throw new \RuntimeException('groq_unavailable');
         }
+        $model = (string) Config::get('ai.groq_model', 'openai/gpt-oss-20b');
+        $response = ProviderHttp::postJson('https://api.groq.com/openai/v1/chat/completions', [
+            'model' => $model,
+            'temperature' => 0.7,
+            'max_completion_tokens' => 2600,
+            'reasoning_effort' => 'low',
+            'messages' => [
+                ['role' => 'system', 'content' => CreativePackageBuilder::systemPrompt()],
+                ['role' => 'user', 'content' => CreativePackageBuilder::userPrompt($snapshot)],
+            ],
+            'response_format' => [
+                'type' => 'json_schema',
+                'json_schema' => ['name' => 'yatsn_song_dna', 'strict' => true, 'schema' => CreativePackageBuilder::schema()],
+            ],
+        ], ['Authorization: Bearer ' . (string) Config::get('ai.groq_api_key')], Config::getInt('ai.text_timeout_seconds', 45));
 
-        // Protected test adapter: performs a live availability-shaped call only when enabled.
-        // For Build 1 quality work without uncontrolled spend, falls back to structured local package
-        // after verifying the key format, unless GROQ_LIVE_CALLS=true.
-        if (!Config::getBool('ai.groq_live_calls')) {
-            $dev = new \Yatsn\CreativeEngine\DevelopmentCreativeAdapter();
-            $package = $dev->buildPackage($snapshot);
-            $package['adapter'] = $this->name() . '+local-structure';
-            $package['compiledPromptSafe'] = Security::redact((string) $package['compiledPromptSafe']);
-            return $package;
+        return CreativePackageBuilder::build(
+            self::decodeResponse($response),
+            $snapshot,
+            $this->name() . ':' . $model,
+            Config::getInt('ai.groq_text_cost_cents', 1)
+        );
+    }
+
+    /** @param array<string, mixed> $response @return array<string, mixed> */
+    public static function decodeResponse(array $response): array
+    {
+        $message = $response['choices'][0]['message'] ?? null;
+        if (!is_array($message) || !empty($message['refusal'])) {
+            throw new \RuntimeException('groq_generation_blocked');
         }
-
-        throw new \RuntimeException('groq_live_calls_not_enabled_for_build_1');
+        $decoded = json_decode(trim((string) ($message['content'] ?? '')), true);
+        if (!is_array($decoded)) {
+            throw new \RuntimeException('groq_invalid_creative_json');
+        }
+        return $decoded;
     }
 }

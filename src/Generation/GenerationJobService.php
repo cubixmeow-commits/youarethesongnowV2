@@ -165,7 +165,8 @@ final class GenerationJobService
                 return ['processed' => false];
             }
 
-            $lease = gmdate('Y-m-d\TH:i:s\Z', time() + 120);
+            // Covers the bounded text, image-generation, and image-download timeouts.
+            $lease = gmdate('Y-m-d\TH:i:s\Z', time() + 240);
             $claimed = Database::exec(
                 'UPDATE generation_jobs SET status = \'generating\', worker_token = :wt, lease_expires_at = :lease,
                     progress_stage = :stage, attempt_count = attempt_count + 1, updated_at = :u
@@ -193,7 +194,9 @@ final class GenerationJobService
     {
         $snapshot = json_decode((string) $job['snapshot_json'], true) ?: [];
         $attemptPublicId = opaque_id();
-        $creative = AdapterFactory::creative();
+        $snapshot['userId'] = (int) $job['user_id'];
+        $creativeChain = AdapterFactory::creativeRetryChain();
+        $creative = $creativeChain[0];
         $imageChain = AdapterFactory::imageRetryChain();
         $primaryImage = $imageChain[0];
 
@@ -221,7 +224,54 @@ final class GenerationJobService
                 ['s' => 'Bringing you into the scene', 'u' => now_utc(), 'id' => $job['id']]
             );
 
-            $package = $creative->buildPackage($snapshot);
+            $package = null;
+            $usedCreative = null;
+            $creativeError = null;
+            foreach ($creativeChain as $index => $creativeAdapter) {
+                try {
+                    $package = $creativeAdapter->buildPackage($snapshot);
+                    $usedCreative = $creativeAdapter->name();
+                    break;
+                } catch (\Throwable $e) {
+                    $creativeError = $e;
+                    Database::exec(
+                        'INSERT INTO generation_attempts (public_id, job_id, attempt_number, adapter_name, status, error_class, started_at, finished_at)
+                         VALUES (:pid, :jid, :n, :a, \'failed\', :e, :s, :f)',
+                        [
+                            'pid' => opaque_id(),
+                            'jid' => $job['id'],
+                            'n' => ((int) $job['attempt_count']) + $index + 1,
+                            'a' => $creativeAdapter->name(),
+                            'e' => Security::redact($e->getMessage()),
+                            's' => now_utc(),
+                            'f' => now_utc(),
+                        ]
+                    );
+                }
+            }
+            if ($package === null) {
+                throw $creativeError ?? new \RuntimeException('creative_provider_failure');
+            }
+            Database::exec(
+                'UPDATE generation_attempts SET adapter_name = :a WHERE public_id = :pid',
+                ['a' => ($usedCreative ?? $creative->name()) . '+' . $primaryImage->name(), 'pid' => $attemptPublicId]
+            );
+            $creativeCost = max(0, (int) ($package['costCents'] ?? 0));
+            if ($creativeCost > 0) {
+                Database::exec(
+                    'INSERT INTO provider_costs (public_id, user_id, job_public_id, adapter_name, stage, cost_cents, created_at)
+                     VALUES (:pid, :uid, :job, :a, \'creative\', :cents, :c)',
+                    [
+                        'pid' => opaque_id(),
+                        'uid' => (int) $job['user_id'],
+                        'job' => $job['public_id'],
+                        'a' => $usedCreative ?? $creative->name(),
+                        'cents' => $creativeCost,
+                        'c' => now_utc(),
+                    ]
+                );
+                GateService::assertGenerationAllowed();
+            }
             Database::exec(
                 'INSERT INTO song_dna_artifacts (public_id, job_id, schema_version, dna_json, narrative_json, portrait_plan_json, stylemap_json, compiled_prompt_safe, created_at)
                  VALUES (:pid, :jid, :sv, :dna, :nar, :pp, :sm, :prompt, :c)',
@@ -430,7 +480,7 @@ final class GenerationJobService
         if ($existing !== null && $existing['expires_at'] > $now) {
             return false;
         }
-        $expires = gmdate('Y-m-d\TH:i:s\Z', time() + 90);
+        $expires = gmdate('Y-m-d\TH:i:s\Z', time() + 240);
         if ($existing === null) {
             Database::exec(
                 'INSERT INTO worker_locks (name, owner_token, expires_at, updated_at) VALUES (\'generation\', :t, :e, :u)',

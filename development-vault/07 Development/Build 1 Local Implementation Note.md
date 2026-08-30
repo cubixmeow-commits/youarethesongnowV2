@@ -68,7 +68,8 @@ Install only in local `.env` / protected hosting config:
 - External beta, public registration, live payments and commercial protected-lyrics use remain disabled.
 - Owner 2FA is implemented but optional until enrolled; sensitive owner ops should be exercised after Authy enrollment.
 - Licensed self-hosted WOFF2 files are not yet in the repo; the app uses a strong local serif/sans stack.
-- Real Groq/Gemini/fal live generation remains opt-in to protect the development budget.
+- Live adapters are implemented but remain independently opt-in to protect the development budget. Gemini is the default creative-analysis provider, Groq is the structured-output fallback, and fal.ai performs portrait-guided image generation. The deterministic adapters remain the development path when live AI is disabled; they are not used as a paid-generation fallback unless explicitly enabled.
+- Provider requests contain no stored lyrics. Gemini and Groq receive only the submitted song and performer identifiers plus copyright-safety instructions. fal.ai receives the sanitized provider-neutral visual package and one or two private portrait data URIs in memory; portrait bytes and provider response bodies are never logged.
 - Final Terms/Privacy legal language and provider/quality benchmarks remain launch gates.
 
 ## Explicitly not claimed

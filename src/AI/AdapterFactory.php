@@ -12,21 +12,33 @@ final class AdapterFactory
 {
     public static function creative(): CreativeAdapterInterface
     {
+        return self::creativeRetryChain()[0];
+    }
+
+    /** @return list<CreativeAdapterInterface> */
+    public static function creativeRetryChain(): array
+    {
         if (!Config::getBool('gates.ai_providers_enabled')) {
-            return new DevelopmentCreativeAdapter();
+            return [new DevelopmentCreativeAdapter()];
         }
-
-        $groq = new GroqCreativeAdapter();
-        if ($groq->isAvailable()) {
-            return $groq;
-        }
-
+        $provider = (string) Config::get('ai.creative_provider', 'auto');
         $gemini = new GeminiCreativeAdapter();
-        if ($gemini->isAvailable()) {
-            return $gemini;
+        $groq = new GroqCreativeAdapter();
+        $ordered = match ($provider) {
+            'groq' => [$groq, $gemini],
+            'deterministic' => [],
+            default => [$gemini, $groq],
+        };
+        $chain = [];
+        foreach ($ordered as $adapter) {
+            if ($adapter->isAvailable()) {
+                $chain[] = $adapter;
+            }
         }
-
-        return new DevelopmentCreativeAdapter();
+        if ($chain === [] || Config::getBool('ai.allow_deterministic_fallback')) {
+            $chain[] = new DevelopmentCreativeAdapter();
+        }
+        return $chain;
     }
 
     public static function image(): ImageAdapterInterface
@@ -48,7 +60,7 @@ final class AdapterFactory
     {
         $primary = self::image();
         $chain = [$primary];
-        if ($primary->name() !== 'deterministic-development-image') {
+        if ($primary->name() !== 'deterministic-development-image' && Config::getBool('ai.allow_deterministic_fallback')) {
             $chain[] = new DevelopmentImageAdapter();
         }
         return $chain;
@@ -67,6 +79,14 @@ final class AdapterFactory
             'groqKeyPresent' => Config::get('ai.groq_api_key') !== '',
             'geminiKeyPresent' => Config::get('ai.gemini_api_key') !== '',
             'falKeyPresent' => Config::get('ai.fal_key') !== '',
+            'creativeProviderPreference' => Config::get('ai.creative_provider'),
+            'geminiLiveCalls' => Config::getBool('ai.gemini_live_calls'),
+            'groqLiveCalls' => Config::getBool('ai.groq_live_calls'),
+            'falLiveCalls' => Config::getBool('ai.fal_live_calls'),
+            'deterministicFallbackAllowed' => Config::getBool('ai.allow_deterministic_fallback'),
+            'geminiModel' => Config::get('ai.gemini_model'),
+            'groqModel' => Config::get('ai.groq_model'),
+            'falImageModel' => Config::get('ai.fal_image_model'),
         ];
     }
 }
