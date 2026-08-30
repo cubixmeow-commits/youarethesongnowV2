@@ -1,7 +1,7 @@
 ---
 type: dashboard-snapshot
 status: active
-updated: 2026-08-28
+updated: 2026-08-30
 area: project
 ---
 
@@ -13,11 +13,11 @@ Agents and humans: when Current Project truth changes, update this snapshot **an
 
 ## Phase
 
-Private Development Build 1 local implementation
+Private Development Build 1 — Gemini native portrait identity
 
 ## Build status
 
-PRIVATE DEVELOPMENT BUILD 1 LOCAL SLICE RUNNING: external beta and commercial launch gates remain active
+GEMINI NATIVE IMAGE PATH SELECTED: song → Gemini Song DNA → saved derived DNA → portrait inlineData → `gemini-3.1-flash-image` → gallery. Uploaded people must be recognizable central subjects. Replicate P-Image-Edit and fal Kontext Multi failed that requirement (scenes OK, people minimized/omitted) and are experimental-only. Automated tests **123 passed**. External beta and commercial gates remain active.
 
 ## Delivery path
 
@@ -73,13 +73,9 @@ The business is California-based. Current CDTFA guidance preliminarily supports 
 
 Groq is available as the first text/reasoning benchmark candidate for song matching, authorized lyrics/context analysis, Song DNA and structured prompt work. Its current APIs provide text output, including from vision inputs, rather than final image generation. Separate image providers must be benchmarked. A 90-day `yatsn-v2-development` key exists in the Default Project, expires 2026-11-26 and is stored only in the owner's password manager. It is not installed in the repository or hosting configuration.
 
-A separate Google AI Studio project and API key named `yatsn-v2-development` are verified on the Free tier. The owners selected it for cost-controlled private development using only synthetic, public-domain, owner-authorized and nonconfidential material. The secret remains only in the owner's password manager and is not installed in the repository or hosting configuration. Because unpaid prompts/responses may improve Google products and receive human review, it is not approved for customer portraits, personal data or external/paid beta traffic.
+A separate Google AI Studio project and API key named `yatsn-v2-development` are verified. V2 uses `gemini-3.6-flash` for Song DNA (Google Search; V1-compatible acceptance; lyrics transient in private development only; never persisted) and `gemini-3.1-flash-image` for native multimodal portrait artwork (text + inline portrait parts in one request). Free-tier material rules still require synthetic, public-domain, owner-authorized and nonconfidential test material for unpaid traffic.
 
-fal.ai is the tentative primary image-provider hub. The initial reference-image comparison will include Seedream V4 Edit, FLUX.2 Pro, Nano Banana, Nano Banana 2 and GPT Image 2. Low/medium/high assignments wait for blind portrait, couples, style, reliability, privacy and total-cost results.
-
-A restricted fal.ai API-only development key exists and is stored only in the owner's password manager. It cannot manage billing, keys, usage or compute and is not installed in the repository or hosting configuration.
-
-The fal.ai account has a verified $25.00 one-time testing balance with automatic top-up disabled and no recorded usage. The purchased credits currently show an expiration of 2027-08-28.
+Replicate P-Image-Edit and fal Kontext Multi produced strong Song DNA scenes but failed the defining portrait requirement (people minimized or omitted). They remain available only as experimental `IMAGE_PROVIDER` options for later benchmarking. Gemini native image is the selected portrait path.
 
 Fifteen balanced launch style candidates are selected across cinematic realism, fine art, romance, music, surrealism, dark romance and fantasy. All 52 recoverable V1 styles will live in the database and owner admin; 37 start inactive for later activation. Prompt rewrites, previews and routing remain open.
 
@@ -105,9 +101,9 @@ The approved Build 1 visual direction preserves V1's dark cinematic atmosphere a
 
 ## Prompt-system status
 
-**V1 prompting functionality is now mapped as a system, not a single prompt.**
+**V1 prompting functionality is mapped as a system; V1-to-V2 comparison lives in Prompt Lab.**
 
-The newest V1 prompt-bearing worker was reviewed directly and is now the approved foundation for the V2 Song DNA and Prompt Pipeline Contract. V2 preserves the strong 12-field interpretation, one/two-person portrait direction, cinematic scene construction, soft user steering and StyleMap. It replaces raw-lyric persistence, prompt-only leakage protection, album-art-dependent general styling, conflicting text/portrait instructions, weak schema handling and retries that silently removed portraits.
+See `development-vault/04 Prompt Lab/V1 to V2 Creative Engine Comparison.md`. The newest V1 prompt-bearing worker remains the approved creative foundation. V2 preserves the strong 12-field interpretation, one/two-person portrait direction, cinematic scene construction, soft user steering and StyleMap. It replaces raw-lyric persistence, prompt-only leakage protection, album-art-dependent general styling, conflicting text/portrait instructions, weak schema handling and retries that silently removed portraits.
 
 Five prompt origins are documented:
 

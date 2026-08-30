@@ -48,13 +48,22 @@ final class AdapterFactory
         }
 
         $provider = (string) Config::get('ai.image_provider', 'auto');
+        $gemini = new GeminiImageAdapter();
         $replicate = new ReplicateImageAdapter();
         $fal = new FalImageAdapter();
+        if ($provider === 'gemini') {
+            return $gemini;
+        }
         if ($provider === 'replicate') {
             return $replicate;
         }
         if ($provider === 'fal') {
             return $fal;
+        }
+        // Portrait identity is the defining product requirement. Prefer native
+        // Gemini multimodal image generation; keep fal/Replicate experimental.
+        if ($provider === 'auto' && $gemini->isAvailable()) {
+            return $gemini;
         }
         if ($provider === 'auto' && $fal->isAvailable()) {
             return $fal;
@@ -78,6 +87,7 @@ final class AdapterFactory
     {
         $creative = self::creative();
         $image = self::image();
+        $geminiImage = new GeminiImageAdapter();
         return [
             'aiProvidersEnabled' => Config::getBool('gates.ai_providers_enabled'),
             'creativeAdapter' => $creative->name(),
@@ -90,11 +100,15 @@ final class AdapterFactory
             'replicateTokenPresent' => Config::get('ai.replicate_api_token') !== '',
             'creativeProviderPreference' => Config::get('ai.creative_provider'),
             'geminiLiveCalls' => Config::getBool('ai.gemini_live_calls'),
+            'geminiImageLiveCalls' => Config::getBool('ai.gemini_image_live_calls'),
             'groqLiveCalls' => Config::getBool('ai.groq_live_calls'),
             'falLiveCalls' => Config::getBool('ai.fal_live_calls'),
             'replicateLiveCalls' => Config::getBool('ai.replicate_live_calls'),
             'deterministicFallbackAllowed' => Config::getBool('ai.allow_deterministic_fallback'),
             'geminiModel' => Config::get('ai.gemini_model'),
+            'geminiImageModel' => Config::get('ai.gemini_image_model'),
+            'geminiImageSize' => Config::get('ai.gemini_image_size'),
+            'geminiImageAdapterAvailable' => $geminiImage->isAvailable(),
             'groqModel' => Config::get('ai.groq_model'),
             'falImageModel' => Config::get('ai.fal_image_model'),
             'imageProviderPreference' => Config::get('ai.image_provider'),

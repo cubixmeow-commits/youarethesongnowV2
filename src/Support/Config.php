@@ -78,11 +78,14 @@ final class Config
                 'creative_provider' => strtolower((string) env_value('CREATIVE_PROVIDER', 'auto')),
                 'image_provider' => strtolower((string) env_value('IMAGE_PROVIDER', 'auto')),
                 'gemini_model' => env_value('GEMINI_MODEL', 'gemini-3.6-flash'),
+                'gemini_image_model' => env_value('GEMINI_IMAGE_MODEL', 'gemini-3.1-flash-image'),
+                'gemini_image_size' => env_value('GEMINI_IMAGE_SIZE', '1K'),
                 'groq_model' => env_value('GROQ_MODEL', 'openai/gpt-oss-20b'),
                 'fal_image_model' => env_value('FAL_IMAGE_MODEL', 'fal-ai/flux-pro/kontext/multi'),
                 'replicate_image_model' => env_value('REPLICATE_IMAGE_MODEL', 'prunaai/p-image-edit'),
                 'groq_live_calls' => self::toBool(env_value('GROQ_LIVE_CALLS', 'false')),
                 'gemini_live_calls' => self::toBool(env_value('GEMINI_LIVE_CALLS', 'false')),
+                'gemini_image_live_calls' => self::toBool(env_value('GEMINI_IMAGE_LIVE_CALLS', 'false')),
                 'fal_live_calls' => self::toBool(env_value('FAL_LIVE_CALLS', 'false')),
                 'replicate_live_calls' => self::toBool(env_value('REPLICATE_LIVE_CALLS', 'false')),
                 'allow_deterministic_fallback' => self::toBool(env_value('AI_ALLOW_DETERMINISTIC_FALLBACK', 'false')),
@@ -91,6 +94,8 @@ final class Config
                 'image_download_timeout_seconds' => max(10, min(45, (int) (env_value('AI_IMAGE_DOWNLOAD_TIMEOUT_SECONDS', '30') ?? '30'))),
                 'gemini_text_cost_cents' => max(0, (int) (env_value('GEMINI_TEXT_COST_CENTS', '0') ?? '0')),
                 'groq_text_cost_cents' => max(0, (int) (env_value('GROQ_TEXT_COST_CENTS', '1') ?? '1')),
+                // ~$0.067 at 1K; whole-cent ledger uses a conservative ceiling.
+                'gemini_image_cost_cents' => max(0, (int) (env_value('GEMINI_IMAGE_COST_CENTS', '7') ?? '7')),
                 'fal_image_cost_cents' => max(0, (int) (env_value('FAL_IMAGE_COST_CENTS', '4') ?? '4')),
                 // The database currently tracks whole cents. One cent is a conservative ceiling for a $0.003 Schnell image.
                 'replicate_image_cost_cents' => max(0, (int) (env_value('REPLICATE_IMAGE_COST_CENTS', '1') ?? '1')),

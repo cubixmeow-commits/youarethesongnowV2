@@ -1,7 +1,7 @@
 ---
 type: current-project
 status: active
-updated: 2026-08-28
+updated: 2026-08-30
 area: priorities
 ---
 
@@ -11,17 +11,17 @@ This note is the daily “what matters now” list for CuBiX Meow and Brut. Keep
 
 ## Active now
 
-1. **Private Development Build 1 running locally:** PHP/SQLite vertical slice is implemented on `build/private-development-build-1` with migrations, `/api/v1`, deterministic creative/image adapters, worker, owner area and automated checks. External beta, live Stripe and commercial protected-lyrics use remain blocked.
-2. **Install protected test credentials locally when needed:** Stripe test Checkout, SMTP and AI keys stay outside Git. Without them the build fails closed and uses logged mail plus deterministic adapters.
-3. **Verify and harden the local slice:** continue browser/accessibility polish, Hostinger dry-run prep and provider-benchmark wiring on top of the working foundation.
-4. **Private song-analysis feasibility first:** do not purchase lyrics licensing for development. Privately compare context-only and ephemeral full-lyric analysis using the approved popular-song benchmark, with no persistence, sharing, public access or commercial use. Any user-accessible catalog remains restricted to verified public-domain/free-authorized songs, owner-controlled material and direct band/artist catalogs unless broad licensing is later approved.
-5. **Provider benchmark planning active:** Groq is available for text/reasoning tests; fal.ai is the tentative primary image hub. Start the reference-image matrix with Seedream V4 Edit, FLUX.2 Pro, Nano Banana, Nano Banana 2 and GPT Image 2, then assign tiers only from blind quality/cost results. See `development-vault/03 Research/AI Provider Benchmark Plan.md`.
-6. **Controlled song set approved:** CuBiX Meow and Brut approved the exact 12-song private-development benchmark covering romance, weddings, heartbreak, celebration, narrative, surreal and ambiguous-title behavior without storing lyrics. See `development-vault/03 Research/Controlled Song Test Set.md`.
-7. **Print and merchandise deferred by owner decision:** first complete and approve the core V2 web build. Then add provider-neutral gallery upscaling, print-master preparation and poster/T-shirt functionality as the next product phase. This work does not block the first Cursor build. See `development-vault/05 Product Design/Print-Ready and Physical Products Workshop.md`.
-8. **Stripe selected; U.S. $20 paywall set:** the business is California-based; accept USD payments from U.S. billing addresses, charge $20.00 monthly immediately with no trial, and keep complimentary reviewers outside Stripe billing. Use product name `You Are The Song Now Membership` and card descriptor `YOU ARE THE SONG`. California guidance preliminarily treats electronically delivered/SaaS products without tangible media as nontaxable; obtain qualified confirmation and monitor other-state nexus. Included credits and tier pricing remain pending provider benchmarks. See `development-vault/03 Research/Stripe Subscription Plan.md`.
-9. Keep the shared development vault as working memory; keep `/docs` as the polished command center.
+1. **Prove Gemini native portrait identity live:** song → Gemini Song DNA → saved DNA → portrait(s) → `gemini-3.1-flash-image` (inline portraits) → gallery with recognizable central subject(s). An image without the uploaded person is not usable.
+2. **Portrait provider decision (current):** Replicate P-Image-Edit and fal Kontext Multi produced strong scenes but failed people (minimized/omitted). Retained for later benchmarking only. Gemini multimodal image is the selected path.
+3. **Private Development Build 1 foundation:** PHP/SQLite vertical slice running. Automated suite: **123 passed** after Gemini image adapter. External beta, live Stripe and commercial protected-lyrics use remain blocked.
+4. **Lyrics boundary unchanged:** private-development Google Search may analyze lyrics transiently; never save or commit lyrics.
+5. **Install protected credentials only when spending budget:** Gemini text + image live flags are separate (`GEMINI_LIVE_CALLS`, `GEMINI_IMAGE_LIVE_CALLS`).
+6. **Print/poster/T-shirt/upscaling remain post-Build-1.**
+7. Vault = workshop; `/docs` = Meow Control.
 
 ## Newly documented
+
+- **Gemini native image path (2026-08-30):** `IMAGE_PROVIDER=gemini|auto`, model `gemini-3.1-flash-image`, 1K development size, V1-style identity-first multimodal request. fal/Replicate demoted to experimental.
 
 - **Final quality set approved:** 90 images, including 30 individual, 40 couple and 20 wedding/celebration compositions; 30 per orientation; every 15-style by three-tier combination tested twice.
 - **Portrait fixtures ready:** the owners confirmed private-development consent for the known V1 sample material, but the 77 local V1 sample files are finished generated artworks rather than source portraits. Eight fully synthetic portrait inputs and a controlled solo/couple/wedding pairing manifest are now stored privately outside Git for provider benchmarking.
@@ -73,10 +73,9 @@ This note is the daily “what matters now” list for CuBiX Meow and Brut. Keep
 
 ## Next
 
-1. Install Stripe test, SMTP and AI credentials only through local `.env` / protected hosting config when ready to exercise those adapters.
-2. Add owner-written, verified public-domain and indie-artist-authorized fixtures alongside private internal tests.
-3. Use the working build to complete provider, style, quality and credit benchmarks.
-4. Keep external registration, live payments and commercial protected-lyrics processing disabled until their gates clear.
+1. Live Hostinger test: one song + one portrait + one style + medium quality through Gemini `gemini-3.1-flash-image`; accept only if the uploaded person is the recognizable central subject.
+2. If identity passes, refine in Creative Engine priority order (one variable at a time).
+3. Keep fal/Replicate off the default path; use only for later benchmarks.
 
 ## Waiting / blocked
 

@@ -487,17 +487,103 @@ $compactEditPrompt = \Yatsn\AI\ReplicateImageAdapter::compactPortraitEditPrompt(
     'quality' => 'high',
     'noTextInImage' => true,
 ], 2);
-assert_true(strlen($compactEditPrompt) <= 3800, 'Replicate P-Image-Edit prompt stays below provider long-prompt ceiling');
-assert_true(str_contains($compactEditPrompt, $analysisFixture['originalVisualMoment']), 'Replicate compact prompt preserves the Song DNA visual moment');
-assert_true(str_contains($compactEditPrompt, 'image 1 and image 2'), 'Replicate compact prompt anchors both portrait identities imperatively');
-assert_true(str_contains($compactEditPrompt, 'no readable text'), 'Replicate compact prompt puts no-text rule near the start');
-assert_true(str_contains($compactEditPrompt, 'large enough to recognize at gallery size'), 'Replicate requires visible portrait-scale identity');
-assert_true(str_contains($compactEditPrompt, 'must not visually overwhelm or hide them'), 'Replicate keeps the cinematic environment subordinate to the protagonists');
-assert_true(str_contains($compactEditPrompt, 'tiny, distant, obscured'), 'Replicate explicitly rejects silhouette-scale protagonists');
+assert_true(strlen($compactEditPrompt) <= 3800, 'shared compact portrait prompt stays below provider long-prompt ceiling');
+assert_true(str_contains($compactEditPrompt, 'IDENTITY-FIRST SCENE INSTRUCTION'), 'compact prompt uses provider-neutral identity-first header');
+assert_true(str_contains($compactEditPrompt, $analysisFixture['originalVisualMoment']), 'compact prompt preserves the Song DNA visual moment');
+assert_true(str_contains($compactEditPrompt, 'image 1 and image 2'), 'compact prompt anchors both portrait identities imperatively');
+assert_true(str_contains($compactEditPrompt, 'no readable text'), 'compact prompt puts no-text rule near the start');
+assert_true(str_contains($compactEditPrompt, 'large enough to recognize at gallery size'), 'compact prompt requires visible portrait-scale identity');
+assert_true(str_contains($compactEditPrompt, 'must not visually overwhelm or hide them'), 'compact prompt keeps the cinematic environment subordinate to the protagonists');
+assert_true(str_contains($compactEditPrompt, 'tiny, distant, obscured'), 'compact prompt explicitly rejects silhouette-scale protagonists');
 assert_true(\Yatsn\AI\ReplicateImageAdapter::aspectMatches(1024, 1024, '1:1'), 'Replicate accepts matching square output');
 assert_true(!\Yatsn\AI\ReplicateImageAdapter::aspectMatches(1344, 768, '1:1'), 'Replicate rejects wrong landscape placeholder for square request');
 assert_true(\Yatsn\AI\ReplicateImageAdapter::aspectMatches(768, 1024, '3:4'), 'shared portrait-provider validation accepts 3:4 output');
 assert_true(\Yatsn\AI\ReplicateImageAdapter::aspectMatches(1024, 768, '4:3'), 'shared portrait-provider validation accepts 4:3 output');
+
+// Gemini native multimodal image adapter (request shape + decode; no live call)
+$geminiOnePortraitPayload = \Yatsn\AI\GeminiImageAdapter::buildRequestPayload($safePackage, [
+    'orientation' => 'portrait',
+    'quality' => 'medium',
+    'noTextInImage' => true,
+    'specialInstructions' => 'soft golden rim light only',
+    'styleName' => 'Cinematic Realism',
+], [
+    ['mime' => 'image/jpeg', 'bytes' => $largePng],
+]);
+assert_true(\Yatsn\AI\GeminiImageAdapter::countInlineImageParts($geminiOnePortraitPayload) === 1, 'Gemini image request attaches one portrait as its own inline part');
+assert_true(($geminiOnePortraitPayload['generationConfig']['responseModalities'][0] ?? '') === 'IMAGE', 'Gemini image request asks for image-only output');
+assert_true(($geminiOnePortraitPayload['generationConfig']['imageConfig']['aspectRatio'] ?? '') === '3:4', 'Gemini image request passes portrait aspect ratio');
+assert_true(($geminiOnePortraitPayload['generationConfig']['imageConfig']['imageSize'] ?? '') === '1K', 'Gemini image request starts at 1K development size');
+$geminiOnePrompt = (string) ($geminiOnePortraitPayload['contents'][0]['parts'][0]['text'] ?? '');
+assert_true(str_contains($geminiOnePrompt, $analysisFixture['originalVisualMoment']), 'Gemini image prompt includes persisted Song DNA visual moment');
+assert_true(str_contains($geminiOnePrompt, 'Cinematic Realism') || str_contains($geminiOnePrompt, 'Selected style'), 'Gemini image prompt includes selected curated style');
+assert_true(str_contains($geminiOnePrompt, 'soft golden rim light only'), 'Gemini image prompt includes user special instructions');
+assert_true(str_contains($geminiOnePrompt, 'NO visible text'), 'Gemini image prompt honors no-text preference');
+assert_true(str_contains($geminiOnePrompt, 'PRIMARY CHARACTER') || str_contains($geminiOnePrompt, 'central subject'), 'Gemini image prompt requires the uploaded person as central subject');
+assert_true(!str_contains(strtolower($geminiOnePrompt), 'lyrics search'), 'Gemini image adapter does not trigger another lyrics search');
+
+$geminiTwoPortraitPayload = \Yatsn\AI\GeminiImageAdapter::buildRequestPayload($safePackage, [
+    'orientation' => 'square',
+    'quality' => 'high',
+    'noTextInImage' => false,
+    'specialInstructions' => '',
+], [
+    ['mime' => 'image/jpeg', 'bytes' => $largePng],
+    ['mime' => 'image/jpeg', 'bytes' => $largePng],
+]);
+assert_true(\Yatsn\AI\GeminiImageAdapter::countInlineImageParts($geminiTwoPortraitPayload) === 2, 'Gemini image request attaches two portraits as separate inline parts');
+$geminiTwoPrompt = (string) ($geminiTwoPortraitPayload['contents'][0]['parts'][0]['text'] ?? '');
+assert_true(str_contains($geminiTwoPrompt, 'CHARACTER 1') && str_contains($geminiTwoPrompt, 'CHARACTER 2'), 'Gemini two-portrait prompt preserves each identity separately');
+assert_true(($geminiTwoPortraitPayload['generationConfig']['imageConfig']['aspectRatio'] ?? '') === '1:1', 'Gemini image request passes square aspect ratio');
+
+$geminiOutputFixture = imagecreatetruecolor(768, 1024);
+$geminiOutputBg = imagecolorallocate($geminiOutputFixture, 40, 36, 48);
+imagefilledrectangle($geminiOutputFixture, 0, 0, 767, 1023, $geminiOutputBg);
+ob_start();
+imagejpeg($geminiOutputFixture, null, 90);
+$geminiOutputJpeg = (string) ob_get_clean();
+$geminiResponse = [
+    'candidates' => [[
+        'finishReason' => 'STOP',
+        'content' => ['parts' => [[
+            'inlineData' => [
+                'mimeType' => 'image/jpeg',
+                'data' => base64_encode($geminiOutputJpeg),
+            ],
+        ]]],
+    ]],
+];
+$geminiExtracted = \Yatsn\AI\GeminiImageAdapter::extractInlineImage($geminiResponse);
+assert_true($geminiExtracted['mime'] === 'image/jpeg' && strlen($geminiExtracted['bytes']) > 100, 'Gemini response image is decoded safely');
+$geminiNormalized = \Yatsn\AI\FalImageAdapter::normalizeImage($geminiExtracted['bytes'], 'gemini-test', 7);
+assert_true($geminiNormalized['width'] === 768 && $geminiNormalized['height'] === 1024, 'Gemini response image is normalized into expected application format');
+$geminiMissingFailed = false;
+try {
+    \Yatsn\AI\GeminiImageAdapter::extractInlineImage(['candidates' => [['finishReason' => 'STOP', 'content' => ['parts' => [['text' => 'no image']]]]]]);
+} catch (\Throwable $e) {
+    $geminiMissingFailed = str_contains($e->getMessage(), 'gemini_image_missing');
+}
+assert_true($geminiMissingFailed, 'Gemini missing image output fails safely');
+$geminiMalformedFailed = false;
+try {
+    \Yatsn\AI\GeminiImageAdapter::extractInlineImage(['candidates' => [['finishReason' => 'STOP', 'content' => ['parts' => [['inlineData' => ['mimeType' => 'image/jpeg', 'data' => '%%%']]]]]]]);
+} catch (\Throwable $e) {
+    $geminiMalformedFailed = str_contains($e->getMessage(), 'gemini_image_decode_failed')
+        || str_contains($e->getMessage(), 'gemini_image_invalid')
+        || str_contains($e->getMessage(), 'gemini_image_missing');
+}
+assert_true($geminiMalformedFailed, 'Gemini malformed image output fails safely');
+$mailAfterGemini = file_exists(Config::get('app.log_path') . '/mail.log')
+    ? (string) file_get_contents(Config::get('app.log_path') . '/mail.log')
+    : '';
+$inlineB64 = (string) ($geminiOnePortraitPayload['contents'][0]['parts'][1]['inlineData']['data'] ?? '');
+assert_true($inlineB64 !== '' && !str_contains($mailAfterGemini, $inlineB64), 'portrait base64 is not written to mail logs');
+assert_true(!str_contains($mailAfterGemini, substr($inlineB64, 0, 40)), 'partial portrait base64 is not written to mail logs');
+$setupAi = Config::setupStatus()['ai'] ?? [];
+assert_true(array_key_exists('geminiImageModel', $setupAi), 'setup-status reports Gemini image model');
+assert_true(array_key_exists('geminiImageLiveCalls', $setupAi), 'setup-status reports Gemini image live-call flag');
+assert_true(array_key_exists('geminiImageAdapterAvailable', $setupAi), 'setup-status reports Gemini image adapter availability');
+assert_true(array_key_exists('imageProviderPreference', $setupAi), 'setup-status reports selected image-provider preference');
 
 // Regeneration prepopulates draft
 $regen = GenerationJobService::recreateDraftFromImage((int) $user['id'], $imageId);

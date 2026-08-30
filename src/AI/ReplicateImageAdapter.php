@@ -150,9 +150,10 @@ final class ReplicateImageAdapter implements ImageAdapterInterface
     }
 
     /**
-     * P-Image-Edit responds best to a concise imperative edit instruction, not
-     * the complete provider-neutral prompt. Keep the canonical package intact
-     * while compiling only its highest-value controls for this provider.
+     * Compact identity-first compiler for portrait-guided image models
+     * (fal Kontext Multi and Replicate P-Image-Edit). Keep the canonical
+     * provider-neutral package intact; compile only the highest-value
+     * controls into a short imperative scene instruction.
      *
      * @param array<string, mixed> $package
      * @param array<string, mixed> $snapshot
@@ -183,7 +184,7 @@ final class ReplicateImageAdapter implements ImageAdapterInterface
         };
 
         $prompt = implode("\n", array_filter([
-            'P-IMAGE-EDIT INSTRUCTION',
+            'IDENTITY-FIRST SCENE INSTRUCTION',
             $identity,
             $textRule,
             'Do not show the source photo as an inset, collage, frame, card, screen, or visible reference. Change its background, crop, pose, lighting, and clothing to belong naturally in the new world.',

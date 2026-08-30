@@ -1,7 +1,7 @@
 ---
 type: index
 status: active
-updated: 2026-08-27
+updated: 2026-08-30
 area: prompt-lab
 ---
 
@@ -11,7 +11,7 @@ Treat prompts like versioned product behavior, not disposable text snippets.
 
 ## Current V1 reference
 
-Start with [[V1 Prompt Functionality Map]] for the recoverable V1 prompt architecture.
+Start with [[V1 to V2 Creative Engine Comparison]] for the authoritative feature-by-feature bridge, then [[V1 Prompt Functionality Map]] for the recoverable V1 prompt architecture. Implementation note: [[V2 V1-Derived Image Prompt Foundation]].
 
 Deep documentation:
 

@@ -11,9 +11,9 @@ This vault is the shared development memory for YouAreTheSongNow V2.
 
 ## Current phase
 
-**Phase: Private Development Build 1 preparation and local implementation.**
+**Phase: Private Development Build 1 — Gemini native portrait identity.**
 
-CuBiX Meow and Brut authorized Private Development Build 1 on 2026-08-28. A local PHP/SQLite vertical slice is now runnable on the build branch. External beta access, live Stripe charges and commercial use of protected lyrics remain gated.
+CuBiX Meow and Brut authorized Private Development Build 1 on 2026-08-28. Local PHP/SQLite vertical slice is runnable. Current gate: recognizable uploaded person via native Gemini `gemini-3.1-flash-image` after Gemini Song DNA. External beta access, live Stripe charges and commercial use of protected lyrics remain gated.
 
 ## Delivery path
 
