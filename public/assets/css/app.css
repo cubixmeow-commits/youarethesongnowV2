@@ -964,23 +964,44 @@ textarea {
   margin-top: var(--space-4);
 }
 
+.portrait-tray,
+.portrait-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
 .portrait-chip {
+  position: relative;
   border: 2px solid transparent;
   padding: 0;
   background: transparent;
-  cursor: pointer;
   min-height: var(--touch-min);
   border-radius: var(--radius-sm);
-  overflow: hidden;
+  overflow: visible;
   transition: border-color var(--motion-fast) var(--ease-standard), transform var(--motion-fast) var(--ease-standard);
 }
 
-.portrait-chip img {
+.portrait-chip__select {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.portrait-chip img,
+.portrait-chip__select img {
   width: 100%;
   aspect-ratio: 1;
   object-fit: cover;
   border-radius: calc(var(--radius-sm) - 2px);
   box-shadow: inset 0 0 0 1px var(--color-border);
+  display: block;
 }
 
 .portrait-chip:hover {
@@ -989,6 +1010,133 @@ textarea {
 
 .portrait-chip.is-selected {
   border-color: var(--color-accent);
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--color-accent) 40%, transparent);
+}
+
+.portrait-chip__delete {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  z-index: 2;
+}
+
+.portrait-chip__delete span {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: color-mix(in oklab, var(--color-bg) 82%, black);
+  border: 1px solid var(--color-border-strong);
+  font-size: 1.05rem;
+  line-height: 1;
+  color: var(--color-text);
+}
+
+.portrait-chip__delete:hover span,
+.portrait-chip__delete:focus-visible span {
+  border-color: color-mix(in oklab, var(--color-destructive) 55%, white);
+  color: color-mix(in oklab, var(--color-destructive) 80%, white);
+}
+
+.track-source__fields {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: color-mix(in oklab, var(--color-surface) 55%, transparent);
+}
+
+.track-source__fields label + label {
+  padding-top: var(--space-3);
+  border-top: 1px solid color-mix(in oklab, var(--color-text) 8%, transparent);
+}
+
+.btn--retrieve {
+  justify-self: start;
+  min-width: min(100%, 12rem);
+}
+
+.direction-fieldset {
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
+.direction-controls .style-option {
+  min-height: 84px;
+  padding: var(--space-3) var(--space-4);
+}
+
+.direction-controls .style-option strong {
+  font-size: 1rem;
+}
+
+.direction-controls .choice-row label {
+  border-radius: var(--radius-md);
+  background: color-mix(in oklab, var(--color-surface) 42%, transparent);
+}
+
+.confirm-sheet {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  max-width: min(24rem, calc(100vw - 2rem));
+}
+
+.confirm-sheet::backdrop {
+  background: color-mix(in oklab, black 55%, transparent);
+}
+
+.confirm-sheet__panel {
+  margin: 0;
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-elevated);
+  box-shadow: var(--shadow-3);
+  color: var(--color-text);
+}
+
+.confirm-sheet__panel h3 {
+  margin: 0;
+}
+
+.confirm-sheet__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.confirm-sheet__actions .btn {
+  flex: 1 1 auto;
+}
+
+@media (min-width: 700px) {
+  .track-source__fields {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+  }
+
+  .track-source__fields label + label {
+    padding-top: 0;
+    border-top: 0;
+    padding-left: var(--space-4);
+    border-left: 1px solid color-mix(in oklab, var(--color-text) 8%, transparent);
+  }
 }
 
 .style-grid {
