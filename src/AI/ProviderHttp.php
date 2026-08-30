@@ -43,6 +43,33 @@ final class ProviderHttp
         return $decoded;
     }
 
+    /** @param list<string> $headers */
+    public static function getJson(string $url, array $headers, int $timeoutSeconds): array
+    {
+        if (!str_starts_with($url, 'https://api.replicate.com/v1/predictions/')) {
+            throw new \RuntimeException('provider_poll_url_invalid');
+        }
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FOLLOWLOCATION => false,
+            CURLOPT_CONNECTTIMEOUT => min(10, $timeoutSeconds),
+            CURLOPT_TIMEOUT => $timeoutSeconds,
+            CURLOPT_HTTPHEADER => array_merge(['Accept: application/json'], $headers),
+        ]);
+        $response = curl_exec($ch);
+        $status = (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
+        curl_close($ch);
+        if (!is_string($response) || $status < 200 || $status >= 300) {
+            throw new \RuntimeException('provider_poll_failed');
+        }
+        $decoded = json_decode($response, true);
+        if (!is_array($decoded)) {
+            throw new \RuntimeException('provider_invalid_json');
+        }
+        return $decoded;
+    }
+
     /** @return array{bytes:string,mime:string} */
     public static function getBinary(string $url, int $timeoutSeconds, int $maxBytes = 26214400): array
     {

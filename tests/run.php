@@ -424,6 +424,11 @@ imagepng($largeFixture);
 $largePng = (string) ob_get_clean();
 $normalizedFal = \Yatsn\AI\FalImageAdapter::normalizeImage($largePng, 'fal-test', 4);
 assert_true($normalizedFal['mime'] === 'image/jpeg' && $normalizedFal['width'] === 512, 'fal output is validated and normalized to JPEG');
+$replicateUrl = \Yatsn\AI\ReplicateImageAdapter::outputUrl([
+    'status' => 'successful',
+    'output' => ['https://replicate.delivery/example/output.jpg'],
+]);
+assert_true($replicateUrl === 'https://replicate.delivery/example/output.jpg', 'Replicate prediction output parser handles file arrays');
 
 // Regeneration prepopulates draft
 $regen = GenerationJobService::recreateDraftFromImage((int) $user['id'], $imageId);

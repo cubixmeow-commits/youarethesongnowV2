@@ -70,6 +70,7 @@ Install only in local `.env` / protected hosting config:
 - Licensed self-hosted WOFF2 files are not yet in the repo; the app uses a strong local serif/sans stack.
 - Live adapters are implemented but remain independently opt-in to protect the development budget. Gemini is the default creative-analysis provider, Groq is the structured-output fallback, and fal.ai performs portrait-guided image generation. The deterministic adapters remain the development path when live AI is disabled; they are not used as a paid-generation fallback unless explicitly enabled.
 - Provider requests contain no stored lyrics. Gemini and Groq receive only the submitted song and performer identifiers plus copyright-safety instructions. fal.ai receives the sanitized provider-neutral visual package and one or two private portrait data URIs in memory; portrait bytes and provider response bodies are never logged.
+- Replicate `black-forest-labs/flux-schnell` is available only through explicit `IMAGE_PROVIDER=replicate` configuration as a low-cost internal composition-testing adapter. It is text-to-image only and receives no customer portraits; its output must not be evaluated or presented as identity-preserving artwork. `IMAGE_PROVIDER=auto` continues to prefer fal.ai for portrait-capable generation.
 - Final Terms/Privacy legal language and provider/quality benchmarks remain launch gates.
 
 ## Explicitly not claimed

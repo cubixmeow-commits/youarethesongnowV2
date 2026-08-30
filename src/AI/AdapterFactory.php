@@ -47,8 +47,16 @@ final class AdapterFactory
             return new DevelopmentImageAdapter();
         }
 
+        $provider = (string) Config::get('ai.image_provider', 'auto');
+        $replicate = new ReplicateImageAdapter();
         $fal = new FalImageAdapter();
-        if ($fal->isAvailable()) {
+        if ($provider === 'replicate') {
+            return $replicate;
+        }
+        if ($provider === 'fal') {
+            return $fal;
+        }
+        if ($provider === 'auto' && $fal->isAvailable()) {
             return $fal;
         }
 
@@ -79,14 +87,18 @@ final class AdapterFactory
             'groqKeyPresent' => Config::get('ai.groq_api_key') !== '',
             'geminiKeyPresent' => Config::get('ai.gemini_api_key') !== '',
             'falKeyPresent' => Config::get('ai.fal_key') !== '',
+            'replicateTokenPresent' => Config::get('ai.replicate_api_token') !== '',
             'creativeProviderPreference' => Config::get('ai.creative_provider'),
             'geminiLiveCalls' => Config::getBool('ai.gemini_live_calls'),
             'groqLiveCalls' => Config::getBool('ai.groq_live_calls'),
             'falLiveCalls' => Config::getBool('ai.fal_live_calls'),
+            'replicateLiveCalls' => Config::getBool('ai.replicate_live_calls'),
             'deterministicFallbackAllowed' => Config::getBool('ai.allow_deterministic_fallback'),
             'geminiModel' => Config::get('ai.gemini_model'),
             'groqModel' => Config::get('ai.groq_model'),
             'falImageModel' => Config::get('ai.fal_image_model'),
+            'imageProviderPreference' => Config::get('ai.image_provider'),
+            'replicateImageModel' => Config::get('ai.replicate_image_model'),
         ];
     }
 }
