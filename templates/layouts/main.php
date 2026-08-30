@@ -16,7 +16,7 @@ if ($authed) {
     $navItems[] = ['href' => '/gallery', 'label' => 'Gallery', 'icon' => 'gallery'];
     $navItems[] = ['href' => '/account', 'label' => 'Account', 'icon' => 'account'];
     if ($isOwner) {
-        $navItems[] = ['href' => '/owner', 'label' => 'Owner', 'icon' => 'owner'];
+        $navItems[] = ['href' => '/owner', 'label' => 'Owner', 'icon' => 'owner', 'secondary' => true];
     }
 } else {
     $navItems[] = ['href' => '/sign-in', 'label' => 'Sign in', 'icon' => 'signin'];
@@ -34,7 +34,7 @@ $bodyClass = trim(($layoutClass ?? '') . ($isHome ? ' is-home' : '') . ($authed 
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
   <?php if ($isHome): ?>
-  <link rel="preload" as="image" href="/assets/images/launch/hero-listening-room-960.webp" imagesrcset="/assets/images/launch/hero-listening-room-960.webp 960w, /assets/images/launch/hero-listening-room-1672.webp 1672w" imagesizes="100vw" fetchpriority="high">
+  <link rel="preload" as="image" href="/assets/images/launch/example-solo-560.webp" imagesrcset="/assets/images/launch/example-solo-560.webp 560w, /assets/images/launch/example-solo-1122.webp 1122w" imagesizes="100vw" fetchpriority="high">
   <?php endif; ?>
   <link rel="stylesheet" href="/assets/css/app.css?v=<?= e($cssVersion) ?>">
   <meta name="theme-color" content="#0E1118">
@@ -64,9 +64,10 @@ $bodyClass = trim(($layoutClass ?? '') . ($isHome ? ' is-home' : '') . ($authed 
         $current = $path === $href || ($href !== '/' && str_starts_with($path, $href));
       ?>
       <a
-        class="app-nav__item<?= $current ? ' is-active' : '' ?>"
+        class="app-nav__item<?= $current ? ' is-active' : '' ?><?= !empty($item['secondary']) ? ' app-nav__item--secondary' : '' ?>"
         href="<?= e($href) ?>"
         <?php if ($current): ?>aria-current="page"<?php endif; ?>
+        <?php if (!empty($item['secondary'])): ?>title="Private operations"<?php endif; ?>
       >
         <span class="app-nav__icon app-nav__icon--<?= e($item['icon']) ?>" aria-hidden="true"></span>
         <span class="app-nav__label"><?= e($item['label']) ?></span>

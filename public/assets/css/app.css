@@ -720,9 +720,17 @@ textarea {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 72% center;
+  object-position: center 28%;
   transform: scale(1.02);
   transition: transform 9s var(--ease-emphasized);
+}
+
+.hero--launchpad .hero__copy {
+  max-width: 28rem;
+}
+
+.hero--launchpad .hero__actions .btn--primary {
+  min-width: min(100%, 16rem);
 }
 
 .hero:hover .hero__image {
@@ -760,6 +768,16 @@ textarea {
   max-width: var(--app-max);
   margin: 0 auto;
   padding: var(--space-7) max(var(--space-4), env(safe-area-inset-left)) var(--space-4);
+}
+
+.examples__intro {
+  margin-bottom: var(--space-5);
+  max-width: 32rem;
+}
+
+.examples__title {
+  margin: 0 0 var(--space-2);
+  font-size: var(--type-title);
 }
 
 .examples__track {
@@ -1264,6 +1282,231 @@ textarea {
   font-size: var(--type-meta);
   letter-spacing: 0.06em;
   text-transform: uppercase;
+}
+
+/* =============================================================================
+   Pass 2 — Creative session / launchpad / anti-dating polish
+   ============================================================================= */
+
+.app-nav__item--secondary {
+  opacity: 0.48;
+  order: 8;
+}
+
+.app-nav__item--secondary .app-nav__label {
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.app-nav__item--secondary:hover,
+.app-nav__item--secondary:focus-visible,
+.app-nav__item--secondary.is-active {
+  opacity: 0.78;
+}
+
+@media (min-width: 900px) {
+  .app-nav__item--secondary {
+    margin-top: auto;
+    opacity: 0.42;
+  }
+}
+
+.session-header {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-4);
+  align-items: center;
+  margin: 0 0 var(--space-5);
+  padding: var(--space-4) 0 var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.session-header__art {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-sm);
+  background:
+    radial-gradient(circle at 42% 40%, color-mix(in oklab, var(--color-accent) 70%, white), transparent 52%),
+    linear-gradient(160deg, color-mix(in oklab, var(--color-haze) 45%, transparent), var(--color-surface));
+  box-shadow: inset 0 0 0 1px var(--color-border), var(--shadow-1);
+  display: grid;
+  place-items: center;
+}
+
+.create.has-song .session-header__art {
+  background:
+    radial-gradient(circle at 45% 42%, color-mix(in oklab, var(--color-accent) 85%, white), transparent 48%),
+    linear-gradient(160deg, color-mix(in oklab, var(--color-haze) 55%, var(--color-surface)), var(--color-bg));
+}
+
+.session-header__art-mark {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid color-mix(in oklab, var(--color-text) 55%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--color-accent) 18%, transparent);
+}
+
+.session-header__eyebrow {
+  margin: 0 0 var(--space-1);
+  font-size: var(--type-meta);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+  font-weight: 600;
+}
+
+.session-header__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 4vw, 1.85rem);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.session-header__hint {
+  margin: var(--space-2) 0 0;
+}
+
+.session-progress {
+  grid-column: 1 / -1;
+  list-style: none;
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.session-progress__step {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 36px;
+  padding: 0.35rem 0.7rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+  color: var(--color-text-tertiary);
+  font-size: var(--type-caption);
+  font-weight: 600;
+}
+
+.session-progress__step span {
+  font-family: var(--font-display);
+  letter-spacing: 0.08em;
+  color: inherit;
+}
+
+.session-progress__step.is-complete {
+  color: var(--color-text-secondary);
+}
+
+.session-progress__step.is-current {
+  color: var(--color-text);
+  border-color: color-mix(in oklab, var(--color-accent) 45%, transparent);
+  background: var(--color-accent-soft);
+}
+
+.movement {
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-5) 0;
+  opacity: 0.78;
+  transition: opacity var(--motion-base) var(--ease-standard);
+}
+
+.movement--primary,
+.movement:not([hidden]) {
+  opacity: 1;
+}
+
+.movement__lead {
+  margin: 0 0 var(--space-4);
+  color: var(--color-text-secondary);
+}
+
+.create__summary,
+.session-board {
+  padding: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(180deg, color-mix(in oklab, var(--color-surface-elevated) 88%, transparent), color-mix(in oklab, var(--color-surface) 92%, transparent));
+  box-shadow: var(--shadow-2);
+}
+
+.session-board__label {
+  margin: 0 0 var(--space-2);
+  font-size: var(--type-meta);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+  font-weight: 600;
+}
+
+.session-board h2 {
+  font-size: var(--type-headline);
+  margin-bottom: var(--space-4);
+}
+
+.btn--generate {
+  width: 100%;
+  min-height: 52px;
+  font-size: 1rem;
+}
+
+.paywall-panel {
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+.panel.narrow {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  max-width: min(26rem, 100%);
+}
+
+.panel.narrow h1 {
+  font-family: var(--font-display);
+}
+
+@media (min-width: 900px) {
+  .session-header {
+    grid-template-columns: auto 1fr auto;
+    align-items: end;
+    gap: var(--space-5);
+  }
+
+  .session-progress {
+    grid-column: auto;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-top: 0;
+  }
+
+  .create__layout {
+    gap: var(--space-7);
+  }
+
+  .create__main {
+    padding-right: var(--space-4);
+    border-right: 1px solid var(--color-border);
+  }
+
+  .session-board {
+    background:
+      radial-gradient(420px 220px at 80% 0%, color-mix(in oklab, var(--color-haze) 12%, transparent), transparent 60%),
+      linear-gradient(180deg, color-mix(in oklab, var(--color-surface-elevated) 90%, transparent), var(--color-surface));
+  }
+
+  .hero--launchpad .hero__image {
+    object-position: center 22%;
+  }
 }
 
 /* =============================================================================

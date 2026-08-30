@@ -87,26 +87,54 @@
   }
 
   function updateSummary() {
-    const song = $('[data-sum-song]');
+    const songNodes = $all('[data-sum-song]');
+    const sessionSong = $('[data-session-song]');
     const people = $('[data-sum-people]');
     const style = $('[data-sum-style]');
     const quality = $('[data-sum-quality]');
     const orientation = $('[data-sum-orientation]');
     const credits = $('[data-sum-credits]');
-    if (!song) return;
+    if (!songNodes.length && !sessionSong) return;
 
-    song.textContent = state.songLookup
+    const songLabel = state.songLookup
       ? `${state.songLookup.title} · ${state.songLookup.artist}`
       : 'Not chosen yet';
-    people.textContent = state.selectedPortraitIds.length
-      ? `${state.selectedPortraitIds.length} selected`
-      : 'None selected';
+    const sessionLabel = state.songLookup
+      ? `${state.songLookup.title} · ${state.songLookup.artist}`
+      : 'Choose your song';
+    songNodes.forEach((node) => {
+      node.textContent = songLabel;
+    });
+    if (sessionSong) sessionSong.textContent = sessionLabel;
+    if (people) {
+      people.textContent = state.selectedPortraitIds.length
+        ? `${state.selectedPortraitIds.length} selected`
+        : 'None selected';
+    }
     const styleObj = state.styles.find((s) => s.id === state.selectedStyleId);
-    style.textContent = styleObj ? styleObj.name : 'Not chosen yet';
-    quality.textContent = state.quality[0].toUpperCase() + state.quality.slice(1);
-    orientation.textContent = state.orientation[0].toUpperCase() + state.orientation.slice(1);
+    if (style) style.textContent = styleObj ? styleObj.name : 'Not chosen yet';
+    if (quality) quality.textContent = state.quality[0].toUpperCase() + state.quality.slice(1);
+    if (orientation) orientation.textContent = state.orientation[0].toUpperCase() + state.orientation.slice(1);
     const price = state.options?.qualities?.find((q) => q.id === state.quality)?.credits;
-    credits.textContent = price != null ? String(price) : '—';
+    if (credits) credits.textContent = price != null ? String(price) : '—';
+
+    // Presentation-only session progress emphasis (no field behavior change).
+    const peopleSection = $('#the-people');
+    const directionSection = $('#the-direction');
+    const steps = $all('.session-progress__step');
+    if (steps.length === 3) {
+      let current = 0;
+      if (peopleSection && !peopleSection.hidden) current = 1;
+      if (directionSection && !directionSection.hidden) current = 2;
+      steps.forEach((step, index) => {
+        step.classList.toggle('is-current', index === current);
+        step.classList.toggle('is-complete', index < current);
+      });
+    }
+    const createRoot = $('[data-create]');
+    if (createRoot) {
+      createRoot.classList.toggle('has-song', Boolean(state.songLookup));
+    }
   }
 
   function renderPortraits() {

@@ -1,15 +1,26 @@
 <section class="create" data-create data-csrf="<?= e($csrf ?? '') ?>">
-  <header class="create__intro">
-    <h1>Create your cinematic world</h1>
-    <p class="lede">Choose a song, add your portraits, and shape the world you want to enter.</p>
+  <header class="session-header" aria-label="Creative session">
+    <div class="session-header__art" aria-hidden="true">
+      <span class="session-header__art-mark"></span>
+    </div>
+    <div class="session-header__meta">
+      <p class="session-header__eyebrow">Creative session</p>
+      <p class="session-header__title" data-session-song>Choose your song</p>
+      <p class="session-header__hint quiet">Assemble the piece, then generate your world.</p>
+    </div>
+    <ol class="session-progress" aria-label="Session movements">
+      <li class="session-progress__step is-current"><span>01</span> Song</li>
+      <li class="session-progress__step"><span>02</span> People</li>
+      <li class="session-progress__step"><span>03</span> Direction</li>
+    </ol>
   </header>
 
   <div class="create__layout">
     <div class="create__main">
-      <section class="movement" id="the-song" aria-labelledby="song-heading">
+      <section class="movement movement--primary" id="the-song" aria-labelledby="song-heading">
         <p class="movement__num">01</p>
         <h2 id="song-heading">The song</h2>
-        <p>Choose your song</p>
+        <p class="movement__lead">Choose your song</p>
         <form id="song-form" class="stack">
           <label>
             <span>Artist or band</span>
@@ -42,7 +53,7 @@
       <section class="movement" id="the-people" aria-labelledby="people-heading" hidden>
         <p class="movement__num">02</p>
         <h2 id="people-heading">The people</h2>
-        <p>Who belongs in this story?</p>
+        <p class="movement__lead">Who belongs in this story?</p>
         <p class="quiet">Add one or two clear portraits. We will use their faces to place them naturally inside your cinematic world.</p>
         <form id="portrait-form" class="stack">
           <label class="file">
@@ -98,8 +109,9 @@
       </section>
     </div>
 
-    <aside class="create__summary" aria-live="polite">
-      <h2>Summary</h2>
+    <aside class="create__summary session-board" aria-live="polite">
+      <p class="session-board__label">Session board</p>
+      <h2>Your piece</h2>
       <dl class="summary-list" data-summary>
         <div><dt>Song</dt><dd data-sum-song>Not chosen yet</dd></div>
         <div><dt>People</dt><dd data-sum-people>None selected</dd></div>
@@ -110,9 +122,9 @@
       </dl>
       <div data-summary-actions hidden>
         <p data-summary-headline>Your cinematic world is ready to create</p>
-        <button class="btn btn--primary" type="button" data-create-image>Create my image</button>
+        <button class="btn btn--primary btn--generate" type="button" data-create-image>Create my image</button>
       </div>
-      <div data-paywall hidden>
+      <div class="paywall-panel" data-paywall hidden>
         <h3>Your song is ready. Step into its world.</h3>
         <p>Create original cinematic art with you and the people you love at the heart of the story.</p>
         <p><strong>You Are The Song Now Membership</strong><br>$20 per month</p>
