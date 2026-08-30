@@ -3,23 +3,25 @@ type: asset-requests
 status: active
 updated: 2026-08-30
 area: visual-design
-phase: mobile-app-first-pass-1
+phase: round-004-premium-venue
 collaborator: ChatGPT image generation
 ---
 
-# Asset Request Manifest — Pass 1
+# Asset Request Manifest — Round 004 (Premium Private Venue)
 
-Only assets that meaningfully raise the premium app feel. User-generated artwork remains the dominant content. Integrate via replaceable paths under `public/assets/images/system/`.
+Assets should support a **premium private creative venue** identity: luxury interior light, gallery calm, and tactile dark materials. Not concert haze, not studio equipment, not music-player chrome.
+
+User-generated artwork remains the dominant content. Integrate via replaceable paths under `public/assets/images/system/`.
 
 ---
 
 ## 1. app-atmosphere-haze
 
 **Purpose**  
-Subtle full-bleed atmospheric texture behind the app scaffold so the base background feels like stage haze / listening-room air rather than a flat CSS fill.
+Global atmospheric field behind the app scaffold. Should feel like expensive space and light at night, not a concert stage.
 
 **Where / why**  
-`body` / `.app` background layer across Create, Gallery, Account, Sign-in. Provides quiet depth without competing with generated images.
+`body.app` background layer across Create, Gallery, Account, Sign-in. Quiet depth without competing with generated images.
 
 **Required dimensions**
 
@@ -29,120 +31,38 @@ Subtle full-bleed atmospheric texture behind the app scaffold so the base backgr
 | desktop | 2400 × 1600 | 3:2 |
 
 **Composition**  
-Abstract soft light only. Soft indigo–violet pool upper-right; warm amber spill lower-left; deep graphite center remaining calm and dark. Large quiet mid/lower region for UI readability (no busy focal subject). No people, no text, no icons, no album covers.
+Deep graphite/midnight field. Subtle cool shadow in upper regions. Warm architectural light grazing one edge (lower-left or right rim). Extremely restrained grain. Calm center for UI readability. No literal room, furniture, fixtures, or focal subject.
 
 **Style**  
-Cinematic concert haze photographed through soft glass. Premium, restrained, photographic grain optional and light.
+Luxury interior atmospheric photography, abstracted. Premium, restrained, photographic grain optional and very light.
 
 **Colors**  
-Midnight navy / graphite base. Accents: deep indigo, electric blue haze, warm amber. No neon rainbow, no pure red/black dating palette.
+Charcoal / midnight base. Accents: muted indigo shadow, warm brass/champagne edge light. No neon, no rainbow, no pure orange CTA glow in the image itself.
 
 **Background**  
 Opaque dark, gradient-compatible. Not transparent.
 
 **Constraints**  
-No logos, lyrics, song titles, UI mockups, musical-note clip art, vinyl records as objects, headphones, equalizer bars, faces, or readable symbols.
+No logos, lyrics, song titles, UI mockups, musical notes, waveforms, vinyl, instruments, faces, or readable symbols.
 
 **Intended placement**  
-`public/assets/images/system/app-atmosphere-haze-{phone|desktop}.webp` referenced from `app.css` as a fixed/cover background layer.
+`public/assets/images/system/app-atmosphere-haze-{phone|desktop}.webp` referenced from `app.css` as `--asset-atmosphere`.
 
 **Export**  
 WebP (quality ~80), sRGB. Optional PNG master.
 
 **Flutter**  
-Raster asset in `assets/images/system/`; `DecorationImage` on scaffold. Consider later procedural gradient if performance prefers.
+Raster asset in `assets/images/system/`; `DecorationImage` on scaffold `backgroundColor` + image stack.
 
 ---
 
-## 2. empty-collection-still
+## 2. launch-mark-tile
 
 **Purpose**  
-Premium empty state for Gallery when the user has no finished works yet.
+App identity mark: entry, aperture, private portal, curated world. Not literal music symbolism.
 
 **Where / why**  
-`.gallery-page` empty / zero-item presentation. Communicates “your collection begins here” without looking like a SaaS blank slate.
-
-**Required dimensions**
-
-| Variant | Pixels | Aspect |
-| --- | --- | --- |
-| main | 1200 × 1200 | 1:1 |
-| @2x optional | 1800 × 1800 | 1:1 |
-
-**Composition**  
-Centered abstract “unopened journey” still: a dark square frame suggesting an empty album slot or unlit stage portal. Soft rim light; tiny warm accent spark deep in the frame. Generous outer margin (safe ~12%) so it can sit above caption text.
-
-**Style**  
-Editorial / photo-book empty plate. Quiet, collectible, not cartoon.
-
-**Colors**  
-Graphite frame, indigo rim light, single amber spark. Mostly desaturated.
-
-**Background**  
-Transparent preferred (PNG/WebP with alpha) so it sits on `--color-bg`.
-
-**Constraints**  
-No people, no text, no folder icons, no sad-state tropes, no music-note stickers.
-
-**Intended placement**  
-`public/assets/images/system/empty-collection-still.webp` inside Gallery empty copy block (CSS or a single `<img>` when empty markup exists / is added later for presentation only).
-
-**Export**  
-WebP with alpha if possible; else PNG.
-
-**Flutter**  
-Raster empty-state illustration widget above `Text`.
-
----
-
-## 3. creative-session-backdrop
-
-**Purpose**  
-Quiet textured backdrop for the Create session so the workspace feels like a studio / listening room rather than a form page.
-
-**Where / why**  
-`.create` section background (replacing or layering over current groove photos once delivered).
-
-**Required dimensions**
-
-| Variant | Pixels | Aspect |
-| --- | --- | --- |
-| phone | 1290 × 2200 | tall |
-| desktop | 2200 × 1600 | landscape |
-
-**Composition**  
-Very dark matte surface with soft concentric listening-room light falloff from top center. Extremely subtle paper/micro-grain. Keep the center 60% low-contrast for form readability. No hard objects in the lower two-thirds.
-
-**Style**  
-Record-sleeve liner / dark studio wall. Tactile, matte, premium.
-
-**Colors**  
-Charcoal, soft indigo edge glow, faint amber crown light.
-
-**Background**  
-Opaque dark.
-
-**Constraints**  
-No text, logos, faces, instruments as literal props, waveform diagrams, or busy patterns that fight inputs.
-
-**Intended placement**  
-`public/assets/images/system/creative-session-backdrop-{phone|desktop}.webp` in `.create` background-image stack.
-
-**Export**  
-WebP.
-
-**Flutter**  
-Raster `BoxDecoration` image behind create flow; swap per breakpoint.
-
----
-
-## 4. launch-mark-tile
-
-**Purpose**  
-App-like brand mark tile for chrome / future splash concepts (not a full splash screen yet).
-
-**Where / why**  
-Top bar brand mark on mobile/desktop; optional future Flutter launch icon exploration reference (not replacing store icons yet).
+Top bar brand mark; future Flutter launch icon exploration reference (not replacing store icons yet).
 
 **Required dimensions**
 
@@ -152,19 +72,19 @@ Top bar brand mark on mobile/desktop; optional future Flutter launch icon explor
 | small UI | derived 128 / 256 | 1:1 |
 
 **Composition**  
-Abstract square emblem: soft luminous aperture / portal suggesting “entering a song,” not a literal eye. Center glow warm amber; outer field deep indigo. Flat-enough edges for small sizes. Safe margin 10% inside canvas.
+Abstract square emblem suggesting a private doorway or luminous aperture. Center glow warm brass/champagne; outer field deep indigo/graphite. Flat-enough edges for small sizes. Safe margin 10% inside canvas.
 
 **Style**  
-Premium app icon family: simple, memorable, no skeuomorphic vinyl.
+Premium app icon family: simple, memorable, gallery-adjacent. No skeuomorphic vinyl or instrument shapes.
 
 **Colors**  
-Indigo field, amber core light, graphite rim.
+Indigo/graphite field, brass core light, charcoal rim.
 
 **Background**  
 Opaque (for app icon testing) plus optional transparent version for in-app chrome.
 
 **Constraints**  
-No letterforms, no “YATSN” monogram required, no music notes, no faces, no gradients that band badly at 29px.
+No letterforms, no music notes, no faces, no gradients that band badly at 29px.
 
 **Intended placement**  
 `public/assets/images/system/launch-mark-tile.png` (and `.webp`) beside brand wordmark in `.app-topbar`.
@@ -177,10 +97,92 @@ Raster for in-app; separate store icon pipeline later.
 
 ---
 
-## 5. paywall-world-preview (optional, defer if capacity limited)
+## 3. creative-session-backdrop
 
 **Purpose**  
-Emotional still behind / beside the membership panel so the paywall feels like stepping into a world, not a billing form.
+Quiet textured backdrop for Create so the suite feels like a private viewing/listening room, abstracted behind UI.
+
+**Where / why**  
+`.create` section background (replacing or layering over current groove photos once delivered).
+
+**Required dimensions**
+
+| Variant | Pixels | Aspect |
+| --- | --- | --- |
+| phone | 1290 × 2200 | tall |
+| desktop | 2200 × 1600 | landscape |
+
+**Composition**  
+Very dark honed stone or lacquer surface. Soft warm light falloff from upper edge. Extremely subtle grain. Center 60% low-contrast for form readability. No hard objects in lower two-thirds.
+
+**Style**  
+Private suite wall / gallery anteroom, tactile and matte. Not a recording studio.
+
+**Colors**  
+Charcoal lacquer, soft indigo edge shadow, faint brass crown light.
+
+**Background**  
+Opaque dark.
+
+**Constraints**  
+No text, logos, faces, instruments, waveform diagrams, mixer panels, or busy patterns that fight inputs.
+
+**Intended placement**  
+`public/assets/images/system/creative-session-backdrop-{phone|desktop}.webp` in `.create` background-image stack.
+
+**Export**  
+WebP.
+
+**Flutter**  
+Raster `BoxDecoration` image behind create flow; swap per breakpoint.
+
+---
+
+## 4. empty-collection-still
+
+**Purpose**  
+Premium empty state for Gallery when the user has no finished works yet. Private collection awaiting its first piece.
+
+**Where / why**  
+`.gallery-page` empty / zero-item presentation.
+
+**Required dimensions**
+
+| Variant | Pixels | Aspect |
+| --- | --- | --- |
+| main | 1200 × 1200 | 1:1 |
+| @2x optional | 1800 × 1800 | 1:1 |
+
+**Composition**  
+Centered abstract unlit gallery frame or quiet alcove. Soft rim light on a dark square aperture. Single warm brass accent deep within. Generous outer margin (safe ~12%) for caption below.
+
+**Style**  
+Museum empty wall / private collection waiting. Quiet, collectible, not cartoon or SaaS blank slate.
+
+**Colors**  
+Graphite frame, indigo rim light, single brass spark. Mostly desaturated.
+
+**Background**  
+Transparent preferred (PNG/WebP with alpha) so it sits on `--color-bg`.
+
+**Constraints**  
+No people, no text, no folder icons, no sad-state tropes, no music-note stickers.
+
+**Intended placement**  
+`public/assets/images/system/empty-collection-still.webp` inside Gallery empty copy block.
+
+**Export**  
+WebP with alpha if possible; else PNG.
+
+**Flutter**  
+Raster empty-state illustration widget above `Text`.
+
+---
+
+## 5. paywall-world-preview (optional, defer)
+
+**Purpose**  
+Emotional still beside membership panel so paywall feels like invitation into a world, not a billing funnel.
 
 **Where / why**  
 Create summary paywall panel (`[data-paywall]` presentation).
@@ -189,13 +191,13 @@ Create summary paywall panel (`[data-paywall]` presentation).
 1600 × 1000 (16:10) and 1200 × 1200 (1:1 crop).
 
 **Composition**  
-Cinematic doorway / threshold into a luminous landscape, figures optional only as silhouettes (no recognizable faces). Soft left third darker for text overlay safe area.
+Cinematic threshold into a luminous landscape. Silhouettes optional only (no recognizable faces). Soft left third darker for text overlay safe area.
 
 **Style**  
-Same family as existing launch hero photography: emotional, adventurous, non-dating.
+Same family as launch hero photography: emotional, adventurous, hospitality not sales.
 
 **Colors**  
-Indigo dusk + amber horizon.
+Indigo dusk + brass horizon.
 
 **Background**  
 Opaque.
@@ -204,7 +206,7 @@ Opaque.
 No logos, no pricing text in image, no couples-as-dating-ad framing, no steamy/seductive styling.
 
 **Intended placement**  
-`public/assets/images/system/paywall-world-preview.webp` as CSS background or `<img>` beside paywall copy when integrated.
+`public/assets/images/system/paywall-world-preview.webp`
 
 **Export**  
 WebP.
@@ -223,4 +225,4 @@ For each approved asset, provide:
 3. Brief note if composition differs from spec  
 4. Drop into vault or `public/assets/images/system/` for Cursor integration  
 
-Pass 1 CSS ships with tokenized hooks so these can drop in without functional changes.
+Round 004 CSS ships with tokenized hooks so these can drop in without functional changes.

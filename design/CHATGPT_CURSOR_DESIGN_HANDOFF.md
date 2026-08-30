@@ -3,8 +3,8 @@
 # ChatGPT ↔ Cursor Design Handoff
 
 **Branch:** `cursor/visual-music-adventure-94fc`  
-**Last updated by Cursor:** 2026-08-30 (Round 003)  
-**Active round:** 003 (awaiting ChatGPT visual review)
+**Last updated by Cursor:** 2026-08-30 (Round 004)  
+**Active round:** 004 (awaiting ChatGPT visual review)
 
 **Workflow roles**
 
@@ -15,7 +15,7 @@
 
 ## Current Objective
 
-Premium mobile-app-first creative experience: **song → imagination → visual journey → collection**, with Flutter-portable tokens. Preserve functionality except where a pass explicitly authorizes a focused feature (Round 003: portrait deletion).
+Premium mobile-app-first creative experience: **song → imagination → visual journey → collection**, expressed as a **private creative venue** (not a music-device interface). Flutter-portable tokens. Portrait deletion remains supported.
 
 ---
 
@@ -23,55 +23,58 @@ Premium mobile-app-first creative experience: **song → imagination → visual 
 
 ### Navigation
 
-Unchanged in Round 003 (user accepted bottom tabs; **hotfix not applied**). Mobile bottom tabs + compact ~88px desktop rail. Owner remains visually secondary.
+Unchanged (Round 004 design-only). Mobile bottom tabs + compact ~88px desktop rail. Owner visually secondary. Nav hotfix not applied.
 
-### Create (Round 003)
+### Create (Round 004)
 
-- Session header + progress retained
-- Song: **track source** grouped Artist/Song surface + retrieve action
-- People: **portrait tray** / contact-sheet source material; square tiles; selected = included in session; secondary × delete with confirmation sheet
-- Direction: denser tactile treatments; generate remains one strong primary action on session board
-- Fields/behavior preserved aside from delete feature
+- **Private suite** header + stages (not “creative session / movements”)
+- Song: hairline-composed centerpiece fields; **Discover my song** premium service action
+- People: gallery casting tray; portrait delete retained (subtle secondary ×)
+- Direction: curator-style lacquer/stone selectors
+- Session overview panel (was session board); `venue-progress` replaces playhead bar
+- All fields/behavior preserved
 
 ### Home
 
-Launchpad direction retained; no structural Home redesign this round.
+Calmer launchpad hospitality copy; examples quieter; interlude “Enter the suite”. No structural rebuild.
+
+### Gallery
+
+Private collection framing; exhibition spacing; quieter metadata typography.
 
 ### Color / type / tokens
 
-Unchanged: graphite/midnight + amber + indigo; Instrument Serif + DM Sans.
+Graphite/midnight foundation refined. Amber evolved toward **brass/champagne architectural light**. Quieter indigo haze. Warm ivory text. New material tokens: lacquer, stone, hairline borders, subtle grain.
 
 ---
 
 ## Design System
 
-Core tokens unchanged (`design/DESIGN_SYSTEM.md`).
+See `design/DESIGN_SYSTEM.md`. Round 004 additions:
 
-Round 003 presentation additions:
-
-- `.track-source`, `.track-source__fields`, `.btn--retrieve`
-- `.portrait-tray`, `.portrait-chip__select`, `.portrait-chip__delete`
-- `.direction-controls`, `.direction-fieldset`
-- `.confirm-sheet` (+ actions)
+- `--color-surface-lacquer`, `--color-surface-stone`
+- `--color-accent-brass`, `--color-border-hairline`
+- `--shadow-inset-stone`, `--grain-opacity`
+- `.venue-progress` (replaces `.playhead` presentation)
 
 ---
 
 ## Asset Inventory
 
-System asset folder still empty / awaiting ChatGPT generation. Priorities unchanged:
+System asset folder still empty / awaiting ChatGPT generation. Specs updated for premium venue philosophy in `design/ASSET_REQUESTS.md`.
 
-1. `app-atmosphere-haze`
-2. `launch-mark-tile`
-3. `creative-session-backdrop`
-4. `empty-collection-still`
+Priorities:
 
-No crop/safe-area changes required this round.
+1. `app-atmosphere-haze` — luxury interior atmospheric field
+2. `launch-mark-tile` — portal/aperture mark (no music literalism)
+3. `creative-session-backdrop` — private suite wall
+4. `empty-collection-still` — gallery alcove empty state
 
 ---
 
 ## Open Asset Requests
 
-See `design/ASSET_REQUESTS.md`. No blocking dependency for Round 003.
+See `design/ASSET_REQUESTS.md` (Round 004 reinterpretation). No blocking dependency for layout.
 
 ---
 
@@ -81,77 +84,75 @@ See `design/ASSET_REQUESTS.md`. No blocking dependency for Round 003.
 
 #### Work Completed
 
-Implemented Round 003 exactly:
+Implemented Round 004 exactly:
 
-1. Create instrument composition refinements (track source, portrait tray, direction controls)
-2. Authorized portrait deletion (service already existed; hardened + UI + tests)
-3. Did **not** apply nav hotfix / did not redesign nav
-4. Did not reinvent Home
+1. Visual philosophy shift: creative instrument → premium private creative venue
+2. Create suite refinements (copy, materials, spacing, session overview)
+3. Home/Gallery/Auth shared hospitality surfaces
+4. Updated asset request specs for venue direction
 5. Screenshot pack + handoff updates
+6. No intentional functional/API/backend changes
 
-#### Portrait deletion implementation
+#### Instrument → venue changes
 
-| Layer | Detail |
+| Removed/softened | Introduced |
 | --- | --- |
-| Route | `DELETE /api/v1/portraits/{portraitId}` (session + CSRF) |
-| Authz | `PortraitService::findOwned` — other users → `not_found` / 404 |
-| Persistence | Soft-delete `deleted_at`, then delete storage + thumb via `LocalStorage` (missing files OK) |
-| UI | × on tile (44×44 hit area) → `<dialog>` confirm → API delete → remove from `state.portraits` + `selectedPortraitIds` + `patchDraft` |
-| Direction section | Hides again if selection becomes empty after delete |
+| Boxed track-source console | Hairline-composed song centerpiece |
+| Session board / creative session labels | Private suite / in review / stages |
+| Playhead progress animation | Venue-progress glow line |
+| Bright orange CTA accent | Brass/champagne gradient primary |
+| Dense control-panel cards | Lacquer + stone surfaces, hairline structure |
+| “Source material” portrait framing | Gallery casting selection tray |
 
 #### Files Changed
 
-- `src/Portraits/PortraitService.php`
-- `src/Api/ApiV1.php`
-- `public/assets/js/app.js`
 - `public/assets/css/app.css`
 - `templates/pages/create.php`
-- `tests/run.php`
+- `templates/pages/welcome.php`
+- `templates/pages/gallery.php`
+- `design/ASSET_REQUESTS.md`
+- `design/DESIGN_SYSTEM.md`
 - `design/CHATGPT_NEXT_PASS.md` (consumed)
 - `design/CHATGPT_CURSOR_DESIGN_HANDOFF.md`
-- `design/review/round-003/*`
+- `design/review/round-004/*`
 
 #### Tests performed
 
 `php tests/run.php` → **173 passed, 0 failed**
 
-Covered:
-
-1. owned delete succeeds + soft-delete timestamp  
-2. storage/thumb files removed  
-3. absent from list after delete  
-4. foreign user delete rejected; files intact  
-5. already-deleted delete rejected  
-6. replacement upload after delete succeeds  
-
-UI selection-clean verified in browser during screenshot pass (delete confirm open; selection/tray update path exercised in code).
-
 #### Screenshots
 
-`design/review/round-003/` — see README there.
+`design/review/round-004/` — see README there.
 
 #### Functionality Audit
 
-- Portrait deletion: **authorized intentional feature**
-- No unrelated backend/API/database/auth/generation logic changes
-- Song lookup/upload/generation/payment flows untouched
-- Navigation hotfix **not** applied
+- Portrait deletion: **intact** (Round 003 feature preserved)
+- Navigation: **unchanged**
+- No APIs, backend, database, auth, generation, payment, or routing changes
+- Presentation copy/button label only: “Discover my song” (same submit behavior as “Find my song”)
+
+#### Flutter portability notes
+
+- New colors are flat OKLCH tokens (no CSS-only tricks required)
+- Grain overlay could become a small tiled raster asset or `ShaderMask` in Flutter
+- Gradients on primary button and surfaces are simple linear stacks reproducible in `BoxDecoration`
+- Avoided heavy backdrop-filter dependence for core structure (chrome only)
 
 #### Questions for ChatGPT (max 3)
 
-1. Does the portrait tray + delete confirm read as creative source-material management (not dating/profile)?
-2. Is Create’s track-source grouping enough, or should Round 004 push further presentation densification?
-3. Generate `app-atmosphere-haze` + `launch-mark-tile` next, or more Create polish first?
+1. Does Create now read as a hosted private suite rather than equipment/console?
+2. Is brass/champagne accent restrained enough for premium venue (not casino cliché)?
+3. Prioritize atmosphere + mark asset generation, or another venue surface pass?
 
 #### Recommended Next Pass
 
-Stop for ChatGPT review of `design/review/round-003/`. Do not start Round 004 until new inbox instructions land in `design/CHATGPT_NEXT_PASS.md`.
+Stop for ChatGPT review of `design/review/round-004/`. Do not start Round 005 until new inbox instructions land in `design/CHATGPT_NEXT_PASS.md`.
 
 ---
 
 ### ChatGPT → Cursor
 
-*(Awaiting Round 003 review / Round 004 inbox.)*
+*(Awaiting Round 004 review / Round 005 inbox.)*
 
 ---
 
@@ -169,6 +170,12 @@ Adventure hero, session header/board, Owner de-emphasis, screenshot protocol. Me
 
 ### Round 003 — Create instrument + portrait deletion (2026-08-30)
 
+**Cursor Report:** Track source, portrait tray, delete feature.  
+**ChatGPT Response:** Round 004 inbox — shift to premium private venue; keep deletion + nav.  
+**Outcome:** Merged direction into Round 004 spec.
+
+### Round 004 — Premium private creative venue (2026-08-30)
+
 **Cursor Report:** See CURRENT HANDOFF.  
 **ChatGPT Response:** *(pending)*  
 **Outcome:** *(pending)*
@@ -179,23 +186,24 @@ Adventure hero, session header/board, Owner de-emphasis, screenshot protocol. Me
 
 | Screen / Area | Status | Last Changed | Notes |
 | --- | --- | --- | --- |
-| Create | Needs review | Round 003 | Track source + tray + delete |
-| People / portraits | Needs review | Round 003 | Deletion live |
-| Direction | Needs review | Round 003 | Denser controls |
-| Home | Stable | Round 002 | No structural change |
+| Create | Needs review | Round 004 | Private suite venue |
+| People / portraits | Needs review | Round 004 | Gallery tray + delete intact |
+| Direction | Needs review | Round 004 | Curator controls |
+| Home | Needs review | Round 004 | Calmer hospitality |
+| Gallery | Needs review | Round 004 | Collection framing |
 | Navigation | Stable | Round 002 | Hotfix skipped |
-| Gallery empty | Waiting asset | — | |
+| Auth/Account | Light polish | Round 004 | Lacquer panels |
 | Reveal | Light | Round 001 | |
 
 ---
 
 ## DESIGN ISSUES / BACKLOG
 
-- Atmosphere/mark assets still pending
+- Atmosphere/mark assets still pending (specs updated)
 - Empty gallery illustration pending
-- Create may still want more instrument densification after review
 - Paywall world preview deferred
 - Flutter widget inventory still thin
+- Grain overlay may become raster asset for native parity
 
 ---
 
@@ -207,8 +215,9 @@ Adventure hero, session header/board, Owner de-emphasis, screenshot protocol. Me
 - Preserve functionality unless a pass explicitly authorizes a feature
 - Bottom tabs + ~88px rail; do not apply old nav hotfix unless newly authorized
 - Square album crops
-- Amber stage light + indigo haze + graphite foundations
-- Guest Home = launchpad; Create = creative session
+- Premium private venue (not music-device / instrument UI)
+- Brass/champagne architectural light + quiet indigo + graphite foundations
+- Guest Home = launchpad; Create = private suite
 - Portrait delete is a supported library/source-material action
 - ChatGPT inbox = `CHATGPT_NEXT_PASS.md`; Cursor consolidates here
 

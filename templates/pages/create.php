@@ -1,14 +1,14 @@
 <section class="create" data-create data-csrf="<?= e($csrf ?? '') ?>">
-  <header class="session-header" aria-label="Creative session">
+  <header class="session-header" aria-label="Private creative suite">
     <div class="session-header__art" aria-hidden="true">
       <span class="session-header__art-mark"></span>
     </div>
     <div class="session-header__meta">
-      <p class="session-header__eyebrow">Creative session</p>
+      <p class="session-header__eyebrow">Private suite</p>
       <p class="session-header__title" data-session-song>Choose your song</p>
-      <p class="session-header__hint quiet">Assemble the piece, then generate your world.</p>
+      <p class="session-header__hint quiet">A session prepared for you. When ready, create your world.</p>
     </div>
-    <ol class="session-progress" aria-label="Session movements">
+    <ol class="session-progress" aria-label="Session stages">
       <li class="session-progress__step is-current"><span>01</span> Song</li>
       <li class="session-progress__step"><span>02</span> People</li>
       <li class="session-progress__step"><span>03</span> Direction</li>
@@ -20,7 +20,7 @@
       <section class="movement movement--primary" id="the-song" aria-labelledby="song-heading">
         <p class="movement__num">01</p>
         <h2 id="song-heading">The song</h2>
-        <p class="movement__lead">Set the track that opens this world.</p>
+        <p class="movement__lead">Choose the centerpiece of this experience.</p>
         <form id="song-form" class="stack track-source">
           <div class="track-source__fields">
             <label>
@@ -32,7 +32,7 @@
               <input type="text" name="title" required placeholder="Enter the song title" autocomplete="off">
             </label>
           </div>
-          <button class="btn btn--secondary btn--retrieve" type="submit">Find my song</button>
+          <button class="btn btn--secondary btn--retrieve" type="submit">Discover my song</button>
           <p class="status" data-song-status role="status" aria-live="polite"></p>
         </form>
         <div class="development-source" data-development-analysis-panel hidden>
@@ -55,7 +55,7 @@
       <section class="movement" id="the-people" aria-labelledby="people-heading" hidden>
         <p class="movement__num">02</p>
         <h2 id="people-heading">The people</h2>
-        <p class="movement__lead">Add source portraits for the cast of this world.</p>
+        <p class="movement__lead">Select portraits to include in your composition.</p>
         <p class="quiet">Add one or two clear portraits. We will use their faces to place them naturally inside your cinematic world.</p>
         <form id="portrait-form" class="stack">
           <label class="file">
@@ -66,7 +66,7 @@
           <p class="quiet">Only upload photos you have permission to use. Your photos remain private and are processed only to create your artwork. See <a href="/privacy">Privacy</a>.</p>
           <p class="status" data-portrait-status role="status" aria-live="polite"></p>
         </form>
-        <div class="portrait-tray" data-portrait-grid role="list" aria-label="Portrait source material"></div>
+        <div class="portrait-tray" data-portrait-grid role="list" aria-label="Portrait selection"></div>
       </section>
 
       <section class="movement" id="the-direction" aria-labelledby="direction-heading" hidden>
@@ -112,8 +112,8 @@
     </div>
 
     <aside class="create__summary session-board" aria-live="polite">
-      <p class="session-board__label">Session board</p>
-      <h2>Your piece</h2>
+      <p class="session-board__label">In review</p>
+      <h2>Your session</h2>
       <dl class="summary-list" data-summary>
         <div><dt>Song</dt><dd data-sum-song>Not chosen yet</dd></div>
         <div><dt>People</dt><dd data-sum-people>None selected</dd></div>
@@ -142,7 +142,7 @@
         <p class="status" data-paywall-status role="status" aria-live="polite"></p>
       </div>
       <div data-progress hidden>
-        <div class="playhead" aria-hidden="true"><span data-playhead></span></div>
+        <div class="venue-progress" aria-hidden="true"><span data-playhead></span></div>
         <p data-progress-copy>Finding the heart of your song</p>
         <p class="quiet" data-progress-note>Your image is still being created. You can leave this page and find it in your gallery when it is ready.</p>
       </div>

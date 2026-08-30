@@ -17,9 +17,9 @@
   </div>
   <div class="hero__veil" aria-hidden="true"></div>
   <div class="hero__copy">
-    <p class="eyebrow">Song · imagination · visual journey</p>
+    <p class="eyebrow">A private creative venue</p>
     <h1>You Are The Song Now</h1>
-    <p class="lede">A meaningful song becomes a cinematic world. Step inside it and begin the adventure.</p>
+    <p class="lede">A meaningful song becomes a cinematic world. Step inside and begin your journey.</p>
     <div class="hero__actions">
       <a class="btn btn--primary" href="/sign-in">Start with a song</a>
     </div>
@@ -28,8 +28,8 @@
 
 <section class="examples" aria-label="Example adventures">
   <header class="examples__intro">
-    <h2 class="examples__title">Adventures from songs</h2>
-    <p class="quiet">Original visual worlds shaped by music, mood, and imagination.</p>
+    <h2 class="examples__title">Works from songs</h2>
+    <p class="quiet">Original visual worlds, quietly curated.</p>
   </header>
   <div class="examples__track">
     <article class="example">
@@ -107,7 +107,7 @@
   </div>
   <div class="interlude__veil" aria-hidden="true"></div>
   <div class="interlude__copy">
-    <h2>Enter the listening room</h2>
+    <h2>Enter the suite</h2>
     <p>Choose a song, shape the journey, and collect original cinematic art made for you.</p>
   </div>
 </section>
