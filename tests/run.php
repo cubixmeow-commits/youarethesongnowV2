@@ -412,9 +412,9 @@ $geminiDecoded = \Yatsn\AI\GeminiCreativeAdapter::decodeResponse([
 ]);
 assert_true($geminiDecoded['narrativeArchetype'] === 'transformation', 'Gemini structured response parser works');
 $lyricsResearchDecoded = \Yatsn\AI\GeminiLyricsResearchService::decodeJsonText([
-    'candidates' => [['content' => ['parts' => [['text' => "```json\n{\"lyricsFound\":true,\"lyrics\":\"internal fixture words\"}\n```"]]]]],
+    'candidates' => [['content' => ['parts' => [['text' => "```json\n{\"lyricsLocated\":true,\"matchedArtist\":\"Fixture Band\"}\n```"]]]]],
 ]);
-assert_true(($lyricsResearchDecoded['lyrics'] ?? '') === 'internal fixture words', 'Gemini grounded lyric JSON parser handles fenced output');
+assert_true(($lyricsResearchDecoded['matchedArtist'] ?? '') === 'Fixture Band', 'Gemini grounded Song DNA JSON parser handles fenced output');
 $groqDecoded = \Yatsn\AI\GroqCreativeAdapter::decodeResponse([
     'choices' => [['message' => ['content' => json_encode($analysisFixture, JSON_THROW_ON_ERROR)]]],
 ]);

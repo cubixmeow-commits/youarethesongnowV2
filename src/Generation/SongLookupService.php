@@ -66,7 +66,7 @@ final class SongLookupService
         $public = self::public($row);
         // Returned to the current browser request for inspection only. This is
         // deliberately fetched after all database writes and is never persisted.
-        $public['developmentLyrics'] = GeminiLyricsResearchService::lookup($artist, $title);
+        $public['developmentAnalysis'] = GeminiLyricsResearchService::analyze($artist, $title);
         return $public;
     }
 

@@ -76,24 +76,12 @@ final class CreativePackageBuilder
 
     public static function userPrompt(array $snapshot): string
     {
-        $lines = [
+        return implode("\n", [
             'Song identifier: ' . self::singleLine((string) ($snapshot['title'] ?? ''), 180),
             'Performer identifier: ' . self::singleLine((string) ($snapshot['artist'] ?? ''), 180),
             'Portrait protagonists: ' . max(1, min(2, (int) ($snapshot['portraitCount'] ?? 1))),
-        ];
-        $developmentLyrics = trim((string) ($snapshot['_developmentLyrics'] ?? ''));
-        if ($developmentLyrics !== '') {
-            $lines[] = 'Actual lyrics were retrieved with Google Search for this private development test.';
-            $lines[] = 'Analyze their complete emotional movement, narrative, themes, mood, symbols, relationships, setting cues, and visual metaphors.';
-            $lines[] = 'Do not quote, closely paraphrase, or return any lyric wording in the Song DNA.';
-            $lines[] = '<transient-development-lyrics>';
-            $lines[] = substr($developmentLyrics, 0, 24000);
-            $lines[] = '</transient-development-lyrics>';
-        } else {
-            $lines[] = 'No reliable lyrics were retrieved. Infer cautiously from the identifiers and include source_or_match_uncertain in riskFlags.';
-        }
-        $lines[] = 'Produce an abstracted Song DNA and one original cinematic visual moment. The JSON must not repeat either identifier or any lyric wording.';
-        return implode("\n", $lines);
+            'Produce an abstracted Song DNA and one original cinematic visual moment. The JSON must not repeat either identifier.',
+        ]);
     }
 
     /** @param array<string, mixed> $analysis */

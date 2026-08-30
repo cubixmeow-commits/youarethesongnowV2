@@ -7,13 +7,13 @@ namespace Yatsn\AI;
 use Yatsn\Support\Config;
 
 /**
- * Development-only Google Search grounding for lyric verification.
- * Returned lyric text is request-memory only and must never be persisted.
+ * Development-only V1-style Song DNA analysis with Google Search grounding.
+ * Gemini analyzes lyrics internally and returns abstractions, not lyric text.
  */
 final class GeminiLyricsResearchService
 {
     /** @return array<string, mixed> */
-    public static function lookup(string $artist, string $title): array
+    public static function analyze(string $artist, string $title): array
     {
         $empty = self::emptyResult($artist, $title, 'disabled');
         if (!Config::getBool('development.gemini_lyrics_search')) {
@@ -30,15 +30,20 @@ final class GeminiLyricsResearchService
             return self::emptyResult($artist, $title, 'model-invalid');
         }
 
+        $schema = json_encode(CreativePackageBuilder::schema(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         $prompt = implode("\n", [
-            'PRIVATE INTERNAL DEVELOPMENT TEST. Use Google Search to locate the actual lyrics for the specified recording.',
-            'Artist or band: ' . self::singleLine($artist, 180),
-            'Song title: ' . self::singleLine($title, 180),
-            'Confirm that the lyrics belong to this artist and title. Prefer a clearly identified lyrics page or artist-authorized source.',
-            'Return only one valid JSON object with these keys:',
-            'matchedArtist (string), matchedTitle (string), matchConfidence (number 0 to 1), lyricsFound (boolean), lyrics (string), verificationNote (string).',
-            'For this private development inspection, put the lyric text you actually analyzed in lyrics. Do not invent missing lines.',
-            'If reliable lyrics cannot be found, set lyricsFound false and lyrics to an empty string.',
+            CreativePackageBuilder::systemPrompt(),
+            '',
+            'PRIVATE DEVELOPMENT SEARCH-AND-ANALYSIS TASK:',
+            'Band/Artist: ' . self::singleLine($artist, 180),
+            'Song: ' . self::singleLine($title, 180),
+            'Use Google Search to locate and verify the actual lyrics for this exact artist and song before analyzing it.',
+            'Analyze the complete lyrics internally. Base the Song DNA on their emotional arc, narrative, themes, mood, symbols, relationships, setting cues, and visual metaphors.',
+            'Do not reproduce, quote, or closely paraphrase lyrics in the analysis.',
+            'Return only valid JSON with these keys:',
+            'matchedArtist (string), matchedTitle (string), matchConfidence (number 0 to 1), lyricsLocated (boolean), verificationExcerpt (string, optional and no more than 12 words), analysis (object).',
+            'The analysis object must follow this JSON schema: ' . $schema,
+            'If the exact lyrics cannot be reliably located, set lyricsLocated false and verificationExcerpt to an empty string.',
         ]);
 
         try {
@@ -48,8 +53,10 @@ final class GeminiLyricsResearchService
                     'contents' => [['role' => 'user', 'parts' => [['text' => $prompt]]]],
                     'tools' => [['google_search' => (object) []]],
                     'generationConfig' => [
-                        'temperature' => 0.1,
-                        'maxOutputTokens' => 8192,
+                        'temperature' => 0.65,
+                        'topP' => 0.95,
+                        'maxOutputTokens' => 4200,
+                        'responseMimeType' => 'application/json',
                     ],
                 ],
                 ['x-goog-api-key: ' . (string) Config::get('ai.gemini_api_key')],
@@ -60,21 +67,25 @@ final class GeminiLyricsResearchService
         }
 
         $decoded = self::decodeJsonText($response);
-        $lyrics = self::cleanLyrics((string) ($decoded['lyrics'] ?? ''));
-        $found = !empty($decoded['lyricsFound']) && $lyrics !== '';
+        $analysis = is_array($decoded['analysis'] ?? null) ? $decoded['analysis'] : [];
         $grounding = self::groundingSummary($response);
+        $lyricsLocated = !empty($decoded['lyricsLocated']);
+        $hasAnalysis = trim((string) ($analysis['originalVisualMoment'] ?? '')) !== '';
+        $analyzed = $lyricsLocated && $grounding['grounded'] && $hasAnalysis;
         return [
             'enabled' => true,
-            'lyricsFound' => $found,
+            'analyzed' => $analyzed,
+            'lyricsLocated' => $lyricsLocated,
             'matchedArtist' => self::singleLine((string) ($decoded['matchedArtist'] ?? $artist), 180),
             'matchedTitle' => self::singleLine((string) ($decoded['matchedTitle'] ?? $title), 180),
             'matchConfidence' => max(0.0, min(1.0, (float) ($decoded['matchConfidence'] ?? 0))),
-            'lyrics' => $found ? $lyrics : null,
-            'verificationNote' => self::singleLine((string) ($decoded['verificationNote'] ?? ''), 300),
+            'verificationExcerpt' => self::shortExcerpt((string) ($decoded['verificationExcerpt'] ?? '')),
+            'analysis' => $analyzed ? $analysis : null,
+            'preview' => $analyzed ? self::preview($analysis) : null,
             'grounded' => $grounding['grounded'],
             'searchQueries' => $grounding['queries'],
             'sources' => $grounding['sources'],
-            'status' => $found ? 'lyrics-found' : 'lyrics-not-found',
+            'status' => $analyzed ? 'grounded-song-dna-ready' : 'grounded-song-dna-unavailable',
         ];
     }
 
@@ -137,17 +148,34 @@ final class GeminiLyricsResearchService
         ];
     }
 
+    /** @param array<string, mixed> $analysis @return array<string, mixed> */
+    private static function preview(array $analysis): array
+    {
+        $list = static fn(string $key): array => array_values(array_slice(
+            array_filter(array_map('strval', is_array($analysis[$key] ?? null) ? $analysis[$key] : [])), 0, 6
+        ));
+        return [
+            'essence' => self::singleLine((string) ($analysis['essence'] ?? ''), 360),
+            'themes' => $list('themes'),
+            'mood' => $list('mood'),
+            'narrativeArchetype' => self::singleLine((string) ($analysis['narrativeArchetype'] ?? ''), 120),
+            'originalVisualMoment' => self::singleLine((string) ($analysis['originalVisualMoment'] ?? ''), 500),
+        ];
+    }
+
     /** @return array<string, mixed> */
     private static function emptyResult(string $artist, string $title, string $status): array
     {
         return [
             'enabled' => Config::getBool('development.gemini_lyrics_search'),
-            'lyricsFound' => false,
+            'analyzed' => false,
+            'lyricsLocated' => false,
             'matchedArtist' => self::singleLine($artist, 180),
             'matchedTitle' => self::singleLine($title, 180),
             'matchConfidence' => 0.0,
-            'lyrics' => null,
-            'verificationNote' => '',
+            'verificationExcerpt' => '',
+            'analysis' => null,
+            'preview' => null,
             'grounded' => false,
             'searchQueries' => [],
             'sources' => [],
@@ -155,12 +183,11 @@ final class GeminiLyricsResearchService
         ];
     }
 
-    private static function cleanLyrics(string $lyrics): string
+    private static function shortExcerpt(string $value): string
     {
-        $lyrics = str_replace(["\r\n", "\r"], "\n", $lyrics);
-        $lyrics = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/u', '', $lyrics) ?? '';
-        $lyrics = preg_replace('/\n{3,}/', "\n\n", $lyrics) ?? '';
-        return substr(trim($lyrics), 0, 24000);
+        $value = self::singleLine($value, 90);
+        $words = preg_split('/\s+/', $value) ?: [];
+        return implode(' ', array_slice($words, 0, 12));
     }
 
     private static function singleLine(string $value, int $max): string
