@@ -1,7 +1,7 @@
 # Round 003 — Visual + portrait deletion review pack
 
 **Branch:** `cursor/visual-music-adventure-94fc`  
-**Commit:** *(filled at commit time)*  
+**Commit:** *53a68d0*  
 **Date:** 2026-08-30  
 **Source:** `design/CHATGPT_NEXT_PASS.md` (Round 003) + `design/CHATGPT_FEATURE_PORTRAIT_DELETE.md`
 
