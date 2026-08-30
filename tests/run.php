@@ -429,6 +429,9 @@ assert_true(isset($groundedPayload['tools'][0]['google_search']), 'Gemini lyric 
 assert_true(!isset($groundedPayload['generationConfig']['responseMimeType']), 'Gemini grounding request avoids unsupported JSON MIME mode');
 assert_true(\Yatsn\AI\GeminiLyricsResearchService::safeFailureStatus('provider_http_429') === 'provider-rate-limited', 'Gemini grounding exposes safe rate-limit classification');
 assert_true(\Yatsn\AI\GeminiLyricsResearchService::safeFailureStatus('provider_timeout') === 'provider-timeout', 'Gemini grounding exposes safe timeout classification');
+assert_true(\Yatsn\AI\GeminiLyricsResearchService::analysisStatus(true, true, true, true) === 'grounded-lyric-song-dna-ready', 'Gemini marks verified lyric analysis distinctly');
+assert_true(\Yatsn\AI\GeminiLyricsResearchService::analysisStatus(true, true, false, true) === 'grounded-context-song-dna-ready', 'Gemini permits honest grounded song-context fallback');
+assert_true(\Yatsn\AI\GeminiLyricsResearchService::analysisStatus(true, false, true, true) === 'search-not-grounded', 'Gemini rejects ungrounded analysis');
 $groqDecoded = \Yatsn\AI\GroqCreativeAdapter::decodeResponse([
     'choices' => [['message' => ['content' => json_encode($analysisFixture, JSON_THROW_ON_ERROR)]]],
 ]);

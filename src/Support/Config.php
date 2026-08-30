@@ -77,7 +77,7 @@ final class Config
                 'replicate_api_token' => env_value('REPLICATE_API_TOKEN', ''),
                 'creative_provider' => strtolower((string) env_value('CREATIVE_PROVIDER', 'auto')),
                 'image_provider' => strtolower((string) env_value('IMAGE_PROVIDER', 'auto')),
-                'gemini_model' => env_value('GEMINI_MODEL', 'gemini-2.5-flash-lite'),
+                'gemini_model' => env_value('GEMINI_MODEL', 'gemini-3.6-flash'),
                 'groq_model' => env_value('GROQ_MODEL', 'openai/gpt-oss-20b'),
                 'fal_image_model' => env_value('FAL_IMAGE_MODEL', 'fal-ai/flux-pro/kontext/multi'),
                 'replicate_image_model' => env_value('REPLICATE_IMAGE_MODEL', 'prunaai/p-image-edit'),

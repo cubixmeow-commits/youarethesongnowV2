@@ -62,12 +62,14 @@ final class GeminiLyricsResearchService
         $analysis = is_array($decoded['analysis'] ?? null) ? $decoded['analysis'] : [];
         $grounding = self::groundingSummary($response);
         $lyricsLocated = !empty($decoded['lyricsLocated']);
-        $hasAnalysis = trim((string) ($analysis['originalVisualMoment'] ?? '')) !== '';
-        $analyzed = $lyricsLocated && $grounding['grounded'] && $hasAnalysis;
+        $hasAnalysis = self::hasUsableAnalysis($analysis);
+        $analyzed = $grounding['grounded'] && $hasAnalysis;
+        $analysisBasis = $analyzed ? ($lyricsLocated ? 'lyrics' : 'song-context') : null;
         return [
             'enabled' => true,
             'analyzed' => $analyzed,
             'lyricsLocated' => $lyricsLocated,
+            'analysisBasis' => $analysisBasis,
             'matchedArtist' => self::singleLine((string) ($decoded['matchedArtist'] ?? $artist), 180),
             'matchedTitle' => self::singleLine((string) ($decoded['matchedTitle'] ?? $title), 180),
             'matchConfidence' => max(0.0, min(1.0, (float) ($decoded['matchConfidence'] ?? 0))),
@@ -77,7 +79,7 @@ final class GeminiLyricsResearchService
             'grounded' => $grounding['grounded'],
             'searchQueries' => $grounding['queries'],
             'sources' => $grounding['sources'],
-            'status' => $analyzed ? 'grounded-song-dna-ready' : 'grounded-song-dna-unavailable',
+            'status' => self::analysisStatus($decoded !== [], $grounding['grounded'], $lyricsLocated, $hasAnalysis),
         ];
     }
 
@@ -113,6 +115,20 @@ final class GeminiLyricsResearchService
             'provider_http_500', 'provider_http_502', 'provider_http_503', 'provider_http_504' => 'provider-temporarily-unavailable',
             default => 'search-failed',
         };
+    }
+
+    public static function analysisStatus(bool $decoded, bool $grounded, bool $lyricsLocated, bool $hasAnalysis): string
+    {
+        if (!$decoded) {
+            return 'grounded-response-unparseable';
+        }
+        if (!$grounded) {
+            return 'search-not-grounded';
+        }
+        if (!$hasAnalysis) {
+            return 'grounded-analysis-incomplete';
+        }
+        return $lyricsLocated ? 'grounded-lyric-song-dna-ready' : 'grounded-context-song-dna-ready';
     }
 
     /** @param array<string, mixed> $response @return array<string, mixed> */
@@ -189,6 +205,17 @@ final class GeminiLyricsResearchService
         ];
     }
 
+    /** @param array<string, mixed> $analysis */
+    private static function hasUsableAnalysis(array $analysis): bool
+    {
+        return trim((string) ($analysis['essence'] ?? '')) !== ''
+            && trim((string) ($analysis['originalVisualMoment'] ?? '')) !== ''
+            && is_array($analysis['themes'] ?? null)
+            && ($analysis['themes'] ?? []) !== []
+            && is_array($analysis['mood'] ?? null)
+            && ($analysis['mood'] ?? []) !== [];
+    }
+
     /** @return array<string, mixed> */
     private static function emptyResult(string $artist, string $title, string $status): array
     {
@@ -196,6 +223,7 @@ final class GeminiLyricsResearchService
             'enabled' => Config::getBool('development.gemini_lyrics_search'),
             'analyzed' => false,
             'lyricsLocated' => false,
+            'analysisBasis' => null,
             'matchedArtist' => self::singleLine($artist, 180),
             'matchedTitle' => self::singleLine($title, 180),
             'matchConfidence' => 0.0,
