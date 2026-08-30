@@ -101,7 +101,6 @@ final class GeminiImageAdapter implements ImageAdapterInterface
         $dna = is_array($package['dna'] ?? null) ? $package['dna'] : [];
         $narrative = is_array($package['narrative'] ?? null) ? $package['narrative'] : [];
         $style = is_array($package['styleMap'] ?? null) ? $package['styleMap'] : [];
-        $compiled = trim((string) ($package['compiledPromptSafe'] ?? ''));
         $special = trim((string) ($snapshot['specialInstructions'] ?? ''));
         $noText = !empty($snapshot['noTextInImage']);
         $styleName = (string) ($style['styleName'] ?? ($narrative['styleLead'] ?? ($snapshot['styleName'] ?? 'Selected style')));
@@ -125,23 +124,28 @@ final class GeminiImageAdapter implements ImageAdapterInterface
         };
 
         if ($portraitCount >= 2) {
-            $portraitDirective = <<<'TXT'
-CRITICAL — TWO ATTACHED PORTRAITS ARE YOUR TWO MAIN CHARACTERS.
+            $identitySection = <<<'TXT'
+IDENTITY — AUTHORITATIVE (do not repeat or override elsewhere)
 The first attached image is CHARACTER 1. The second attached image is CHARACTER 2.
-Match each person's exact facial features, bone structure, skin tone, hair, and apparent age separately.
-Both people must be unmistakable principal subjects: clearly visible, properly lit, waist-up or full-body, and integral to the composition.
-Create dynamic interaction between them. Never merge, swap, average, omit, silhouette, or shrink either person into the distant background.
-Compose the artwork around these two people. Do not invent a scenic world and treat the portraits as optional references.
+Every attached portrait must appear. Preserve each person separately: facial features, bone structure, skin tone, hair, and apparent age.
+Never merge, swap, average, duplicate, or omit either identity.
+Both people must be meaningful protagonists of the story, not token background figures, silhouettes, ghosts, statues, or generic stand-ins.
+Faces must remain sufficiently visible and lit to recognize at gallery size.
+“Central subject” means narratively and emotionally central — not that anyone must sit in the geometric center or closest to the camera.
+Transform clothing, pose, lighting, and artistic treatment to fit the Song DNA and selected style while preserving identity.
+An image that omits any required person is unusable.
 TXT;
         } else {
-            $portraitDirective = <<<'TXT'
-CRITICAL — THE ATTACHED PORTRAIT IS YOUR PRIMARY CHARACTER.
-Match their exact facial features, bone structure, skin tone, hair, and apparent age.
-They must be the unmistakable central subject of the image: clearly visible, properly lit, waist-up or three-quarter or full-body, actively engaged with the environment.
-Favor a close, medium, or three-quarter character composition so the face remains identifiable at gallery size.
-Do not depict a tiny figure, silhouette, distant figure, ghost, statue, or generic stand-in.
-Compose the artwork around this person. Do not invent a scenic world and treat the portrait as an optional reference.
+            $identitySection = <<<'TXT'
+IDENTITY — AUTHORITATIVE (do not repeat or override elsewhere)
+The attached image is CHARACTER 1, the sole required uploaded person.
+That person must appear and remain separately recognizable: facial features, bone structure, skin tone, hair, and apparent age.
+Never merge, swap, average, duplicate, omit, or replace them with a generic stand-in, silhouette, ghost, or statue.
+They must be a meaningful protagonist of the story, not a token background figure.
+Their face must remain sufficiently visible and lit to recognize at gallery size.
+“Central subject” means narratively and emotionally central — not that they must sit in the geometric center or closest to the camera.
 Transform clothing, pose, lighting, and artistic treatment to fit the Song DNA and selected style while preserving identity.
+An image that omits the required person is unusable.
 TXT;
         }
 
@@ -154,10 +158,13 @@ TXT;
         $themes = $join($dna['themes'] ?? [], 6);
         $mood = $join($dna['mood'] ?? [], 6);
         $symbols = $join($dna['symbols'] ?? [], 5);
+        $subjectRoles = $join($dna['subjectRoles'] ?? [], 4);
+        $relationshipDynamics = $join($dna['relationshipDynamics'] ?? [], 4);
         $palette = $join($dna['palette'] ?? [], 6);
         $lighting = $join($dna['lighting'] ?? [], 5);
         $camera = $join($dna['camera'] ?? [], 5);
         $composition = $join($dna['composition'] ?? [], 5);
+        $motion = $join($dna['motion'] ?? [], 5);
         $texture = $join($dna['texture'] ?? [], 5);
         $environment = '';
         if (is_array($dna['environment'] ?? null)) {
@@ -183,34 +190,38 @@ TXT;
 
         $aspect = self::aspectRatioForOrientation((string) ($snapshot['orientation'] ?? 'square'));
         $aspectLine = $aspect . '. Frame the final image to a true ' . $aspect . ' canvas.';
+        $stagingPeople = $portraitCount >= 2 ? 'both required people' : 'the required person';
 
         $prompt = <<<PROMPT
-MISSION: Create one finished cinematic artwork in which the attached uploaded person or people are the recognizable central subjects of an original song-inspired world.
+MISSION: Create one finished cinematic artwork in which the attached uploaded person or people are the recognizable emotional center of an original song-inspired world.
 
-{$portraitDirective}
+{$identitySection}
 
 ═══════════════════════════════════════════════════════════════
 SONG DNA (already approved — do not re-analyze lyrics or invent a different song meaning)
 ═══════════════════════════════════════════════════════════════
 Essence: {$essence}
-Narrative moment: {$moment}
+Original visual moment: {$moment}
+Subject roles: {$subjectRoles}
+Relationship dynamics: {$relationshipDynamics}
 Themes: {$themes}
 Mood: {$mood}
 Symbols: {$symbols}
 Environment: {$environment}
-Palette: {$palette}
-Lighting: {$lighting}
 Camera: {$camera}
 Composition: {$composition}
+Motion: {$motion}
+Palette: {$palette}
+Lighting: {$lighting}
 Surface and texture: {$texture}
 
 ═══════════════════════════════════════════════════════════════
-CHARACTER & SCENE
+NARRATIVE STAGING FREEDOM
 ═══════════════════════════════════════════════════════════════
-Build a lived-in three-dimensional space with clear foreground, middle ground, and background.
-The required people occupy the emotional and visual center. The environment supports them and must not hide or overwhelm them.
-Use motivated lighting so every required face stays readable. Imply motion through pose, fabric, particles, weather, or environmental interaction.
-AVOID: flat backdrops, passport/studio framing, empty voids, tiny distant figures, silhouettes, and optional/token people.
+Let the Song DNA fields above — especially the original visual moment, subject roles, relationship dynamics, camera, composition, motion, environment, and selected style — determine staging.
+You have explicit creative freedom to choose where each person stands or sits; relative scale and distance; camera height and angle; whether subjects are together or spatially separated; pose, movement, gaze, and environmental interaction; and foreground, middle-ground, or deeper depth relationships.
+Do not default to a generic two-person portrait layout (for example one person left/middle-ground and another larger in the right foreground) unless that arrangement truly serves this specific narrative moment.
+The chosen arrangement must serve the narrative moment. Avoid passport/studio framing and empty decorative scenery that treats people as optional.
 
 ═══════════════════════════════════════════════════════════════
 CURATED STYLE (dominant aesthetic)
@@ -227,7 +238,7 @@ Create a completely original composition. Do not reproduce lyrics, artist names,
 Do not add other identifiable real people or celebrity likenesses.
 No graphic violence or explicit sexual content.
 
-OUTPUT GOAL: One cohesive, instantly readable image. Priorities: (1) recognizable uploaded identity for every required person, (2) Song DNA emotional truth, (3) selected-style strength, (4) cinematic composition and atmosphere.
+OUTPUT GOAL: One cohesive, instantly readable image. Priorities: (1) recognizable uploaded identity for {$stagingPeople}, (2) Song DNA emotional truth and moment-specific staging, (3) selected-style strength, (4) cinematic atmosphere.
 PROMPT;
 
         if ($special !== '') {
@@ -236,11 +247,9 @@ PROMPT;
                 . "User directions:\n" . substr($special, 0, 300);
         }
 
-        // Prefer the full V1-derived compiled package when present; keep the
-        // identity-critical framing above it so Gemini cannot ignore portraits.
-        if ($compiled !== '') {
-            $prompt .= "\n\nCANONICAL CREATIVE PACKAGE (follow; identity rules above still dominate):\n" . $compiled;
-        }
+        // Do not append compiledPromptSafe here. Identity and placement live in
+        // the single authoritative section above; duplicating them over-weighted
+        // a safe default two-person layout.
 
         return substr($prompt, 0, 12000);
     }

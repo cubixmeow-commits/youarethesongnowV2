@@ -43,6 +43,12 @@ V1 comparison: `development-vault/04 Prompt Lab/V1 to V2 Creative Engine Compari
 - **Rejected for portrait workflow:** Replicate P-Image-Edit (scenes OK, people omitted/minimized); fal Kontext Multi (scenes OK, people omitted). Both retained for later benchmarking only.
 - **Deferred:** print / poster / T-shirt / upscaling.
 
+## Observed composition bias (2026-08-30)
+
+Multiple two-person Gemini generations defaulted to a similar layout: one person toward the left/middle ground and the other larger in the right foreground. Cause: identity, crop, placement, interaction, and FG/MG rules were repeated in both `GeminiImageAdapter` and the appended `compiledPromptSafe`, overweighting a safe generic couple arrangement and suppressing Song DNA-driven staging.
+
+**Fix:** one authoritative identity section; narrative/emotional “central” (not geometric); Song DNA camera/composition/roles/relationships/motion/environment choose staging; explicit freedom over scale, distance, separation, and depth; stop appending duplicate portrait-placement directives from `compiledPromptSafe`.
+
 ## Priorities
 
 1. Portrait identity fidelity (uploaded people as unmistakable central subjects)

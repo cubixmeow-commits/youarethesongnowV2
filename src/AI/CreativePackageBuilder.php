@@ -158,15 +158,14 @@ final class CreativePackageBuilder
             ? implode("\n", [
                 'IMAGE 1 and IMAGE 2 are two different, authorized identity references and equal primary protagonists.',
                 'Preserve each person separately: facial geometry, bone structure, skin tone, hair, age presentation, and other stable identity cues.',
-                'Never blend, merge, average, duplicate, or swap their faces. Both people must be clearly visible, naturally lit, and integral to the scene.',
-                'Create meaningful interaction through gaze, shared action, touch, or a clear environmental relationship. Avoid a static side-by-side lineup.',
-                'Prefer waist-up or full-body environmental storytelling. Change clothing freely to fit the world rather than copying reference clothing.',
+                'Never blend, merge, average, duplicate, or swap their faces. Both people must remain recognizable protagonists, not token background figures.',
+                'Change clothing freely to fit the world rather than copying reference clothing. Let Song DNA decide staging, scale, and interaction.',
             ])
             : implode("\n", [
                 'IMAGE 1 is an authorized identity reference and the sole primary protagonist.',
                 'Preserve recognizable facial geometry, bone structure, skin tone, hair, age presentation, and other stable identity cues.',
-                'Place this person inside the story as an active protagonist, not as a studio headshot or passport portrait.',
-                'Prefer waist-up or full-body environmental storytelling. Change clothing freely to fit the world rather than copying reference clothing.',
+                'Place this person inside the story as an active protagonist, not as a studio headshot, passport portrait, or token background figure.',
+                'Change clothing freely to fit the world rather than copying reference clothing. Let Song DNA decide staging, scale, and pose.',
             ]);
 
         $qualityDirection = match ($quality) {
@@ -208,10 +207,11 @@ final class CreativePackageBuilder
             $portraitDirective,
             '',
             'ENVIRONMENT AND CINEMATIC DEPTH',
-            'Build a lived-in, three-dimensional world with intentional foreground, middle ground, and background.',
-            'Use atmospheric perspective, occlusion, scale variation, parallax, and motivated depth cues. Avoid flat backdrops, empty voids, and generic studio staging.',
+            'Build a lived-in, three-dimensional world with intentional depth. Foreground, middle ground, and background may be used when they serve the narrative moment.',
+            'Use atmospheric perspective, occlusion, scale variation, parallax, and motivated depth cues when helpful. Avoid flat backdrops, empty voids, and generic studio staging.',
             'Environment: ' . implode(', ', array_filter(array_merge($dna['environment']['settingTypes'], [$dna['environment']['eraAtmosphere']], $dna['environment']['weather'], $dna['environment']['spatialCharacter']))),
             'Imply motion through pose, fabric, particles, weather, light, or environmental interaction: ' . implode(', ', $dna['motion']),
+            'Let Song DNA camera, composition, subject roles, and relationship dynamics choose staging. Do not force a generic two-person portrait layout.',
             '',
             'CINEMATOGRAPHY AND MATERIALS',
             'Palette: ' . implode(', ', $dna['palette']),

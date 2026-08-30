@@ -33,6 +33,12 @@ Canonical worker `arcana.queue.processor.cron.parallel.v3.dynamicstyle.php` atta
 
 Neither meets the defining requirement that uploaded people are recognizable central subjects. Both remain optional experimental providers for later benchmarks.
 
+## Observed two-person staging bias
+
+Multiple live two-person Gemini outputs repeated a left/middle-ground + larger right-foreground arrangement. Repeated waist-up, close/three-quarter, FG/MG, interaction, and “visual center” wording in both the Gemini adapter and the appended compiled package over-weighted that safe default.
+
+**Correction:** consolidate identity into one section; keep every person recognizable and present; clarify “central” as narrative/emotional; let Song DNA moment, roles, relationships, camera, composition, motion, environment, and style choose staging; grant explicit placement freedom; do not append a second near-identical portrait-placement block via `compiledPromptSafe`.
+
 ## Boundary
 
 Lyrics may be searched/analyzed transiently during private Song DNA development. Raw lyrics are never saved or committed. Print/poster/T-shirt/upscaling remain post-Build-1.

@@ -436,8 +436,10 @@ assert_true(!str_contains(strtolower($safeSerialized), 'the ramones'), 'creative
 assert_true(str_contains($safePackage['compiledPromptSafe'], 'No letters, words'), 'creative compiler enforces no-text option');
 assert_true(!str_contains(strtolower($safePackage['compiledPromptSafe']), 'copy the album cover'), 'unsafe special instructions are not forwarded');
 assert_true($safePackage['dna']['riskFlags'] === ['possible_quote'], 'creative package retains only categorical risk codes');
-assert_true(str_contains($safePackage['compiledPromptSafe'], 'foreground, middle ground, and background'), 'V1-derived compiler restores dimensional environmental staging');
+assert_true(str_contains(strtolower($safePackage['compiledPromptSafe']), 'foreground, middle ground, and background'), 'V1-derived compiler restores dimensional environmental staging');
 assert_true(str_contains($safePackage['compiledPromptSafe'], 'IMAGE 1 and IMAGE 2'), 'V1-derived compiler gives both portrait identities explicit roles');
+assert_true(str_contains($safePackage['compiledPromptSafe'], 'Let Song DNA decide staging'), 'V1-derived compiler leaves staging to Song DNA rather than hard-coded crops');
+assert_true(!str_contains(strtolower($safePackage['compiledPromptSafe']), 'prefer waist-up'), 'V1-derived compiler no longer mandates waist-up framing');
 assert_true(str_contains($safePackage['compiledPromptSafe'], 'CURATED STYLEMAP - DOMINANT AESTHETIC'), 'V1-derived compiler applies a structured dominant StyleMap');
 assert_true(str_contains($safePackage['compiledPromptSafe'], 'Premium poster-ready render'), 'creative compiler includes quality-tier craft direction');
 assert_true(!str_contains($safePackage['compiledPromptSafe'], 'Recognizable portraits of real people.'), 'V1 contradictory portrait prohibition is removed');
@@ -592,7 +594,15 @@ assert_true(str_contains($geminiOnePrompt, $analysisFixture['originalVisualMomen
 assert_true(str_contains($geminiOnePrompt, 'Cinematic Realism') || str_contains($geminiOnePrompt, 'Selected style'), 'Gemini image prompt includes selected curated style');
 assert_true(str_contains($geminiOnePrompt, 'soft golden rim light only'), 'Gemini image prompt includes user special instructions');
 assert_true(str_contains($geminiOnePrompt, 'NO visible text'), 'Gemini image prompt honors no-text preference');
-assert_true(str_contains($geminiOnePrompt, 'PRIMARY CHARACTER') || str_contains($geminiOnePrompt, 'central subject'), 'Gemini image prompt requires the uploaded person as central subject');
+assert_true(str_contains($geminiOnePrompt, 'CHARACTER 1') && str_contains($geminiOnePrompt, 'IDENTITY — AUTHORITATIVE'), 'Gemini one-portrait prompt keeps a single authoritative identity section');
+assert_true(str_contains($geminiOnePrompt, 'must appear') || str_contains($geminiOnePrompt, 'must appear and remain'), 'Gemini one-portrait prompt still requires the uploaded person');
+assert_true(str_contains($geminiOnePrompt, 'narratively and emotionally central'), 'Gemini clarifies central subject is narrative, not geometric');
+assert_true(str_contains($geminiOnePrompt, 'NARRATIVE STAGING FREEDOM'), 'Gemini image prompt grants narrative-driven staging freedom');
+assert_true(str_contains($geminiOnePrompt, 'Camera:'), 'Gemini image prompt retains Song DNA camera direction');
+assert_true(str_contains($geminiOnePrompt, 'Composition:'), 'Gemini image prompt retains Song DNA composition direction');
+assert_true(!str_contains(strtolower($geminiOnePrompt), 'waist-up'), 'Gemini image prompt removes hard-coded waist-up crop requirement');
+assert_true(!str_contains(strtolower($geminiOnePrompt), 'three-quarter character composition'), 'Gemini image prompt removes hard-coded three-quarter framing requirement');
+assert_true(!str_contains($geminiOnePrompt, 'CANONICAL CREATIVE PACKAGE'), 'Gemini image prompt no longer appends duplicate compiled portrait-placement directives');
 assert_true(!str_contains(strtolower($geminiOnePrompt), 'lyrics search'), 'Gemini image adapter does not trigger another lyrics search');
 
 $geminiTwoPortraitPayload = \Yatsn\AI\GeminiImageAdapter::buildRequestPayload($safePackage, [
@@ -607,6 +617,12 @@ $geminiTwoPortraitPayload = \Yatsn\AI\GeminiImageAdapter::buildRequestPayload($s
 assert_true(\Yatsn\AI\GeminiImageAdapter::countInlineImageParts($geminiTwoPortraitPayload) === 2, 'Gemini image request attaches two portraits as separate inline parts');
 $geminiTwoPrompt = (string) ($geminiTwoPortraitPayload['contents'][0]['parts'][0]['text'] ?? '');
 assert_true(str_contains($geminiTwoPrompt, 'CHARACTER 1') && str_contains($geminiTwoPrompt, 'CHARACTER 2'), 'Gemini two-portrait prompt preserves each identity separately');
+assert_true(str_contains($geminiTwoPrompt, 'Never merge, swap, average, duplicate, or omit'), 'Gemini two-portrait prompt keeps non-negotiable identity separation');
+assert_true(str_contains($geminiTwoPrompt, 'Every attached portrait must appear'), 'Gemini two-portrait prompt requires every attached person');
+assert_true(str_contains($geminiTwoPrompt, 'Do not default to a generic two-person portrait layout'), 'Gemini two-portrait prompt rejects the repeated left/middle and right/foreground default');
+assert_true(substr_count($geminiTwoPrompt, 'IDENTITY — AUTHORITATIVE') === 1, 'Gemini prompt consolidates identity into one authoritative section');
+assert_true(!str_contains(strtolower($geminiTwoPrompt), 'create dynamic interaction'), 'Gemini prompt softens repeated dynamic-interaction wording');
+assert_true(!str_contains($geminiTwoPrompt, 'PORTRAIT INTEGRATION'), 'Gemini prompt does not re-append compiled portrait-placement block');
 assert_true(($geminiTwoPortraitPayload['generationConfig']['imageConfig']['aspectRatio'] ?? '') === '1:1', 'Gemini image request passes square aspect ratio');
 
 $geminiOutputFixture = imagecreatetruecolor(768, 1024);
