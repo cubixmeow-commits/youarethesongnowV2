@@ -17,7 +17,7 @@ Private Development Build 1 — Gemini native portrait identity
 
 ## Build status
 
-GEMINI NATIVE IMAGE PATH SELECTED: song → Gemini Song DNA → saved derived DNA → portrait inlineData → `gemini-3.1-flash-image` → gallery. Uploaded people must be recognizable central subjects. Replicate P-Image-Edit and fal Kontext Multi failed that requirement (scenes OK, people minimized/omitted) and are experimental-only. Automated tests **123 passed**. External beta and commercial gates remain active.
+GEMINI NATIVE IMAGE PATH SELECTED; SONG DNA ON INTERACTIONS API: song → Gemini Interactions (`gemini-3.6-flash`, Google Search + JSON Schema, `store=false`) → saved derived DNA → portrait inlineData → `gemini-3.1-flash-image` → gallery. Uploaded people must be recognizable central subjects. Legacy generateContent Search/JSON conflict caused incomplete Springsteen DNA; V1 JSON-repair is historical only. Automated tests **146 passed**. External beta and commercial gates remain active.
 
 ## Delivery path
 

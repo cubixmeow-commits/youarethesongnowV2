@@ -8,7 +8,7 @@ window.MEOW_CONTROL = {
   project: "YouAreTheSongNow V2",
   phase: "Private Development Build 1 — Gemini native portrait identity",
   buildStatus: "GEMINI NATIVE IMAGE PATH SELECTED",
-  buildStatusDetail: "Song → Gemini Song DNA → saved DNA → portrait inlineData → gemini-3.1-flash-image → gallery. Uploaded people must be recognizable central subjects. Replicate/fal failed that requirement and are experimental-only. 123 tests passed. External beta and commercial gates remain active.",
+  buildStatusDetail: "Song → Gemini Interactions Song DNA (Search + JSON Schema, store=false) → saved DNA → portrait inlineData → gemini-3.1-flash-image → gallery. 146 tests passed. Springsteen incomplete-DNA failure addressed by Interactions API. External beta and commercial gates remain active.",
   backend: "PHP",
   database: "SQLite (initial)",
   mobile: "Flutter + Dart (iOS second)",

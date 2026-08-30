@@ -13,7 +13,7 @@ This note is the daily “what matters now” list for CuBiX Meow and Brut. Keep
 
 1. **Prove Gemini native portrait identity live:** song → Gemini Song DNA → saved DNA → portrait(s) → `gemini-3.1-flash-image` (inline portraits) → gallery with recognizable central subject(s). An image without the uploaded person is not usable.
 2. **Portrait provider decision (current):** Replicate P-Image-Edit and fal Kontext Multi produced strong scenes but failed people (minimized/omitted). Retained for later benchmarking only. Gemini multimodal image is the selected path.
-3. **Private Development Build 1 foundation:** PHP/SQLite vertical slice running. Automated suite: **123 passed** after Gemini image adapter. External beta, live Stripe and commercial protected-lyrics use remain blocked.
+3. **Private Development Build 1 foundation:** PHP/SQLite vertical slice running. Automated suite: **146 passed** after Interactions Song DNA + Gemini image adapter. External beta, live Stripe and commercial protected-lyrics use remain blocked.
 4. **Lyrics boundary unchanged:** private-development Google Search may analyze lyrics transiently; never save or commit lyrics.
 5. **Install protected credentials only when spending budget:** Gemini text + image live flags are separate (`GEMINI_LIVE_CALLS`, `GEMINI_IMAGE_LIVE_CALLS`).
 6. **Print/poster/T-shirt/upscaling remain post-Build-1.**
@@ -21,7 +21,7 @@ This note is the daily “what matters now” list for CuBiX Meow and Brut. Keep
 
 ## Newly documented
 
-- **Gemini native image path (2026-08-30):** `IMAGE_PROVIDER=gemini|auto`, model `gemini-3.1-flash-image`, 1K development size, V1-style identity-first multimodal request. fal/Replicate demoted to experimental.
+- **Gemini Interactions Song DNA (2026-08-30):** replaced legacy `generateContent` grounding. Live Springsteen/`Dancing in the Dark` incomplete structure traced to Search without enforced JSON schema. V1 JSON-repair recorded as historical emergency fallback only. Mandatory `store=false`.
 
 - **Final quality set approved:** 90 images, including 30 individual, 40 couple and 20 wedding/celebration compositions; 30 per orientation; every 15-style by three-tier combination tested twice.
 - **Portrait fixtures ready:** the owners confirmed private-development consent for the known V1 sample material, but the 77 local V1 sample files are finished generated artworks rather than source portraits. Eight fully synthetic portrait inputs and a controlled solo/couple/wedding pairing manifest are now stored privately outside Git for provider benchmarking.

@@ -452,15 +452,88 @@ $lyricsResearchDecoded = \Yatsn\AI\GeminiLyricsResearchService::decodeJsonText([
     'candidates' => [['content' => ['parts' => [['text' => "```json\n{\"lyricsLocated\":true,\"matchedArtist\":\"Fixture Band\"}\n```"]]]]],
 ]);
 assert_true(($lyricsResearchDecoded['matchedArtist'] ?? '') === 'Fixture Band', 'Gemini grounded Song DNA JSON parser handles fenced output');
-$groundedPayload = \Yatsn\AI\GeminiLyricsResearchService::groundedRequestPayload('fixture prompt');
-assert_true(isset($groundedPayload['tools'][0]['google_search']), 'Gemini lyric research enables current Google Search grounding tool');
-assert_true(!isset($groundedPayload['generationConfig']['responseMimeType']), 'Gemini grounding request avoids unsupported JSON MIME mode');
+$interactionsPayload = \Yatsn\AI\GeminiLyricsResearchService::interactionsRequestPayload('fixture prompt', 'gemini-3.6-flash');
+assert_true(\Yatsn\AI\GeminiLyricsResearchService::interactionsEndpoint() === 'https://generativelanguage.googleapis.com/v1beta/interactions', 'Gemini Song DNA uses Interactions endpoint');
+assert_true(($interactionsPayload['store'] ?? null) === false, 'Interactions Song DNA request sets store=false');
+assert_true(($interactionsPayload['tools'][0]['type'] ?? '') === 'google_search', 'Interactions Song DNA request includes Google Search tool');
+assert_true(($interactionsPayload['response_format']['type'] ?? '') === 'text', 'Interactions response_format type is text');
+assert_true(($interactionsPayload['response_format']['mime_type'] ?? '') === 'application/json', 'Interactions response_format MIME is application/json');
+assert_true(isset($interactionsPayload['response_format']['schema']['properties']['analysis']), 'Interactions response schema includes analysis');
+assert_true(isset($interactionsPayload['response_format']['schema']['properties']['matchedArtist']), 'Interactions response schema requires matchedArtist');
+assert_true(isset($interactionsPayload['response_format']['schema']['properties']['lyricsLocated']), 'Interactions response schema requires lyricsLocated');
+assert_true(in_array('essence', $interactionsPayload['response_format']['schema']['properties']['analysis']['required'] ?? [], true), 'Interactions analysis schema requires essence for hasUsableAnalysis');
+assert_true(in_array('originalVisualMoment', $interactionsPayload['response_format']['schema']['properties']['analysis']['required'] ?? [], true), 'Interactions analysis schema requires originalVisualMoment');
+assert_true(!isset($interactionsPayload['previous_interaction_id']), 'Interactions Song DNA request has no previous_interaction_id');
+assert_true(empty($interactionsPayload['background']), 'Interactions Song DNA request does not use background execution');
 assert_true(\Yatsn\AI\GeminiLyricsResearchService::safeFailureStatus('provider_http_429') === 'provider-rate-limited', 'Gemini grounding exposes safe rate-limit classification');
 assert_true(\Yatsn\AI\GeminiLyricsResearchService::safeFailureStatus('provider_timeout') === 'provider-timeout', 'Gemini grounding exposes safe timeout classification');
+assert_true(\Yatsn\AI\GeminiLyricsResearchService::safeFailureStatus('provider_http_400') === 'interactions-structured-search-rejected', 'Interactions structured-search rejection has explicit diagnostic status');
+assert_true(\Yatsn\AI\GeminiLyricsResearchService::isTransientFailure('provider_timeout'), 'timeouts are classified as transient retryable failures');
+assert_true(\Yatsn\AI\GeminiLyricsResearchService::isTransientFailure('provider_http_503'), '5xx failures are classified as transient retryable failures');
+assert_true(!\Yatsn\AI\GeminiLyricsResearchService::isTransientFailure('provider_http_400'), 'structured-search rejection is not silently retried as transient');
 assert_true(\Yatsn\AI\GeminiLyricsResearchService::analysisStatus(true, true, true, true) === 'grounded-lyric-song-dna-ready', 'Gemini marks verified lyric analysis distinctly');
 assert_true(\Yatsn\AI\GeminiLyricsResearchService::analysisStatus(true, true, false, true) === 'grounded-context-song-dna-ready', 'Gemini permits honest grounded song-context fallback');
 assert_true(\Yatsn\AI\GeminiLyricsResearchService::analysisStatus(true, false, false, true) === 'v1-model-song-dna-ready', 'Gemini accepts complete V1-style analysis without grounding metadata');
 assert_true(\Yatsn\AI\GeminiLyricsResearchService::analysisStatus(true, true, false, false) === 'grounded-analysis-incomplete', 'Gemini still rejects incomplete Song DNA');
+
+$completeAnalysisFixture = array_merge($analysisFixture, [
+    'essence' => 'A restless night drive toward release.',
+    'originalVisualMoment' => 'A lone figure stands at a neon-lit intersection as warm sodium light cuts the dark.',
+    'themes' => ['restlessness', 'desire'],
+    'mood' => ['yearning', 'electric'],
+]);
+assert_true(\Yatsn\AI\GeminiLyricsResearchService::hasUsableAnalysis($completeAnalysisFixture), 'complete structured Song DNA semantic content is accepted');
+assert_true(!\Yatsn\AI\GeminiLyricsResearchService::hasUsableAnalysis([
+    'essence' => '',
+    'originalVisualMoment' => 'incomplete',
+    'themes' => ['x'],
+    'mood' => ['y'],
+]), 'incomplete semantic Song DNA content is rejected after schema parsing');
+
+$interactionsResponse = [
+    'id' => 'int_fixture',
+    'status' => 'completed',
+    'steps' => [
+        [
+            'type' => 'google_search_call',
+            'arguments' => ['queries' => ['Bruce Springsteen Dancing in the Dark lyrics']],
+        ],
+        [
+            'type' => 'google_search_result',
+            'call_id' => 'search_001',
+            'result' => [['search_suggestions' => '']],
+        ],
+        [
+            'type' => 'model_output',
+            'content' => [[
+                'type' => 'text',
+                'text' => json_encode([
+                    'matchedArtist' => 'Bruce Springsteen',
+                    'matchedTitle' => 'Dancing in the Dark',
+                    'matchConfidence' => 0.94,
+                    'lyricsLocated' => true,
+                    'analysis' => $completeAnalysisFixture,
+                ], JSON_THROW_ON_ERROR),
+                'annotations' => [[
+                    'type' => 'url_citation',
+                    'url' => 'https://example.com/song-reference',
+                    'title' => 'example.com',
+                ]],
+            ]],
+        ],
+    ],
+];
+$interactionsDecoded = \Yatsn\AI\GeminiLyricsResearchService::decodeStructuredOutput($interactionsResponse);
+assert_true(($interactionsDecoded['matchedTitle'] ?? '') === 'Dancing in the Dark', 'Interactions structured Song DNA is decoded from model_output');
+assert_true(!empty($interactionsDecoded['lyricsLocated']), 'Interactions lyric verification state is preserved');
+$interactionsSearch = \Yatsn\AI\GeminiLyricsResearchService::searchSummary($interactionsResponse);
+assert_true($interactionsSearch['grounded'] === true, 'Interactions search metadata marks grounded results');
+assert_true(in_array('Bruce Springsteen Dancing in the Dark lyrics', $interactionsSearch['queries'], true), 'Interactions search queries are extracted for inspection');
+assert_true(($interactionsSearch['sources'][0]['url'] ?? '') === 'https://example.com/song-reference', 'Interactions citation sources are extracted for inspection');
+assert_true(!str_contains(json_encode($interactionsSearch, JSON_THROW_ON_ERROR), 'LYRIC TEXT'), 'search summary never includes protected lyric text');
+$mailLogPath = Config::get('app.log_path') . '/mail.log';
+$mailBeforeInteractions = file_exists($mailLogPath) ? (string) file_get_contents($mailLogPath) : '';
+assert_true(!str_contains($mailBeforeInteractions, (string) ($interactionsResponse['id'] ?? 'int_fixture')), 'raw interaction identifiers are not written into mail logs by Song DNA parsing');
 $groqDecoded = \Yatsn\AI\GroqCreativeAdapter::decodeResponse([
     'choices' => [['message' => ['content' => json_encode($analysisFixture, JSON_THROW_ON_ERROR)]]],
 ]);

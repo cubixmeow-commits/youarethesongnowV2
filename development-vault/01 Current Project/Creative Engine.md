@@ -38,7 +38,7 @@ V1 comparison: `development-vault/04 Prompt Lab/V1 to V2 Creative Engine Compari
 
 ## Current provider path
 
-- **Analysis:** `gemini-3.6-flash` + Google Search; transient lyric use in private development only; never persist lyrics; worker reuses saved DNA.
+- **Analysis:** `gemini-3.6-flash` via Interactions API (Google Search + strict JSON Schema, `store=false`); transient lyric use in private development only; never persist lyrics; worker reuses saved DNA. Legacy generateContent Search/JSON conflict and V1 JSON-repair are historical notes only.
 - **Image (selected):** native Gemini multimodal `gemini-3.1-flash-image` — text + portrait `inlineData` in one request; V1-style identity-first prompt; no second Song DNA call.
 - **Rejected for portrait workflow:** Replicate P-Image-Edit (scenes OK, people omitted/minimized); fal Kontext Multi (scenes OK, people omitted). Both retained for later benchmarking only.
 - **Deferred:** print / poster / T-shirt / upscaling.

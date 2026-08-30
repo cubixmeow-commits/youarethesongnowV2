@@ -29,10 +29,11 @@ A private local web vertical slice on PHP + SQLite with invite-only auth, Listen
 
 ## Song DNA (Gemini text)
 
-- Model: `gemini-3.6-flash` (2.5 unavailable to new API users).
-- Google Search finds/analyzes songs during private development.
-- Lyrics are searched and analyzed **transiently** for private development only. Never saved to Git, SQLite, queues, logs, prompts, analytics, or backups.
-- V1-compatible acceptance labels: lyrics confirmed / song-context / V1-compatible analysis.
+- Model: `gemini-3.6-flash` via **Interactions API** (`/v1beta/interactions`) with Google Search + strict JSON Schema.
+- **`store=false` mandatory** so lyrics/search material are never retained as Gemini interaction state.
+- Legacy `generateContent` could not combine Search with JSON MIME; that caused incomplete Song DNA (e.g. live `Dancing in the Dark` / Bruce Springsteen). V1’s JSON-repair call is historical only, not the primary V2 path.
+- Lyrics are searched/analyzed **transiently** for private development only. Never saved to Git, SQLite, queues, logs, prompts, analytics, or backups.
+- V1-compatible acceptance labels: lyrics confirmed / song-context / V1-compatible analysis after semantic validation.
 - Derived DNA shown at selection is locked into the generation snapshot.
 
 ## Image provider status
@@ -60,7 +61,7 @@ php bin/console.php setup-status
 
 ## Automated test result
 
-`php tests/run.php` → **123 passed, 0 failed** after Gemini native image adapter.
+`php tests/run.php` → **146 passed, 0 failed** after Interactions API Song DNA path.
 
 ## Development substitutes vs real integrations
 
