@@ -88,7 +88,7 @@ php tests/run.php
 
 ## Final commit
 
-- **Hash:** `6fa401fdecdbdb454d2a81b015607a27d0b5a0a5`
+- **Hash:** `e5dfe824e2d2ef2701872a9f395acd31c2724388`
 - **Message:** Show Explore diagnostics on private Hostinger without .env
 - **Branch:** `main`
 - **Requires:** Hostinger git sync only (no `.env` changes)

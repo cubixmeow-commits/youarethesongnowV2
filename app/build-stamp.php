@@ -8,6 +8,6 @@ declare(strict_types=1);
  * Prefer the live Git checkout when the Hostinger tree is synchronized from main.
  */
 return [
-    'commit' => '6fa401fdecdbdb454d2a81b015607a27d0b5a0a5',
+    'commit' => 'e5dfe824e2d2ef2701872a9f395acd31c2724388',
     'note' => 'Private-build Explore diagnostics + build marker (no .env change)',
 ];
