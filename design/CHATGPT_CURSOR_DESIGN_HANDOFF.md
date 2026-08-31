@@ -6,7 +6,7 @@
 
 **Last updated by ChatGPT:** 2026-08-30 (Round 008 local dispatch)
 
-**Active round:** 008 (ready for Cursor implementation)
+**Active round:** 008 (implemented locally — awaiting ChatGPT visual review)
 
 **Workflow roles**
 
@@ -73,9 +73,91 @@ Production assets delivered. Integration hooks and responsive usage are document
 
 ## CURRENT HANDOFF
 
-### Cursor → ChatGPT
+### Cursor → ChatGPT (Round 008 — 2026-08-30)
 
-#### Work Completed
+#### Work completed
+
+Integrated the delivered YS monogram, wordmark, atmosphere, Create backdrops, Gallery empty-state art and paywall previews into the current responsive web/mobile app. Preserved all routes, APIs, generation, credits, Stripe, portrait upload/delete and owner style activate/deactivate behavior.
+
+#### Production assets integrated
+
+| Asset | Hook |
+| --- | --- |
+| `ys-monogram-flat-platinum.svg` | Top bar `<img>` + Create session header |
+| `ys-wordmark.svg` | Top bar `<img>` with visually hidden accessible name |
+| `app-atmosphere-haze-phone/desktop.webp` | `--asset-atmosphere` on `body.app` |
+| `creative-session-backdrop-phone/desktop.webp` | `.create` background under readability veil |
+| `empty-collection-still.webp` | Gallery empty `<img>` |
+| `paywall-world-preview-phone/desktop.webp` | `.paywall-panel__media` |
+
+#### Files changed
+
+- `public/assets/css/app.css`
+- `templates/layouts/main.php`
+- `templates/pages/welcome.php`
+- `templates/pages/create.php`
+- `templates/pages/gallery.php`
+- `design/DESIGN_SYSTEM.md`
+- `design/ASSET_INTEGRATION_MAP.md`
+- `design/CHATGPT_CURSOR_DESIGN_HANDOFF.md`
+- `design/CHATGPT_NEXT_PASS.md` (consumed)
+- `design/review/round-008/*`
+- `development-vault/01 Current Project/Current Priorities.md`
+- `development-vault/01 Current Project/Dashboard Snapshot.md`
+- `docs/dashboard-data.js`
+
+#### Mobile / desktop composition decisions
+
+- **Shell:** Real YS mark (30–32px) + wordmark (132–168px); 16px inset at 320px, 20px from 390px; atmosphere phone `center top`, desktop `right top`; no `background-attachment: fixed` on phone.
+- **Home:** Poster-first 100svh hero; quiet Sign in secondary in hero actions; desktop copy capped ~440px over calm field; examples remain editorial rail/row.
+- **Create:** Phone session backdrop with 88% bg overlay veil; desktop 62/38 split (max ~640px form); stage progress inline under header (not far-right column); overview uses separators not heavy card chrome on desktop.
+- **Gallery empty:** Real aperture `<img>` (240px phone / 300px desktop) + primary Create link; no extra frame.
+- **Paywall:** Square phone header + two-column desktop media/copy; billing remains live HTML on opaque surface.
+- **Reveal:** Desktop artwork-left / metadata-right grid.
+
+#### Crop / overlay values
+
+See `design/review/round-008/README.md` overlay table. Session overlay `--asset-session-overlay: color-mix(in oklab, var(--color-bg) 88%, transparent)`; desktop Create adds horizontal veil keeping form in calm left field.
+
+#### Accessibility / responsive checks
+
+Keyboard/focus, 16px inputs, 44–48px targets, reduced motion, increased contrast rules preserved. Verified 320, 390, 430, 768, 900, 1440 and 200% zoom notes in `design/review/round-008/README.md`.
+
+#### Tests
+
+`php tests/run.php` → **178 passed, 0 failed**
+
+#### Owner style activate/deactivate verification
+
+Preserved commit `3953689` behavior: `.owner-style-toggle` buttons remain labeled **Activate** / **Deactivate** with explicit titles; automated tests `owner can activate style` and `owner can deactivate style` pass.
+
+#### Screenshots
+
+`design/review/round-008/` — full pack per Round 008 brief plus `overflow-check-320-home.png`.
+
+#### Functionality audit
+
+- Portrait deletion: **intact**
+- Navigation / routes / APIs / generation / payments: **unchanged**
+- Flutter / commerce / upscale / print / T-shirt: **not started**
+
+#### Remaining visual issues (max 3)
+
+1. Atmosphere/session readability still uses gradient veils over assets (intentional until image-only review).
+2. Account forms remain utilitarian (acceptable Build 1).
+3. Populated gallery desktop not re-shot; empty state is the Round 008 gallery deliverable.
+
+#### Deviations
+
+None intentional beyond using in-browser grid clear for empty-gallery screenshots (presentation only; no server/data change).
+
+#### Recommended next pass
+
+Stop for ChatGPT visual review of `design/review/round-008/`. Do not push or deploy without separate owner authorization.
+
+---
+
+### Cursor → ChatGPT (Round 005 archive)
 
 1. Locked Round 004 venue language as Round 005 baseline
 2. Targeted component consistency (nav, buttons, confirm sheet, curator tiles, gallery empty)
@@ -192,6 +274,10 @@ Warm brass/amber chrome was replaced by black/graphite, platinum, deep sapphire 
 
 The intertwined YS monogram was selected and documented. Final production geometry/assets were still pending.
 
+### Round 008 — YS production asset integration (2026-08-30)
+
+Production YS identity and system imagery integrated into the current responsive web/mobile app. Screenshot pack committed under `design/review/round-008/`. Flutter remains documentation-only.
+
 ### Round 008 preparation — Production asset delivery (2026-08-30)
 
 ChatGPT delivered the complete brand/system asset set, production manifest, responsive redesign plan and exact Cursor implementation instructions. Implementation and responsive screenshots remain pending.
@@ -202,14 +288,12 @@ ChatGPT delivered the complete brand/system asset set, production manifest, resp
 
 | Screen / Area | Status | Last Changed | Notes |
 | --- | --- | --- | --- |
-| Create | Stable baseline | Round 005 | Copy toned; curator tiles denser |
-| People / portraits | Stable baseline | Round 005 | Delete intact |
-| Direction | Stable baseline | Round 005 | Smaller option tiles |
-| Home | Stable baseline | Round 005 | Less literal venue copy |
-| Gallery | Stable baseline | Round 005 | Empty state hook |
-| Navigation | Stable | Round 005 | Brass active tint |
+| Create | Integrated | Round 008 | YS session header; production backdrop; desktop 62/38 |
+| Home | Integrated | Round 008 | Poster hero; YS lockup; quiet Sign in |
+| Gallery | Integrated | Round 008 | Empty-state `<img>` + Create CTA |
+| Navigation | Stable | Round 008 | YS mark/wordmark in chrome |
 | Auth/Account | Light | Round 004 | Lacquer panels |
-| YS production assets | Delivered | Round 008 prep | Awaiting web integration |
+| YS production assets | Integrated | Round 008 | Web/mobile hooks live; see review pack |
 | Flutter spec | Documentation only | Round 008 prep | Native implementation deferred |
 
 ---

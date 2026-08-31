@@ -47,8 +47,23 @@ $bodyClass = trim(($layoutClass ?? '') . ($isHome ? ' is-home' : '') . ($authed 
   <header class="app-topbar">
     <div class="app-topbar__inner">
       <a class="brand" href="<?= $authed ? '/create' : '/' ?>">
-        <span class="brand__mark" aria-hidden="true"></span>
-        <span class="brand__text">You Are The Song Now</span>
+        <img
+          class="brand__mark"
+          src="/assets/images/brand/ys-monogram-flat-platinum.svg"
+          width="32"
+          height="32"
+          alt=""
+          aria-hidden="true"
+          decoding="async">
+        <img
+          class="brand__wordmark"
+          src="/assets/images/brand/ys-wordmark.svg"
+          width="150"
+          height="25"
+          alt=""
+          aria-hidden="true"
+          decoding="async">
+        <span class="visually-hidden">You Are The Song Now</span>
       </a>
     </div>
   </header>

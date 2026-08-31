@@ -22,6 +22,7 @@
     <p class="lede">A meaningful song becomes a cinematic world. Step inside and begin your journey.</p>
     <div class="hero__actions">
       <a class="btn btn--primary" href="/sign-in">Start with a song</a>
+      <a class="btn btn--ghost hero__sign-in" href="/sign-in">Sign in</a>
     </div>
   </div>
 </section>

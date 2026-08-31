@@ -1,6 +1,6 @@
 /* =============================================================================
-   You Are The Song Now — Design system (Round 006)
-   Platinum + blue on black. Tokens → Flutter (design/FLUTTER_DESIGN_HANDOFF.md)
+   You Are The Song Now — Design system (Round 008)
+   YS identity + production assets integrated. Tokens → Flutter (design/FLUTTER_DESIGN_HANDOFF.md)
    Material hierarchy: black → graphite → smoked graphite → platinum/sapphire → artwork
    ============================================================================= */
 
@@ -104,14 +104,15 @@
   --header-h: var(--topbar-h);
 
   /* Asset hooks — see design/ASSET_INTEGRATION_MAP.md */
-  --asset-atmosphere: none;
-  --asset-launch-mark: none;
-  --asset-empty-collection: none;
-  --asset-session-phone: url("/assets/images/launch/layout-mobile-480.webp");
-  --asset-session-desktop: url("/assets/images/launch/layout-groove-1254.webp");
-  --asset-session-tablet: url("/assets/images/launch/layout-groove-640.webp");
+  --asset-atmosphere: url("/assets/images/system/app-atmosphere-haze-phone.webp");
+  --asset-launch-mark: url("/assets/images/brand/ys-monogram-flat-platinum.svg");
+  --asset-empty-collection: url("/assets/images/system/empty-collection-still.webp");
+  --asset-session-phone: url("/assets/images/system/creative-session-backdrop-phone.webp");
+  --asset-session-desktop: url("/assets/images/system/creative-session-backdrop-desktop.webp");
+  --asset-paywall-preview-phone: url("/assets/images/system/paywall-world-preview-phone.webp");
+  --asset-paywall-preview-desktop: url("/assets/images/system/paywall-world-preview-desktop.webp");
   --asset-atmosphere-opacity: 1;
-  --asset-session-overlay: color-mix(in oklab, var(--color-bg) 92%, transparent);
+  --asset-session-overlay: color-mix(in oklab, var(--color-bg) 88%, transparent);
 }
 
 *,
@@ -141,7 +142,9 @@ body.app {
     radial-gradient(820px 480px at 92% 0%, color-mix(in oklab, var(--color-haze) 14%, transparent), transparent 62%),
     radial-gradient(560px 380px at -4% 100%, color-mix(in oklab, var(--color-accent-sapphire) 6%, transparent), transparent 58%),
     linear-gradient(165deg, oklch(0.095 0.014 264) 0%, var(--color-bg) 42%, oklch(0.07 0.01 266) 100%);
-  background-attachment: fixed;
+  background-size: cover, auto, auto, auto;
+  background-position: center top, 92% 0%, -4% 100%, center;
+  background-repeat: no-repeat;
   padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom));
 }
 
@@ -193,6 +196,18 @@ a:hover {
   top: 1rem;
 }
 
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* =============================================================================
    App chrome — mobile bottom tabs → desktop rail
    ============================================================================= */
@@ -218,6 +233,18 @@ a:hover {
   align-items: center;
 }
 
+@media (min-width: 390px) {
+  .app-topbar__inner {
+    padding-left: max(1.25rem, env(safe-area-inset-left));
+    padding-right: max(1.25rem, env(safe-area-inset-right));
+  }
+
+  .app-main {
+    padding-left: max(1.25rem, env(safe-area-inset-left));
+    padding-right: max(1.25rem, env(safe-area-inset-right));
+  }
+}
+
 .brand {
   display: inline-flex;
   align-items: center;
@@ -233,18 +260,19 @@ a:hover {
 }
 
 .brand__mark {
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   flex: 0 0 auto;
-  border-radius: 7px;
-  background-image:
-    var(--asset-launch-mark),
-    radial-gradient(circle at 38% 38%, color-mix(in oklab, var(--color-accent-sapphire) 55%, white), transparent 58%),
-    linear-gradient(155deg, color-mix(in oklab, var(--color-platinum) 18%, transparent), var(--color-surface-lacquer));
-  background-size: cover, auto, auto;
-  background-position: center;
-  background-repeat: no-repeat;
-  box-shadow: inset 0 0 0 1px var(--color-border-hairline), var(--shadow-inset-stone);
+  display: block;
+  object-fit: contain;
+}
+
+.brand__wordmark {
+  width: min(142px, 38vw);
+  height: auto;
+  flex: 0 0 auto;
+  display: block;
+  object-fit: contain;
 }
 
 .brand__text {
@@ -390,9 +418,27 @@ a:hover {
 
 /* Desktop: left rail */
 @media (min-width: 900px) {
+  :root {
+    --asset-atmosphere: url("/assets/images/system/app-atmosphere-haze-desktop.webp");
+  }
+
+  body.app {
+    background-position: right top, 92% 0%, -4% 100%, center;
+    background-attachment: scroll;
+  }
+
   body.app {
     padding-bottom: 0;
     padding-left: var(--rail-w);
+  }
+
+  .brand__mark {
+    width: 32px;
+    height: 32px;
+  }
+
+  .brand__wordmark {
+    width: min(168px, 14vw);
   }
 
   .app-topbar__inner {
@@ -724,7 +770,7 @@ textarea {
 
 .hero {
   position: relative;
-  min-height: calc(100svh - var(--topbar-h) - var(--tabbar-h));
+  min-height: calc(100svh - var(--topbar-h) - var(--tabbar-h) - env(safe-area-inset-top) - env(safe-area-inset-bottom));
   display: grid;
   align-items: end;
   overflow: hidden;
@@ -794,6 +840,11 @@ textarea {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-3);
+  align-items: center;
+}
+
+.hero__sign-in {
+  min-height: var(--touch-min);
 }
 
 .examples {
@@ -895,6 +946,12 @@ textarea {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     grid-auto-columns: unset;
     overflow: visible;
+    gap: var(--space-6);
+  }
+
+  .example__figure {
+    border-radius: var(--radius-md);
+    box-shadow: none;
   }
 
   .hero__veil {
@@ -905,6 +962,27 @@ textarea {
 
   .hero__image {
     object-position: 70% center;
+  }
+}
+
+@media (min-width: 900px) {
+  .hero {
+    min-height: calc(100svh - var(--topbar-h));
+  }
+
+  .hero__copy {
+    max-width: 27.5rem;
+    padding-left: max(var(--space-6), env(safe-area-inset-left));
+    padding-bottom: var(--space-8);
+  }
+
+  .examples {
+    max-width: min(1280px, 100%);
+    padding-inline: max(var(--space-6), env(safe-area-inset-left));
+  }
+
+  .interlude__copy {
+    padding-left: max(var(--space-6), env(safe-area-inset-left));
   }
 }
 
@@ -924,11 +1002,13 @@ textarea {
 .create {
   margin: calc(var(--space-5) * -1) calc(var(--space-4) * -1) 0;
   padding: var(--space-6) var(--space-4) var(--space-7);
+  background-color: var(--color-bg);
   background-image:
-    linear-gradient(180deg, var(--asset-session-overlay) 0%, color-mix(in oklab, var(--color-bg) 96%, transparent) 35%, var(--color-bg) 100%),
+    linear-gradient(180deg, var(--asset-session-overlay) 0%, color-mix(in oklab, var(--color-bg) 94%, transparent) 42%, var(--color-bg) 100%),
     var(--asset-session-phone);
   background-size: cover;
   background-position: center top;
+  background-repeat: no-repeat;
   border-radius: 0;
 }
 
@@ -960,19 +1040,42 @@ textarea {
     margin-inline: 0;
     padding-inline: 0;
     background-image:
-      linear-gradient(180deg, color-mix(in oklab, var(--color-bg) 90%, transparent), var(--color-bg)),
+      linear-gradient(90deg, var(--asset-session-overlay) 0%, color-mix(in oklab, var(--color-bg) 90%, transparent) 48%, color-mix(in oklab, var(--color-bg) 72%, transparent) 68%, transparent 100%),
+      linear-gradient(180deg, color-mix(in oklab, var(--color-bg) 88%, transparent), var(--color-bg)),
       var(--asset-session-desktop);
+    background-position: center, center, right top;
+    background-size: cover;
   }
 
   .create__layout {
-    grid-template-columns: minmax(0, 1.35fr) minmax(17rem, 0.85fr);
-    gap: var(--space-6);
+    grid-template-columns: minmax(0, 1.62fr) minmax(17rem, 1fr);
+    gap: var(--space-7);
     align-items: start;
+    max-width: 1120px;
+  }
+
+  .create__main {
+    max-width: 40rem;
+    padding-right: var(--space-6);
+    border-right: 1px solid var(--color-border-hairline);
   }
 
   .create__summary {
     position: sticky;
     top: calc(var(--topbar-h) + var(--space-5));
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    padding: var(--space-5) 0 var(--space-6);
+  }
+
+  .create__summary::before {
+    content: "";
+    display: block;
+    height: 1px;
+    margin-bottom: var(--space-5);
+    background: var(--color-border-hairline);
   }
 }
 
@@ -1296,7 +1399,7 @@ textarea {
   from {
     opacity: 0;
     transform: translateY(12px);
-    filter: blur(4px);
+    filter: blur(6px);
   }
   to {
     opacity: 1;
@@ -1326,12 +1429,6 @@ textarea {
 }
 
 .gallery-page.empty-gallery {
-  background-image:
-    linear-gradient(180deg, var(--asset-session-overlay), var(--color-bg)),
-    var(--asset-session-tablet);
-  background-size: cover;
-  background-position: center;
-  border-radius: var(--radius-lg);
   padding: var(--space-5);
 }
 
@@ -1339,31 +1436,27 @@ textarea {
   display: none;
   text-align: center;
   padding: var(--space-6) var(--space-4) var(--space-7);
-  max-width: 22rem;
+  max-width: 24rem;
   margin: 0 auto;
 }
 
 .gallery-grid:empty ~ .gallery-empty {
-  display: block;
+  display: grid;
+  gap: var(--space-4);
+  justify-items: center;
 }
 
 .gallery-empty__art {
   width: min(72vw, 240px);
+  height: auto;
   aspect-ratio: 1;
-  margin: 0 auto var(--space-5);
-  border-radius: var(--radius-md);
-  background-image: var(--asset-empty-collection);
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  box-shadow: inset 0 0 0 1px var(--color-border-hairline);
+  object-fit: contain;
+  margin: 0;
 }
 
-.gallery-grid:empty ~ .gallery-empty .gallery-empty__art {
-  background-image:
-    var(--asset-empty-collection),
-    radial-gradient(circle at 50% 42%, color-mix(in oklab, var(--color-accent-sapphire) 12%, transparent), transparent 55%),
-    linear-gradient(165deg, var(--color-surface-stone), var(--color-surface-lacquer));
+.gallery-empty__action {
+  margin-top: var(--space-2);
+  min-width: min(100%, 14rem);
 }
 
 .gallery-empty__title {
@@ -1433,9 +1526,48 @@ textarea {
   }
 }
 
+@media (min-width: 900px) {
+  .gallery-empty__art {
+    width: min(300px, 42vw);
+  }
+
+  .gallery-page {
+    max-width: 1280px;
+  }
+}
+
 .reveal {
   max-width: 920px;
   margin: 0 auto;
+}
+
+@media (min-width: 900px) {
+  .reveal {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(17rem, 22rem);
+    gap: var(--space-6) var(--space-7);
+    align-items: start;
+    max-width: 1280px;
+  }
+
+  .reveal > h1,
+  .reveal > .quiet,
+  .reveal > [data-image-meta],
+  .reveal > .action-row,
+  .reveal > [data-email-share],
+  .reveal > .status {
+    grid-column: 2;
+  }
+
+  .reveal__figure {
+    grid-column: 1;
+    grid-row: 1 / span 6;
+    margin: 0;
+    min-height: min(78svh, 920px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 .reveal__figure {
@@ -1595,29 +1727,28 @@ textarea {
 }
 
 .session-header__art {
-  width: 72px;
-  height: 72px;
+  width: 56px;
+  height: 56px;
   border-radius: var(--radius-md);
-  background:
-    radial-gradient(circle at 40% 38%, color-mix(in oklab, var(--color-accent-sapphire) 50%, white), transparent 54%),
-    linear-gradient(165deg, color-mix(in oklab, var(--color-platinum) 12%, transparent), var(--color-surface-lacquer));
-  box-shadow: inset 0 0 0 1px var(--color-border-hairline), var(--shadow-inset-stone);
+  background: color-mix(in oklab, var(--color-surface-lacquer) 55%, transparent);
+  box-shadow: inset 0 0 0 1px var(--color-border-hairline);
   display: grid;
   place-items: center;
 }
 
+.session-header__mark {
+  width: 30px;
+  height: 30px;
+  display: block;
+  object-fit: contain;
+}
+
 .create.has-song .session-header__art {
-  background:
-    radial-gradient(circle at 42% 40%, color-mix(in oklab, var(--color-accent-sapphire) 70%, white), transparent 50%),
-    linear-gradient(165deg, color-mix(in oklab, var(--color-haze) 35%, var(--color-surface-lacquer)), var(--color-surface-stone));
+  background: color-mix(in oklab, var(--color-accent-sapphire) 8%, var(--color-surface-lacquer));
 }
 
 .session-header__art-mark {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 1px solid color-mix(in oklab, var(--color-text) 40%, transparent);
-  box-shadow: 0 0 0 5px color-mix(in oklab, var(--color-accent-sapphire) 12%, transparent);
+  display: none;
 }
 
 .session-header__eyebrow {
@@ -1734,22 +1865,70 @@ textarea {
 
 .paywall-panel {
   margin-top: var(--space-4);
-  padding-top: var(--space-4);
-  border-top: 1px solid var(--color-border-hairline);
+  padding-top: 0;
+  border-top: 0;
+}
+
+.paywall-panel__layout {
+  display: grid;
+  gap: 0;
+  margin: calc(var(--space-4) * -1) calc(var(--space-5) * -1) 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--color-border-hairline);
+  background: var(--color-surface-stone);
+}
+
+.paywall-panel__media {
+  aspect-ratio: 1;
+  min-height: 11rem;
+  background-image: var(--asset-paywall-preview-phone);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.paywall-panel__content {
+  padding: var(--space-5);
+  background: linear-gradient(180deg, var(--color-surface-lacquer), var(--color-surface-stone));
+}
+
+.paywall-panel__content h3 {
+  margin-top: 0;
+}
+
+@media (min-width: 900px) {
+  .paywall-panel__layout {
+    grid-template-columns: minmax(0, 1fr) minmax(16rem, 1.1fr);
+    margin-inline: 0;
+  }
+
+  .paywall-panel__media {
+    aspect-ratio: auto;
+    min-height: 100%;
+    background-image: var(--asset-paywall-preview-desktop);
+    background-position: center;
+  }
+
+  .paywall-panel__content {
+    padding: var(--space-6);
+  }
 }
 
 @media (min-width: 900px) {
   .session-header {
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: auto 1fr;
     align-items: end;
     gap: var(--space-5);
   }
 
   .session-progress {
-    grid-column: auto;
-    flex-direction: column;
-    align-items: flex-end;
-    margin-top: 0;
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: center;
+    margin-top: var(--space-3);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-border-hairline);
   }
 
   .create__layout {
@@ -1757,14 +1936,10 @@ textarea {
   }
 
   .session-board {
-    background:
-      radial-gradient(380px 200px at 85% 0%, color-mix(in oklab, var(--color-haze) 8%, transparent), transparent 62%),
-      linear-gradient(175deg, color-mix(in oklab, var(--color-surface-lacquer) 92%, transparent), var(--color-surface-stone));
-  }
-
-  .create__main {
-    padding-right: var(--space-5);
-    border-right: 1px solid var(--color-border-hairline);
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    padding: var(--space-5) 0 var(--space-6);
   }
 
   .hero--launchpad .hero__image {
@@ -1777,9 +1952,8 @@ textarea {
    ============================================================================= */
 
 @media (max-width: 480px) {
-  .brand__text {
-    font-size: 0.95rem;
-    max-width: calc(100vw - 5rem);
+  .brand__wordmark {
+    width: min(132px, 34vw);
   }
 
   .btn {
@@ -1804,7 +1978,7 @@ textarea {
 
   .create {
     background-image:
-      linear-gradient(180deg, color-mix(in oklab, var(--color-bg) 90%, transparent), var(--color-bg)),
+      linear-gradient(180deg, var(--asset-session-overlay) 0%, color-mix(in oklab, var(--color-bg) 92%, transparent) 38%, var(--color-bg) 100%),
       var(--asset-session-phone);
   }
 }

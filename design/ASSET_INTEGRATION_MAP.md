@@ -1,9 +1,9 @@
 ---
 type: asset-integration
-status: production-assets-delivered
+status: integrated-web-round-008
 updated: 2026-08-30
 area: visual-design
-phase: round-006-platinum-blue
+phase: round-008-ys-integrated
 ---
 
 # Production Asset Integration Map
@@ -69,7 +69,7 @@ System assets directory (create when delivering):
 }
 ```
 
-Prefer real `<img>` elements for the mark and wordmark so intrinsic dimensions, alternate text behavior and responsive sizing are explicit. Keep `--asset-launch-mark` only as a compatibility hook during the transition.
+Prefer real `<img>` elements for the mark and wordmark so intrinsic dimensions, alternate text behavior and responsive sizing are explicit. `--asset-launch-mark` remains as a compatibility hook; Round 008 uses `<img>` in `templates/layouts/main.php`.
 
 ---
 
@@ -106,7 +106,7 @@ Prefer real `<img>` elements for the mark and wordmark so intrinsic dimensions, 
 | **Purpose** | Gallery zero-state illustration |
 | **CSS variable** | `--asset-empty-collection` |
 | **File** | `public/assets/images/system/empty-collection-still.webp` |
-| **Selector / hook** | `.gallery-empty__art` in `templates/pages/gallery.php` |
+| **Selector / hook** | `.gallery-empty__art` `<img>` in `templates/pages/gallery.php` |
 | **Mobile crop** | `width: min(72vw, 240px)`; `aspect-ratio: 1`; `background-size: contain` |
 | **Desktop crop** | Same; centered in column |
 | **Blend / overlay** | Transparent PNG/WebP preferred; CSS gradient fallback behind when variable is `none` |

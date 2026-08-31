@@ -3,7 +3,7 @@ type: design-system
 status: active
 updated: 2026-08-30
 area: visual-design
-phase: round-006-platinum-blue
+phase: round-008-ys-integrated
 ---
 
 # You Are The Song Now — YS Design System
@@ -181,4 +181,4 @@ Prefer `max-width` content shells (~430–720 for reading; wider for artwork gri
 
 ## Pass status
 
-Round 006 converted the venue system to **platinum + blue on black**. On 2026-08-30 the YS identity and complete production raster/SVG asset set were delivered. The next pass integrates those files into the current web/mobile application and verifies responsive behavior before any Flutter implementation begins.
+Round 008 integrated the delivered YS monogram, wordmark, atmosphere, Create backdrops, Gallery empty-state art and paywall previews into the current web/mobile application. Review pack: `design/review/round-008/`. Flutter implementation remains deferred.

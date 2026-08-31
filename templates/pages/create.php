@@ -1,7 +1,13 @@
 <section class="create" data-create data-csrf="<?= e($csrf ?? '') ?>">
   <header class="session-header" aria-label="Create">
     <div class="session-header__art" aria-hidden="true">
-      <span class="session-header__art-mark"></span>
+      <img
+        class="session-header__mark"
+        src="/assets/images/brand/ys-monogram-flat-platinum.svg"
+        width="32"
+        height="32"
+        alt=""
+        decoding="async">
     </div>
     <div class="session-header__meta">
       <p class="session-header__eyebrow">Create</p>
@@ -127,19 +133,24 @@
         <button class="btn btn--primary btn--generate" type="button" data-create-image>Create my image</button>
       </div>
       <div class="paywall-panel" data-paywall hidden>
-        <h3>Your song is ready. Step into its world.</h3>
-        <p>Create original cinematic art with you and the people you love at the heart of the story.</p>
-        <p><strong>You Are The Song Now Membership</strong><br>$20 per month</p>
-        <ul class="benefit-list">
-          <li>Monthly credits for creating personalized artwork</li>
-          <li>Low, medium and high-quality options</li>
-          <li>Save, download and share creations</li>
-          <li>Cancel anytime</li>
-        </ul>
-        <p class="quiet">Your subscription renews monthly until cancelled. Card statement shows YOU ARE THE SONG.</p>
-        <button class="btn btn--primary" type="button" data-checkout>Continue to secure checkout</button>
-        <button class="btn btn--secondary" type="button" data-dev-activate>Activate local development membership</button>
-        <p class="status" data-paywall-status role="status" aria-live="polite"></p>
+        <div class="paywall-panel__layout">
+          <div class="paywall-panel__media" aria-hidden="true"></div>
+          <div class="paywall-panel__content stack">
+            <h3>Your song is ready. Step into its world.</h3>
+            <p>Create original cinematic art with you and the people you love at the heart of the story.</p>
+            <p><strong>You Are The Song Now Membership</strong><br>$20 per month</p>
+            <ul class="benefit-list">
+              <li>Monthly credits for creating personalized artwork</li>
+              <li>Low, medium and high-quality options</li>
+              <li>Save, download and share creations</li>
+              <li>Cancel anytime</li>
+            </ul>
+            <p class="quiet">Your subscription renews monthly until cancelled. Card statement shows YOU ARE THE SONG.</p>
+            <button class="btn btn--primary" type="button" data-checkout>Continue to secure checkout</button>
+            <button class="btn btn--secondary" type="button" data-dev-activate>Activate local development membership</button>
+            <p class="status" data-paywall-status role="status" aria-live="polite"></p>
+          </div>
+        </div>
       </div>
       <div data-progress hidden>
         <div class="venue-progress" aria-hidden="true"><span data-playhead></span></div>
