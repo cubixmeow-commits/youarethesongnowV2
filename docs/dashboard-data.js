@@ -3,7 +3,7 @@
  * Source of working truth: development-vault/
  */
 window.MEOW_CONTROL = {
-  updated: "2026-08-30",
+  updated: "2026-08-31",
   owners: ["CuBiX Meow", "Brut"],
   project: "YouAreTheSongNow V2",
   phase: "Private Development Build 1 — live quality and reliability testing",
@@ -18,8 +18,8 @@ window.MEOW_CONTROL = {
   mission: "Turn a song into an interpreted cinematic visual experience, optionally placing the user inside that visual world.",
   workshopStatus: "Core premise proven; controlled acceptance testing next",
   workshopDetail: "One- and two-person Gemini identity have succeeded live. Flash Lite is the low-cost candidate; full Flash is the quality anchor. fal and Replicate remain disabled experiments. Print/upscaling stay deferred.",
-  brandStatus: "YS identity integrated; V1 showcase live (Round 009)",
-  brandDetail: "Black/graphite, platinum and sapphire/cobalt. Round 008 production assets are integrated. Round 009 brought all 77 V1 sample artworks into a progressively loaded Home carousel and a V2-styled /showcase masonry wall, labeled as legacy development reference. Flutter remains deferred.",
+  brandStatus: "YS identity + permanent design OS (Phase 1 audit)",
+  brandDetail: "Black/graphite, platinum and sapphire/cobalt. Round 008–009 assets and V1 showcase remain live. Permanent design docs now live under docs/design/ with a repo-aware UI audit and proposed semantic tokens in assets/design/. Phase 2 token/UI migration waits for GPT review. Flutter remains deferred.",
   promptSystemStatus: "Gemini identity works; composition freedom restored",
   promptSystemDetail: "One authoritative identity section keeps every portrait recognizable while Song DNA controls staging. Interactions schema prevents malformed DNA. No-text and automatic usability checks remain open.",
   assessmentUrl: "https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/development-vault/01%20Current%20Project/Build%201%20Assessment%202026-08-30.md",

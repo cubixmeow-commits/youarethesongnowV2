@@ -1,0 +1,96 @@
+{
+  "$schema_note": "Proposed canonical semantic tokens for YouAreTheSongNow. Values mirror public/assets/css/app.css Round 008. NOT yet wired into the app. Phase 1 documentation only.",
+  "meta": {
+    "product": "YouAreTheSongNow",
+    "updated": "2026-08-31",
+    "canonicalViewportOrder": ["phone", "tablet", "desktop"],
+    "cssSource": "public/assets/css/app.css",
+    "status": "proposed"
+  },
+  "color": {
+    "bg": "oklch(0.09 0.012 264)",
+    "surface": "oklch(0.13 0.014 262)",
+    "surfaceElevated": "oklch(0.16 0.016 262)",
+    "surfaceLacquer": "oklch(0.18 0.012 264)",
+    "surfaceStone": "oklch(0.12 0.01 262)",
+    "surfaceChrome": "color-mix(in oklab, oklch(0.09 0.012 264) 92%, transparent)",
+    "text": "oklch(0.91 0.008 250)",
+    "textSecondary": "oklch(0.70 0.012 252)",
+    "textTertiary": "oklch(0.56 0.01 256)",
+    "platinum": "oklch(0.78 0.012 250)",
+    "accent": "oklch(0.50 0.12 264)",
+    "accentStrong": "oklch(0.58 0.16 268)",
+    "accentSoft": "color-mix(in oklab, oklch(0.50 0.12 264) 16%, transparent)",
+    "haze": "oklch(0.42 0.10 264)",
+    "border": "color-mix(in oklab, oklch(0.78 0.012 250) 14%, transparent)",
+    "borderHairline": "color-mix(in oklab, oklch(0.78 0.012 250) 10%, transparent)",
+    "borderStrong": "color-mix(in oklab, oklch(0.78 0.012 250) 26%, transparent)",
+    "success": "oklch(0.72 0.12 145)",
+    "warning": "oklch(0.78 0.12 75)",
+    "destructive": "oklch(0.62 0.17 25)",
+    "focus": "color-mix(in oklab, oklch(0.50 0.12 264) 45%, transparent)"
+  },
+  "space": {
+    "1": 4,
+    "2": 8,
+    "3": 12,
+    "4": 16,
+    "5": 24,
+    "6": 32,
+    "7": 48,
+    "8": 64
+  },
+  "radius": {
+    "sm": 8,
+    "md": 14,
+    "lg": 20,
+    "xl": 28,
+    "pill": 999
+  },
+  "elevation": {
+    "shadow1": "0 1px 0 color-mix(in oklab, white 3%, transparent)",
+    "shadow2": "0 12px 32px color-mix(in oklab, black 32%, transparent)",
+    "shadow3": "0 24px 52px color-mix(in oklab, black 42%, transparent)",
+    "focusRing": "0 0 0 3px color-mix(in oklab, oklch(0.50 0.12 264) 45%, transparent)"
+  },
+  "typography": {
+    "fontDisplay": "Instrument Serif",
+    "fontUi": "DM Sans",
+    "roles": {
+      "display": "clamp(2.5rem, 8vw, 3.5rem)",
+      "largeTitle": "clamp(1.85rem, 5.5vw, 2.5rem)",
+      "title": "clamp(1.35rem, 3vw, 1.75rem)",
+      "headline": "1.125rem",
+      "body": "1rem",
+      "callout": "0.9375rem",
+      "caption": "0.8125rem",
+      "meta": "0.75rem"
+    }
+  },
+  "motion": {
+    "fastMs": 140,
+    "baseMs": 220,
+    "enterMs": 420,
+    "easeStandard": "cubic-bezier(0.22, 1, 0.36, 1)",
+    "easeEmphasized": "cubic-bezier(0.2, 0, 0, 1)"
+  },
+  "layout": {
+    "touchMin": 48,
+    "topbar": 52,
+    "tabbar": 64,
+    "rail": 88,
+    "appMax": 1120,
+    "measureRem": 36
+  },
+  "breakpoints": {
+    "phoneMax": 599,
+    "tabletMin": 600,
+    "desktopMin": 900,
+    "wideMin": 1200,
+    "observedExtras": [359, 390, 480, 700, 768, 1100]
+  },
+  "deprecate": [
+    "legacy aliases --ink --charcoal --paper --muted --stage --line",
+    "conflated --focus-ring as both color and shadow"
+  ]
+}
