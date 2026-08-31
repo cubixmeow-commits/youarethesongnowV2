@@ -14,55 +14,53 @@ That is `explore_failed` (not the earlier 404/`explore_unavailable` copy). There
 
 ## GitHub `main` tip (repo truth)
 
-- Expected reliability fix: `9f7a27576e61c5f9335a6894668d31828e3eb3ca`
-- Tip after handoff hash note: `07d3c8609d457a2207ed85c4a55ce3171bb27130`
-- Newer private-diagnostics/build-stamp commit: see **Final commit** below
+- Gemini model reliability fix: `9f7a27576e61c5f9335a6894668d31828e3eb3ca`
+- Private-build diagnostics (no `.env`): `e9b7482fd712b5f35fb5826e3cc20077e7daad77`
+- Current `main` tip: `8201020e26404e7fc77e56a53c13804c5f1d5e55`
 
 ## Deployment mechanism (verified)
 
 - Hostinger PHP app under `/yatsnV2/` is **owner-synchronized from Git** (`main`). It is **not** auto-deployed by GitHub Actions.
 - GitHub “deployments” for this repo are **GitHub Pages only** (`/docs` Meow Control). They do **not** update youarethesongnow.com PHP.
-- Therefore pushing to `main` does not by itself refresh Hostinger until the owner pulls/syncs that tree.
+- Pushing to `main` does not refresh Hostinger until the owner pulls/syncs that tree.
 
-## Live site inspection (from cloud agent)
+## Live site inspection (from cloud agent, before this fix)
 
 | Probe | Result |
 | --- | --- |
-| `GET /api/v1/health` | 200 `yatsn-v2` (no build field yet on old deploy) |
-| `GET /api/v1/explore-directions/readiness` | **401 unauthorized** → route **exists** (added in `9f7a275`) |
-| `POST /api/v1/explore-directions` (no session) | 401 unauthorized → route exists |
-| Live `/assets/js/explore.js` | **byte-identical** to repo (`md5 fa7d2ca6…`), includes `fields?.diagnostic` UI |
-| Asset `?v=` timestamps | ~2026-08-31 05:18–06:10 UTC (earlier same day) |
+| `GET /api/v1/health` | 200 `yatsn-v2` (no `build` field yet) |
+| `GET /api/v1/explore-directions/readiness` | **401** → route **exists** (from `9f7a275`) |
+| Live `/assets/js/explore.js` | **byte-identical** to repo, includes diagnostic UI |
+| Diagnostic suffix on iPhone | **Missing** |
 
-**Conclusion:** Hostinger already had the Explore reliability JS + readiness route from `9f7a275+`. Deployment was **not** stuck before that commit. The missing diagnostic suffix was caused by code that only exposed `error.fields.diagnostic` when `APP_DEBUG` or `APP_ENV=development` — Hostinger private site can run with production-like env while still being owner-only. **No `.env` edit is required** for the new fix.
+**Conclusion:** Hostinger already had Explore code from `9f7a275+`. The missing diagnostic was **not** primarily a stale-JS problem. Diagnostics were only attached when `APP_DEBUG` or `APP_ENV=development`. Hostinger can be private/owner-only while still using production-like env vars. **No `.env` edit is required.**
 
-Gemini provider logic was **not** changed again in this follow-up. First make the diagnostic visible; then interpret the exact status.
+Gemini provider logic was **not** changed again. Make the diagnostic visible first; then interpret the exact status.
 
-## Exact fix in this follow-up (git-only)
+## Exact fix (git-only, no `.env`)
 
-1. `BuildInfo::allowDiagnostics()` is true for **private Build 1** whenever `ALLOW_EXTERNAL_USERS` is false (already the Hostinger default / hard gate). No `APP_ENV` / `APP_DEBUG` change.
-2. Explore errors include `fields.diagnostic` + `fields.build` under that private-build rule.
-3. `GET /api/v1/health` includes a safe `build.commit` while private.
-4. Create page / Explore badge show the short commit so an iPhone can confirm the deploy without guessing.
-5. `app/build-stamp.php` is a fallback if `.git` is absent; Hostinger git sync prefers live `.git` HEAD.
+1. `BuildInfo::allowDiagnostics()` is true whenever `ALLOW_EXTERNAL_USERS` is false (already Hostinger’s private Build 1 gate).
+2. Explore errors include `fields.diagnostic` + `fields.build` under that rule.
+3. `GET /api/v1/health` includes safe `build.commit` while private.
+4. Create / Explore badge shows the short commit for iPhone deploy checks.
+5. Prefer live `.git` HEAD after Hostinger sync; `app/build-stamp.php` is FTP fallback only.
 
-## Smoke / diagnose on Hostinger
+## After Hostinger git sync
 
-After the owner syncs `main` on the host (no `.env` work):
+No `.env` work. From the host (optional):
 
 ```bash
-cd /path/to/yatsnV2   # Hostinger app root
 php bin/diagnose-gemini-explore.php
 php bin/diagnose-gemini-explore.php --smoke
 ```
 
-Or from any browser/phone (signed out):
+From the phone (signed out):
 
 ```text
 https://youarethesongnow.com/api/v1/health
 ```
 
-Expect `data.build.commit` to match the synced revision (12-char short hash).
+Expect `data.build.commit` (12-char short SHA from the synced checkout).
 
 ## Tests
 
@@ -71,26 +69,19 @@ php tests/run.php
 === Results: 953 passed, 0 failed ===
 ```
 
-## Exact iPhone retest (after Hostinger git sync)
+## Exact iPhone retest
 
-1. Soft-refresh `/create` (or clear tab) so `explore.js` reloads.
-2. Confirm the Explore badge shows `First build · Song DNA · <shortsha>` matching health `build.commit`.
-3. Discover a song → select portrait → **Explore options**.
-4. If it still fails, the status **must** include a parenthetical diagnostic, e.g.  
-   `We could not create visual directions… (provider-incomplete-output · build <shortsha>)`.
-5. Send that exact diagnostic string back before any further Gemini code changes.
-
-## What GPT / owners still need
-
-1. Owner Hostinger sync of latest `main` (git pull under `/yatsnV2/`). Cloud agent cannot SSH/FTP deploy. **No `.env` edits.**
-2. After sync: open `/api/v1/health` and confirm `build.commit`; then Explore once and paste the diagnostic (or success).
-3. Only then decide whether another Gemini request/model change is warranted.
+1. Someone syncs Hostinger `/yatsnV2` to latest `main` (git pull). **You do not need to edit `.env`.**
+2. Soft-refresh `/create`.
+3. Badge should show `First build · Song DNA · <shortsha>` matching health `build.commit`.
+4. Explore options once.
+5. On failure, status must include something like  
+   `(provider-incomplete-output · build <shortsha>)`.
+6. Send that exact diagnostic back before any further Gemini code changes.
 
 ## Final commit
 
-- **Hash:** `e5dfe824e2d2ef2701872a9f395acd31c2724388`
-- **Message:** Show Explore diagnostics on private Hostinger without .env
+- **Feature:** `e9b7482fd712b5f35fb5826e3cc20077e7daad77` — private-build diagnostics without `.env`
+- **Tip:** `8201020e26404e7fc77e56a53c13804c5f1d5e55` — stamp/handoff alignment
 - **Branch:** `main`
-- **Requires:** Hostinger git sync only (no `.env` changes)
-
-Stamp follow-up may bump `app/build-stamp.php` to match HEAD; Hostinger git checkouts prefer `.git` HEAD over the stamp.
+- **Requires:** Hostinger git sync only
