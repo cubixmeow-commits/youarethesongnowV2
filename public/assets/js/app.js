@@ -828,13 +828,73 @@
       { key: 'creditCost', label: 'Credits' },
     ]);
 
+    const renderStylesTable = (el, rows) => {
+      if (!rows.length) {
+        el.textContent = 'None yet.';
+        return;
+      }
+      const table = document.createElement('table');
+      table.innerHTML = '<thead><tr><th>Name</th><th>Status</th><th>Category</th><th>Key</th></tr></thead>';
+      const tbody = document.createElement('tbody');
+      rows.forEach((row) => {
+        const tr = document.createElement('tr');
+
+        const nameTd = document.createElement('td');
+        nameTd.textContent = row.name ?? '';
+
+        const statusTd = document.createElement('td');
+        const statusWrap = document.createElement('div');
+        statusWrap.className = 'owner-style-status';
+        const statusText = document.createElement('span');
+        statusText.className = 'owner-style-status__label';
+        statusText.textContent = row.status ?? '';
+        const toggleBtn = document.createElement('button');
+        toggleBtn.type = 'button';
+        toggleBtn.className = 'btn btn--ghost owner-style-toggle';
+        const setToggleLabel = (status) => {
+          toggleBtn.textContent = status === 'active' ? 'Deactivate' : 'Activate';
+          toggleBtn.title = status === 'active' ? 'Deactivate this style' : 'Activate this style';
+        };
+        setToggleLabel(row.status);
+        toggleBtn.addEventListener('click', async () => {
+          const next = row.status === 'active' ? 'inactive' : 'active';
+          toggleBtn.disabled = true;
+          try {
+            const res = await api(`/api/v1/owner/styles/${row.id}`, {
+              method: 'PATCH',
+              body: { status: next },
+            });
+            row.status = res.data.status;
+            statusText.textContent = row.status;
+            setToggleLabel(row.status);
+          } catch (err) {
+            toggleBtn.textContent = 'Failed';
+            toggleBtn.title = err.message || 'Could not update style.';
+            setTimeout(() => setToggleLabel(row.status), 1800);
+          } finally {
+            toggleBtn.disabled = false;
+          }
+        });
+        statusWrap.appendChild(statusText);
+        statusWrap.appendChild(toggleBtn);
+        statusTd.appendChild(statusWrap);
+
+        const categoryTd = document.createElement('td');
+        categoryTd.textContent = row.category ?? '';
+
+        const keyTd = document.createElement('td');
+        keyTd.textContent = row.styleKey ?? '';
+
+        tr.append(nameTd, statusTd, categoryTd, keyTd);
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      el.innerHTML = '';
+      el.appendChild(table);
+    };
+
     const styles = await api('/api/v1/owner/styles');
-    renderTable($('[data-styles]'), styles.data, [
-      { key: 'name', label: 'Name' },
-      { key: 'status', label: 'Status' },
-      { key: 'category', label: 'Category' },
-      { key: 'styleKey', label: 'Key' },
-    ]);
+    renderStylesTable($('[data-styles]'), styles.data);
 
     $('#invite-form')?.addEventListener('submit', async (e) => {
       e.preventDefault();

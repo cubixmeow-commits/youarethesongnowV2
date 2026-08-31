@@ -99,6 +99,24 @@ final class StyleService
         return Database::one('SELECT * FROM styles WHERE public_id = :pid', ['pid' => $publicId]);
     }
 
+    public static function setStatus(string $publicId, string $status): array
+    {
+        if (!in_array($status, ['active', 'inactive'], true)) {
+            throw new \InvalidArgumentException('invalid_status');
+        }
+        $row = self::findByPublicId($publicId);
+        if ($row === null) {
+            throw new \RuntimeException('not_found');
+        }
+        $now = now_utc();
+        Database::exec(
+            'UPDATE styles SET status = :s, updated_at = :u WHERE id = :id',
+            ['s' => $status, 'u' => $now, 'id' => $row['id']]
+        );
+        $updated = Database::one('SELECT * FROM styles WHERE id = :id', ['id' => $row['id']]);
+        return self::public($updated);
+    }
+
     public static function productOptions(): array
     {
         return [
