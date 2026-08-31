@@ -21,6 +21,8 @@ This note is the daily “what matters now” list for CuBiX Meow and Brut. Keep
 
 ## Newly documented
 
+- **V1 sample showcase approved (2026-08-30):** Round 009 will copy all 77 finished V1 sample artworks into V2, replace the current hardcoded Home examples/background usage, add a progressively loaded Home carousel and add `/showcase` with the V1-style mixed-orientation masonry wall where images fall into place and lock together. The archive is internal development reference and must disclose visible legacy marks/text. Exact handoff: `design/V1_SAMPLE_SHOWCASE_HANDOFF.md`.
+
 - **Round 008 local baseline verified (2026-08-30):** the local Cursor checkout is clean, contains the complete YS production asset/handoff delivery, includes the owner-page style activate/deactivate control from `3953689`, and passes **178 tests with 0 failures**. The responsive redesign must preserve and re-verify that owner control. Cursor may commit locally but must not push or deploy without separate owner authorization.
 
 - **YS production identity integrated (2026-08-30):** flat/premium YS marks, wordmark, app icon, responsive atmosphere/Create backgrounds, Gallery empty-state art and paywall previews are wired into the current web/mobile app. Screenshot review pack: `design/review/round-008/`. Flutter remains documentation-only.

@@ -4,9 +4,9 @@
 
 **Branch:** `main`
 
-**Last updated by Cursor:** 2026-08-30 (Round 008.1 local correction pass)
+**Last updated by ChatGPT:** 2026-08-30 (Round 009 V1 sample showcase handoff)
 
-**Active round:** 008.1 (implemented locally — awaiting ChatGPT visual review)
+**Active round:** 009 (ready for Cursor implementation)
 
 **Workflow roles**
 
@@ -17,7 +17,7 @@
 
 ## Current Objective
 
-Integrate the delivered **YS monogram identity** and black/platinum/sapphire production assets into the current responsive web/mobile app. Preserve all application behavior and portrait deletion. Flutter remains documentation-only.
+Build the owner-approved V1 sample archive showcase in the current responsive web/mobile app. Copy all 77 V1 samples into V2, replace the old hardcoded Home imagery, add a lazy Home carousel and add `/showcase` with the V1-style falling/locking masonry wall. Preserve all application behavior, owner controls and portrait deletion. Flutter remains documentation-only.
 
 ### Verified local baseline before implementation
 
@@ -72,6 +72,22 @@ Production assets delivered. Integration hooks and responsive usage are document
 ---
 
 ## CURRENT HANDOFF
+
+### ChatGPT → Cursor (Round 009 — 2026-08-30)
+
+The Round 008/008.1 YS redesign is accepted and synced. The next pass is the V1 sample showcase.
+
+- Canonical design/asset/interaction handoff: `design/V1_SAMPLE_SHOWCASE_HANDOFF.md`
+- Exact implementation inbox: `design/CHATGPT_NEXT_PASS.md`
+- Approved vault decision: `development-vault/05 Product Design/V1 Sample Showcase.md`
+- Verified source: `/Users/realiainreid/Documents/You Are The Song Now V2/repo V1 archive/sample_images`
+- Inventory: 77 images, about 108 MB, 29 JPEG, 48 PNG, 32 portrait, 33 square, 12 landscape.
+- Required V1 behavior: Masonry v4 + imagesLoaded v5 semantics, horizontal ordering, natural heights and relayout after progressively loaded batches.
+- Required V2 treatment: YS identity, dark editorial materials, no runtime CDN, accessible controls/dialog, reduced-motion mode and explicit legacy-content disclosure.
+- Remove Home references to the three current sample images and the old interlude background. Do not delete those launch files in this pass.
+- Commit locally and stop. Do not push or deploy without separate owner authorization.
+
+---
 
 ### Cursor → ChatGPT (Round 008.1 — 2026-08-30)
 
@@ -348,6 +364,10 @@ Production YS identity and system imagery integrated into the current responsive
 
 ChatGPT delivered the complete brand/system asset set, production manifest, responsive redesign plan and exact Cursor implementation instructions. Implementation and responsive screenshots remain pending.
 
+### Round 009 — V1 sample archive showcase (2026-08-30)
+
+Owner-approved handoff ready. All 77 V1 samples will be copied/optimized for V2, the Home imagery becomes archive-driven, and `/showcase` recreates the V1 falling/locking masonry behavior with progressive batches and V2 styling. Implementation pending.
+
 ---
 
 ## DESIGN SCREEN / PAGE STATUS
@@ -360,6 +380,7 @@ ChatGPT delivered the complete brand/system asset set, production manifest, resp
 | Navigation | Stable | Round 008 | YS mark/wordmark in chrome |
 | Auth/Account | Light | Round 004 | Lacquer panels |
 | YS production assets | Integrated | Round 008 | Web/mobile hooks live; see review pack |
+| V1 sample showcase | Ready for implementation | Round 009 | 77-image Home carousel + `/showcase` masonry wall |
 | Flutter spec | Documentation only | Round 008 prep | Native implementation deferred |
 
 ---
