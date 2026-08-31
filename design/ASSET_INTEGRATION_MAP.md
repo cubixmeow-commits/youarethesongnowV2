@@ -1,14 +1,14 @@
 ---
 type: asset-integration
-status: active
+status: production-assets-delivered
 updated: 2026-08-30
 area: visual-design
 phase: round-006-platinum-blue
 ---
 
-# Asset Integration Map
+# Production Asset Integration Map
 
-Drop-in guide for ChatGPT-generated system assets. Specs live in `design/ASSET_REQUESTS.md`. This map documents **where** each asset connects in the web prototype and how it should map to Flutter.
+Drop-in guide for delivered YS brand and system assets. Specs and prompts live in `design/PRODUCTION_ASSET_MANIFEST.md`. This map documents **where** each asset connects in the current web/mobile application. Flutter implementation remains deferred.
 
 System assets directory (create when delivering):
 
@@ -26,7 +26,7 @@ System assets directory (create when delivering):
 | **Phone file** | `public/assets/images/system/app-atmosphere-haze-phone.webp` |
 | **Desktop file** | `public/assets/images/system/app-atmosphere-haze-desktop.webp` |
 | **Selector / hook** | `body.app` `background-image` stack (first layer) |
-| **Mobile crop** | `background-size: cover`; `background-position: center top`; `background-attachment: fixed` |
+| **Mobile crop** | `background-size: cover`; `background-position: center top`; scrolls normally (do not use fixed attachment on iOS) |
 | **Desktop crop** | Same; desktop variant used at `min-width: 900px` via media query override in `app.css` |
 | **Blend / overlay** | Sits beneath existing radial gradients and grain (`body.app::before`). No multiply blend. Gradients remain for readability until asset is validated alone. |
 | **Fallback when absent** | `--asset-atmosphere: none` — black/graphite radial gradients + sapphire atmospheric glow + subtle SVG grain |
@@ -47,27 +47,29 @@ System assets directory (create when delivering):
 
 ---
 
-## 2. launch-mark-tile
+## 2. YS brand mark and wordmark
 
 | Field | Value |
 | --- | --- |
-| **Purpose** | App mark in top bar; future store icon reference |
+| **Purpose** | Selected YS identity in top bar/rail; separate app-icon tile |
 | **CSS variable** | `--asset-launch-mark` |
-| **File** | `public/assets/images/system/launch-mark-tile.webp` (+ optional `.png` master) |
+| **Files** | `public/assets/images/brand/ys-monogram-flat-platinum.svg`, `ys-wordmark.svg`, `ys-app-icon.webp` |
 | **Selector / hook** | `.brand__mark` in `templates/layouts/main.php` |
-| **Mobile crop** | 28×28 CSS px display; source 1024×1024 with 10% safe margin |
-| **Desktop crop** | Same mark; no separate desktop asset required |
-| **Blend / overlay** | `background-size: cover`; layered above CSS gradient fallback when variable is `none` |
+| **Mobile crop** | Flat SVG at 30–32 CSS px; wordmark approximately 132–150 CSS px wide |
+| **Desktop crop** | Flat SVG at 30–36 CSS px; wordmark approximately 150–190 CSS px wide |
+| **Blend / overlay** | No blend. Preserve transparent SVG edges and keep the mark platinum. |
 | **Fallback when absent** | CSS gradient mark: sapphire core + platinum/graphite rim |
-| **Flutter equivalent** | `Image.asset('assets/images/system/launch_mark_tile.webp', width: 28, height: 28)` beside wordmark in `VenueTopBar` |
+| **Flutter equivalent** | Documentation only for now; later use the flat SVG in the native asset bundle after web approval |
 
 ### Integration snippet (web)
 
 ```css
 :root {
-  --asset-launch-mark: url("/assets/images/system/launch-mark-tile.webp");
+  --asset-launch-mark: url("/assets/images/brand/ys-monogram-flat-platinum.svg");
 }
 ```
+
+Prefer real `<img>` elements for the mark and wordmark so intrinsic dimensions, alternate text behavior and responsive sizing are explicit. Keep `--asset-launch-mark` only as a compatibility hook during the transition.
 
 ---
 
@@ -122,14 +124,27 @@ System assets directory (create when delivering):
 
 ---
 
-## 5. paywall-world-preview (deferred)
+## 5. paywall-world-preview
 
 | Field | Value |
 | --- | --- |
-| **CSS hook** | Not wired in Round 005 — add to `.paywall-panel` when asset arrives |
-| **Suggested variable** | `--asset-paywall-preview` |
-| **File** | `public/assets/images/system/paywall-world-preview.webp` |
-| **Flutter equivalent** | Header image in paywall sheet |
+| **CSS hooks** | `--asset-paywall-preview-phone`, `--asset-paywall-preview-desktop` |
+| **Phone file** | `public/assets/images/system/paywall-world-preview-phone.webp` |
+| **Desktop file** | `public/assets/images/system/paywall-world-preview-desktop.webp` |
+| **Selector / hook** | `.paywall-panel` media region or a new presentational child inside the existing paywall container |
+| **Mobile crop** | 1:1 header; `object-position: center`; membership sheet may overlap lower edge |
+| **Desktop crop** | 16:10 media side in a two-column paywall composition; `object-position: center` |
+| **Overlay rule** | Billing, renewal and legal copy remain live HTML on an opaque surface; never bake text into the image |
+| **Flutter equivalent** | Documentation only for now; later header/media asset in the native paywall sheet |
+
+### Integration snippet (web)
+
+```css
+:root {
+  --asset-paywall-preview-phone: url("/assets/images/system/paywall-world-preview-phone.webp");
+  --asset-paywall-preview-desktop: url("/assets/images/system/paywall-world-preview-desktop.webp");
+}
+```
 
 ---
 
@@ -139,7 +154,7 @@ System assets directory (create when delivering):
 2. Update `:root` variables in `public/assets/css/app.css` (or a dedicated `assets.css` import if preferred later).
 3. Capture new screenshots in `design/review/round-XXX/`.
 4. Note any crop/overlay adjustments in `design/CHATGPT_CURSOR_DESIGN_HANDOFF.md`.
-5. Mirror filenames under Flutter `assets/images/system/` per `design/FLUTTER_DESIGN_HANDOFF.md`.
+5. Do not copy assets into Flutter or scaffold native UI during this pass.
 
 ## Do not
 

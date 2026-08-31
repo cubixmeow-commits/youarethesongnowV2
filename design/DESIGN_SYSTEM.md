@@ -6,7 +6,7 @@ area: visual-design
 phase: round-006-platinum-blue
 ---
 
-# You Are The Song Now — Design System (Pass 1)
+# You Are The Song Now — YS Design System
 
 This document is the web prototype of the long-term visual system for Flutter iOS/Android and desktop/web. Prefer concepts that map cleanly to `ThemeData`, `ColorScheme`, `TextTheme`, and reusable widgets.
 
@@ -15,6 +15,8 @@ This document is the web prototype of the long-term visual system for Flutter iO
 A premium creative app: choose music → create a visual interpretation → enter the world of the song → collect and explore the imagery.
 
 Benchmark: flagship App Store product, not a responsive marketing website.
+
+Selected identity: the intertwined YS monogram and `YouAreTheSongNow` wordmark documented in `design/BRAND_SYSTEM_YS.md`. Production assets are listed in `design/PRODUCTION_ASSET_MANIFEST.md`.
 
 ## Platform philosophy
 
@@ -171,9 +173,12 @@ Prefer `max-width` content shells (~430–720 for reading; wider for artwork gri
 | App chrome | `templates/layouts/main.php` |
 | Asset requests | `design/ASSET_REQUESTS.md` |
 | Asset integration | `design/ASSET_INTEGRATION_MAP.md` |
+| Production assets | `design/PRODUCTION_ASSET_MANIFEST.md` |
+| Responsive redesign | `design/RESPONSIVE_REDESIGN_PLAN.md` |
+| Future commerce insertion points | `design/COMMERCE_UI_INSERTION_MAP.md` |
 | Flutter handoff | `design/FLUTTER_DESIGN_HANDOFF.md` |
 | This system | `design/DESIGN_SYSTEM.md` |
 
 ## Pass status
 
-Round 006 converts the locked venue system to **platinum + blue on black** (sapphire/cobalt architectural light). Asset specs and Flutter handoff updated. Await ChatGPT asset generation and visual review.
+Round 006 converted the venue system to **platinum + blue on black**. On 2026-08-30 the YS identity and complete production raster/SVG asset set were delivered. The next pass integrates those files into the current web/mobile application and verifies responsive behavior before any Flutter implementation begins.

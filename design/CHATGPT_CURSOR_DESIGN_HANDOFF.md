@@ -2,9 +2,11 @@
 
 # ChatGPT ↔ Cursor Design Handoff
 
-**Branch:** `cursor/visual-music-adventure-94fc`  
-**Last updated by Cursor:** 2026-08-30 (Round 005)  
-**Active round:** 005 (awaiting ChatGPT visual review)
+**Branch:** `main`
+
+**Last updated by ChatGPT:** 2026-08-30 (production asset delivery)
+
+**Active round:** 008 (ready for Cursor implementation)
 
 **Workflow roles**
 
@@ -15,7 +17,7 @@
 
 ## Current Objective
 
-Premium mobile-app-first creative experience expressed as a **private creative venue** (materials, light, pacing — not literal hotel UI). Flutter-portable tokens locked Round 005. Portrait deletion remains supported.
+Integrate the delivered **YS monogram identity** and black/platinum/sapphire production assets into the current responsive web/mobile app. Preserve all application behavior and portrait deletion. Flutter remains documentation-only.
 
 ---
 
@@ -23,7 +25,7 @@ Premium mobile-app-first creative experience expressed as a **private creative v
 
 ### Navigation
 
-Unchanged. Mobile bottom tabs + ~88px desktop rail. Brass-tinted active state (Round 005). Nav hotfix not applied.
+Unchanged. Mobile bottom tabs + ~88px desktop rail. Round 006 converted the active system from brass to platinum/sapphire/cobalt. Nav hotfix not applied.
 
 ### Create
 
@@ -40,7 +42,7 @@ Unchanged. Mobile bottom tabs + ~88px desktop rail. Brass-tinted active state (R
 
 ### Design system (locked baseline)
 
-Material hierarchy: **midnight → stone → lacquer → hairline/brass → artwork**
+Material hierarchy: **black → graphite → lacquer → platinum/sapphire light → artwork**
 
 Docs: `DESIGN_SYSTEM.md`, `ASSET_INTEGRATION_MAP.md`, `FLUTTER_DESIGN_HANDOFF.md`
 
@@ -48,14 +50,16 @@ Docs: `DESIGN_SYSTEM.md`, `ASSET_INTEGRATION_MAP.md`, `FLUTTER_DESIGN_HANDOFF.md
 
 ## Asset Inventory
 
-Awaiting ChatGPT generation. Integration hooks verified and documented.
+Production assets delivered. Integration hooks and responsive usage are documented in `PRODUCTION_ASSET_MANIFEST.md`, `RESPONSIVE_REDESIGN_PLAN.md` and `ASSET_INTEGRATION_MAP.md`.
 
 | Asset | Hook | Fallback |
 | --- | --- | --- |
-| app-atmosphere-haze | `--asset-atmosphere` | CSS gradients + grain |
-| launch-mark-tile | `--asset-launch-mark` | CSS gradient mark |
-| creative-session-backdrop | `--asset-session-phone/desktop` | Launch groove photos |
-| empty-collection-still | `--asset-empty-collection` | CSS gradient frame |
+| YS flat monogram + wordmark | top bar/rail | Delivered under `public/assets/images/brand/` |
+| YS premium monogram + app icon | brand/reveal/icon contexts | Delivered under `public/assets/images/brand/` |
+| app-atmosphere-haze | `--asset-atmosphere` | Phone + desktop delivered |
+| creative-session-backdrop | `--asset-session-phone/desktop` | Phone + desktop delivered |
+| empty-collection-still | Gallery zero state | Transparent WebP delivered |
+| paywall-world-preview | Paywall media | Phone + desktop delivered |
 
 ---
 
@@ -141,7 +145,15 @@ Stop for ChatGPT review of `design/review/round-005/`. Do not start Round 006 un
 
 ### ChatGPT → Cursor
 
-*(Awaiting Round 005 review / Round 006 inbox.)*
+#### Production delivery
+
+- Final YS brand assets and responsive system imagery are present in the repository.
+- Exact dimensions and final prompts: `design/PRODUCTION_ASSET_MANIFEST.md`.
+- Phone/desktop composition plan: `design/RESPONSIVE_REDESIGN_PLAN.md`.
+- Exact implementation instructions: `design/CHATGPT_NEXT_PASS.md` (Round 008).
+- Do not begin Flutter, commerce or unrelated functional work.
+
+Cursor should implement Round 008, capture the required responsive review pack, run tests, update this handoff, commit/push and stop for ChatGPT visual review.
 
 ---
 
@@ -163,6 +175,18 @@ Venue pivot from instrument UI. Merged via PR #13.
 **ChatGPT Response:** *(pending)*  
 **Outcome:** *(pending)*
 
+### Round 006 — Platinum and sapphire conversion (2026-08-30)
+
+Warm brass/amber chrome was replaced by black/graphite, platinum, deep sapphire and restrained cobalt. Round 006 screenshots are committed.
+
+### Round 007 — YS identity selection (2026-08-30)
+
+The intertwined YS monogram was selected and documented. Final production geometry/assets were still pending.
+
+### Round 008 preparation — Production asset delivery (2026-08-30)
+
+ChatGPT delivered the complete brand/system asset set, production manifest, responsive redesign plan and exact Cursor implementation instructions. Implementation and responsive screenshots remain pending.
+
 ---
 
 ## DESIGN SCREEN / PAGE STATUS
@@ -176,7 +200,8 @@ Venue pivot from instrument UI. Merged via PR #13.
 | Gallery | Stable baseline | Round 005 | Empty state hook |
 | Navigation | Stable | Round 005 | Brass active tint |
 | Auth/Account | Light | Round 004 | Lacquer panels |
-| Flutter spec | Ready | Round 005 | Handoff doc |
+| YS production assets | Delivered | Round 008 prep | Awaiting web integration |
+| Flutter spec | Documentation only | Round 008 prep | Native implementation deferred |
 
 ---
 
@@ -186,11 +211,13 @@ Venue pivot from instrument UI. Merged via PR #13.
 - Flutter/Dart future — use handoff docs
 - Artwork dominates; avoid dating/SaaS/glass/rainbow
 - Premium private venue via materials (not literal hotel UI)
+- Selected identity is the intertwined YS monogram
+- Brand palette is black/graphite, platinum and sapphire/cobalt; no brass/gold chrome
 - Material hierarchy: midnight → stone → lacquer → brass → artwork
 - Portrait delete supported
 - Bottom tabs + ~88px rail; no nav hotfix unless authorized
 - Square artwork/portrait crops
-- Brass sparingly — architectural light, not gold wash
+- Flutter implementation remains deferred until the current web/mobile experience is approved
 
 ---
 

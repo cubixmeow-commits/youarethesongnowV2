@@ -1,6 +1,6 @@
 # YouAreTheSongNow — YS Brand System
 
-**Status:** selected direction for implementation
+**Status:** selected direction; production asset set delivered 2026-08-30
 **Phase:** current web/mobile site first; Flutter later
 **Visual target:** premium private creative venue; black + platinum + sapphire/cobalt
 
@@ -18,6 +18,13 @@ Character:
 
 The mark should feel like a premium object, not a glowing gaming emblem.
 
+The delivered identity has two deliberate reproduction tiers:
+
+- **premium rendered mark:** use at 96 CSS px and larger, or in launch/reveal moments where the satin-platinum material can be seen;
+- **flat monogram:** use for navigation, print, embroidery, one-color merchandise, accessibility fallbacks and any placement where glow or bevel detail would collapse.
+
+Do not redraw either tier in CSS. Do not attempt to make the flat mark look three-dimensional. Both tiers use the same intertwined Y/S idea, while the flat version removes fragile intersections and surface detail for reliable reproduction.
+
 ## 2. Wordmark
 
 Primary wordmark:
@@ -26,7 +33,7 @@ Primary wordmark:
 
 Use a refined high-contrast serif/display face already compatible with the project direction. Keep UI/body copy in the existing clean sans system.
 
-Wordmark should be platinum/cool-white on black. Do not add gradients to the letters.
+Wordmark should be platinum/cool-white on black. Do not add gradients to the letters. Use the supplied SVG as the implementation asset; live text remains the accessible name.
 
 ## 3. Palette
 
@@ -120,21 +127,26 @@ Because poster/T-shirt ordering is planned next, the brand mark must have:
 
 Do not rely on glow to define the silhouette.
 
-## 11. Asset family to create
+## 11. Production asset family
 
-Target paths for future final assets:
+Delivered paths:
 
 - `public/assets/images/brand/ys-monogram-premium.png`
 - `public/assets/images/brand/ys-monogram-flat-platinum.svg`
 - `public/assets/images/brand/ys-monogram-flat-white.svg`
 - `public/assets/images/brand/ys-monogram-flat-black.svg`
 - `public/assets/images/brand/ys-app-icon.png`
+- `public/assets/images/brand/ys-app-icon.webp`
 - `public/assets/images/brand/ys-wordmark.svg`
 - `public/assets/images/system/app-atmosphere-haze-phone.webp`
 - `public/assets/images/system/app-atmosphere-haze-desktop.webp`
 - `public/assets/images/system/creative-session-backdrop-phone.webp`
 - `public/assets/images/system/creative-session-backdrop-desktop.webp`
 - `public/assets/images/system/empty-collection-still.webp`
+- `public/assets/images/system/paywall-world-preview-phone.webp`
+- `public/assets/images/system/paywall-world-preview-desktop.webp`
+
+Exact dimensions, usage, source prompts and responsive behavior are recorded in `design/PRODUCTION_ASSET_MANIFEST.md`.
 
 ## 12. Important implementation rule
 

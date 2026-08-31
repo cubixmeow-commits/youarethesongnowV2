@@ -1,7 +1,7 @@
 ---
 type: product-design-contract
 status: owner-approved-for-private-development-build-1
-updated: 2026-08-28
+updated: 2026-08-30
 area: visual-design
 owners:
   - CuBiX Meow
@@ -19,7 +19,7 @@ CuBiX Meow approved this direction for Private Development Build 1 on 2026-08-28
 
 ## Visual thesis
 
-**A modern record sleeve meets a cinematic photo book: dark, tactile, editorial and emotionally charged, with generated artwork providing the spectacle and the interface behaving like quiet album packaging.**
+**A platinum threshold in a silent black gallery, lit by deep sapphire: dark, tactile, editorial and emotionally charged, with generated artwork providing the spectacle and the interface behaving like quiet album packaging.**
 
 The product should feel created by people who love music and visual art. It should not look like an AI dashboard, science-fiction control panel or generic gradient-based SaaS product.
 
@@ -48,7 +48,7 @@ Replace:
 
 ## Design concept: The Listening Room
 
-The interface behaves like a private listening room, record sleeve and photographer's contact sheet rather than a machine console.
+The interface behaves like a private listening room, contemporary gallery, record sleeve and photographer's contact sheet rather than a machine console. The selected intertwined YS monogram is the primary identity. Production usage is governed by `design/BRAND_SYSTEM_YS.md` and `design/PRODUCTION_ASSET_MANIFEST.md`.
 
 Music influence appears through:
 
@@ -142,18 +142,19 @@ Use a restrained dark-first system whose neutral surfaces allow varied artwork t
 - `Charcoal`: a modestly lifted working surface, used sparingly.
 - `Paper`: warm off-white for primary text and occasional editorial sections.
 - `Muted ink`: quiet gray-beige for supporting copy and metadata.
-- `Stage light`: one warm vermilion/coral accent for the primary action and selected state.
+- `Platinum`: cool-white hierarchy, hairlines and the YS mark.
+- `Deep sapphire`: spatial depth, focus and calm selected states.
+- `Cobalt`: one restrained high-value action or active moment.
 - Semantic success, warning and error colors remain separate and are never used decoratively.
 
-Directionally, use OKLCH tokens similar to:
+Directionally, use the following sRGB anchors and convert them into tested semantic tokens where appropriate:
 
 ```css
---color-bg: oklch(0.145 0.012 285);
---color-surface: oklch(0.205 0.014 285);
---color-text: oklch(0.94 0.018 80);
---color-text-muted: oklch(0.72 0.018 80);
---color-accent: oklch(0.66 0.19 30);
---color-accent-strong: oklch(0.59 0.2 30);
+--color-bg: #0A0A0A;
+--color-surface: #1B1D21;
+--color-text: #E6E7EA;
+--color-accent-sapphire: #0D1B3D;
+--color-accent-cobalt: #1E4CFF;
 ```
 
 These are initial art-direction values, not acceptance-tested final values. Build 1 must verify gamut and WCAG 2.2 Level AA contrast for every rendered text/control pair and provide increased-contrast behavior.
@@ -162,6 +163,9 @@ Rules:
 
 - one filled accent action per decision view;
 - no blue-purple gradient as the main brand treatment;
+- no amber, brass or gold as brand chrome;
+- sapphire behaves like architectural depth, not a large painted panel;
+- cobalt remains rare enough to preserve action hierarchy;
 - no accent-colored decorative body text that resembles a link;
 - use semantic tokens rather than raw colors in components;
 - image color may bleed edge to edge while controls remain inside safe margins;
@@ -296,4 +300,4 @@ Build 1 design is accepted only when CuBiX Meow and Brut agree that it:
 
 ## Approval status
 
-CuBiX Meow and Brut authorized Private Development Build 1 and directed V2 to take inspiration from V1 while becoming more music-inspired and less visibly AI-generated. The exact design direction above awaits owner approval before it becomes the fixed visual contract.
+CuBiX Meow and Brut authorized Private Development Build 1 and directed V2 to take inspiration from V1 while becoming more music-inspired and less visibly AI-generated. CuBiX Meow selected the YS black/platinum/sapphire refinement on 2026-08-30. Production identity and system assets are delivered. Exact overlay strength, cropping and responsive placement remain subject to web/mobile screenshot review. Flutter implementation remains deferred.

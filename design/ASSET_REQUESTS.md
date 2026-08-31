@@ -1,17 +1,29 @@
 ---
 type: asset-requests
-status: active
+status: fulfilled
 updated: 2026-08-30
 area: visual-design
 phase: round-006-platinum-blue
 collaborator: ChatGPT image generation
 ---
 
-# Asset Request Manifest — Round 006 (Platinum + Blue on Black)
+# Asset Request Manifest — Round 006 (Fulfilled)
 
 Assets support a **premium private venue** on a **platinum + sapphire/cobalt on black** palette. Luxury automotive interior + gallery + Apple-grade dark interface. Not gaming RGB, neon fog, cyberpunk chrome, or casino gold.
 
 User-generated artwork remains the dominant content. Integrate via replaceable paths under `public/assets/images/system/`.
+
+## Delivery status
+
+All requested production assets were delivered on 2026-08-30. Exact dimensions, responsive rules and generation prompts are recorded in `design/PRODUCTION_ASSET_MANIFEST.md`.
+
+| Request | Status | Delivered file(s) |
+| --- | --- | --- |
+| app-atmosphere-haze | Delivered | `app-atmosphere-haze-phone.webp`, `app-atmosphere-haze-desktop.webp` |
+| launch-mark-tile | Superseded by selected YS identity | `public/assets/images/brand/ys-app-icon.png`, `ys-app-icon.webp`, flat SVG monograms |
+| creative-session-backdrop | Delivered | `creative-session-backdrop-phone.webp`, `creative-session-backdrop-desktop.webp` |
+| empty-collection-still | Delivered | `empty-collection-still.webp` |
+| paywall-world-preview | Delivered | `paywall-world-preview-phone.webp`, `paywall-world-preview-desktop.webp` |
 
 ---
 
@@ -56,7 +68,7 @@ Raster asset in `assets/images/system/`; `DecorationImage` on scaffold `backgrou
 
 ---
 
-## 2. launch-mark-tile
+## 2. launch-mark-tile (superseded by YS identity)
 
 **Purpose**  
 App identity mark: entry, aperture, private portal, curated world. Not literal music symbolism.
@@ -84,7 +96,7 @@ Opaque (for app icon testing) plus optional transparent version for in-app chrom
 No letterforms, no music notes, no faces, no gradients that band badly at 29px.
 
 **Intended placement**  
-`public/assets/images/system/launch-mark-tile.png` (and `.webp`) beside brand wordmark in `.app-topbar`.
+Use `public/assets/images/brand/ys-monogram-flat-platinum.svg` in `.app-topbar`. The rendered tile is `public/assets/images/brand/ys-app-icon.webp` and is reserved for icon/tile contexts.
 
 **Export**  
 PNG master + WebP derivative.
@@ -170,7 +182,7 @@ Raster empty-state illustration widget above `Text`.
 
 ---
 
-## 5. paywall-world-preview (optional, defer)
+## 5. paywall-world-preview (delivered)
 
 **Purpose**  
 Emotional still beside membership panel so paywall feels like invitation into a world, not a billing funnel.
@@ -179,7 +191,7 @@ Emotional still beside membership panel so paywall feels like invitation into a 
 Create summary paywall panel (`[data-paywall]` presentation).
 
 **Required dimensions**  
-1600 × 1000 (16:10) and 1200 × 1200 (1:1 crop).
+1600 × 1000 (16:10) and 1200 × 1200 (1:1 independently composed phone variant).
 
 **Composition**  
 Cinematic threshold into a luminous landscape. Silhouettes optional only (no recognizable faces). Soft left third darker for text overlay safe area.
@@ -197,7 +209,7 @@ Opaque.
 No logos, no pricing text in image, no couples-as-dating-ad framing, no steamy/seductive styling.
 
 **Intended placement**  
-`public/assets/images/system/paywall-world-preview.webp`
+`public/assets/images/system/paywall-world-preview-desktop.webp` and `public/assets/images/system/paywall-world-preview-phone.webp`
 
 **Export**  
 WebP.
@@ -209,11 +221,11 @@ Raster header in paywall sheet.
 
 ## Delivery checklist for ChatGPT
 
-For each approved asset, provide:
+Completed:
 
 1. Final file(s) at requested pixel sizes  
 2. Filename matching this manifest  
 3. Brief note if composition differs from spec  
 4. Drop into vault or `public/assets/images/system/` for Cursor integration  
 
-Round 004 CSS ships with tokenized hooks so these can drop in without functional changes.
+The repository now contains the production files. Cursor should follow `design/ASSET_INTEGRATION_MAP.md` and `design/RESPONSIVE_REDESIGN_PLAN.md` for integration without functional changes.

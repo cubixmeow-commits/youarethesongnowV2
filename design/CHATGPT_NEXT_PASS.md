@@ -1,215 +1,233 @@
-# YouAreTheSongNow — ChatGPT Next Design Pass
+# YouAreTheSongNow — Cursor Implementation Instructions
 
-**Round:** 007  
-**Written by:** ChatGPT  
-**Date:** 2026-08-30  
+**Round:** 008
+
+**Written by:** ChatGPT
+
+**Date:** 2026-08-30
+
 **Status:** Ready for Cursor
 
-# Round 007 — Implement the selected YS identity into the current web/mobile app
+**Scope:** Current web/mobile application only
 
-The selected brand direction is the **YS monogram** documented in:
+# Round 008 — Integrate the production YS identity and responsive art system
 
-`design/BRAND_SYSTEM_YS.md`
+Production assets now exist in the repository. This pass replaces the CSS placeholders and provisional warm/groove imagery with the delivered YS identity and black/platinum/sapphire system, then refines the real phone and desktop compositions around those assets.
 
-This round is about translating that identity into the real responsive site/app shell so mobile and desktop begin to look like the chosen black / platinum / sapphire reference system.
+## Required reading
 
-## Critical product constraint
+Read these files completely before editing:
 
-**Do not begin Flutter implementation.**
+1. `AGENTS.md`
+2. required Current Project and Build 1 contracts named there
+3. `design/BRAND_SYSTEM_YS.md`
+4. `design/DESIGN_SYSTEM.md`
+5. `design/PRODUCTION_ASSET_MANIFEST.md`
+6. `design/RESPONSIVE_REDESIGN_PLAN.md`
+7. `design/ASSET_INTEGRATION_MAP.md`
+8. `design/CHATGPT_CURSOR_DESIGN_HANDOFF.md`
 
-The current PHP/web app remains the product we are actively building. Flutter documentation may be kept synchronized, but native implementation is deferred until the existing product experience, generation workflow, commerce, credits/subscription behavior, ordering flows, and visual system are much further along.
+Inspect every delivered image at full resolution before integrating it.
 
-## 1. Treat the selected visual board as a direction, not a literal screenshot
+## Hard boundaries
 
-Use the YS brand board qualities:
+- Do not begin Flutter implementation or create Flutter/Dart files.
+- Do not change APIs, routes, authentication, song lookup, portrait upload/delete, generation, credits, Stripe behavior, gallery data, sharing or business logic.
+- Do not implement Upscale, Order print or Order T-shirt.
+- Do not add fake commerce buttons or inactive controls that look functional.
+- Do not modify the production image/SVG files unless a verified encoding problem blocks rendering.
+- Preserve all approved product copy and no-em-dash rules.
 
-- near-black foundation
-- graphite/lacquer depth
-- platinum typography/hairlines
-- sapphire shadows
-- cobalt only for focused active/primary moments
-- large cinematic generated imagery
-- sparse premium composition
-- elegant YS identity
+## 1. Wire the delivered assets
 
-Do not copy fake UI labels or navigation from the generated concept image.
-Do not replace working product navigation/functionality with mockup UI.
+Set the current web asset hooks to the exact files below:
 
-## 2. Build a real responsive brand shell
+```css
+:root {
+  --asset-atmosphere: url("/assets/images/system/app-atmosphere-haze-phone.webp");
+  --asset-launch-mark: url("/assets/images/brand/ys-monogram-flat-platinum.svg");
+  --asset-empty-collection: url("/assets/images/system/empty-collection-still.webp");
+  --asset-session-phone: url("/assets/images/system/creative-session-backdrop-phone.webp");
+  --asset-session-desktop: url("/assets/images/system/creative-session-backdrop-desktop.webp");
+  --asset-paywall-preview-phone: url("/assets/images/system/paywall-world-preview-phone.webp");
+  --asset-paywall-preview-desktop: url("/assets/images/system/paywall-world-preview-desktop.webp");
+}
 
-### Mobile
+@media (min-width: 900px) {
+  :root {
+    --asset-atmosphere: url("/assets/images/system/app-atmosphere-haze-desktop.webp");
+  }
+}
+```
 
-Target first: 390–430px.
+Use real `<img>` markup for the top-bar flat monogram and wordmark when practical:
 
-- top bar should use a compact YS mark area + `YouAreTheSongNow` wordmark treatment
-- preserve current bottom navigation and routes
-- make the page feel edge-to-edge and native-app-like
-- use premium dark surfaces and restrained separators
-- maintain safe-area handling
-- minimum interactive hit area 44px; prefer 48px where practical
-- reduce webpage-like container framing
+- mark: `public/assets/images/brand/ys-monogram-flat-platinum.svg`
+- wordmark: `public/assets/images/brand/ys-wordmark.svg`
+
+Keep an accessible brand name. Decorative duplicates must use empty alt text/hidden semantics.
+
+Do not use `background-attachment: fixed` on phone/iOS. Keep the existing fallback gradients behind/beside the files until screenshot review proves the images alone are readable.
+
+## 2. Shared phone shell
+
+Target 390–430px first and verify 320px.
+
+- top bar total height approximately 52–56px plus safe area;
+- 30–32px flat YS mark;
+- compact wordmark approximately 132–150px wide;
+- 16px page inset at 320px, 20px at 390px and above;
+- preserve current bottom navigation/routes and safe-area padding;
+- 44px minimum touch target, prefer 48px;
+- platinum text/hairlines, sapphire depth, cobalt only for current selection/focus/primary action;
+- remove any remaining brass/amber brand chrome;
+- do not put every section in a rounded card.
+
+## 3. Shared desktop shell
+
+- preserve the 88px navigation rail and its existing destinations;
+- use the flat YS mark in rail/top brand moments;
+- use the delivered desktop atmosphere anchored right/top;
+- content working max width 1120px, artwork-led pages may reach 1280px;
+- keep the same information architecture as phone;
+- use negative space, alignment and platinum hairlines before new panels/shadows.
+
+## 4. Home
+
+### Phone
+
+- First viewport is one poster: current artwork, compact YS identity, headline, one sentence, one primary action.
+- Top bar plus the primary action should fit in the initial `100svh` where practical.
+- Move Sign in out of the current interrupting middle strip; keep it available as a quiet shell/secondary action without changing its route.
+- Keep examples as an artwork-first horizontal rail with a visible partial next item and keyboard/touch access.
 
 ### Desktop
 
-- preserve compact ~88px rail
-- apply YS identity to rail/top branding
-- let artwork and content breathe
-- use platinum hairlines and sapphire depth instead of generic cards
-- desktop is an expanded version of mobile, not a separate corporate site
+- Use one full-bleed artwork plane after the rail, with copy no wider than 440px in the calm tonal region.
+- Present examples as an open editorial artwork row, not feature cards.
+- Do not add a SaaS feature grid, logo cloud, stats or dashboard preview.
 
-## 3. Home
+## 5. Create
 
-Refine the real Home screen around the chosen brand language.
+All existing fields and behavior remain intact.
 
-Priorities:
+### Phone
 
-- compact YS identity
-- cinematic art as the dominant element
-- concise message and one strong action
-- premium gallery-like spacing
-- examples should resemble collected works rather than marketing feature cards
+- Integrate `creative-session-backdrop-phone.webp` as one continuous page atmosphere under a strong readability veil.
+- Keep Song, People and Direction as the persistent three-stage sequence.
+- Song fields remain together with the lookup action immediately after them.
+- People reads as a contact-sheet tray. Selected and delete states remain distinct and fully accessible.
+- Direction options are tactile rows/tiles with restrained selected treatment.
+- Move the overview after the active work rather than letting a tall card compete with an unfinished first stage.
+- A sticky generation action is allowed only after the draft is ready and must respect keyboard/safe-area behavior.
 
-Do not reintroduce dating/couple-first brand identity.
-Do not create a SaaS feature grid.
+### Desktop
 
-## 4. Create
+- Use a 62/38 main/overview split.
+- Main form column maximum approximately 640px.
+- Sticky overview uses alignment and separators rather than heavy card chrome.
+- Move the stage navigation into the main content header; do not leave it detached at the far-right page edge.
+- Anchor `creative-session-backdrop-desktop.webp` right/top and keep the form in its calm dark field.
 
-Keep all existing fields, upload, song lookup, portrait deletion, selection, generation, and state behavior.
+## 6. Gallery and reveal
 
-Translate the screen visually:
+### Gallery empty state
 
-- YS identity should be present but subtle
-- song section = one composed source area
-- portraits = curated gallery/contact-sheet selection
-- delete remains secondary and safe
-- direction controls = tactile premium selectors
-- cobalt reserved for selected/focus/final action
-- final Generate action should feel like the visual culmination
+- Replace the CSS placeholder square with a real `<img>` using `empty-collection-still.webp`.
+- Use empty alt text because the adjacent heading/copy explains the state.
+- Maximum 240px on phone and 300px on desktop.
+- Add one real primary link/action to the existing Create route if one is not already present.
+- Do not add another frame/card around the supplied aperture artwork.
 
-Avoid large glowing neon controls.
+### Populated Gallery
 
-## 5. Gallery + Reveal
+- Keep artwork-first proportions and real orientation.
+- Metadata stays sparse and outside the artwork.
+- Touch actions remain available without hover; desktop focus/hover may reveal secondary actions.
 
-Gallery should become a strong expression of the brand:
+### Reveal
 
-- larger artwork priority
-- cool platinum hierarchy
-- very sparse metadata
-- sapphire/cobalt interaction only
-- empty state uses current asset hook until custom art is delivered
+- Phone: artwork owns the first viewport; actions follow in the existing functional order.
+- Desktop: large artwork stage left, quiet metadata/actions right.
+- Do not add commerce actions yet.
+- Do not place the YS mark over user artwork.
 
-Reveal should be audited for the same visual system. Do not make it a generic bordered result card.
+## 7. Paywall presentation
 
-## 6. Brand mark implementation strategy
+Preserve every membership, Checkout, recovery and prepared-creation behavior.
 
-We do not yet have final production vector geometry for the YS monogram.
+### Phone
 
-For this round:
+- Add `paywall-world-preview-phone.webp` as a square media header partially covered by the existing membership sheet/panel.
+- Billing, renewal, credits, cancellation and legal copy remain live HTML on an opaque readable surface.
 
-- create a clean replaceable brand component / hook in markup/CSS
-- do NOT attempt to trace a complicated faux-3D logo into fragile CSS
-- if a temporary simplified `YS` typographic/geometry mark is needed, clearly label it temporary
-- use paths/naming from `design/BRAND_SYSTEM_YS.md`
-- make replacing the placeholder with final SVG/PNG trivial
+### Desktop
 
-The final monogram will eventually need flat merchandise-safe versions as well as a premium rendered version.
+- Use `paywall-world-preview-desktop.webp` as the media side of a two-column composition.
+- Keep all copy away from the bright horizon.
+- This is one membership invitation, not a SaaS pricing-card grid.
 
-## 7. Commerce readiness — prepare, do not implement ordering yet
+## 8. Motion and accessibility
 
-The next product phase will include image upscaling and ordering posters / T-shirts.
+- Entry/cover reveal: 420ms opacity/blur/12px translate.
+- Stage advance: 220ms directional translate/opacity.
+- Press feedback: 140ms and no smaller than scale 0.97.
+- No continuous background animation or mobile parallax.
+- Honor reduced motion and increased contrast.
+- Verify keyboard operation, focus visibility/return, announced errors/status, 16px mobile inputs and non-color selection cues.
 
-During this design pass, ensure generated-art/gallery/reveal layouts have sensible places for future secondary actions such as:
+## 9. Required responsive review
 
-- Upscale
-- Order print
-- Order T-shirt
+Verify at:
 
-But **do not invent or implement commerce/backend behavior in Round 007** unless it already exists.
-Do not add fake checkout buttons that appear functional.
+- 320 × 568
+- 390 × 844
+- 430 × 932
+- 768 × 1024
+- 900 × 900
+- 1440 × 900
+- 200% browser zoom
 
-Instead document recommended insertion points in:
-
-`design/COMMERCE_UI_INSERTION_MAP.md`
-
-Create that file with:
-
-- Reveal insertion point
-- Gallery item action entry point
-- mobile action-sheet recommendation
-- desktop action placement
-- poster/T-shirt preview entry point
-- where upscale status/progress could appear
-- accessibility/touch requirements
-- what backend contracts will eventually be needed (high-level only)
-
-This will prepare us for the next functional phase without mixing it into brand implementation.
-
-## 8. Update design docs
-
-Update where needed:
-
-- `design/DESIGN_SYSTEM.md`
-- `design/ASSET_REQUESTS.md`
-- `design/ASSET_INTEGRATION_MAP.md`
-- `design/FLUTTER_DESIGN_HANDOFF.md` only to record the current web system for future use; do not scaffold Flutter
-- canonical handoff
-
-Explicitly state that `design/BRAND_SYSTEM_YS.md` is the selected identity direction.
-
-## 9. Review pack
-
-Create:
-
-`design/review/round-007/`
-
-Preferred screenshots:
+Create `design/review/round-008/` with:
 
 - `home-mobile-390.png`
 - `create-mobile-390-top.png`
 - `create-mobile-390-people.png`
 - `create-mobile-390-direction.png`
 - `gallery-mobile-390.png`
-- `reveal-mobile-390.png` if a representative state can be captured
+- `paywall-mobile-390.png`
+- `reveal-mobile-390.png` when a representative fixture exists
 - `home-desktop-1440.png`
 - `create-desktop-1440.png`
 - `gallery-desktop-1440.png`
+- `paywall-desktop-1440.png`
+- `reveal-desktop-1440.png` when a representative fixture exists
 
-Add README with:
+Add a README with exact viewport, fixture/state, crop/overlay adjustments and any known issue. Include at least one 320px overflow check and one 200% zoom note.
 
-- branch/commit
-- exact viewports
-- visual changes
-- placeholder vs production brand assets
-- remaining inconsistencies
-- what ChatGPT should judge
+## 10. Documentation and report
 
-## 10. Functionality / tests
+Update only where implementation evidence changes current truth:
 
-Preserve:
+- `design/DESIGN_SYSTEM.md`
+- `design/ASSET_INTEGRATION_MAP.md`
+- `design/CHATGPT_CURSOR_DESIGN_HANDOFF.md`
+- `development-vault/01 Current Project/Dashboard Snapshot.md` and `docs/dashboard-data.js` if the dashboard needs the implemented status
 
-- auth
-- routes
-- APIs
-- song lookup
-- portraits/upload/delete
-- generation logic
-- payment/subscription behavior
-- current navigation
+Do not add Flutter implementation. `design/FLUTTER_DESIGN_HANDOFF.md` may receive a brief parity note only.
 
-Run existing test suite and report results.
+Run the full existing test suite. Inspect the real browser at phone and desktop sizes. Review the diff for functional scope creep.
 
-## Report back
+Report in `design/CHATGPT_CURSOR_DESIGN_HANDOFF.md`:
 
-Update `design/CHATGPT_CURSOR_DESIGN_HANDOFF.md` with:
+1. exact files changed;
+2. which production assets are integrated;
+3. mobile and desktop composition decisions;
+4. crop/overlay values;
+5. accessibility/responsive checks;
+6. exact test result;
+7. screenshot paths;
+8. remaining visual issues, maximum three;
+9. confirmation that Flutter, commerce and application behavior were not changed.
 
-1. Round 007 implementation summary
-2. exact files changed
-3. mobile/desktop brand-shell decisions
-4. how final YS assets can drop in
-5. commerce insertion map summary
-6. tests/results
-7. screenshot references
-8. no more than 3 high-value questions
-9. confirmation that Flutter implementation was NOT started
-
-Commit/push and stop for ChatGPT review. Do not begin the upscaling/poster/T-shirt functional build yet.
+Commit and push the completed Round 008 pass, then stop for ChatGPT review.

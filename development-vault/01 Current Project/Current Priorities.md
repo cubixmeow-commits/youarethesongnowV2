@@ -21,6 +21,8 @@ This note is the daily “what matters now” list for CuBiX Meow and Brut. Keep
 
 ## Newly documented
 
+- **YS production identity delivered (2026-08-30):** the current web/mobile redesign now has final flat and premium YS marks, wordmark, app icon, phone/desktop atmosphere, Create backdrops, Gallery empty-state art and phone/desktop paywall previews. Integration and screenshot review are the next visual step. Flutter remains documentation-only.
+
 - **Gemini Interactions Song DNA (2026-08-30):** replaced legacy `generateContent` grounding. Live Springsteen/`Dancing in the Dark` incomplete structure traced to Search without enforced JSON schema. V1 JSON-repair recorded as historical emergency fallback only. Mandatory `store=false`.
 
 - **Final quality set approved:** 90 images, including 30 individual, 40 couple and 20 wedding/celebration compositions; 30 per orientation; every 15-style by three-tier combination tested twice.

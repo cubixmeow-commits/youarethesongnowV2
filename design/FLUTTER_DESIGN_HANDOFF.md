@@ -1,6 +1,6 @@
 ---
 type: flutter-handoff
-status: active
+status: documentation-only-deferred
 updated: 2026-08-30
 area: visual-design
 phase: round-006-platinum-blue
@@ -8,6 +8,8 @@ target: iOS + Android (Flutter)
 ---
 
 # Flutter / iOS Visual Design Handoff
+
+> **Current boundary:** Do not begin Flutter implementation. This file records future parity only. The active pass integrates and validates the delivered YS assets in the current web/mobile application.
 
 The web prototype (`public/assets/css/app.css`, templates) is the visual specification for the future Flutter app. This document maps tokens and components without prescribing implementation code.
 
@@ -194,10 +196,16 @@ Mirror `design/ASSET_INTEGRATION_MAP.md` paths under:
 assets/images/system/
   app_atmosphere_haze_phone.webp
   app_atmosphere_haze_desktop.webp
-  launch_mark_tile.webp
   creative_session_backdrop_phone.webp
   creative_session_backdrop_desktop.webp
   empty_collection_still.webp
+  paywall_world_preview_phone.webp
+  paywall_world_preview_desktop.webp
+
+assets/images/brand/
+  ys_monogram_flat_platinum.svg
+  ys_wordmark.svg
+  ys_app_icon.webp
 ```
 
 Declare in `pubspec.yaml`; load via `AssetImage` / `DecorationImage`.
@@ -227,6 +235,6 @@ Declare in `pubspec.yaml`; load via `AssetImage` / `DecorationImage`.
 | Asset hooks | Documented in `ASSET_INTEGRATION_MAP.md` |
 | Create flow structure | Stable; matches web stages |
 | Navigation IA | Stable (Create, Gallery, Account, Owner) |
-| Generated assets | Not yet delivered |
+| Generated assets | Delivered to web repository; native copy deferred |
 
-**Not ready without further work:** paywall art, procedural grain parity, full widget library implementation, iOS store icon pipeline.
+**Not ready without further work:** web visual approval, procedural grain parity, full widget library implementation and iOS store icon pipeline. No native scaffolding is authorized by this document.

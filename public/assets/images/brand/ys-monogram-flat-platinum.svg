@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">YS monogram</title>
+  <g fill="none" stroke="#E6E7EA" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M116 84 256 238 396 84M256 238v190" stroke-width="64"/>
+    <path d="M356 154c-30-30-84-38-127-18-50 24-61 72-20 101 23 16 58 22 88 34 54 20 66 65 34 99-39 42-116 46-164 8" stroke-width="58"/>
+  </g>
+</svg>
