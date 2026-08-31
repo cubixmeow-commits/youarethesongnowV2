@@ -5,6 +5,7 @@ declare(strict_types=1);
 require dirname(__DIR__) . '/app/bootstrap.php';
 
 use Yatsn\Api\ApiV1;
+use Yatsn\Api\ExploreApi;
 use Yatsn\Auth\SessionService;
 use Yatsn\Http\Request;
 use Yatsn\Http\Router;
@@ -33,6 +34,7 @@ if (Config::get('app.env') === 'development') {
 $request = Request::fromGlobals();
 $router = new Router();
 ApiV1::register($router);
+ExploreApi::register($router);
 
 $router->get('/', function () {
     $session = SessionService::current();
