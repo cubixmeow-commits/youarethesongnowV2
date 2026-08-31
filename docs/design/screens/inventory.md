@@ -27,7 +27,9 @@ Interactive client: `public/assets/js/app.js` (product) + `showcase.js` (marketi
 
 ```text
 Guest: Home → Showcase? → Sign in / Activate → Create
-Create: Song → People → Direction → Review → [Paywall?] → Generating → Image reveal
+Create (as-built Build 1): Song → People → Direction → Review → [Paywall?] → Generating → Image reveal
+Create (target architecture): Song → Song DNA → Quick Generate | Explore Options → [Fine Tune?] → Generate → Reveal
+  See create-flow.md — not implemented yet.
 Collection: Gallery → Image detail → share / download / regenerate / delete
 Account: profile / email / password / sessions / delete / sign out
 Owner: invitations, users, jobs, style activate/deactivate
@@ -41,6 +43,8 @@ Owner: invitations, users, jobs, style activate/deactivate
 | Authed | Create, Gallery, Account |
 | Owner | + Owner (secondary) |
 
+**Conceptual target (not shipped):** Create, Gallery, Discover, Account. See [create-flow.md](./create-flow.md) §10 before changing nav.
+
 ## Screen notes
 
 ### Home (`welcome.php`)
@@ -51,6 +55,8 @@ Legacy disclosure, orientation filters, Masonry + imagesLoaded, infinite/load-mo
 
 ### Create (`create.php`)
 Largest product surface. Progressive disclosure of People/Direction. Sticky summary on desktop. Paywall + generation progress. Dev Song DNA inspection panel. Portrait delete dialog.
+
+**Target architecture (documentation only):** Song DNA selection, Quick Generate / Explore Options / Fine Tune, DNA-aware generation experience, reveal CTAs Save/Share/Variation/Reimagine. Full map: [create-flow.md](./create-flow.md). Do not treat the style grid as the long-term primary creative control.
 
 ### Gallery / Image / Account / Owner
 Thin PHP shells; content hydrated by `app.js` + `/api/v1/*`.

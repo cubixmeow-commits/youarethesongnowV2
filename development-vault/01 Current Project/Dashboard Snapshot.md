@@ -105,7 +105,7 @@ The final quality set contains 90 generations, tests every launch-style and qual
 
 CuBiX Meow and Brut lifted the freeze for Private Development Build 1 on 2026-08-28. Cursor may now build the internal V2 foundation from the approved vault using Stripe sandbox, configurable development credits, private provider credentials, SQLite and local image storage. External access, live charges and commercial protected-lyrics use remain blocked until their unfinished gates are completed.
 
-The approved Build 1 visual direction preserves V1's dark cinematic atmosphere and artwork-led reveal while replacing its futuristic typography, blue-purple neon gradients, glass panels, glowing borders, emoji controls and AI-console presentation. The selected identity is an intertwined YS monogram on a black/graphite, platinum and sapphire/cobalt system. Round 008 integrated production flat/premium marks, wordmark, app icon, phone/desktop atmosphere, Create backdrops, Gallery empty-state art and paywall previews into the current web/mobile app (see `design/review/round-008/`). Round 009 integrated all 77 V1 sample artworks as a progressively loaded Home carousel and dedicated `/showcase` masonry page with legacy disclosure (see `design/review/round-009/`). On 2026-08-31 a permanent design-engineering OS was established under `docs/design/` (Phase 1 audit; proposed tokens in `assets/design/`; no UI migration yet). Flutter remains documentation-only.
+The approved Build 1 visual direction preserves V1's dark cinematic atmosphere and artwork-led reveal while replacing its futuristic typography, blue-purple neon gradients, glass panels, glowing borders, emoji controls and AI-console presentation. The selected identity is an intertwined YS monogram on a black/graphite, platinum and sapphire/cobalt system. Round 008 integrated production flat/premium marks, wordmark, app icon, phone/desktop atmosphere, Create backdrops, Gallery empty-state art and paywall previews into the current web/mobile app (see `design/review/round-008/`). Round 009 integrated all 77 V1 sample artworks as a progressively loaded Home carousel and dedicated `/showcase` masonry page with legacy disclosure (see `design/review/round-009/`). On 2026-08-31 a permanent design-engineering OS was established under `docs/design/` (Phase 1 audit; proposed tokens in `assets/design/`; no UI migration yet). The same day, GPT/design-review Create-flow architecture was locked into the OS: Song-DNA-first Quick Generate, Explore Options with AI visual directions (not generic presets), optional Fine Tune, DNA-aware generation experience, and artwork-first reveal CTAs — see `docs/design/screens/create-flow.md` and ADR-20260831. Create UX is not implemented yet; shipped Create remains Song → People → Direction until First Build / Onboarding contracts are amended. Flutter remains documentation-only.
 
 ## Prompt-system status
 
@@ -156,9 +156,12 @@ Source Context
 
 - Meaning of “Dynamic Band Lore” in V2
 - Portrait fallback honesty
+- Portrait placement in DNA-first Create
 - Lyrics retrieval method and user-accessible catalog rights. Persistence is resolved: raw lyrics are never saved.
 - Branding in-image vs post-process
 - Whether artist visual identity runs by default
+- Variation vs Reimagine definitions; Discover IA before chrome change
+- Amendment of First Build / Onboarding contracts for DNA-first Create
 
 ## Read next
 

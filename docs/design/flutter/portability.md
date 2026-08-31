@@ -6,8 +6,13 @@
 | --- | --- |
 | Semantic color/space/type/motion tokens | `ThemeData` / `ColorScheme` / `ThemeExtension` / `TextTheme` |
 | App chrome destinations (Create / Gallery / Account) | `NavigationBar` (phone) + `NavigationRail` (large) |
-| Create stages Song → People → Direction | Multi-step flow / wizard with shared draft state |
-| PortraitChip / StyleTile / ChoiceRow | Custom widgets with selected + semantic states |
+| Create stages Song → People → Direction | **As-built.** Target: Song → Song DNA → Quick Generate / Explore Options / Fine Tune — see `screens/create-flow.md` |
+| DNA selection progressive layers | Custom chips/cards + shared draft state (new API contract) |
+| AI visual direction cards | Selectable recommendation cards — not StyleMap grid |
+| Generation DNA checklist + honest stages | Full-screen progress route; poll job; no fake % |
+| Reveal Save / Share / Variation / Reimagine | Hero image route; delayed secondary actions |
+| Immersive Create (optional hide nav) | Nested navigator / shell without bottom bar on focused steps |
+| PortraitChip / StyleTile / ChoiceRow | Custom widgets; StyleTile demoted to Fine Tune / admin over time |
 | Gallery grid + image detail | `GridView` + detail route |
 | Status / empty / error / paywall panels | Shared widgets fed by API state |
 | `/api/v1` contracts | Same backend; opaque sessions already designed for mobile |
