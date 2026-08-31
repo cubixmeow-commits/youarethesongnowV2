@@ -5,164 +5,162 @@
 **Date:** 2026-08-30  
 **Status:** Ready for Cursor
 
-## Round 006 assessment
+# Round 007 — Implement the selected YS identity into the current web/mobile app
 
-Round 006 successfully converted the premium private-venue system to **near-black + platinum + sapphire/cobalt blue**.
+The selected brand direction is the **YS monogram** documented in:
 
-Keep this palette direction. Do not bring brass/gold back into the core UI.
+`design/BRAND_SYSTEM_YS.md`
 
-The intended read is now:
+This round is about translating that identity into the real responsive site/app shell so mobile and desktop begin to look like the chosen black / platinum / sapphire reference system.
 
-**black architectural space + platinum detail + controlled blue light + vivid user artwork**
+## Critical product constraint
 
-Blue should remain controlled and structural, not neon. Platinum should read as fine cool metal / light edge, not chrome or sci-fi plating.
+**Do not begin Flutter implementation.**
 
-`php tests/run.php` reported **173 passed, 0 failed** in Round 006.
+The current PHP/web app remains the product we are actively building. Flutter documentation may be kept synchronized, but native implementation is deferred until the existing product experience, generation workflow, commerce, credits/subscription behavior, ordering flows, and visual system are much further along.
 
-Important workflow note: `design/CHATGPT_CURSOR_DESIGN_HANDOFF.md` on main still reports Round 005 even though the Round 006 inbox is marked consumed and `design/review/round-006/` exists. In this round, repair the canonical handoff so Round 006 is fully recorded before adding Round 007 results.
+## 1. Treat the selected visual board as a direction, not a literal screenshot
 
----
+Use the YS brand board qualities:
 
-# ROUND 007 GOAL
+- near-black foundation
+- graphite/lacquer depth
+- platinum typography/hairlines
+- sapphire shadows
+- cobalt only for focused active/primary moments
+- large cinematic generated imagery
+- sparse premium composition
+- elegant YS identity
 
-Do **not** begin Flutter implementation.
+Do not copy fake UI labels or navigation from the generated concept image.
+Do not replace working product navigation/functionality with mockup UI.
 
-The Flutter handoff remains documentation only. There is substantial product, UX, visual, functional, and launch-readiness work to finish in the existing application first.
+## 2. Build a real responsive brand shell
 
-Round 007 should continue improving the current app and prepare it for custom asset integration.
+### Mobile
 
----
+Target first: 390–430px.
 
-## 1. Freeze the core palette, refine usage
+- top bar should use a compact YS mark area + `YouAreTheSongNow` wordmark treatment
+- preserve current bottom navigation and routes
+- make the page feel edge-to-edge and native-app-like
+- use premium dark surfaces and restrained separators
+- maintain safe-area handling
+- minimum interactive hit area 44px; prefer 48px where practical
+- reduce webpage-like container framing
 
-Keep:
+### Desktop
 
-- near-black / graphite scaffold
-- platinum text + hairlines
-- sapphire selection/focus/atmosphere
-- cobalt only for deliberate primary emphasis
-- generated artwork as the main source of emotional color
+- preserve compact ~88px rail
+- apply YS identity to rail/top branding
+- let artwork and content breathe
+- use platinum hairlines and sapphire depth instead of generic cards
+- desktop is an expanded version of mobile, not a separate corporate site
 
-Audit the current app for places where cobalt is too saturated or starts to feel gaming/neon. Reduce glow before reducing contrast.
+## 3. Home
 
-Avoid:
+Refine the real Home screen around the chosen brand language.
 
-- broad blue fills
-- glowing blue outlines everywhere
-- metallic chrome effects
-- cyan
-- purple-heavy AI aesthetics
-- black/blue gaming UI
+Priorities:
 
-The target remains a **premium creative experience**, not a tech dashboard.
+- compact YS identity
+- cinematic art as the dominant element
+- concise message and one strong action
+- premium gallery-like spacing
+- examples should resemble collected works rather than marketing feature cards
 
----
+Do not reintroduce dating/couple-first brand identity.
+Do not create a SaaS feature grid.
 
-## 2. Prepare for the first real custom assets
+## 4. Create
 
-Do not invent new temporary artwork.
+Keep all existing fields, upload, song lookup, portrait deletion, selection, generation, and state behavior.
 
-Verify and, if needed, update these four priority asset hooks/specs for the platinum/blue palette:
+Translate the screen visually:
 
-1. `app-atmosphere-haze`
-2. `launch-mark-tile`
-3. `creative-session-backdrop`
-4. `empty-collection-still`
+- YS identity should be present but subtle
+- song section = one composed source area
+- portraits = curated gallery/contact-sheet selection
+- delete remains secondary and safe
+- direction controls = tactile premium selectors
+- cobalt reserved for selected/focus/final action
+- final Generate action should feel like the visual culmination
 
-The visual concepts should now be:
+Avoid large glowing neon controls.
 
-### app-atmosphere-haze
-Near-black architectural darkness, cool platinum edge light, subtle sapphire depth, extremely restrained cobalt presence. No literal room, instruments, UI, people, or text.
+## 5. Gallery + Reveal
 
-### launch-mark-tile
-Abstract aperture / threshold / entry mark. Graphite-black field, platinum structure/rim, sapphire inner depth, controlled cobalt core light. Must remain elegant at 28–32px and not resemble a gaming logo.
+Gallery should become a strong expression of the brand:
 
-### creative-session-backdrop
-Honed black stone / lacquer / architectural surface with platinum grazing light and very subtle sapphire shadow. Center must stay quiet for controls.
+- larger artwork priority
+- cool platinum hierarchy
+- very sparse metadata
+- sapphire/cobalt interaction only
+- empty state uses current asset hook until custom art is delivered
 
-### empty-collection-still
-Private gallery alcove / aperture waiting for its first artwork: graphite, platinum rim, small sapphire/cobalt depth light. Quiet and collectible.
+Reveal should be audited for the same visual system. Do not make it a generic bordered result card.
 
-Update `design/ASSET_REQUESTS.md` and `design/ASSET_INTEGRATION_MAP.md` only where the new palette requires it.
+## 6. Brand mark implementation strategy
 
----
+We do not yet have final production vector geometry for the YS monogram.
 
-## 3. Current-app product polish — not another redesign
+For this round:
 
-Do a targeted visual/UX audit of the current app rather than changing the overall architecture.
+- create a clean replaceable brand component / hook in markup/CSS
+- do NOT attempt to trace a complicated faux-3D logo into fragile CSS
+- if a temporary simplified `YS` typographic/geometry mark is needed, clearly label it temporary
+- use paths/naming from `design/BRAND_SYSTEM_YS.md`
+- make replacing the placeholder with final SVG/PNG trivial
 
-Priority screens:
+The final monogram will eventually need flat merchandise-safe versions as well as a premium rendered version.
 
-### Create
-- preserve current structure and all behavior
-- improve any remaining generic-form visual moments
-- ensure portrait selection/deletion remains elegant and obvious
-- ensure Overview reads as creative context, not checkout/order summary
-- make the final generation action premium and confident without oversized glow
+## 7. Commerce readiness — prepare, do not implement ordering yet
 
-### Gallery / Reveal
-- strengthen finished-artwork presentation
-- generated art should feel like the centerpiece of a private collection
-- metadata/chrome should retreat visually
-- keep empty-state asset hook ready
-- do not bury useful actions
+The next product phase will include image upscaling and ordering posters / T-shirts.
 
-### Account / Sign-in
-- bring these screens into the same platinum/blue material system without overdesigning them
-- remove obvious generic SaaS styling where possible
-- clarity remains more important than atmosphere
+During this design pass, ensure generated-art/gallery/reveal layouts have sensible places for future secondary actions such as:
 
-### Paywall / membership
-This is now worth a focused presentation audit because it is one of the remaining places that can still make the product feel like a membership/dating funnel.
+- Upscale
+- Order print
+- Order T-shirt
 
-Do not change pricing, entitlement, subscription, payment, or access logic in this pass.
+But **do not invent or implement commerce/backend behavior in Round 007** unless it already exists.
+Do not add fake checkout buttons that appear functional.
 
-Presentation goals:
-- invitation to continue creating, not a sales wall
-- concise benefits
-- premium but calm
-- no dating/membership visual language
-- no casino luxury
-- no giant pricing-card SaaS composition if avoidable with current markup
+Instead document recommended insertion points in:
 
----
+`design/COMMERCE_UI_INSERTION_MAP.md`
 
-## 4. Mobile-first quality audit
+Create that file with:
 
-Because the eventual primary product is iOS/Android, audit the existing mobile experience at ~390px as the primary canvas.
+- Reveal insertion point
+- Gallery item action entry point
+- mobile action-sheet recommendation
+- desktop action placement
+- poster/T-shirt preview entry point
+- where upscale status/progress could appear
+- accessibility/touch requirements
+- what backend contracts will eventually be needed (high-level only)
 
-Check:
+This will prepare us for the next functional phase without mixing it into brand implementation.
 
-- touch targets
-- safe-area clearance
-- bottom navigation overlap
-- keyboard/input behavior where review tooling permits
-- long labels wrapping
-- portrait tile controls
-- modal/dialog fit
-- vertical rhythm
-- excessive scrolling caused purely by decorative spacing
-- generated-image visibility on first meaningful viewport
+## 8. Update design docs
 
-Do not begin Flutter. Record anything that should later become a native-specific consideration in `FLUTTER_DESIGN_HANDOFF.md`, but keep implementation in the current app.
+Update where needed:
 
----
+- `design/DESIGN_SYSTEM.md`
+- `design/ASSET_REQUESTS.md`
+- `design/ASSET_INTEGRATION_MAP.md`
+- `design/FLUTTER_DESIGN_HANDOFF.md` only to record the current web system for future use; do not scaffold Flutter
+- canonical handoff
 
-## 5. Repair the handoff history
+Explicitly state that `design/BRAND_SYSTEM_YS.md` is the selected identity direction.
 
-Before finishing Round 007:
+## 9. Review pack
 
-1. Add Round 006 to `design/CHATGPT_CURSOR_DESIGN_HANDOFF.md` using the actual Round 006 implementation and screenshot pack.
-2. Change the canonical current state from Round 005/brass to the actual platinum/blue Round 006 baseline.
-3. Then add Round 007 results normally.
+Create:
 
-The canonical handoff must again be sufficient for ChatGPT to understand the current project state without reconciling multiple stale files manually.
-
----
-
-# REVIEW PACK
-
-Create `design/review/round-007/`.
+`design/review/round-007/`
 
 Preferred screenshots:
 
@@ -171,49 +169,47 @@ Preferred screenshots:
 - `create-mobile-390-people.png`
 - `create-mobile-390-direction.png`
 - `gallery-mobile-390.png`
-- `account-mobile-390.png` if accessible
-- `paywall-mobile-390.png` if accessible
-- `reveal-mobile-390.png` if accessible with existing data
+- `reveal-mobile-390.png` if a representative state can be captured
+- `home-desktop-1440.png`
 - `create-desktop-1440.png`
 - `gallery-desktop-1440.png`
 
-If a state cannot be reached safely with available test data, document that rather than inventing it.
+Add README with:
 
-README should explicitly call out:
+- branch/commit
+- exact viewports
+- visual changes
+- placeholder vs production brand assets
+- remaining inconsistencies
+- what ChatGPT should judge
 
-- any cobalt saturation reduced
-- remaining generic SaaS/membership cues
-- mobile UX problems found
-- which screens now need custom assets versus structural work
+## 10. Functionality / tests
 
----
+Preserve:
 
-# FUNCTIONAL SCOPE
+- auth
+- routes
+- APIs
+- song lookup
+- portraits/upload/delete
+- generation logic
+- payment/subscription behavior
+- current navigation
 
-This is primarily design/UX polish.
+Run existing test suite and report results.
 
-Do not change unrelated backend/API/database/auth/generation/payment/subscription logic.
-
-Portrait deletion remains supported and must not regress.
-
-Run the existing full test suite and report results.
-
----
-
-# REPORT BACK
+## Report back
 
 Update `design/CHATGPT_CURSOR_DESIGN_HANDOFF.md` with:
 
-1. repaired Round 006 history/current state
-2. Round 007 work completed
-3. files changed
-4. screenshot references
-5. functional audit
-6. test results
-7. updated asset readiness
-8. mobile UX findings
-9. no more than 3 high-value questions
+1. Round 007 implementation summary
+2. exact files changed
+3. mobile/desktop brand-shell decisions
+4. how final YS assets can drop in
+5. commerce insertion map summary
+6. tests/results
+7. screenshot references
+8. no more than 3 high-value questions
+9. confirmation that Flutter implementation was NOT started
 
-Mark this inbox consumed, commit/push everything, and stop for ChatGPT review.
-
-**Do not start Flutter implementation. Do not begin Round 008 speculatively.**
+Commit/push and stop for ChatGPT review. Do not begin the upscaling/poster/T-shirt functional build yet.
