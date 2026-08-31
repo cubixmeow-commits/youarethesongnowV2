@@ -1,0 +1,55 @@
+{
+  "homeOverflow": {
+    "label": "home-320",
+    "scrollWidth": 320,
+    "innerWidth": 320,
+    "ok": true
+  },
+  "zoomResults": [
+    {
+      "label": "create-direction-900",
+      "viewport": "900×900",
+      "pageScaleFactor": 2,
+      "scrollWidth": 900,
+      "innerWidth": 900,
+      "horizontalOverflow": false,
+      "inputSize": 16,
+      "inputsAtLeast16px": true,
+      "checkoutReachable": true,
+      "hasSelectedStateCue": true
+    },
+    {
+      "label": "paywall-900",
+      "viewport": "900×900",
+      "pageScaleFactor": 2,
+      "scrollWidth": 900,
+      "innerWidth": 900,
+      "horizontalOverflow": false,
+      "inputSize": 16,
+      "inputsAtLeast16px": true,
+      "checkoutReachable": true,
+      "hasSelectedStateCue": true
+    },
+    {
+      "label": "paywall-1440",
+      "viewport": "1440×900",
+      "pageScaleFactor": 2,
+      "scrollWidth": 1440,
+      "innerWidth": 1440,
+      "horizontalOverflow": false,
+      "inputSize": 16,
+      "inputsAtLeast16px": true,
+      "checkoutReachable": true,
+      "hasSelectedStateCue": true
+    },
+    {
+      "label": "home-1440",
+      "viewport": "1440×900",
+      "pageScaleFactor": 2,
+      "scrollWidth": 1440,
+      "innerWidth": 1440,
+      "horizontalOverflow": false,
+      "inputsAtLeast16px": true
+    }
+  ]
+}

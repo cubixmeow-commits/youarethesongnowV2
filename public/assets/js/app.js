@@ -273,6 +273,7 @@
     if (direction) {
       direction.hidden = !(state.selectedPortraitIds.length > 0);
     }
+    updateSummary();
   }
 
   function renderDevelopmentAnalysis(lookup) {
@@ -400,7 +401,6 @@
     renderStyles();
     renderChoices();
     renderPortraits();
-    updateSummary();
     maybeShowDirection();
 
     $('#song-form')?.addEventListener('submit', async (e) => {
@@ -423,7 +423,6 @@
         } else {
           setStatus(status, 'We found your song and will use its themes and feeling to inspire your image.');
         }
-        updateSummary();
         maybeShowDirection();
       } catch (err) {
         setStatus(status, err.message, true);

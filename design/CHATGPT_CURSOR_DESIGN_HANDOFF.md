@@ -4,9 +4,9 @@
 
 **Branch:** `main`
 
-**Last updated by ChatGPT:** 2026-08-30 (Round 008 local dispatch)
+**Last updated by Cursor:** 2026-08-30 (Round 008.1 local correction pass)
 
-**Active round:** 008 (implemented locally — awaiting ChatGPT visual review)
+**Active round:** 008.1 (implemented locally — awaiting ChatGPT visual review)
 
 **Workflow roles**
 
@@ -72,6 +72,68 @@ Production assets delivered. Integration hooks and responsive usage are document
 ---
 
 ## CURRENT HANDOFF
+
+### Cursor → ChatGPT (Round 008.1 — 2026-08-30)
+
+Focused presentation corrections from Round 008 acceptance review. No route, API, authentication, generation, credit, Stripe, portrait, gallery-data, sharing, owner-control, Flutter, upscale, print, or commerce changes. Readability gradients preserved.
+
+#### Work completed
+
+1. **320px Home overflow** — hero copy given definite width + `min-width: 0`; hero actions stack on narrow phones; safe-area padding corrected; `overflow-check-320-home.png` recaptured with `scrollWidth === innerWidth === 320`.
+2. **Desktop paywall** — paywall panel moved outside the sticky overview column; centered two-column invitation (~42% media / ~58% copy, `max-width: 52rem`) in the Create working area; `paywall-desktop-1440.png` replaced.
+3. **People/Direction evidence** — capture script navigates real workflow states via existing development drafts (song-only for People, song+portrait for Direction); progress steps verified current in screenshots.
+4. **200% zoom** — genuine browser zoom via CDP `Emulation.setPageScaleFactor: 2`; results in `zoom-check-200-results.json`.
+
+#### Files changed
+
+- `public/assets/css/app.css` — Home hero overflow/stacking; desktop paywall layout
+- `templates/pages/create.php` — paywall panel sibling of `.create__layout` (not inside overview column)
+- `public/assets/js/app.js` — `maybeShowDirection()` calls `updateSummary()` so session progress step matches revealed stage (presentation-only)
+- `design/review/round-008/capture-screenshots.mjs` — workflow-aware captures + 200% zoom checks
+- `design/review/round-008/README.md` — evidence claims aligned to captures
+- `design/review/round-008/.gitignore` — ignore `node_modules/`
+- `design/review/round-008/*.png` — corrected screenshots (320 home, paywall desktop, people, direction)
+- `design/review/round-008/zoom-check-200-results.json` — 200% zoom record
+- `design/CHATGPT_CURSOR_DESIGN_HANDOFF.md` — this section
+
+#### Corrected screenshots
+
+| File | Correction |
+| --- | --- |
+| `overflow-check-320-home.png` | No horizontal clip; headline, copy, CTA, Sign in fit at 320px |
+| `paywall-desktop-1440.png` | Centered readable two-column paywall; heading fully in viewport |
+| `create-mobile-390-people.png` | **02 People** current; portrait contact-sheet tray visible |
+| `create-mobile-390-direction.png` | **03 Direction** current; style curator grid visible |
+
+#### 320px overflow result
+
+**Pass** — `document.documentElement.scrollWidth <= window.innerWidth` at 320×568 (`scrollWidth: 320`, `innerWidth: 320`). See `overflow-check-320-home.png`.
+
+#### 200% zoom result (actual browser zoom)
+
+Chrome headless, `pageScaleFactor: 2`. No horizontal overflow at 900×900 (Create Direction, Paywall) or 1440×900 (Paywall, Home). Song inputs remain **16px**. Paywall checkout and local-development activate remain enabled. Direction style tile retains `.is-selected` non-color cue. Full record: `design/review/round-008/zoom-check-200-results.json`.
+
+#### Desktop paywall result
+
+Paywall renders as a centered membership invitation in the Create working area (not nested in the narrow sticky overview). Media ~42%, copy/actions ~58%, `max-width: 52rem`. Phone paywall composition unchanged. Billing, recovery, membership JS/API behavior preserved.
+
+#### People/Direction state verification
+
+Captures load authenticated Create with existing development drafts at the correct stage—no `hidden` attribute hacks. People draft: song resolved, portraits unselected, step **02** current. Direction draft: portrait selected, step **03** current, style grid visible.
+
+#### Tests
+
+`php tests/run.php` → **178 passed, 0 failed**
+
+#### Owner style activate/deactivate verification
+
+Preserved commit `3953689` behavior: `.owner-style-toggle` buttons remain labeled **Activate** / **Deactivate**; automated tests `owner can activate style` and `owner can deactivate style` pass.
+
+#### Recommended next pass
+
+Stop for ChatGPT visual review of `design/review/round-008/`. Do not push or deploy without separate owner authorization.
+
+---
 
 ### Cursor → ChatGPT (Round 008 — 2026-08-30)
 
@@ -274,6 +336,10 @@ Warm brass/amber chrome was replaced by black/graphite, platinum, deep sapphire 
 
 The intertwined YS monogram was selected and documented. Final production geometry/assets were still pending.
 
+### Round 008.1 — Acceptance corrections (2026-08-30)
+
+Focused visual correction pass: 320px Home overflow, desktop paywall composition, valid People/Direction workflow screenshots, actual 200% zoom verification. Local commit from baseline `87fe637`.
+
 ### Round 008 — YS production asset integration (2026-08-30)
 
 Production YS identity and system imagery integrated into the current responsive web/mobile app. Screenshot pack committed under `design/review/round-008/`. Flutter remains documentation-only.
@@ -288,8 +354,8 @@ ChatGPT delivered the complete brand/system asset set, production manifest, resp
 
 | Screen / Area | Status | Last Changed | Notes |
 | --- | --- | --- | --- |
-| Create | Integrated | Round 008 | YS session header; production backdrop; desktop 62/38 |
-| Home | Integrated | Round 008 | Poster hero; YS lockup; quiet Sign in |
+| Create | Integrated | Round 008.1 | Desktop paywall centered in working area; session progress sync fix |
+| Home | Integrated | Round 008.1 | 320px overflow corrected; hero action stacking |
 | Gallery | Integrated | Round 008 | Empty-state `<img>` + Create CTA |
 | Navigation | Stable | Round 008 | YS mark/wordmark in chrome |
 | Auth/Account | Light | Round 004 | Lacquer panels |

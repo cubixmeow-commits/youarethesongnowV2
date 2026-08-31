@@ -1,8 +1,8 @@
 # Round 008 — YS identity + production asset integration review pack
 
-**Branch:** `main` (local)  
-**Date:** 2026-08-30  
-**Source:** `design/CHATGPT_NEXT_PASS.md` (Round 008)
+**Branch:** `main` (local)
+**Date:** 2026-08-30 (Round 008.1 corrections 2026-08-30)
+**Source:** `design/CHATGPT_NEXT_PASS.md` (Round 008); Round 008.1 acceptance corrections
 
 ## Screenshots
 
@@ -11,18 +11,18 @@
 | `home-mobile-390.png` | 390 × 844 | Guest Home launchpad | YS mark + wordmark in top bar; atmosphere haze; hero poster; quiet Sign in secondary |
 | `home-desktop-1440.png` | 1440 × 900 | Guest Home desktop | Full-bleed artwork; copy column ≤ 440px over calm field |
 | `create-mobile-390-top.png` | 390 × 844 | Create — Song stage | Session backdrop phone; YS mark in session header; stage progress row |
-| `create-mobile-390-people.png` | 390 × 844 | Create — People (unhidden for review) | Contact-sheet tray layout |
-| `create-mobile-390-direction.png` | 390 × 844 | Create — Direction (unhidden for review) | Tactile curator rows/tiles |
+| `create-mobile-390-people.png` | 390 × 844 | Create — People (workflow) | Real draft with song resolved; **02 People** current; portrait contact-sheet tray visible |
+| `create-mobile-390-direction.png` | 390 × 844 | Create — Direction (workflow) | Real draft with portrait selected; **03 Direction** current; style curator grid visible |
 | `create-desktop-1440.png` | 1440 × 900 | Create desktop | 62/38 split; session backdrop desktop right/top; overview uses separators not heavy card |
 | `gallery-mobile-390.png` | 390 × 844 | Gallery empty | `empty-collection-still.webp` as `<img>`; primary Create link |
 | `gallery-desktop-1440.png` | 1440 × 900 | Gallery empty | Centered aperture art max 300px |
 | `paywall-mobile-390.png` | 390 × 844 | Paywall panel visible | Square `paywall-world-preview-phone.webp` header above membership sheet |
-| `paywall-desktop-1440.png` | 1440 × 900 | Paywall panel visible | Two-column media + copy; desktop preview asset |
+| `paywall-desktop-1440.png` | 1440 × 900 | Paywall panel visible | Centered two-column invitation (~42% media / ~58% copy); full heading in viewport |
 | `reveal-mobile-390.png` | 390 × 844 | Reveal (`X4EFBGopt0bRejuE0ZYMmA`) | Artwork-first viewport |
 | `reveal-desktop-1440.png` | 1440 × 900 | Reveal desktop | Artwork stage left; metadata/actions right |
-| `overflow-check-320-home.png` | 320 × 568 | Guest Home | No horizontal overflow; wordmark scales to 132px max |
+| `overflow-check-320-home.png` | 320 × 568 | Guest Home | `scrollWidth === innerWidth === 320`; headline, copy, primary CTA and Sign in fit with 16px insets |
 
-People/Direction mobile captures unhide sections for presentation review only. Gallery empty captures clear the grid in-browser to exercise the zero-state markup without changing server data.
+People/Direction mobile captures load existing development drafts at the correct workflow stage (song-only draft for People; song+portrait draft for Direction). No DOM unhide hacks. Gallery empty captures clear the grid in-browser to exercise the zero-state markup without changing server data.
 
 ## Overlay / crop values
 
@@ -44,13 +44,24 @@ People/Direction mobile captures unhide sections for presentation review only. G
 
 | Width | Result |
 | --- | --- |
-| 320 × 568 | Pass — see `overflow-check-320-home.png`; wordmark and hero actions fit |
-| 390 × 844 | Pass — primary review width |
-| 430 × 932 | Pass — spot-checked via wider insets (20px from 390px breakpoint) |
-| 768 × 1024 | Pass — examples row layout at tablet |
-| 900 × 900 | Pass — desktop rail + split Create |
-| 1440 × 900 | Pass — captured in desktop pack |
-| 200% zoom | Pass — 16px inputs, 44px+ targets, focus rings and non-color selection cues preserved at default zoom; no layout dependence on hover-only actions on phone |
+| 320 × 568 | **Pass** — `overflow-check-320-home.png`; programmatic `document.documentElement.scrollWidth <= window.innerWidth` |
+| 390 × 844 | **Pass** — primary review width |
+| 430 × 932 | **Pass** — spot-checked via wider insets (20px from 390px breakpoint) |
+| 768 × 1024 | **Pass** — examples row layout at tablet |
+| 900 × 900 | **Pass** — desktop rail + split Create; paywall centered in working area |
+| 1440 × 900 | **Pass** — captured in desktop pack |
+| 200% zoom | **Pass** — genuine browser zoom via CDP `Emulation.setPageScaleFactor: 2`; see `zoom-check-200-results.json` |
+
+### 200% zoom (actual browser zoom)
+
+Configuration: Chrome headless, `pageScaleFactor: 2`, viewports 900×900 and 1440×900 (Create Direction + Paywall) and 1440×900 (Home).
+
+| Check | Result |
+| --- | --- |
+| Horizontal overflow | **None** on all captured surfaces |
+| Input font size | **16px** minimum on song inputs |
+| Controls reachable | Checkout + local-development activate buttons enabled on paywall |
+| Selection cues | `.is-selected` present on Direction style tile at 200% zoom |
 
 ## Tests
 
