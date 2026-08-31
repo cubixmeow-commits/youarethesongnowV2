@@ -622,6 +622,23 @@ final class ApiV1
             JsonResponse::data(StyleService::allForOwner(), 200, ['nextCursor' => null]);
         });
 
+        $router->patch('/api/v1/owner/styles/{styleId}', function (Request $request, array $params) {
+            self::requireOwner();
+            self::requireCsrf($request);
+            $status = (string) $request->input('status', '');
+            if (!in_array($status, ['active', 'inactive'], true)) {
+                JsonResponse::error('invalid_status', 'Status must be active or inactive.', 422);
+            }
+            try {
+                JsonResponse::data(StyleService::setStatus((string) $params['styleId'], $status));
+            } catch (\RuntimeException $e) {
+                if ($e->getMessage() === 'not_found') {
+                    JsonResponse::error('not_found', 'Style not found.', 404);
+                }
+                throw $e;
+            }
+        });
+
         $router->get('/api/v1/owner/jobs', function () {
             self::requireOwner();
             $rows = Database::all(

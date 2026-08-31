@@ -121,6 +121,20 @@ assert_true($applied !== [] || Migrator::status()[0]['applied'] ?? false, 'migra
 $seeded = StyleService::seed();
 assert_true($seeded >= 52 || count(StyleService::allForOwner()) === 52, '52 styles seeded');
 assert_true(count(StyleService::activeForClient()) === 15, '15 active launch styles');
+$inactiveStyle = null;
+foreach (StyleService::allForOwner() as $styleRow) {
+    if ($styleRow['status'] === 'inactive') {
+        $inactiveStyle = $styleRow;
+        break;
+    }
+}
+assert_true($inactiveStyle !== null, 'inactive style available for owner toggle test');
+$activatedStyle = StyleService::setStatus($inactiveStyle['id'], 'active');
+assert_true($activatedStyle['status'] === 'active', 'owner can activate style');
+assert_true(count(StyleService::activeForClient()) === 16, 'activated style appears to clients');
+$deactivatedStyle = StyleService::setStatus($inactiveStyle['id'], 'inactive');
+assert_true($deactivatedStyle['status'] === 'inactive', 'owner can deactivate style');
+assert_true(count(StyleService::activeForClient()) === 15, 'deactivated style removed from clients');
 
 $owner = AuthService::seedOwner();
 assert_true($owner['email'] === 'owner@example.test', 'owner seeded from protected config');

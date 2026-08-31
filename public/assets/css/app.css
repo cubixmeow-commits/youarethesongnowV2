@@ -1536,6 +1536,26 @@ textarea {
   text-transform: uppercase;
 }
 
+.owner-style-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.owner-style-status__label {
+  min-width: 4.5rem;
+}
+
+.owner-style-toggle {
+  min-height: auto;
+  padding: 0.2rem 0.5rem;
+  font-size: var(--type-meta);
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
 /* =============================================================================
    Pass 2 — Creative session / launchpad / anti-dating polish
    ============================================================================= */
