@@ -3,7 +3,7 @@ type: design-system
 status: active
 updated: 2026-08-30
 area: visual-design
-phase: round-004-premium-venue
+phase: round-005-baseline
 ---
 
 # You Are The Song Now — Design System (Pass 1)
@@ -165,8 +165,10 @@ Prefer `max-width` content shells (~430–720 for reading; wider for artwork gri
 | Tokens + components | `public/assets/css/app.css` |
 | App chrome | `templates/layouts/main.php` |
 | Asset requests | `design/ASSET_REQUESTS.md` |
+| Asset integration | `design/ASSET_INTEGRATION_MAP.md` |
+| Flutter handoff | `design/FLUTTER_DESIGN_HANDOFF.md` |
 | This system | `design/DESIGN_SYSTEM.md` |
 
 ## Pass status
 
-Round 004 evolves tokens toward premium venue materials (lacquer, stone, brass light), refines Create/Gallery/Home presentation, and updates asset requests. Further polish waits for visual review and ChatGPT asset delivery.
+Round 005 locks the premium venue system as baseline, documents asset integration (`design/ASSET_INTEGRATION_MAP.md`) and Flutter handoff (`design/FLUTTER_DESIGN_HANDOFF.md`). Targeted polish only; await ChatGPT asset delivery and visual review.

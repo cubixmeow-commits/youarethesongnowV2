@@ -1,12 +1,12 @@
 <section class="create" data-create data-csrf="<?= e($csrf ?? '') ?>">
-  <header class="session-header" aria-label="Private creative suite">
+  <header class="session-header" aria-label="Create">
     <div class="session-header__art" aria-hidden="true">
       <span class="session-header__art-mark"></span>
     </div>
     <div class="session-header__meta">
-      <p class="session-header__eyebrow">Private suite</p>
+      <p class="session-header__eyebrow">Create</p>
       <p class="session-header__title" data-session-song>Choose your song</p>
-      <p class="session-header__hint quiet">A session prepared for you. When ready, create your world.</p>
+      <p class="session-header__hint quiet">Choose a song, add portraits, set the direction. Then create your world.</p>
     </div>
     <ol class="session-progress" aria-label="Session stages">
       <li class="session-progress__step is-current"><span>01</span> Song</li>
@@ -112,8 +112,8 @@
     </div>
 
     <aside class="create__summary session-board" aria-live="polite">
-      <p class="session-board__label">In review</p>
-      <h2>Your session</h2>
+      <p class="session-board__label">Overview</p>
+      <h2>Your creation</h2>
       <dl class="summary-list" data-summary>
         <div><dt>Song</dt><dd data-sum-song>Not chosen yet</dd></div>
         <div><dt>People</dt><dd data-sum-people>None selected</dd></div>
