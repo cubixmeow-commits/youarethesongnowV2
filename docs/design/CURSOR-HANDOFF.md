@@ -1,103 +1,100 @@
-# CURSOR-HANDOFF — Explore JSON decoder fix
+# CURSOR-HANDOFF — Explore cleanup + premium redesign program
 
 **Date:** 2026-08-31  
 **Working branch:** `main`  
-**Phase:** Gemini Explore response decoding (after live `provider-invalid-json`)
+**Phase:** Working Gemini Explore → product-quality integration, followed by systematic premium redesign
 
-## Live evidence (already confirmed)
+## Live result confirmed
 
-iPhone diagnostic:
+Gemini Explore now works on the private Hostinger site and returns exactly three Song-DNA-specific visual directions.
 
-> `provider-invalid-json · build e51e28d7e092`
+Observed successful options included distinct treatments such as:
 
-Meaning already proven before this change:
+- `Cathedral of Shadows` — gothic, monumental, grief/longing
+- `Threshold of Eternity` — grounded cinematic realism, mourning/spiritual isolation
+- `Elegiac Reverie` — painterly, timeless, muted warmth, love/loss
 
-- Hostinger is on the private-diagnostics build (`e51e28d`)
-- Routing, API key, model access, and Gemini transport work
-- Explore fails while **decoding** the generateContent payload
+This validates the product concept: AI can translate Song DNA into meaningful creative directions and privately bridge those into the current generation system.
 
-Do **not** revisit deploy/auth/model-404 unless a new diagnostic says so.
+## Locked product principles
 
-## Exact root cause
+1. **AI should remove decisions by default and offer intelligent choices when the user asks for control.**
+2. **Song DNA is the creative control surface.**
+3. Default path: `Song → Song DNA → Generate`.
+4. Optional path: `Song → Song DNA → Explore Options → AI-generated visual direction → optional Fine Tune → Generate`.
+5. AI Explore directions are not generic presets.
+6. Portrait management belongs at the top of Gallery for now. Create should eventually use the active/default portrait automatically.
+7. Mobile is canonical; desktop expands the same product architecture.
 
-`GeminiExploreService` reused `GeminiCreativeAdapter::decodeResponse()`.
+## Immediate task — clean up the working Explore experience
 
-That helper:
+Preserve the now-working Gemini pipeline. Do not rewrite the provider logic unless necessary for a regression.
 
-1. Concatenates **every** `candidates[0].content.parts[].text`
-2. Runs `json_decode()` on the whole string
-3. Maps any failure to a single invalid-JSON path
+Improve only the product interaction around the successful result:
 
-Live Explore uses **`gemini-3.6-flash`**, a Gemini 3 thinking model. generateContent commonly returns:
+1. Remove customer-facing implementation text such as:
+   - `Uses Gothic Romance internally`
+   - `Uses Cinematic Realism internally`
+   - `Uses Heirloom Oil Portrait internally`
+2. Keep StyleMap mapping available only in owner/dev diagnostics if useful.
+3. Replace the explanatory sentence `The first option is Gemini’s strongest fit` with a subtle visual `Recommended` treatment on the first card.
+4. Make each direction card a large, clear, accessible tap target.
+5. Add a strong selected state.
+6. After a direction is selected, expose one dominant continuation CTA such as `Create this direction` (choose wording that fits the current Review/generation contract without introducing misleading behavior).
+7. When an Explore direction is active, hide or collapse the legacy `Choose your world` grid so the new intelligent-control system and the old style picker do not compete visually.
+8. Provide a deliberate secondary path back to manual direction/style selection for development/fallback use.
+9. Keep `Generate for me` visually primary before Explore is opened.
+10. Keep safe private-build diagnostics available for failures, but diagnostics should not dominate successful customer UI.
+11. Do not break Quick Generate, current draft/job contracts, credits/paywall, portraits, or generation.
+12. Test mobile touch behavior, keyboard behavior, loading, failure, retry, direction selection, and transition to Review/generation.
+13. Run the full test suite.
+14. Commit directly to `main`.
 
-```json
-"parts": [
-  { "text": "…reasoning…", "thought": true },
-  { "text": "{ \"directions\": [ … ] }" }
-]
-```
+## Premium redesign program
 
-Concatenating thought prose + JSON makes `json_decode` fail — even when the answer part is valid structured JSON. A fixture in the test suite proves CreativeAdapter-style concatenation cannot decode that shape.
+A canonical program now exists at:
 
-Secondary hardening in the same fix:
+`docs/design/process/PREMIUM-SITE-DESIGN-BUILD-PLAN.md`
 
-- fenced / embedded JSON recovery
-- `MAX_TOKENS` truncation diagnosis
-- empty candidate / safety / schema-mismatch diagnostics
-- `thinkingConfig.thinkingLevel = minimal` + `maxOutputTokens = 4096` so structured JSON is less likely to be truncated by thinking budget
+Read it in full before beginning broad redesign work.
 
-## Exact fix
+This is the governing implementation sequence:
 
-1. Added dedicated `GeminiExploreService::decodeExploreResponse()` / `parseJsonObject()`.
-2. Skips `thought: true` parts; only answer text is parsed.
-3. Recovers direct JSON, fenced JSON, and embedded `{…}` objects.
-4. Distinguishes diagnostics:
-   - `provider-no-output-text`
-   - `provider-fenced-json-recovered` (soft success, logged)
-   - `provider-embedded-json-recovered` (soft success, logged)
-   - `provider-malformed-json`
-   - `provider-truncated-output`
-   - `provider-safety-blocked`
-   - `provider-generation-blocked`
-   - `provider-schema-mismatch`
-   - `provider-incomplete-output` (&lt; 3 usable directions)
-5. Keeps true structured output: `responseMimeType=application/json` + `responseJsonSchema`.
-6. Sanitized logs may include finishReason / textLength / part counts — never Song DNA, lyrics, prompts, keys, portraits, or full bodies.
+1. Clean up working Explore first build
+2. Formalize Create journey/state architecture
+3. Run visual-direction comparison
+4. Lock foundational tokens/primitives
+5. Rebuild Create Home + Song selection
+6. Build Song DNA selector
+7. Integrate Quick Generate + Explore into canonical Create flow
+8. Build generation experience
+9. Build premium reveal/result
+10. Rebuild Gallery + portraits
+11. Rebuild shell/navigation responsively
+12. Account/membership/onboarding
+13. Discover/marketing as needed
+14. Full accessibility/performance cleanup
+15. Flutter handoff consolidation
 
-### Files changed
+Do **not** execute the entire redesign as one giant task. Work in focused slices using the loop:
 
-- `src/AI/GeminiExploreService.php`
-- `tests/run.php`
-- `app/build-stamp.php`
-- `docs/design/CURSOR-HANDOFF.md`
+`Inspect → Define intent → Wireframe → Critique → Refine → Specify → Implement → Test → Visual review → Iterate → Lock`
 
-## Tests / results
+GPT is design director / UX critic / design-system architect. Cursor is implementation engineer / repo analyst / test runner.
 
-```text
-php tests/run.php
-=== Results: 972 passed, 0 failed ===
-```
+## Current task stopping point
 
-## Deploy / build stamp
+For this Cursor run, implement **only the Explore cleanup** above.
 
-- No `.env` changes.
-- Hostinger still needs a normal **git sync** of `main`.
-- After sync, `/api/v1/health` → `build.commit` should move past `e51e28d7e092`.
+Then update this handoff with:
 
-## Exact iPhone retest
+- files changed
+- interaction changes
+- tests/results
+- final commit hash
+- iPhone retest steps
+- desktop implications discovered
+- any design questions that should go back to GPT
+- recommended next slice from the premium build plan
 
-1. Sync Hostinger `/yatsnV2` to latest `main`.
-2. Soft-refresh `/create`; badge SHA should match health `build.commit`.
-3. Discover a song → portrait → **Explore options**.
-4. **Success:** exactly 3 Song-DNA-specific directions; first recommended.
-5. If it still fails, the status must include a precise diagnostic (not bare `provider-invalid-json`), e.g. `provider-truncated-output`, `provider-schema-mismatch`, or `provider-incomplete-output`.
-6. Also retest **Generate for me**.
-
-## Final commit
-
-- **Decoder fix:** `5a1dfde676486b6affcccbf70397e0cab2547423`
-- **Tip:** `a799c5e7c8775e6bcbc59212f2e5f006f150c16f`
-- **Message:** Fix Explore JSON decode for Gemini 3 thought parts
-- **Branch:** `main`
-- **Build stamp:** `5a1dfde676486b6affcccbf70397e0cab2547423` (Hostinger git sync reports live `.git` HEAD)
-- **Requires:** Hostinger git sync only (no `.env` changes)
+Do not begin the full visual redesign until GPT reviews the cleaned-up Explore implementation.
