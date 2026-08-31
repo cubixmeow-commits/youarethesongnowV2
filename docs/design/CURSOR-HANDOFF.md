@@ -1,145 +1,213 @@
 # CURSOR-HANDOFF — Design Operating System
 
 **Date:** 2026-08-31  
-**Branch:** `main`  
-**Phase:** 1 — Audit & structure + **Create-flow architecture documentation**  
-**Do not begin Phase 2 token migration or DNA-first Create UX implementation** until this handoff is reviewed and First Build / Onboarding contracts are amended where required.
+**Working branch:** `main`  
+**Phase:** First implementation test — **Song DNA Quick Generate + Explore Options compatibility build**
 
 ---
 
-## Latest owner decision — portrait placement
+## Locked product decisions
 
-**Locked for now:** portrait management belongs at the **top of Gallery**, not inside the primary Create flow.
+### Core creation principle
 
-Implications:
+**AI should remove decisions by default and offer intelligent choices when the user asks for control.**
 
-- Gallery should expose a `Your portraits` area above saved creations, with the active/default portrait visually clear and actions to add/change portraits.
-- The primary Create flow should remain streamlined and should **not** require a dedicated People/Portrait step by default.
-- Create should use the user’s active/default portrait automatically unless a later design explicitly adds an optional change affordance.
-- The intended repeat-user path remains:
+The default product path is:
 
 ```text
 Song → Song DNA → Generate
 ```
 
-- First-time portrait onboarding/empty-state handling still needs a focused design pass, but portrait library management should live in Gallery for now.
-- This resolves the open question “Where do portraits sit in the new flow?” for the current design phase.
-
----
-
-## This turn (Create-flow architecture)
-
-Incorporated newly approved GPT/design-review product decisions into the permanent design OS. **No production Create refactor.** Structural documentation only.
-
-### Locked principle
-
-AI should remove decisions by default and offer intelligent choices when the user asks for control. Prefer Song DNA over generic image-generator controls.
-
-### Canonical target flow
+The optional control path is:
 
 ```text
-Create → Choose Song → Choose Song DNA
-  → Quick Generate (default) OR Explore Options
-  → AI visual directions (Explore) → Fine Tune (optional, advanced)
-  → Generate → Generation experience → Reveal
-  → Save / Share / Variation / Reimagine
+Song → Song DNA → Explore Options → AI-generated visual directions → optional Fine Tune → Generate
 ```
 
-### Primary deliverable
+Generic image-generator controls and permanent style presets are not the intended primary customer experience.
 
-`docs/design/screens/create-flow.md` — full current→target map, Song DNA field inventory, API/backend gaps, UI states, Flutter notes, open questions.
+### Portrait placement — resolved
 
-### Also updated
+For now, **portrait management belongs at the top of Gallery**, not in the core Create flow.
 
-| Path | Change |
-| --- | --- |
-| `docs/design/DESIGN-OPERATING-SYSTEM.md` | §§2a creation principle, shell, premium rules, phases, pointer |
-| `docs/design/README.md`, `screens/README.md`, `screens/inventory.md` | Indexes + as-built vs target |
-| `docs/design/flutter/portability.md` | DNA / directions / reveal / immersive Create |
-| `docs/design/process/phases.md` | Create-flow extension + next-task recommendation |
-| `docs/design/components/inventory.md` | StyleTile demotion note |
-| `development-vault/05 Product Design/Create Flow Architecture Contract.md` | Vault contract |
-| `development-vault/02 Decisions/ADR-20260831-create-flow-dna-first.md` | ADR |
-| `development-vault/02 Decisions/Decision Index.md` + `Decision Inbox.md` | Index + open questions |
-| `development-vault/01 Current Project/Current Priorities.md` | Newly documented + Next |
-| `development-vault/01 Current Project/Dashboard Snapshot.md` | Design status |
-| `docs/dashboard-data.js` | Meow Control brand line |
+Target behavior:
 
----
+```text
+Gallery
+├── Your portraits
+│   ├── active/default portrait
+│   ├── additional portraits
+│   └── Add portrait
+└── Your creations
+```
 
-## Inspection summary (Create + Song DNA)
+Create should ultimately use the active/default portrait automatically, with a lightweight way to change it only when necessary. The target repeat flow remains `Song → Song DNA → Generate`.
 
-### As-built Create (`templates/pages/create.php` + `app.js`)
-
-1. Song (artist/title) → `POST /api/v1/song-lookups`
-2. People (1–2 portraits)
-3. Direction: StyleMap grid + quality + orientation + no-text + special instructions
-4. Review → paywall if needed → `POST /generation-jobs`
-5. Progress stages (backend): Finding the heart… → Building… → Bringing you… → Adding the final details
-6. Reveal on `/images/{id}`: Download, Share link, Stop sharing, Create another, Delete, email share
-
-### Song DNA fields available (`song-dna-v2.0`)
-
-`essence`, `emotionalArc` (opening/turning/closing + intensityPattern), `themes`, `relationshipDynamics`, `narrativeArchetype`, `originalVisualMoment`, `symbols[{concept,visualTranslation}]`, `visualMetaphors`, `mood`, `environment` (settingTypes, eraAtmosphere, weather, spatialCharacter), `palette`, `lighting`, `camera`, `composition`, `motion`, `texture`, `subjectRoles`, `ambiguities`, `confidence`, `riskFlags`.
-
-Customer API does **not** currently expose selectable DNA; only private-dev `developmentAnalysis` on lookup create. Derived analysis may persist on `song_lookups.derived_analysis_json`.
-
-### AI visual directions
-
-Full approved intent needs **new backend behavior** (directions generation step). Heuristic packaging of existing DNA visual fields can bootstrap a limited MVP; **relabeling the StyleMap grid is not acceptable**.
+The shipped Build 1 Create screen still contains its existing People stage until that broader Create refactor is performed. Do not interpret that temporary implementation constraint as the target IA.
 
 ---
 
-## Prior Phase 1 audit (still valid)
+## First implementation test: Quick Generate + Explore Options
 
-See earlier sections of branch history / prior handoff commits for full UI audit (routes, components, tokens, a11y, mobile). Key permanent tree remains under `docs/design/`; artifacts under `assets/design/`.
+A narrow compatibility-first implementation has been added so the new interaction can be tested **before** rebuilding the draft schema / generation worker.
 
-**Missing original OS file:** `YouAreTheSongNow_Design_Operating_System.md` was never found; reconstituted OS remains unless owners supply the original.
+### Intent
 
----
+1. Reuse the existing grounded Song DNA produced during song discovery.
+2. Send only derived Song DNA + the internal active StyleMap catalog to Gemini for the Explore step.
+3. Gemini returns exactly three context-aware visual directions specific to that Song DNA.
+4. Each visual direction has:
+   - customer-facing direction name
+   - short description
+   - internal style id (compatibility bridge only)
+   - concise prompt hint
+5. **Generate for me** uses Gemini's strongest recommendation (first ranked direction).
+6. **Explore options** displays all three recommendations.
+7. Selecting a recommendation privately maps it into the existing StyleMap + special-instructions fields so the current Build 1 generator can still run unchanged.
 
-## Questions requiring GPT / owner review
+### Important architecture rule
 
-### Create-flow (new)
+The current StyleMap mapping is **temporary compatibility plumbing**. It is not approval to relabel or retain the static style grid as the future Explore Options experience.
 
-1. Amend First Build + Onboarding contracts for DNA-first Create? (Required before implementation.)
-2. ~~Where do portraits sit in the new flow?~~ **Resolved for now: portrait management lives at top of Gallery; Create uses active/default portrait automatically.**
-3. Final DNA dimension labels vs provisional Emotional Core / World / etc.?
-4. Is `originalVisualMoment` selectable or system-owned?
-5. **Variation** vs **Reimagine** vs regenerate — definitions?
-6. **Save** = download, gallery pin, or both?
-7. Explore Options entry pattern (link vs gate vs segment)?
-8. **Discover** destination before chrome change?
-9. Visual directions: new model call now, or heuristic MVP first?
-10. Which Fine Tune knobs survive (quality, orientation, no-text, special, internal style)?
-
-### Carry-over from Phase 1 audit
-
-1. Confirm reconstituted `DESIGN-OPERATING-SYSTEM.md` vs any missing original file.
-2. `/docs/design/` vs `/design/` authority split (current proposal: permanent OS vs round-ops).
-3. Showcase in guest primary nav?
-4. Home/Showcase in Flutter v1?
-5. Owner admin web-only forever?
-6. Approve proposed semantic token JSON before CSS migration?
-7. Phase 2 priority: a11y vs token hygiene?
+Full product intent still requires the visual direction itself to become a first-class draft/generation input rather than being translated through a legacy style selection.
 
 ---
 
-## Recommended next design task (single highest leverage)
+## Files added / changed for first build
 
-**Song DNA selection interaction design** (GPT + Cursor documentation/wireframe pass — still no production Create refactor):
+### `src/AI/GeminiExploreService.php`
 
-1. Map provisional dimension labels → exact `song-dna-v2.0` fields and customer-safe copy.
-2. Specify progressive multi-select (“add another layer”) states and empty/loading/unavailable.
-3. Treat portrait management as a Gallery concern; only design the minimal active/default portrait assumption needed by Create.
-4. Define Quick Generate CTA + credit/paywall handoff on the DNA-ready screen.
-5. Produce a review pack under `design/review/` when owners want visuals — structural first.
+New lightweight structured-output service.
 
-This unblocks Explore Options / Fine Tune / generation checklist design without boiling the ocean.
+- Default model: `gemini-2.5-flash-lite`
+- Config override: `ai.gemini_explore_model`
+- Input: safe subset of already-derived Song DNA + active internal style catalog
+- Does **not** send portraits or raw lyrics
+- Produces exactly 3 visual directions using a JSON schema
+- Validates style ids returned by Gemini against the active internal catalog
+
+Safe Song DNA projection currently includes:
+
+- essence
+- emotional arc
+- themes
+- relationship dynamics
+- narrative archetype
+- original visual moment
+- symbols
+- visual metaphors
+- mood
+- environment
+- palette
+- lighting
+- camera
+- composition
+- motion
+- texture
+- subject roles
+
+It intentionally excludes confidence / risk flags / internal analysis metadata from the Explore prompt.
+
+### `src/Api/ExploreApi.php`
+
+Registers:
+
+```text
+POST /api/v1/explore-directions
+```
+
+Requires:
+- authenticated session
+- CSRF token
+- derived Song DNA
+
+Returns friendly failures for unavailable Gemini / free-tier rate limit / incomplete output.
+
+### `public/assets/js/explore.js`
+
+Temporary first-build UI bridge loaded before `app.js` on `/create`.
+
+Responsibilities:
+
+- observes the existing `/api/v1/song-lookups` response
+- captures already-derived `developmentAnalysis.analysis`
+- injects a small AI direction panel into the existing Direction stage
+- exposes:
+  - **Generate for me**
+  - **Explore options**
+- renders three returned visual-direction cards
+- applies selected internal style + promptHint into the existing Build 1 controls
+- Quick Generate then hands off to the existing review / generation pipeline
+
+This is deliberately isolated from the large current `app.js` so the experiment can be removed or replaced cleanly during the full Create refactor.
+
+### `public/index.php`
+
+Registers `ExploreApi` after `ApiV1`.
+
+### `templates/layouts/main.php`
+
+Loads `explore.js` before `app.js` on `/create` only so it can observe the existing song-lookup fetch without editing the large app script in this first experiment.
 
 ---
 
-## Git
+## Privacy / provider note
 
-- **Current working branch:** `main`
-- **Scope:** documentation / vault / dashboard / design decisions unless explicitly authorized otherwise
+Explore sends **derived Song DNA**, not portraits and not raw lyrics, to the Gemini text call.
+
+This is especially important while testing on the Gemini Developer API free tier. Before external-user release, provider terms/data-use behavior must be reviewed again and the production provider/tier decision must be explicit.
+
+---
+
+## Current limitations / expected first-build behavior
+
+1. The current shipped People stage still gates Direction, so an existing portrait must still be selected before the new AI panel becomes visible. This is a temporary implementation constraint; target portrait management is Gallery-level.
+2. Quick Generate internally maps to the existing StyleMap because the current draft/job schema requires `styleId`.
+3. The Explore direction itself is not yet persisted as a first-class object on the draft/snapshot.
+4. `promptHint` is bridged through the existing special-instructions field (max 500 chars).
+5. The Explore call uses the Song DNA returned by the existing development song lookup; customer-safe Song DNA projection still needs a proper API in the full implementation.
+6. Explore is not cached yet; repeated clicks can make repeated Gemini calls and consume free-tier quota.
+7. Direction output quality, latency, and failure handling need live testing with a representative set of songs.
+
+---
+
+## Manual first-build test
+
+1. Open `/create` while signed in.
+2. Discover a song that returns usable Song DNA.
+3. Select an existing portrait so the current Direction stage appears (temporary Build 1 limitation).
+4. Confirm the new **Let AI shape the direction** panel appears.
+5. Test **Explore options**:
+   - loading state appears
+   - exactly three song-specific directions appear
+   - first is labeled as recommended
+   - selecting one maps into the existing direction controls
+6. Review the creation and confirm the current generation pipeline still works.
+7. Repeat with **Generate for me**:
+   - Gemini generates directions
+   - first recommendation is automatically applied
+   - existing review/generation handoff is triggered
+8. Test provider failure / rate limiting if practical.
+9. Test several very different songs to judge whether the three outputs are genuinely Song-DNA-specific rather than generic style renames.
+
+---
+
+## Next review questions
+
+After live testing, GPT / Cursor should review:
+
+1. Are the three directions meaningfully different and song-specific?
+2. Is a model call necessary for Quick Generate every time, or can Quick Generate derive a single direction more cheaply/directly?
+3. Which parts of the Gemini result need to be persisted on the creation snapshot for reproducibility?
+4. Should Explore results be cached per Song DNA selection?
+5. How should customer-facing Song DNA selection modify the Explore request once the DNA picker exists?
+6. Which visual-direction attributes should become first-class generation inputs instead of being collapsed into `styleId` + special instructions?
+7. After this interaction proves useful, remove the current People-stage gating and move portrait management to the top of Gallery as already decided.
+
+---
+
+## Prior design/audit context
+
+The permanent UI audit, semantic-token proposal, Flutter portability notes, and structural Create-flow specification remain under `docs/design/`.
+
+The canonical target Create architecture remains Song-DNA-first. This first build is an experiment designed to validate **Generate for me vs Explore options**, not the final production architecture.
