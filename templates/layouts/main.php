@@ -9,6 +9,9 @@ $isOwner = $authed && (($session['role'] ?? '') === 'owner');
 $path = (string) (parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/');
 $cssVersion = (string) (filemtime(YATSN_ROOT . '/public/assets/css/app.css') ?: '1');
 $jsVersion = (string) (filemtime(YATSN_ROOT . '/public/assets/js/app.js') ?: '1');
+$showcaseScripts = $showcaseScripts ?? [];
+$showcaseJsVersion = (string) (filemtime(YATSN_ROOT . '/public/assets/js/showcase.js') ?: '1');
+$showcaseHero = $showcaseHero ?? null;
 
 $navItems = [];
 if ($authed) {
@@ -33,8 +36,8 @@ $bodyClass = trim(($layoutClass ?? '') . ($isHome ? ' is-home' : '') . ($authed 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-  <?php if ($isHome): ?>
-  <link rel="preload" as="image" href="/assets/images/launch/example-solo-560.webp" imagesrcset="/assets/images/launch/example-solo-560.webp 560w, /assets/images/launch/example-solo-1122.webp 1122w" imagesizes="100vw" fetchpriority="high">
+  <?php if ($isHome && !empty($showcaseHero['display'])): ?>
+  <link rel="preload" as="image" href="<?= e($showcaseHero['display']) ?>" fetchpriority="high">
   <?php endif; ?>
   <link rel="stylesheet" href="/assets/css/app.css?v=<?= e($cssVersion) ?>">
   <meta name="theme-color" content="#080A10">
@@ -95,5 +98,14 @@ $bodyClass = trim(($layoutClass ?? '') . ($isHome ? ' is-home' : '') . ($authed 
     <a href="/privacy">Privacy</a>
   </footer>
   <script src="/assets/js/app.js?v=<?= e($jsVersion) ?>" defer></script>
+  <?php if (in_array('imagesloaded', $showcaseScripts, true)): ?>
+  <script src="/assets/vendor/imagesloaded.pkgd.min.js" defer></script>
+  <?php endif; ?>
+  <?php if (in_array('masonry', $showcaseScripts, true)): ?>
+  <script src="/assets/vendor/masonry.pkgd.min.js" defer></script>
+  <?php endif; ?>
+  <?php if (in_array('showcase', $showcaseScripts, true)): ?>
+  <script src="/assets/js/showcase.js?v=<?= e($showcaseJsVersion) ?>" defer></script>
+  <?php endif; ?>
 </body>
 </html>

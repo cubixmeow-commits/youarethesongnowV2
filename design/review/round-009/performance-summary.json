@@ -1,0 +1,56 @@
+{
+  "generatedAt": "2026-08-31T05:57:31.241Z",
+  "homeCarouselInitialBatch": 9,
+  "showcaseInitialBatch": 18,
+  "showcaseLaterBatch": 12,
+  "showcaseTotalItems": 77,
+  "orientationTotals": {
+    "portrait": 32,
+    "square": 33,
+    "landscape": 12
+  },
+  "bytes": {
+    "originals": 92452925,
+    "thumbs": 2895726,
+    "display": 14396776
+  },
+  "zoom200": [
+    {
+      "page": "home",
+      "url": "http://127.0.0.1:8765/",
+      "width": 320,
+      "height": 568,
+      "pageScaleFactor": 2,
+      "scrollWidth": 320,
+      "innerWidth": 320,
+      "overflow": false
+    },
+    {
+      "page": "showcase",
+      "url": "http://127.0.0.1:8765/showcase",
+      "width": 390,
+      "height": 844,
+      "pageScaleFactor": 2,
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "overflow": false
+    },
+    {
+      "page": "showcase-desktop",
+      "url": "http://127.0.0.1:8765/showcase",
+      "width": 1440,
+      "height": 900,
+      "pageScaleFactor": 2,
+      "scrollWidth": 1440,
+      "innerWidth": 1440,
+      "overflow": false
+    }
+  ],
+  "keyboardChecks": {
+    "carouselArrowKeys": "supported in showcase.js",
+    "dialogEscapeArrows": "supported in showcase.js",
+    "loadMoreAccessibleName": "Load more worlds"
+  },
+  "reducedMotion": "insert and relayout immediately without transforms when prefers-reduced-motion: reduce",
+  "slow4gNote": "thumbnails and progressive batches keep pages usable while later images arrive"
+}

@@ -13,6 +13,7 @@ use Yatsn\Support\Config;
 use Yatsn\Support\Database;
 use Yatsn\Support\JsonResponse;
 use Yatsn\Support\Migrator;
+use Yatsn\Support\ShowcaseManifest;
 use Yatsn\Support\View;
 use Yatsn\Styles\StyleService;
 
@@ -42,6 +43,17 @@ $router->get('/', function () {
         'title' => 'You Are The Song Now',
         'session' => null,
         'isHome' => true,
+        'showcaseHero' => ShowcaseManifest::hero(),
+        'showcaseScripts' => ['showcase'],
+    ]);
+    return true;
+});
+
+$router->get('/showcase', function () {
+    echo View::page('pages/showcase', [
+        'title' => 'V1 archive showcase',
+        'session' => SessionService::current(),
+        'showcaseScripts' => ['imagesloaded', 'masonry', 'showcase'],
     ]);
     return true;
 });

@@ -6,7 +6,7 @@
 
 **Last updated by ChatGPT:** 2026-08-30 (Round 009 V1 sample showcase handoff)
 
-**Active round:** 009 (ready for Cursor implementation)
+**Active round:** 009 (implemented locally; awaiting ChatGPT visual review)
 
 **Workflow roles**
 
@@ -72,6 +72,52 @@ Production assets delivered. Integration hooks and responsive usage are document
 ---
 
 ## CURRENT HANDOFF
+
+### Cursor → ChatGPT (Round 009 — 2026-08-30)
+
+Implemented the owner-approved V1 sample archive showcase. No registration, auth, generation, credits, Stripe, gallery-data, sharing, owner-control, portrait-delete or Flutter changes.
+
+#### Work completed
+
+1. **Asset pipeline** — `bin/build-v1-showcase.php` copies all 77 V1 originals, generates committed WebP thumbs (max 560px) and display files (max 1600px), and writes `public/assets/data/v1-showcase.json` with dimensions, orientation, paths, order and visually verified alt text.
+2. **Home** — featured hero `v1-020` (calm lake/moon scene), progressive carousel for all 77 samples, **Explore all 77 worlds** link, quiet final Create invitation; old `example-*` and `layout-interlude-*` references removed from Home markup (launch files retained).
+3. **`/showcase`** — legacy disclosure, orientation filters, Masonry v4 + imagesLoaded v5 (pinned under `public/assets/vendor/`), initial batch 18 / later 12 via IntersectionObserver plus **Load more worlds**, accessible full-image dialog, final **Create your world** action.
+4. **Verification** — `php tests/run.php` → **893 passed, 0 failed** (includes 715 showcase asset assertions). Review pack: `design/review/round-009/`.
+
+#### Inventory verified
+
+| Set | Count | Bytes |
+| --- | ---: | ---: |
+| Originals | 77 | 92,452,925 |
+| Thumbs | 77 | 2,895,726 |
+| Display | 77 | 14,396,776 |
+| Orientations | 32 portrait / 33 square / 12 landscape | — |
+
+#### Files changed (principal)
+
+- `bin/build-v1-showcase.php`, `bin/v1-showcase-alt.json`
+- `public/assets/images/showcase/**` (77 originals + 154 derivatives)
+- `public/assets/data/v1-showcase.json`
+- `public/assets/vendor/masonry.pkgd.min.js`, `imagesloaded.pkgd.min.js` + licenses
+- `public/assets/js/showcase.js`, `public/assets/css/app.css`
+- `templates/pages/welcome.php`, `templates/pages/showcase.php`, `templates/layouts/main.php`
+- `public/index.php`, `src/Support/ShowcaseManifest.php`, `tests/run.php`
+- `design/review/round-009/*`, `design/CHATGPT_CURSOR_DESIGN_HANDOFF.md`, `design/CHATGPT_NEXT_PASS.md`
+- `development-vault/01 Current Project/Current Priorities.md`, `Dashboard Snapshot.md`, `docs/dashboard-data.js`
+
+#### 200% zoom result
+
+Chrome headless `pageScaleFactor: 2`. No horizontal overflow at Home 320×568 or Showcase 390×844 / 1440×900. Record: `design/review/round-009/performance-summary.json`.
+
+#### Owner style activate/deactivate verification
+
+Preserved. Baseline owner style tests still pass.
+
+#### Recommended next pass
+
+Stop for ChatGPT visual review of `design/review/round-009/`. Do not push or deploy without separate owner authorization.
+
+---
 
 ### ChatGPT → Cursor (Round 009 — 2026-08-30)
 
@@ -366,7 +412,7 @@ ChatGPT delivered the complete brand/system asset set, production manifest, resp
 
 ### Round 009 — V1 sample archive showcase (2026-08-30)
 
-Owner-approved handoff ready. All 77 V1 samples will be copied/optimized for V2, the Home imagery becomes archive-driven, and `/showcase` recreates the V1 falling/locking masonry behavior with progressive batches and V2 styling. Implementation pending.
+Owner-approved handoff implemented locally. All 77 V1 samples copied/optimized, Home imagery is archive-driven, `/showcase` recreates the V1 falling/locking masonry behavior with progressive batches and V2 styling. Review pack committed under `design/review/round-009/`.
 
 ---
 
@@ -375,12 +421,12 @@ Owner-approved handoff ready. All 77 V1 samples will be copied/optimized for V2,
 | Screen / Area | Status | Last Changed | Notes |
 | --- | --- | --- | --- |
 | Create | Integrated | Round 008.1 | Desktop paywall centered in working area; session progress sync fix |
-| Home | Integrated | Round 008.1 | 320px overflow corrected; hero action stacking |
+| Home | Integrated | Round 009 | V1 archive hero + 77-sample carousel; link to `/showcase` |
 | Gallery | Integrated | Round 008 | Empty-state `<img>` + Create CTA |
 | Navigation | Stable | Round 008 | YS mark/wordmark in chrome |
 | Auth/Account | Light | Round 004 | Lacquer panels |
 | YS production assets | Integrated | Round 008 | Web/mobile hooks live; see review pack |
-| V1 sample showcase | Ready for implementation | Round 009 | 77-image Home carousel + `/showcase` masonry wall |
+| V1 sample showcase | Integrated | Round 009 | `/showcase` masonry wall + review pack |
 | Flutter spec | Documentation only | Round 008 prep | Native implementation deferred |
 
 ---

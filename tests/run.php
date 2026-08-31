@@ -772,6 +772,59 @@ assert_true(str_contains($mailLog2, '[redacted]') && !str_contains($mailLog2, 's
 
 assert_true(Config::setupStatus()['publicRegistration'] === false, 'setup status shows registration disabled');
 
+// V1 sample showcase (Round 009)
+use Yatsn\Support\ShowcaseManifest;
+use Yatsn\Support\View;
+
+$showcaseManifest = ShowcaseManifest::load();
+assert_true(($showcaseManifest['total'] ?? 0) === 77, 'showcase manifest count is exactly 77');
+assert_true(($showcaseManifest['orientations']['portrait'] ?? 0) === 32, 'showcase manifest has 32 portrait items');
+assert_true(($showcaseManifest['orientations']['square'] ?? 0) === 33, 'showcase manifest has 33 square items');
+assert_true(($showcaseManifest['orientations']['landscape'] ?? 0) === 12, 'showcase manifest has 12 landscape items');
+$showcaseIds = [];
+foreach ($showcaseManifest['items'] as $showcaseItem) {
+    assert_true(!isset($showcaseIds[$showcaseItem['id']]), 'showcase manifest ids are unique');
+    $showcaseIds[$showcaseItem['id']] = true;
+    foreach (['original', 'thumb', 'display'] as $assetKey) {
+        $assetPath = $root . '/public' . $showcaseItem[$assetKey];
+        assert_true(is_file($assetPath), 'showcase asset exists: ' . $showcaseItem[$assetKey]);
+        assert_true(str_starts_with($showcaseItem[$assetKey], '/assets/images/showcase/'), 'showcase asset path stays in showcase root');
+    }
+    assert_true(!empty($showcaseItem['alt']), 'showcase item has alt text: ' . $showcaseItem['id']);
+    assert_true(in_array($showcaseItem['orientation'], ['portrait', 'square', 'landscape'], true), 'showcase item orientation is valid');
+}
+$showcaseHero = ShowcaseManifest::hero();
+assert_true($showcaseHero !== null && !empty($showcaseHero['featured']), 'showcase hero item is featured');
+
+$welcomeTemplate = (string) file_get_contents($root . '/templates/pages/welcome.php');
+assert_true(!str_contains($welcomeTemplate, 'example-solo'), 'home template no longer references example-solo');
+assert_true(!str_contains($welcomeTemplate, 'example-energy'), 'home template no longer references example-energy');
+assert_true(!str_contains($welcomeTemplate, 'example-intimate'), 'home template no longer references example-intimate');
+assert_true(!str_contains($welcomeTemplate, 'layout-interlude'), 'home template no longer references layout-interlude');
+assert_true(str_contains($welcomeTemplate, 'Worlds from the first chapter'), 'home template includes carousel heading');
+assert_true(str_contains($welcomeTemplate, 'Explore all 77 worlds'), 'home template links to showcase');
+
+$showcaseTemplate = (string) file_get_contents($root . '/templates/pages/showcase.php');
+assert_true(str_contains($showcaseTemplate, 'V1 archive'), 'showcase template includes archive eyebrow');
+assert_true(str_contains($showcaseTemplate, 'Seventy-seven worlds'), 'showcase template includes heading');
+assert_true(str_contains($showcaseTemplate, 'Load more worlds'), 'showcase template includes load more fallback');
+assert_true(str_contains($showcaseTemplate, 'data-dialog-prev'), 'showcase template includes previous dialog control');
+assert_true(str_contains($showcaseTemplate, 'data-dialog-next'), 'showcase template includes next dialog control');
+assert_true(str_contains($showcaseTemplate, 'Create your world'), 'showcase template includes final create action');
+
+$showcaseHtml = View::page('pages/showcase', [
+    'title' => 'V1 archive showcase',
+    'session' => null,
+    'showcaseScripts' => ['imagesloaded', 'masonry', 'showcase'],
+]);
+assert_true(str_contains($showcaseHtml, 'data-showcase-page'), 'showcase page renders showcase shell');
+assert_true(str_contains($showcaseHtml, 'Portrait 32'), 'showcase page renders portrait filter');
+
+$showcaseJs = (string) file_get_contents($root . '/public/assets/js/showcase.js');
+assert_true(str_contains($showcaseJs, 'loading = index === 0 ? \'eager\' : \'lazy\''), 'home carousel lazy-loads non-first thumbnails');
+assert_true(is_file($root . '/public/assets/vendor/masonry.pkgd.min.js'), 'masonry vendor is pinned locally');
+assert_true(is_file($root . '/public/assets/vendor/imagesloaded.pkgd.min.js'), 'imagesloaded vendor is pinned locally');
+
 echo "\n=== Results: {$passed} passed, {$failed} failed ===\n";
 if ($failed > 0) {
     echo "Failures:\n - " . implode("\n - ", $failures) . "\n";
