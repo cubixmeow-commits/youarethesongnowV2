@@ -127,4 +127,6 @@ Optional: leave `GEMINI_EXPLORE_MODEL` empty (recommended). Do **not** set it to
 
 ## Commit
 
-Recorded after push on `main` (see git history for hash).
+- **Hash:** `9f7a27576e61c5f9335a6894668d31828e3eb3ca`
+- **Message:** Fix Gemini Explore 404 by reusing proven GEMINI_MODEL
+- **Branch:** `main`
