@@ -49,8 +49,6 @@ final class GeminiExploreService
             throw new \RuntimeException('styles_unavailable');
         }
 
-        // Flash-Lite currently has a Gemini Developer API free tier and is well suited to
-        // this lightweight structured recommendation step.
         $model = (string) Config::get('ai.gemini_explore_model', 'gemini-2.5-flash-lite');
         if (!preg_match('/^[A-Za-z0-9._-]+$/', $model)) {
             throw new \RuntimeException('gemini_model_invalid');
@@ -70,7 +68,7 @@ final class GeminiExploreService
             json_encode($safeDna, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
             'INTERNAL STYLE CATALOG:',
             json_encode($catalog, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
-            'Return only the requested structured JSON.',
+            'Return only the requested JSON object.',
         ]);
 
         $styleIds = array_keys($allowed);
@@ -98,27 +96,55 @@ final class GeminiExploreService
             ],
         ];
 
-        $response = ProviderHttp::postJson(
-            'https://generativelanguage.googleapis.com/v1beta/models/' . $model . ':generateContent',
-            [
-                'contents' => [[
-                    'role' => 'user',
-                    'parts' => [['text' => $prompt]],
-                ]],
-                'generationConfig' => [
-                    'temperature' => 0.85,
-                    'maxOutputTokens' => 1200,
-                    'responseFormat' => [
-                        'text' => [
-                            'mimeType' => 'application/json',
-                            'schema' => $schema,
-                        ],
+        $url = 'https://generativelanguage.googleapis.com/v1beta/models/' . $model . ':generateContent';
+        $headers = ['x-goog-api-key: ' . (string) Config::get('ai.gemini_api_key')];
+        $timeout = Config::getInt('ai.text_timeout_seconds', 45);
+
+        // generateContent structured output uses responseMimeType + responseJsonSchema.
+        // The previous first-build request accidentally used the newer Interactions-style
+        // responseFormat nesting, which Gemini can reject with HTTP 400.
+        try {
+            $response = ProviderHttp::postJson(
+                $url,
+                [
+                    'contents' => [[
+                        'role' => 'user',
+                        'parts' => [['text' => $prompt]],
+                    ]],
+                    'generationConfig' => [
+                        'temperature' => 0.85,
+                        'maxOutputTokens' => 1200,
+                        'responseMimeType' => 'application/json',
+                        'responseJsonSchema' => $schema,
                     ],
                 ],
-            ],
-            ['x-goog-api-key: ' . (string) Config::get('ai.gemini_api_key')],
-            Config::getInt('ai.text_timeout_seconds', 45)
-        );
+                $headers,
+                $timeout
+            );
+        } catch (\RuntimeException $e) {
+            if ($e->getMessage() !== 'provider_http_400') {
+                throw $e;
+            }
+
+            // Compatibility fallback: JSON mode without a schema. The prompt still describes
+            // the exact shape and the response is validated below before anything reaches the UI.
+            $response = ProviderHttp::postJson(
+                $url,
+                [
+                    'contents' => [[
+                        'role' => 'user',
+                        'parts' => [['text' => $prompt]],
+                    ]],
+                    'generationConfig' => [
+                        'temperature' => 0.85,
+                        'maxOutputTokens' => 1200,
+                        'responseMimeType' => 'application/json',
+                    ],
+                ],
+                $headers,
+                $timeout
+            );
+        }
 
         $decoded = GeminiCreativeAdapter::decodeResponse($response);
         $directions = is_array($decoded['directions'] ?? null) ? $decoded['directions'] : [];
@@ -131,10 +157,16 @@ final class GeminiExploreService
             if (!isset($allowed[$styleId])) {
                 continue;
             }
+            $name = self::line((string) ($direction['name'] ?? ''), 80);
+            $description = self::text((string) ($direction['description'] ?? ''), 320);
+            $promptHint = self::text((string) ($direction['promptHint'] ?? ''), 420);
+            if ($name === '' || $description === '' || $promptHint === '') {
+                continue;
+            }
             $out[] = [
-                'name' => self::line((string) ($direction['name'] ?? ''), 80),
-                'description' => self::text((string) ($direction['description'] ?? ''), 320),
-                'promptHint' => self::text((string) ($direction['promptHint'] ?? ''), 420),
+                'name' => $name,
+                'description' => $description,
+                'promptHint' => $promptHint,
                 'styleId' => $styleId,
                 'styleName' => (string) ($allowed[$styleId]['name'] ?? ''),
             ];
