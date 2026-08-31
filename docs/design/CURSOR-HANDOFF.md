@@ -1,87 +1,102 @@
-# CURSOR-HANDOFF — Explore deploy verification + private-build diagnostics
+# CURSOR-HANDOFF — Explore JSON decoder fix
 
 **Date:** 2026-08-31  
 **Working branch:** `main`  
-**Phase:** Private Hostinger verification (no `.env` changes required)
+**Phase:** Gemini Explore response decoding (after live `provider-invalid-json`)
 
-## What the latest iPhone failure proved
+## Live evidence (already confirmed)
 
-Observed message:
+iPhone diagnostic:
 
-> We could not create visual directions for this song yet. Try again.
+> `provider-invalid-json · build e51e28d7e092`
 
-That is `explore_failed` (not the earlier 404/`explore_unavailable` copy). There was **no** `(diagnostic)` suffix.
+Meaning already proven before this change:
 
-## GitHub `main` tip (repo truth)
+- Hostinger is on the private-diagnostics build (`e51e28d`)
+- Routing, API key, model access, and Gemini transport work
+- Explore fails while **decoding** the generateContent payload
 
-- Gemini model reliability fix: `9f7a27576e61c5f9335a6894668d31828e3eb3ca`
-- Private-build diagnostics (no `.env`): `e9b7482fd712b5f35fb5826e3cc20077e7daad77`
-- Current `main` tip: `8201020e26404e7fc77e56a53c13804c5f1d5e55`
+Do **not** revisit deploy/auth/model-404 unless a new diagnostic says so.
 
-## Deployment mechanism (verified)
+## Exact root cause
 
-- Hostinger PHP app under `/yatsnV2/` is **owner-synchronized from Git** (`main`). It is **not** auto-deployed by GitHub Actions.
-- GitHub “deployments” for this repo are **GitHub Pages only** (`/docs` Meow Control). They do **not** update youarethesongnow.com PHP.
-- Pushing to `main` does not refresh Hostinger until the owner pulls/syncs that tree.
+`GeminiExploreService` reused `GeminiCreativeAdapter::decodeResponse()`.
 
-## Live site inspection (from cloud agent, before this fix)
+That helper:
 
-| Probe | Result |
-| --- | --- |
-| `GET /api/v1/health` | 200 `yatsn-v2` (no `build` field yet) |
-| `GET /api/v1/explore-directions/readiness` | **401** → route **exists** (from `9f7a275`) |
-| Live `/assets/js/explore.js` | **byte-identical** to repo, includes diagnostic UI |
-| Diagnostic suffix on iPhone | **Missing** |
+1. Concatenates **every** `candidates[0].content.parts[].text`
+2. Runs `json_decode()` on the whole string
+3. Maps any failure to a single invalid-JSON path
 
-**Conclusion:** Hostinger already had Explore code from `9f7a275+`. The missing diagnostic was **not** primarily a stale-JS problem. Diagnostics were only attached when `APP_DEBUG` or `APP_ENV=development`. Hostinger can be private/owner-only while still using production-like env vars. **No `.env` edit is required.**
+Live Explore uses **`gemini-3.6-flash`**, a Gemini 3 thinking model. generateContent commonly returns:
 
-Gemini provider logic was **not** changed again. Make the diagnostic visible first; then interpret the exact status.
-
-## Exact fix (git-only, no `.env`)
-
-1. `BuildInfo::allowDiagnostics()` is true whenever `ALLOW_EXTERNAL_USERS` is false (already Hostinger’s private Build 1 gate).
-2. Explore errors include `fields.diagnostic` + `fields.build` under that rule.
-3. `GET /api/v1/health` includes safe `build.commit` while private.
-4. Create / Explore badge shows the short commit for iPhone deploy checks.
-5. Prefer live `.git` HEAD after Hostinger sync; `app/build-stamp.php` is FTP fallback only.
-
-## After Hostinger git sync
-
-No `.env` work. From the host (optional):
-
-```bash
-php bin/diagnose-gemini-explore.php
-php bin/diagnose-gemini-explore.php --smoke
+```json
+"parts": [
+  { "text": "…reasoning…", "thought": true },
+  { "text": "{ \"directions\": [ … ] }" }
+]
 ```
 
-From the phone (signed out):
+Concatenating thought prose + JSON makes `json_decode` fail — even when the answer part is valid structured JSON. A fixture in the test suite proves CreativeAdapter-style concatenation cannot decode that shape.
 
-```text
-https://youarethesongnow.com/api/v1/health
-```
+Secondary hardening in the same fix:
 
-Expect `data.build.commit` (12-char short SHA from the synced checkout).
+- fenced / embedded JSON recovery
+- `MAX_TOKENS` truncation diagnosis
+- empty candidate / safety / schema-mismatch diagnostics
+- `thinkingConfig.thinkingLevel = minimal` + `maxOutputTokens = 4096` so structured JSON is less likely to be truncated by thinking budget
 
-## Tests
+## Exact fix
+
+1. Added dedicated `GeminiExploreService::decodeExploreResponse()` / `parseJsonObject()`.
+2. Skips `thought: true` parts; only answer text is parsed.
+3. Recovers direct JSON, fenced JSON, and embedded `{…}` objects.
+4. Distinguishes diagnostics:
+   - `provider-no-output-text`
+   - `provider-fenced-json-recovered` (soft success, logged)
+   - `provider-embedded-json-recovered` (soft success, logged)
+   - `provider-malformed-json`
+   - `provider-truncated-output`
+   - `provider-safety-blocked`
+   - `provider-generation-blocked`
+   - `provider-schema-mismatch`
+   - `provider-incomplete-output` (&lt; 3 usable directions)
+5. Keeps true structured output: `responseMimeType=application/json` + `responseJsonSchema`.
+6. Sanitized logs may include finishReason / textLength / part counts — never Song DNA, lyrics, prompts, keys, portraits, or full bodies.
+
+### Files changed
+
+- `src/AI/GeminiExploreService.php`
+- `tests/run.php`
+- `app/build-stamp.php`
+- `docs/design/CURSOR-HANDOFF.md`
+
+## Tests / results
 
 ```text
 php tests/run.php
-=== Results: 953 passed, 0 failed ===
+=== Results: 972 passed, 0 failed ===
 ```
+
+## Deploy / build stamp
+
+- No `.env` changes.
+- Hostinger still needs a normal **git sync** of `main`.
+- After sync, `/api/v1/health` → `build.commit` should move past `e51e28d7e092`.
 
 ## Exact iPhone retest
 
-1. Someone syncs Hostinger `/yatsnV2` to latest `main` (git pull). **You do not need to edit `.env`.**
-2. Soft-refresh `/create`.
-3. Badge should show `First build · Song DNA · <shortsha>` matching health `build.commit`.
-4. Explore options once.
-5. On failure, status must include something like  
-   `(provider-incomplete-output · build <shortsha>)`.
-6. Send that exact diagnostic back before any further Gemini code changes.
+1. Sync Hostinger `/yatsnV2` to latest `main`.
+2. Soft-refresh `/create`; badge SHA should match health `build.commit`.
+3. Discover a song → portrait → **Explore options**.
+4. **Success:** exactly 3 Song-DNA-specific directions; first recommended.
+5. If it still fails, the status must include a precise diagnostic (not bare `provider-invalid-json`), e.g. `provider-truncated-output`, `provider-schema-mismatch`, or `provider-incomplete-output`.
+6. Also retest **Generate for me**.
 
 ## Final commit
 
-- **Feature:** `e9b7482fd712b5f35fb5826e3cc20077e7daad77` — private-build diagnostics without `.env`
-- **Tip:** `8201020e26404e7fc77e56a53c13804c5f1d5e55` — stamp/handoff alignment
-- **Branch:** `main`
-- **Requires:** Hostinger git sync only
+- **Hash:** 
+- **Message:** Fix Explore JSON decode for Gemini 3 thought parts
+- **Branch:** 
+- **Build stamp:** 
+- **Requires:** Hostinger git sync only (no  changes)

@@ -7,6 +7,6 @@ declare(strict_types=1);
  * Prefer the live Git checkout when the Hostinger tree is synchronized from main.
  */
 return [
-    'commit' => '8201020e26404e7fc77e56a53c13804c5f1d5e55',
-    'note' => 'Private-build Explore diagnostics + build marker (no .env change)',
+    'commit' => '9557316e9aac76c3993f085a10e12a2aeec4a216',
+    'note' => 'Explore decoder skips Gemini 3 thought parts',
 ];

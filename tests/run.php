@@ -799,9 +799,99 @@ try {
     \Yatsn\AI\GeminiExploreService::directions($exploreSongDna, $exploreStyles);
 } catch (RuntimeException $e) {
     $invalidJson = $e->getMessage() === 'gemini_explore_incomplete'
-        && \Yatsn\AI\GeminiExploreService::lastDiagnostic() === 'provider-invalid-json';
+        && \Yatsn\AI\GeminiExploreService::lastDiagnostic() === 'provider-malformed-json';
 }
-assert_true($invalidJson, 'Explore maps invalid provider JSON to incomplete/invalid diagnostic');
+assert_true($invalidJson, 'Explore maps invalid provider JSON to malformed-json diagnostic');
+
+// Dedicated Explore decoder fixtures (Gemini 3 thought parts, fences, truncation, safety).
+$exploreJsonBody = json_encode($exploreDirectionPayload, JSON_THROW_ON_ERROR);
+$thoughtThenJson = \Yatsn\AI\GeminiExploreService::decodeExploreResponse([
+    'candidates' => [[
+        'finishReason' => 'STOP',
+        'content' => ['parts' => [
+            ['text' => 'Planning three cinematic directions for the emotional arc…', 'thought' => true],
+            ['text' => $exploreJsonBody],
+        ]],
+    ]],
+]);
+assert_true(($thoughtThenJson['ok'] ?? false) === true, 'Explore decoder accepts Gemini 3 answer part after thought part');
+assert_true(($thoughtThenJson['meta']['thoughtPartCount'] ?? 0) === 1, 'Explore decoder counts thought parts without using them');
+assert_true(($thoughtThenJson['data']['directions'][0]['name'] ?? '') === 'Sodium Crossing', 'Explore decoder reads JSON from non-thought parts only');
+
+$concatWouldFail = json_decode(
+    'Planning three cinematic directions for the emotional arc…' . $exploreJsonBody,
+    true
+);
+assert_true(!is_array($concatWouldFail), 'fixture proves CreativeAdapter-style concatenation cannot json_decode thought+answer');
+
+$fenced = \Yatsn\AI\GeminiExploreService::decodeExploreResponse([
+    'candidates' => [[
+        'finishReason' => 'STOP',
+        'content' => ['parts' => [['text' => "```json\n{$exploreJsonBody}\n```"]]],
+    ]],
+]);
+assert_true(($fenced['ok'] ?? false) === true, 'Explore decoder recovers fenced JSON');
+assert_true(($fenced['diagnostic'] ?? '') === 'provider-fenced-json-recovered', 'Explore decoder reports fenced recovery diagnostic');
+
+$embedded = \Yatsn\AI\GeminiExploreService::decodeExploreResponse([
+    'candidates' => [[
+        'finishReason' => 'STOP',
+        'content' => ['parts' => [['text' => "Here you go:\n{$exploreJsonBody}\nThanks!"]]],
+    ]],
+]);
+assert_true(($embedded['ok'] ?? false) === true, 'Explore decoder extracts embedded JSON object');
+assert_true(($embedded['diagnostic'] ?? '') === 'provider-embedded-json-recovered', 'Explore decoder reports embedded recovery diagnostic');
+
+$truncated = \Yatsn\AI\GeminiExploreService::decodeExploreResponse([
+    'candidates' => [[
+        'finishReason' => 'MAX_TOKENS',
+        'content' => ['parts' => [['text' => '{"directions":[{"name":"Only"']]],
+    ]],
+]);
+assert_true(($truncated['ok'] ?? false) === false, 'Explore decoder rejects truncated JSON');
+assert_true(($truncated['diagnostic'] ?? '') === 'provider-truncated-output', 'Explore decoder diagnoses truncated output');
+
+$emptyParts = \Yatsn\AI\GeminiExploreService::decodeExploreResponse([
+    'candidates' => [['finishReason' => 'STOP', 'content' => ['parts' => []]]],
+]);
+assert_true(($emptyParts['diagnostic'] ?? '') === 'provider-no-output-text', 'Explore decoder diagnoses empty candidate content');
+
+$safety = \Yatsn\AI\GeminiExploreService::decodeExploreResponse([
+    'candidates' => [['finishReason' => 'SAFETY', 'content' => ['parts' => [['text' => $exploreJsonBody]]]]],
+]);
+assert_true(($safety['diagnostic'] ?? '') === 'provider-safety-blocked', 'Explore decoder diagnoses safety finishReason');
+
+$promptBlocked = \Yatsn\AI\GeminiExploreService::decodeExploreResponse([
+    'promptFeedback' => ['blockReason' => 'SAFETY'],
+    'candidates' => [],
+]);
+assert_true(($promptBlocked['diagnostic'] ?? '') === 'provider-safety-blocked', 'Explore decoder diagnoses promptFeedback blockReason');
+
+$schemaMismatch = \Yatsn\AI\GeminiExploreService::decodeExploreResponse([
+    'candidates' => [[
+        'finishReason' => 'STOP',
+        'content' => ['parts' => [['text' => '{"ok":true}']]],
+    ]],
+]);
+assert_true(($schemaMismatch['diagnostic'] ?? '') === 'provider-schema-mismatch', 'Explore decoder diagnoses missing directions schema');
+
+\Yatsn\AI\GeminiExploreService::setTransportForTests(static function (string $url, array $payload) use ($exploreDirectionPayload): array {
+    assert_true(($payload['generationConfig']['maxOutputTokens'] ?? 0) >= 4096, 'Explore request raises maxOutputTokens for thinking models');
+    assert_true(($payload['generationConfig']['thinkingConfig']['thinkingLevel'] ?? '') === 'minimal', 'Explore request sets Gemini 3 thinkingLevel minimal');
+    assert_true(($payload['generationConfig']['responseMimeType'] ?? '') === 'application/json', 'Explore keeps structured JSON mime type');
+    assert_true(isset($payload['generationConfig']['responseJsonSchema']), 'Explore keeps responseJsonSchema structured output');
+    return [
+        'candidates' => [[
+            'finishReason' => 'STOP',
+            'content' => ['parts' => [
+                ['thought' => true, 'text' => 'internal reasoning should be ignored'],
+                ['text' => json_encode($exploreDirectionPayload, JSON_THROW_ON_ERROR)],
+            ]],
+        ]],
+    ];
+});
+$exploreThoughtOk = \Yatsn\AI\GeminiExploreService::directions($exploreSongDna, $exploreStyles);
+assert_true(count($exploreThoughtOk['directions']) === 3, 'Explore end-to-end succeeds when Gemini 3 returns thought + JSON parts');
 
 // Config gate diagnostics (providers disabled / live calls off / key missing)
 putenv('AI_PROVIDERS_ENABLED=false');

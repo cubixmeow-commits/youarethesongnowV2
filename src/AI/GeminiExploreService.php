@@ -13,6 +13,9 @@ use Yatsn\Support\Config;
  *
  * Uses the same Gemini API key / live-call gates as GeminiLyricsResearchService. The Explore model
  * defaults to the proven general GEMINI_MODEL; GEMINI_EXPLORE_MODEL is an optional override.
+ *
+ * Decoding is Explore-specific: Gemini 3 thinking models may return thought parts before the JSON
+ * answer. GeminiCreativeAdapter::decodeResponse() concatenates every part and fails on that shape.
  */
 final class GeminiExploreService
 {
@@ -83,7 +86,7 @@ final class GeminiExploreService
             $usedModel = $model;
             $url = self::generateContentUrl($model);
             try {
-                $response = self::postGenerateContent($url, $prompt, $schema, $headers, $timeout, true);
+                $response = self::postGenerateContent($url, $prompt, $schema, $headers, $timeout, true, $model);
                 $lastProviderError = '';
                 if ($index > 0) {
                     self::logDiagnostic('provider-model-fallback-used', [
@@ -98,7 +101,7 @@ final class GeminiExploreService
                 if ($lastProviderError === 'provider_http_400') {
                     try {
                         // Compatibility fallback: JSON mode without a schema.
-                        $response = self::postGenerateContent($url, $prompt, null, $headers, $timeout, false);
+                        $response = self::postGenerateContent($url, $prompt, null, $headers, $timeout, false, $model);
                         $lastProviderError = '';
                         self::logDiagnostic('provider-structured-output-fallback', ['model' => $model]);
                         break;
@@ -135,27 +138,44 @@ final class GeminiExploreService
             throw new \RuntimeException($lastProviderError !== '' ? $lastProviderError : 'provider_empty_response');
         }
 
-        try {
-            $decoded = GeminiCreativeAdapter::decodeResponse($response);
-        } catch (\RuntimeException $e) {
-            $code = $e->getMessage();
-            $diagnostic = $code === 'gemini_generation_blocked'
-                ? 'provider-generation-blocked'
-                : 'provider-invalid-json';
+        $decoded = self::decodeExploreResponse($response);
+        if (!$decoded['ok']) {
+            $diagnostic = (string) $decoded['diagnostic'];
             self::rememberDiagnostic($diagnostic, $usedModel);
-            self::logDiagnostic($diagnostic, ['model' => $usedModel]);
-            throw new \RuntimeException($code === 'gemini_generation_blocked' ? $code : 'gemini_explore_incomplete');
+            self::logDiagnostic($diagnostic, array_merge([
+                'model' => $usedModel,
+            ], is_array($decoded['meta'] ?? null) ? $decoded['meta'] : []));
+            $code = match ($diagnostic) {
+                'provider-generation-blocked', 'provider-safety-blocked' => 'gemini_generation_blocked',
+                default => 'gemini_explore_incomplete',
+            };
+            throw new \RuntimeException($code);
         }
 
+        /** @var array<string,mixed> $payload */
+        $payload = is_array($decoded['data'] ?? null) ? $decoded['data'] : [];
         $out = self::normalizeDirections(
-            is_array($decoded['directions'] ?? null) ? $decoded['directions'] : [],
+            is_array($payload['directions'] ?? null) ? $payload['directions'] : [],
             $allowed
         );
 
         if (count($out) < 3) {
             self::rememberDiagnostic('provider-incomplete-output', $usedModel);
-            self::logDiagnostic('provider-incomplete-output', ['model' => $usedModel, 'accepted' => count($out)]);
+            self::logDiagnostic('provider-incomplete-output', [
+                'model' => $usedModel,
+                'accepted' => count($out),
+                'finishReason' => $decoded['meta']['finishReason'] ?? null,
+                'textLength' => $decoded['meta']['textLength'] ?? null,
+            ]);
             throw new \RuntimeException('gemini_explore_incomplete');
+        }
+
+        if (($decoded['diagnostic'] ?? '') !== '' && ($decoded['diagnostic'] ?? '') !== 'ok') {
+            // Soft recovery path (e.g. fenced JSON) — succeed, but record how it was recovered.
+            self::logDiagnostic((string) $decoded['diagnostic'], array_merge([
+                'model' => $usedModel,
+                'recovered' => true,
+            ], is_array($decoded['meta'] ?? null) ? $decoded['meta'] : []));
         }
 
         self::rememberDiagnostic('ok', $usedModel);
@@ -254,6 +274,170 @@ final class GeminiExploreService
     }
 
     /**
+     * Dedicated Explore decoder for generateContent structured JSON.
+     * Does not reuse GeminiCreativeAdapter::decodeResponse() because that helper:
+     * - concatenates thought + answer parts (breaks Gemini 3 thinking models)
+     * - rejects any non-direct json_decode without fence/slice recovery
+     * - collapses every failure into gemini_invalid_creative_json
+     *
+     * @param array<string,mixed> $response
+     * @return array{ok:bool,data:?array,diagnostic:string,meta:array<string,mixed>}
+     */
+    public static function decodeExploreResponse(array $response): array
+    {
+        $meta = [
+            'finishReason' => null,
+            'textLength' => 0,
+            'partCount' => 0,
+            'thoughtPartCount' => 0,
+            'answerPartCount' => 0,
+            'blockReason' => null,
+            'recoveredVia' => null,
+        ];
+
+        $promptFeedback = is_array($response['promptFeedback'] ?? null) ? $response['promptFeedback'] : [];
+        $blockReason = (string) ($promptFeedback['blockReason'] ?? '');
+        if ($blockReason !== '') {
+            $meta['blockReason'] = $blockReason;
+            return self::decodeResult(false, null, 'provider-safety-blocked', $meta);
+        }
+
+        $candidates = is_array($response['candidates'] ?? null) ? $response['candidates'] : [];
+        if ($candidates === []) {
+            return self::decodeResult(false, null, 'provider-no-output-text', $meta);
+        }
+
+        $candidate = is_array($candidates[0] ?? null) ? $candidates[0] : [];
+        $finish = strtoupper((string) ($candidate['finishReason'] ?? ''));
+        $meta['finishReason'] = $finish !== '' ? $finish : null;
+
+        if (in_array($finish, ['SAFETY', 'RECITATION', 'BLOCKLIST', 'PROHIBITED_CONTENT', 'SPII', 'IMAGE_SAFETY'], true)) {
+            return self::decodeResult(false, null, 'provider-safety-blocked', $meta);
+        }
+        $acceptableFinish = $finish === ''
+            || in_array($finish, ['STOP', 'MAX_TOKENS', 'FINISH_REASON_UNSPECIFIED'], true);
+        if (!$acceptableFinish) {
+            return self::decodeResult(false, null, 'provider-generation-blocked', $meta);
+        }
+
+        $content = is_array($candidate['content'] ?? null) ? $candidate['content'] : [];
+        $parts = is_array($content['parts'] ?? null) ? $content['parts'] : [];
+        $meta['partCount'] = count($parts);
+
+        $answerText = '';
+        $thoughtTextLength = 0;
+        foreach ($parts as $part) {
+            if (!is_array($part) || !isset($part['text'])) {
+                continue;
+            }
+            $chunk = (string) $part['text'];
+            if (!empty($part['thought'])) {
+                $meta['thoughtPartCount']++;
+                $thoughtTextLength += strlen($chunk);
+                continue;
+            }
+            $meta['answerPartCount']++;
+            $answerText .= $chunk;
+        }
+        $meta['textLength'] = strlen($answerText);
+        if ($thoughtTextLength > 0) {
+            $meta['thoughtTextLength'] = $thoughtTextLength;
+        }
+
+        if (trim($answerText) === '') {
+            // Some fixtures/providers may put JSON only in thought-tagged parts incorrectly;
+            // never use thought text for product output, but diagnose clearly.
+            return self::decodeResult(
+                false,
+                null,
+                $finish === 'MAX_TOKENS' ? 'provider-truncated-output' : 'provider-no-output-text',
+                $meta
+            );
+        }
+
+        $parsed = self::parseJsonObject($answerText);
+        if ($parsed['data'] === null) {
+            if ($finish === 'MAX_TOKENS' || self::looksTruncatedJson($answerText)) {
+                return self::decodeResult(false, null, 'provider-truncated-output', $meta);
+            }
+            return self::decodeResult(false, null, 'provider-malformed-json', $meta);
+        }
+
+        $meta['recoveredVia'] = $parsed['recoveredVia'];
+        $data = $parsed['data'];
+        if (!isset($data['directions']) || !is_array($data['directions'])) {
+            return self::decodeResult(false, $data, 'provider-schema-mismatch', $meta);
+        }
+
+        $diagnostic = 'ok';
+        if ($parsed['recoveredVia'] === 'fenced') {
+            $diagnostic = 'provider-fenced-json-recovered';
+        } elseif ($parsed['recoveredVia'] === 'extracted') {
+            $diagnostic = 'provider-embedded-json-recovered';
+        }
+
+        return self::decodeResult(true, $data, $diagnostic, $meta);
+    }
+
+    /**
+     * @return array{data:?array<string,mixed>,recoveredVia:?string}
+     */
+    public static function parseJsonObject(string $text): array
+    {
+        $trimmed = trim($text);
+        if ($trimmed === '') {
+            return ['data' => null, 'recoveredVia' => null];
+        }
+
+        $direct = json_decode($trimmed, true);
+        if (is_array($direct)) {
+            return ['data' => $direct, 'recoveredVia' => 'direct'];
+        }
+
+        $fenced = $trimmed;
+        $wasFenced = false;
+        if (preg_match('/^```(?:json)?\s*/i', $fenced) === 1 || str_contains($fenced, '```')) {
+            $wasFenced = true;
+            $fenced = preg_replace('/^```(?:json)?\s*/i', '', $fenced) ?? $fenced;
+            $fenced = preg_replace('/\s*```\s*$/', '', $fenced) ?? $fenced;
+            $fenced = trim($fenced);
+            $decodedFence = json_decode($fenced, true);
+            if (is_array($decodedFence)) {
+                return ['data' => $decodedFence, 'recoveredVia' => 'fenced'];
+            }
+        }
+
+        $start = strpos($trimmed, '{');
+        $end = strrpos($trimmed, '}');
+        if ($start === false || $end === false || $end <= $start) {
+            return ['data' => null, 'recoveredVia' => null];
+        }
+        $slice = substr($trimmed, $start, $end - $start + 1);
+        $decodedSlice = json_decode($slice, true);
+        if (is_array($decodedSlice)) {
+            return ['data' => $decodedSlice, 'recoveredVia' => $wasFenced ? 'fenced' : 'extracted'];
+        }
+
+        return ['data' => null, 'recoveredVia' => null];
+    }
+
+    public static function looksTruncatedJson(string $text): bool
+    {
+        $trim = trim($text);
+        if ($trim === '') {
+            return false;
+        }
+        $opens = substr_count($trim, '{') + substr_count($trim, '[');
+        $closes = substr_count($trim, '}') + substr_count($trim, ']');
+        if ($opens > $closes) {
+            return true;
+        }
+        // Starts like JSON but never closes.
+        return str_starts_with($trim, '{') && !str_ends_with($trim, '}')
+            || str_starts_with($trim, '[') && !str_ends_with($trim, ']');
+    }
+
+    /**
      * Safe readiness snapshot for owner/dev smoke checks. Never includes keys or prompts.
      *
      * @return array<string,mixed>
@@ -338,16 +522,26 @@ final class GeminiExploreService
      * @param array<string,mixed>|null $schema
      * @return array<string,mixed>
      */
-    public static function requestPayload(string $prompt, ?array $schema): array
+    public static function requestPayload(string $prompt, ?array $schema, ?string $model = null): array
     {
         $generationConfig = [
             'temperature' => 0.85,
-            'maxOutputTokens' => 1200,
+            // Gemini 3 thinking can consume a large share of the output budget before JSON begins.
+            'maxOutputTokens' => 4096,
             'responseMimeType' => 'application/json',
         ];
         if ($schema !== null) {
             // generateContent structured output: responseMimeType + responseJsonSchema.
             $generationConfig['responseJsonSchema'] = $schema;
+        }
+
+        $resolvedModel = $model ?? self::resolveModelSafe();
+        if ($resolvedModel !== null && self::modelSupportsThinkingLevel($resolvedModel)) {
+            // Keep structured Explore calls cheap/fast; still skip thought parts when decoding.
+            $generationConfig['thinkingConfig'] = [
+                'thinkingLevel' => 'minimal',
+                'includeThoughts' => false,
+            ];
         }
 
         return [
@@ -409,6 +603,11 @@ final class GeminiExploreService
         return $out;
     }
 
+    public static function modelSupportsThinkingLevel(string $model): bool
+    {
+        return (bool) preg_match('/^gemini-3(\.|-|$)/i', $model);
+    }
+
     /** @param array<string,mixed> $meta */
     private static function postGenerateContent(
         string $url,
@@ -416,19 +615,43 @@ final class GeminiExploreService
         ?array $schema,
         array $headers,
         int $timeout,
-        bool $withSchema
+        bool $withSchema,
+        ?string $model = null
     ): array {
-        $payload = self::requestPayload($prompt, $withSchema ? $schema : null);
+        $payload = self::requestPayload($prompt, $withSchema ? $schema : null, $model);
         if (self::$transport !== null) {
             return (self::$transport)($url, $payload, $headers, $timeout);
         }
         return ProviderHttp::postJson($url, $payload, $headers, $timeout);
     }
 
+    private static function resolveModelSafe(): ?string
+    {
+        try {
+            return self::resolveModel();
+        } catch (\Throwable) {
+            return null;
+        }
+    }
+
+    /**
+     * @param array<string,mixed>|null $data
+     * @param array<string,mixed> $meta
+     * @return array{ok:bool,data:?array,diagnostic:string,meta:array<string,mixed>}
+     */
+    private static function decodeResult(bool $ok, ?array $data, string $diagnostic, array $meta): array
+    {
+        return [
+            'ok' => $ok,
+            'data' => $data,
+            'diagnostic' => $diagnostic,
+            'meta' => $meta,
+        ];
+    }
+
     private static function rememberDiagnostic(string $status, ?string $model = null): void
     {
         self::$lastDiagnostic = $status;
-        // Model is recorded only in the sanitized log, never in customer API codes.
         unset($model);
     }
 
@@ -440,7 +663,11 @@ final class GeminiExploreService
             'component' => 'gemini-explore',
             'status' => $status,
         ];
-        foreach (['model', 'fallbackModel', 'fallbackFrom', 'httpStatus', 'accepted'] as $key) {
+        foreach ([
+            'model', 'fallbackModel', 'fallbackFrom', 'httpStatus', 'accepted',
+            'finishReason', 'textLength', 'partCount', 'thoughtPartCount', 'answerPartCount',
+            'thoughtTextLength', 'blockReason', 'recoveredVia', 'recovered',
+        ] as $key) {
             if (array_key_exists($key, $meta) && $meta[$key] !== null && $meta[$key] !== '') {
                 $safe[$key] = $meta[$key];
             }
