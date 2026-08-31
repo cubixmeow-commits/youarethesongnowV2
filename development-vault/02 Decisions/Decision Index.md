@@ -14,6 +14,7 @@ area: decisions
 - [[ADR-20260827-use-sqlite-initially]]
 - [[ADR-20260827-web-first-then-flutter-ios]]
 - [[ADR-20260829-small-php-app-without-heavy-framework]]
+- [[ADR-20260831-create-flow-dna-first]]
 
 ## Discussing
 

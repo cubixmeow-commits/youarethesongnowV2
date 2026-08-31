@@ -77,7 +77,7 @@ Prioritized for shared extraction (web partials first; Flutter widgets later):
 5. `EmptyState`
 6. `ConfirmSheet` (replace `confirm()`)
 7. `SessionProgress` + `MovementSection`
-8. `PortraitChip` / `StyleTile` / `ChoiceRow`
+8. `PortraitChip` / DNA dimension cards / direction cards / `ChoiceRow` (StyleTile demoted over time per create-flow.md)
 9. `SummaryBoard` / `PaywallPanel`
 10. `GalleryTile` / `RevealFigure`
 11. `FilterChipGroup` / `MediaLightbox`

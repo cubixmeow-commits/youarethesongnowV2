@@ -21,7 +21,9 @@ This note is the daily “what matters now” list for CuBiX Meow and Brut. Keep
 
 ## Newly documented
 
-- **Permanent design OS established (2026-08-31):** Phase 1 audit + documentation only. Permanent tree at `docs/design/` with reconstituted `DESIGN-OPERATING-SYSTEM.md`, foundations, screen/component inventories, Flutter portability notes, and `CURSOR-HANDOFF.md`. Non-runtime artifacts at `assets/design/` including proposed semantic tokens JSON. No UI migration. Awaiting GPT/design-director review before Phase 2. Note: original `YouAreTheSongNow_Design_Operating_System.md` was not found in-repo/attachments and was reconstituted from the task brief + verified contracts.
+- **Create-flow architecture locked into design OS (2026-08-31):** GPT/design-review decisions — AI removes decisions by default; Song DNA is the creative control surface; Quick Generate default; Explore Options = AI visual directions (not generic presets); Fine Tune advanced-only; DNA-aware generation experience; artwork-first reveal. Spec: `docs/design/screens/create-flow.md`. Vault: `05 Product Design/Create Flow Architecture Contract.md`. ADR-20260831. **No Create UX implementation yet**; First Build / Onboarding contracts still describe shipped Song → People → Direction until amended. Discover nav and immersive Create shell documented as implications only.
+
+- **Permanent design OS established (2026-08-31):** Phase 1 audit + documentation only. Permanent tree at `docs/design/` with reconstituted `DESIGN-OPERATING-SYSTEM.md`, foundations, screen/component inventories, Flutter portability notes, and `CURSOR-HANDOFF.md`. Non-runtime artifacts at `assets/design/` including proposed semantic tokens JSON. No UI migration. Note: original `YouAreTheSongNow_Design_Operating_System.md` was not found in-repo/attachments and was reconstituted from the task brief + verified contracts.
 
 - **V1 sample showcase integrated (2026-08-30):** Round 009 copied all 77 V1 sample artworks into V2, replaced Home hardcoded examples with a featured archive hero and progressively loaded carousel, and added `/showcase` with Masonry v4 + imagesLoaded v5, orientation filters, legacy disclosure and an accessible viewing dialog. Review pack: `design/review/round-009/`. Archive remains separate from signed-in Gallery and SQLite.
 
@@ -81,10 +83,12 @@ This note is the daily “what matters now” list for CuBiX Meow and Brut. Keep
 
 ## Next
 
-1. Controlled same-input Flash Lite versus full Flash comparison for one and two people.
-2. Design no-text enforcement and unusable-image detection before the formal benchmark.
-3. Complete the live functional and Hostinger operational checks listed above.
-4. Keep fal/Replicate off the default path; use only for later benchmarks.
+1. GPT/owner review of Create-flow architecture + amend First Build / Onboarding contracts for DNA-first Create (portrait placement, Variation/Reimagine, Discover).
+2. Highest-leverage design follow-up: Song DNA selection interaction design (labels ↔ `song-dna-v2.0`, progressive multi-select, loading/unavailable, Quick Generate).
+3. Controlled same-input Flash Lite versus full Flash comparison for one and two people.
+4. Design no-text enforcement and unusable-image detection before the formal benchmark.
+5. Complete the live functional and Hostinger operational checks listed above.
+6. Keep fal/Replicate off the default path; use only for later benchmarks.
 
 ## Waiting / blocked
 

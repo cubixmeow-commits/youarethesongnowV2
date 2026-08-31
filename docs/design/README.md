@@ -33,7 +33,7 @@ Premium comes from hierarchy, restraint, typography, spacing, image treatment, e
 | [CURSOR-HANDOFF.md](./CURSOR-HANDOFF.md) | Latest agent handoff (read before continuing) |
 | [foundations/](./foundations/) | Tokens, color, type, space, motion, imagery |
 | [components/](./components/) | Component inventory and canonical candidates |
-| [screens/](./screens/) | Route and screen inventory |
+| [screens/](./screens/) | Route inventory + Create-flow architecture spec |
 | [audits/](./audits/) | UI audits (Phase 1) |
 | [flutter/](./flutter/) | Flutter portability guidance |
 | [process/](./process/) | Phases and review gates |
@@ -44,6 +44,6 @@ Working round history (ChatGPT ↔ Cursor): `/design/` (kept; not deleted)
 
 ## Current phase
 
-**Phase 1 — Repository-aware audit and documentation structure** (this delivery).
+**Phase 1 — Repository-aware audit and documentation structure**, plus Create-flow structural architecture (2026-08-31).
 
-Do **not** begin Phase 2 (token migration / visual system implementation) until GPT / design-director review of `CURSOR-HANDOFF.md`.
+Do **not** begin Phase 2 token migration or implement the DNA-first Create UX until GPT / design-director review of `CURSOR-HANDOFF.md` and the relevant contract amendments. See [screens/create-flow.md](./screens/create-flow.md).
