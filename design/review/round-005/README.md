@@ -1,7 +1,7 @@
 # Round 005 — Venue system lock + Flutter handoff review pack
 
 **Branch:** `cursor/visual-music-adventure-94fc`  
-**Commit:** *(recorded after push)*  
+**Commit:** `9ac597b`  
 **Date:** 2026-08-30  
 **Source:** `design/CHATGPT_NEXT_PASS.md` (Round 005)
 
