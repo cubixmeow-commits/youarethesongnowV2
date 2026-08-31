@@ -88,4 +88,9 @@ php tests/run.php
 
 ## Final commit
 
-Filled after push.
+- **Hash:** `6fa401fdecdbdb454d2a81b015607a27d0b5a0a5`
+- **Message:** Show Explore diagnostics on private Hostinger without .env
+- **Branch:** `main`
+- **Requires:** Hostinger git sync only (no `.env` changes)
+
+Stamp follow-up may bump `app/build-stamp.php` to match HEAD; Hostinger git checkouts prefer `.git` HEAD over the stamp.
