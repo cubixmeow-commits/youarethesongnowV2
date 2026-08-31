@@ -3,7 +3,7 @@ type: asset-integration
 status: active
 updated: 2026-08-30
 area: visual-design
-phase: round-005
+phase: round-006-platinum-blue
 ---
 
 # Asset Integration Map
@@ -29,7 +29,7 @@ System assets directory (create when delivering):
 | **Mobile crop** | `background-size: cover`; `background-position: center top`; `background-attachment: fixed` |
 | **Desktop crop** | Same; desktop variant used at `min-width: 900px` via media query override in `app.css` |
 | **Blend / overlay** | Sits beneath existing radial gradients and grain (`body.app::before`). No multiply blend. Gradients remain for readability until asset is validated alone. |
-| **Fallback when absent** | `--asset-atmosphere: none` — radial graphite/indigo/brass gradients + subtle SVG grain only |
+| **Fallback when absent** | `--asset-atmosphere: none` — black/graphite radial gradients + sapphire atmospheric glow + subtle SVG grain |
 | **Flutter equivalent** | `DecorationImage` on `Scaffold` `backgroundColor` + `BoxDecoration` stack; separate phone/tablet/desktop assets via `LayoutBuilder` breakpoints |
 
 ### Integration snippet (web)
@@ -58,7 +58,7 @@ System assets directory (create when delivering):
 | **Mobile crop** | 28×28 CSS px display; source 1024×1024 with 10% safe margin |
 | **Desktop crop** | Same mark; no separate desktop asset required |
 | **Blend / overlay** | `background-size: cover`; layered above CSS gradient fallback when variable is `none` |
-| **Fallback when absent** | Brass/indigo CSS radial gradient emblem (current behavior) |
+| **Fallback when absent** | CSS gradient mark: sapphire core + platinum/graphite rim |
 | **Flutter equivalent** | `Image.asset('assets/images/system/launch_mark_tile.webp', width: 28, height: 28)` beside wordmark in `VenueTopBar` |
 
 ### Integration snippet (web)
@@ -108,7 +108,7 @@ System assets directory (create when delivering):
 | **Mobile crop** | `width: min(72vw, 240px)`; `aspect-ratio: 1`; `background-size: contain` |
 | **Desktop crop** | Same; centered in column |
 | **Blend / overlay** | Transparent PNG/WebP preferred; CSS gradient fallback behind when variable is `none` |
-| **Fallback when absent** | Radial brass spark on stone/lacquer gradient (current behavior) |
+| **Fallback when absent** | Sapphire depth spark on graphite gradient (current behavior) |
 | **Visibility** | Shown when `.gallery-grid:empty` (no JS change required) |
 | **Flutter equivalent** | `Image.asset` in `GalleryEmptyState` widget above title/copy |
 

@@ -1,27 +1,30 @@
 /* =============================================================================
-   You Are The Song Now — Design system baseline (Round 005)
-   Premium private creative venue. Tokens → Flutter (design/FLUTTER_DESIGN_HANDOFF.md)
-   Material hierarchy: midnight base → stone → lacquer → hairline/brass → artwork
+   You Are The Song Now — Design system (Round 006)
+   Platinum + blue on black. Tokens → Flutter (design/FLUTTER_DESIGN_HANDOFF.md)
+   Material hierarchy: black → graphite → smoked graphite → platinum/sapphire → artwork
    ============================================================================= */
 
 :root {
-  /* Color — luxury interior at night */
-  --color-bg: oklch(0.145 0.014 268);
-  --color-surface: oklch(0.185 0.012 270);
-  --color-surface-elevated: oklch(0.215 0.014 272);
-  --color-surface-lacquer: oklch(0.2 0.01 272);
-  --color-surface-stone: oklch(0.17 0.008 270);
-  --color-surface-chrome: color-mix(in oklab, oklch(0.155 0.014 268) 90%, transparent);
-  --color-text: oklch(0.93 0.018 88);
-  --color-text-secondary: oklch(0.72 0.016 82);
-  --color-text-tertiary: oklch(0.58 0.012 80);
-  --color-accent: oklch(0.78 0.07 72);
-  --color-accent-brass: oklch(0.74 0.06 68);
-  --color-accent-soft: color-mix(in oklab, var(--color-accent) 14%, transparent);
-  --color-haze: oklch(0.46 0.055 258);
-  --color-border: color-mix(in oklab, var(--color-text) 9%, transparent);
-  --color-border-hairline: color-mix(in oklab, var(--color-text) 6%, transparent);
-  --color-border-strong: color-mix(in oklab, var(--color-text) 20%, transparent);
+  /* Color — near-black scaffold, cool graphite, architectural blue light */
+  --color-bg: oklch(0.09 0.012 264);
+  --color-surface: oklch(0.13 0.014 262);
+  --color-surface-elevated: oklch(0.16 0.016 262);
+  --color-surface-lacquer: oklch(0.18 0.012 264);
+  --color-surface-stone: oklch(0.12 0.01 262);
+  --color-surface-chrome: color-mix(in oklab, oklch(0.09 0.012 264) 92%, transparent);
+  --color-text: oklch(0.91 0.008 250);
+  --color-text-secondary: oklch(0.70 0.012 252);
+  --color-text-tertiary: oklch(0.56 0.01 256);
+  --color-platinum: oklch(0.78 0.012 250);
+  --color-silver: oklch(0.68 0.014 252);
+  --color-accent-sapphire: oklch(0.50 0.12 264);
+  --color-accent-cobalt: oklch(0.58 0.16 268);
+  --color-accent: var(--color-accent-sapphire);
+  --color-accent-soft: color-mix(in oklab, var(--color-accent-sapphire) 16%, transparent);
+  --color-haze: oklch(0.42 0.10 264);
+  --color-border: color-mix(in oklab, var(--color-platinum) 14%, transparent);
+  --color-border-hairline: color-mix(in oklab, var(--color-platinum) 10%, transparent);
+  --color-border-strong: color-mix(in oklab, var(--color-platinum) 26%, transparent);
   --color-success: oklch(0.72 0.12 145);
   --color-warning: oklch(0.78 0.12 75);
   --color-destructive: oklch(0.62 0.17 25);
@@ -33,8 +36,7 @@
   --paper: var(--color-text);
   --muted: var(--color-text-secondary);
   --haze: var(--color-haze);
-  --sunset: oklch(0.8 0.1 70);
-  --stage: var(--color-accent);
+  --stage: var(--color-accent-sapphire);
   --accent: var(--color-accent);
   --danger: var(--color-destructive);
   --success: var(--color-success);
@@ -97,7 +99,7 @@
   --rail-w: 88px;
   --app-max: 1120px;
   --measure: 36rem;
-  --focus-ring: 0 0 0 3px color-mix(in oklab, var(--color-haze) 55%, white);
+  --focus-ring: 0 0 0 3px color-mix(in oklab, var(--color-accent-sapphire) 45%, transparent);
   --focus: var(--focus-ring);
   --header-h: var(--topbar-h);
 
@@ -136,9 +138,9 @@ body.app {
   background-color: var(--color-bg);
   background-image:
     var(--asset-atmosphere),
-    radial-gradient(820px 480px at 92% 0%, color-mix(in oklab, var(--color-haze) 12%, transparent), transparent 62%),
-    radial-gradient(560px 380px at -4% 100%, color-mix(in oklab, var(--color-accent-brass) 8%, transparent), transparent 58%),
-    linear-gradient(165deg, oklch(0.15 0.016 270) 0%, var(--color-bg) 42%, oklch(0.125 0.012 272) 100%);
+    radial-gradient(820px 480px at 92% 0%, color-mix(in oklab, var(--color-haze) 14%, transparent), transparent 62%),
+    radial-gradient(560px 380px at -4% 100%, color-mix(in oklab, var(--color-accent-sapphire) 6%, transparent), transparent 58%),
+    linear-gradient(165deg, oklch(0.095 0.014 264) 0%, var(--color-bg) 42%, oklch(0.07 0.01 266) 100%);
   background-attachment: fixed;
   padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom));
 }
@@ -167,7 +169,7 @@ a {
 }
 
 a:hover {
-  color: color-mix(in oklab, var(--color-accent) 70%, white);
+  color: color-mix(in oklab, var(--color-platinum) 75%, var(--color-accent-sapphire));
 }
 
 :focus-visible {
@@ -237,8 +239,8 @@ a:hover {
   border-radius: 7px;
   background-image:
     var(--asset-launch-mark),
-    radial-gradient(circle at 38% 38%, color-mix(in oklab, var(--color-accent-brass) 65%, white), transparent 58%),
-    linear-gradient(155deg, color-mix(in oklab, var(--color-haze) 28%, transparent), var(--color-surface-lacquer));
+    radial-gradient(circle at 38% 38%, color-mix(in oklab, var(--color-accent-sapphire) 55%, white), transparent 58%),
+    linear-gradient(155deg, color-mix(in oklab, var(--color-platinum) 18%, transparent), var(--color-surface-lacquer));
   background-size: cover, auto, auto;
   background-position: center;
   background-repeat: no-repeat;
@@ -312,7 +314,7 @@ a:hover {
 }
 
 .app-nav__item.is-active {
-  color: color-mix(in oklab, var(--color-accent-brass) 85%, var(--color-text));
+  color: color-mix(in oklab, var(--color-platinum) 80%, var(--color-accent-sapphire));
 }
 
 .app-nav__label {
@@ -484,7 +486,7 @@ h3 {
   letter-spacing: 0.14em;
   font-size: var(--type-meta);
   font-weight: 600;
-  color: color-mix(in oklab, var(--color-accent-brass) 55%, var(--color-text-secondary));
+  color: color-mix(in oklab, var(--color-platinum) 65%, var(--color-text-secondary));
   margin: 0 0 var(--space-3);
 }
 
@@ -522,14 +524,14 @@ h3 {
 }
 
 .btn--primary {
-  background: linear-gradient(180deg, color-mix(in oklab, var(--color-accent) 85%, white), var(--color-accent-brass));
-  color: oklch(0.17 0.02 68);
-  box-shadow: var(--shadow-1), 0 0 0 1px color-mix(in oklab, var(--color-accent-brass) 28%, transparent);
+  background: linear-gradient(180deg, color-mix(in oklab, var(--color-accent-cobalt) 82%, black), var(--color-accent-sapphire));
+  color: oklch(0.94 0.01 250);
+  box-shadow: var(--shadow-1), 0 0 0 1px color-mix(in oklab, var(--color-accent-sapphire) 35%, transparent);
 }
 
 .btn--primary:hover {
-  background: linear-gradient(180deg, color-mix(in oklab, var(--color-accent) 88%, white), color-mix(in oklab, var(--color-accent-brass) 90%, white));
-  color: oklch(0.15 0.02 68);
+  background: linear-gradient(180deg, color-mix(in oklab, var(--color-accent-cobalt) 88%, black), color-mix(in oklab, var(--color-accent-sapphire) 92%, white));
+  color: oklch(0.96 0.008 250);
 }
 
 .btn--primary:active {
@@ -543,7 +545,7 @@ h3 {
 }
 
 .btn--secondary:hover {
-  border-color: color-mix(in oklab, var(--color-accent-brass) 35%, var(--color-text));
+  border-color: color-mix(in oklab, var(--color-accent-sapphire) 40%, var(--color-platinum));
   background: color-mix(in oklab, var(--color-surface-elevated) 80%, transparent);
 }
 
@@ -639,7 +641,7 @@ input:focus,
 select:focus,
 textarea:focus {
   outline: none;
-  border-color: color-mix(in oklab, var(--color-haze) 50%, var(--color-text));
+  border-color: color-mix(in oklab, var(--color-haze) 35%, transparent);
   box-shadow: var(--focus-ring);
 }
 
@@ -664,7 +666,7 @@ textarea {
   width: 1.15rem;
   height: 1.15rem;
   margin-top: 0.2rem;
-  accent-color: var(--color-accent);
+  accent-color: var(--color-accent-sapphire);
 }
 
 .status {
@@ -937,7 +939,7 @@ textarea {
 
 .movement__num {
   font-family: var(--font-display);
-  color: color-mix(in oklab, var(--color-accent-brass) 75%, var(--color-text-secondary));
+  color: color-mix(in oklab, var(--color-platinum) 70%, var(--color-text-secondary));
   letter-spacing: 0.14em;
   font-size: var(--type-meta);
   margin: 0 0 var(--space-2);
@@ -1032,9 +1034,9 @@ textarea {
 }
 
 .portrait-chip.is-selected {
-  border-color: color-mix(in oklab, var(--color-accent-brass) 55%, transparent);
-  box-shadow: 0 0 0 1px color-mix(in oklab, var(--color-accent-brass) 25%, transparent);
-  background: color-mix(in oklab, var(--color-accent-brass) 6%, transparent);
+  border-color: color-mix(in oklab, var(--color-accent-sapphire) 55%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--color-accent-sapphire) 25%, transparent);
+  background: color-mix(in oklab, var(--color-accent-sapphire) 6%, transparent);
 }
 
 .portrait-chip__delete {
@@ -1110,8 +1112,8 @@ textarea {
 }
 
 .direction-controls .style-option.is-selected {
-  border-color: color-mix(in oklab, var(--color-accent-brass) 50%, transparent);
-  background: color-mix(in oklab, var(--color-accent-brass) 8%, var(--color-surface-stone));
+  border-color: color-mix(in oklab, var(--color-accent-sapphire) 50%, transparent);
+  background: color-mix(in oklab, var(--color-accent-sapphire) 8%, var(--color-surface-stone));
 }
 
 .direction-controls .choice-row label {
@@ -1193,9 +1195,9 @@ textarea {
 }
 
 .style-option.is-selected {
-  border-color: color-mix(in oklab, var(--color-accent-brass) 55%, transparent);
-  background: color-mix(in oklab, var(--color-accent-brass) 10%, var(--color-surface-stone));
-  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--color-accent-brass) 20%, transparent);
+  border-color: color-mix(in oklab, var(--color-accent-sapphire) 55%, transparent);
+  background: color-mix(in oklab, var(--color-accent-sapphire) 10%, var(--color-surface-stone));
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--color-accent-sapphire) 20%, transparent);
 }
 
 .style-option strong {
@@ -1231,8 +1233,8 @@ textarea {
 }
 
 .choice-row label:has(input:checked) {
-  border-color: color-mix(in oklab, var(--color-accent-brass) 45%, transparent);
-  background: color-mix(in oklab, var(--color-accent-brass) 10%, var(--color-surface-stone));
+  border-color: color-mix(in oklab, var(--color-accent-sapphire) 45%, transparent);
+  background: color-mix(in oklab, var(--color-accent-sapphire) 10%, var(--color-surface-stone));
 }
 
 .summary-list {
@@ -1280,7 +1282,7 @@ textarea {
   display: block;
   height: 100%;
   width: 24%;
-  background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--color-accent-brass) 70%, white), transparent);
+  background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--color-accent-cobalt) 55%, white), transparent);
   animation: venue-glow 3.2s ease-in-out infinite;
 }
 
@@ -1360,7 +1362,7 @@ textarea {
 .gallery-grid:empty ~ .gallery-empty .gallery-empty__art {
   background-image:
     var(--asset-empty-collection),
-    radial-gradient(circle at 50% 42%, color-mix(in oklab, var(--color-accent-brass) 12%, transparent), transparent 55%),
+    radial-gradient(circle at 50% 42%, color-mix(in oklab, var(--color-accent-sapphire) 12%, transparent), transparent 55%),
     linear-gradient(165deg, var(--color-surface-stone), var(--color-surface-lacquer));
 }
 
@@ -1411,7 +1413,7 @@ textarea {
 .gallery-item:hover img,
 .gallery-item:focus-visible img {
   transform: translateY(-1px);
-  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--color-accent-brass) 25%, transparent), var(--shadow-3);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--color-accent-sapphire) 25%, transparent), var(--shadow-3);
 }
 
 .gallery-item span {
@@ -1577,8 +1579,8 @@ textarea {
   height: 72px;
   border-radius: var(--radius-md);
   background:
-    radial-gradient(circle at 40% 38%, color-mix(in oklab, var(--color-accent-brass) 55%, white), transparent 54%),
-    linear-gradient(165deg, color-mix(in oklab, var(--color-haze) 28%, transparent), var(--color-surface-lacquer));
+    radial-gradient(circle at 40% 38%, color-mix(in oklab, var(--color-accent-sapphire) 50%, white), transparent 54%),
+    linear-gradient(165deg, color-mix(in oklab, var(--color-platinum) 12%, transparent), var(--color-surface-lacquer));
   box-shadow: inset 0 0 0 1px var(--color-border-hairline), var(--shadow-inset-stone);
   display: grid;
   place-items: center;
@@ -1586,7 +1588,7 @@ textarea {
 
 .create.has-song .session-header__art {
   background:
-    radial-gradient(circle at 42% 40%, color-mix(in oklab, var(--color-accent-brass) 70%, white), transparent 50%),
+    radial-gradient(circle at 42% 40%, color-mix(in oklab, var(--color-accent-sapphire) 70%, white), transparent 50%),
     linear-gradient(165deg, color-mix(in oklab, var(--color-haze) 35%, var(--color-surface-lacquer)), var(--color-surface-stone));
 }
 
@@ -1595,7 +1597,7 @@ textarea {
   height: 20px;
   border-radius: 50%;
   border: 1px solid color-mix(in oklab, var(--color-text) 40%, transparent);
-  box-shadow: 0 0 0 5px color-mix(in oklab, var(--color-accent-brass) 12%, transparent);
+  box-shadow: 0 0 0 5px color-mix(in oklab, var(--color-accent-sapphire) 12%, transparent);
 }
 
 .session-header__eyebrow {
@@ -1603,7 +1605,7 @@ textarea {
   font-size: var(--type-meta);
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: color-mix(in oklab, var(--color-accent-brass) 55%, var(--color-text-tertiary));
+  color: color-mix(in oklab, var(--color-platinum) 55%, var(--color-text-tertiary));
   font-weight: 600;
 }
 
@@ -1654,8 +1656,8 @@ textarea {
 
 .session-progress__step.is-current {
   color: var(--color-text);
-  border-color: color-mix(in oklab, var(--color-accent-brass) 35%, transparent);
-  background: color-mix(in oklab, var(--color-accent-brass) 8%, transparent);
+  border-color: color-mix(in oklab, var(--color-accent-sapphire) 35%, transparent);
+  background: color-mix(in oklab, var(--color-accent-sapphire) 8%, transparent);
 }
 
 .movement {
@@ -1695,7 +1697,7 @@ textarea {
   font-size: var(--type-meta);
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: color-mix(in oklab, var(--color-accent-brass) 45%, var(--color-text-tertiary));
+  color: color-mix(in oklab, var(--color-platinum) 45%, var(--color-text-tertiary));
   font-weight: 600;
 }
 

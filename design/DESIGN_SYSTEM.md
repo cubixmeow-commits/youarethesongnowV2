@@ -3,7 +3,7 @@ type: design-system
 status: active
 updated: 2026-08-30
 area: visual-design
-phase: round-005-baseline
+phase: round-006-platinum-blue
 ---
 
 # You Are The Song Now — Design System (Pass 1)
@@ -22,34 +22,39 @@ Benchmark: flagship App Store product, not a responsive marketing website.
 2. Expand the same primitives to tablet/desktop.
 3. Desktop is the same app on a larger canvas (split views, side rail, larger artwork), not a different product.
 
-## Color tokens
+## Color tokens (Round 006 — platinum + blue on black)
 
 CSS variables live in `public/assets/css/app.css` under `:root`. Flutter should mirror these names.
 
+**Material hierarchy:** black → graphite → smoked graphite → platinum / sapphire light → artwork
+
 | Token | Role | CSS | Flutter mapping |
 | --- | --- | --- | --- |
-| `bg` | Base application background | `--color-bg` | `ColorScheme.surface` / scaffold |
-| `surface` | Elevated content surface | `--color-surface` | `ColorScheme.surfaceContainerLow` |
-| `surface-elevated` | Cards, sheets, sticky panels | `--color-surface-elevated` | `surfaceContainer` |
+| `bg` | Near-black scaffold | `--color-bg` | `scaffoldBackground` |
+| `surface` | Graphite structural surface | `--color-surface` | `surfaceContainerLow` |
+| `surface-elevated` | Raised graphite | `--color-surface-elevated` | `surfaceContainer` |
+| `surface-lacquer` | Smoked graphite sheet | `--color-surface-lacquer` | `surfaceContainerHigh` |
+| `surface-stone` | Quiet working area | `--color-surface-stone` | `surfaceContainerHighest` |
 | `surface-chrome` | Top bar / tab bar / rail | `--color-surface-chrome` | translucent app bar |
-| `text` | Primary text | `--color-text` | `onSurface` |
+| `text` | Platinum primary text | `--color-text` | `onSurface` |
 | `text-secondary` | Supporting copy | `--color-text-secondary` | `onSurfaceVariant` |
 | `text-tertiary` | Metadata / captions | `--color-text-tertiary` | muted variant |
-| `accent` | Primary creative action / selected | `--color-accent` | `primary` |
-| `accent-soft` | Soft accent wash | `--color-accent-soft` | `primaryContainer` |
-| `haze` | Atmospheric indigo light | `--color-haze` | decorative only |
-| `surface-lacquer` | Charcoal lacquer panels | `--color-surface-lacquer` | `surfaceContainerHigh` |
-| `surface-stone` | Honed stone inputs/trays | `--color-surface-stone` | `surfaceContainerHighest` |
-| `accent-brass` | Warm architectural light | `--color-accent-brass` | `primary` (refined) |
-| `border-hairline` | Ultra-quiet structure | `--color-border-hairline` | `outlineVariant` (lighter) |
-| `border` | Quiet hairline | `--color-border` | `outlineVariant` |
+| `platinum` | Cool metal edge / hairlines | `--color-platinum` | decorative edge |
+| `silver` | Secondary metallic tone | `--color-silver` | secondary edge |
+| `accent-sapphire` | Primary brand light / calm active | `--color-accent-sapphire` | `primary` |
+| `accent-cobalt` | Strong action emphasis | `--color-accent-cobalt` | `primary` (emphasized) |
+| `accent` | Alias → sapphire | `--color-accent` | `primary` |
+| `accent-soft` | Sapphire wash | `--color-accent-soft` | `primaryContainer` |
+| `haze` | Atmospheric deep sapphire | `--color-haze` | decorative only |
+| `border-hairline` | Platinum hairline | `--color-border-hairline` | `outlineVariant` |
+| `border` | Standard outline | `--color-border` | `outlineVariant` |
 | `border-strong` | Interactive outline | `--color-border-strong` | `outline` |
 | `success` | Success | `--color-success` | `tertiary` / custom |
-| `warning` | Warning | `--color-warning` | custom |
+| `warning` | Warning (semantic warm) | `--color-warning` | custom |
 | `destructive` | Destructive | `--color-destructive` | `error` |
 | `focus` | Focus ring | `--focus-ring` | focus highlight |
 
-Artwork supplies most chroma. Accents behave like light, not paint.
+Artwork supplies most chroma. Blue behaves like architectural light grazing black material, not panel paint. Platinum is for fine rules and micro-hierarchy only.
 
 ## Spacing scale
 
@@ -171,4 +176,4 @@ Prefer `max-width` content shells (~430–720 for reading; wider for artwork gri
 
 ## Pass status
 
-Round 005 locks the premium venue system as baseline, documents asset integration (`design/ASSET_INTEGRATION_MAP.md`) and Flutter handoff (`design/FLUTTER_DESIGN_HANDOFF.md`). Targeted polish only; await ChatGPT asset delivery and visual review.
+Round 006 converts the locked venue system to **platinum + blue on black** (sapphire/cobalt architectural light). Asset specs and Flutter handoff updated. Await ChatGPT asset generation and visual review.
