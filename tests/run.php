@@ -941,6 +941,15 @@ Config::boot($root);
 
 $exploreJs = (string) file_get_contents($root . '/public/assets/js/explore.js');
 assert_true(str_contains($exploreJs, 'fields?.diagnostic'), 'Explore UI surfaces development diagnostic codes when present');
+assert_true(!str_contains($exploreJs, 'Uses ${escapeHtml(direction.styleName)} internally'), 'Explore cards no longer expose internal StyleMap names to customers');
+assert_true(!str_contains($exploreJs, "Gemini’s strongest fit"), 'Explore no longer uses Gemini strongest-fit explanatory copy');
+assert_true(str_contains($exploreJs, 'ai-direction-card__recommend'), 'Explore marks the first direction with a Recommended treatment');
+assert_true(str_contains($exploreJs, 'Create this direction'), 'Explore exposes a dominant Create this direction CTA after selection');
+assert_true(str_contains($exploreJs, 'Choose a style manually'), 'Explore provides a deliberate path back to manual style selection');
+assert_true(str_contains($exploreJs, 'is-ai-direction-active'), 'Explore collapses legacy style grid while an AI direction is active');
+assert_true(str_contains($exploreJs, 'is-selected'), 'Explore direction cards support a selected state');
+assert_true(str_contains($exploreJs, 'aria-selected'), 'Explore direction cards expose accessible selection state');
+assert_true(str_contains($exploreJs, 'btn--primary') && str_contains($exploreJs, 'data-ai-quick'), 'Generate for me remains a primary action before Explore opens');
 assert_true(is_file($root . '/bin/diagnose-gemini-explore.php'), 'Explore host diagnostic command exists');
 $aiStatus = \Yatsn\AI\AdapterFactory::runtimeStatus();
 assert_true(array_key_exists('geminiExploreModel', $aiStatus), 'runtime status exposes resolved Explore model');

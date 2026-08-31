@@ -1,100 +1,87 @@
-# CURSOR-HANDOFF — Explore cleanup + premium redesign program
+# CURSOR-HANDOFF — Explore cleanup complete (awaiting GPT visual review)
 
 **Date:** 2026-08-31  
 **Working branch:** `main`  
-**Phase:** Working Gemini Explore → product-quality integration, followed by systematic premium redesign
+**Phase:** Immediate Explore product-interaction cleanup only  
+**Status:** Ready for GPT visual review before Phase 1 premium redesign continues
 
-## Live result confirmed
+## Scope completed
 
-Gemini Explore now works on the private Hostinger site and returns exactly three Song-DNA-specific visual directions.
+Implemented **only** the immediate Explore cleanup from this handoff / `docs/design/process/PREMIUM-SITE-DESIGN-BUILD-PLAN.md` Phase 0.
 
-Observed successful options included distinct treatments such as:
+Preserved:
 
-- `Cathedral of Shadows` — gothic, monumental, grief/longing
-- `Threshold of Eternity` — grounded cinematic realism, mourning/spiritual isolation
-- `Elegiac Reverie` — painterly, timeless, muted warmth, love/loss
+- working Gemini Explore provider/decoder path
+- Quick Generate / Explore API contract
+- draft/job, credits/paywall, portraits, generation handoff
 
-This validates the product concept: AI can translate Song DNA into meaningful creative directions and privately bridge those into the current generation system.
+Did **not** begin the broader premium redesign.
 
-## Locked product principles
+## Interaction changes
 
-1. **AI should remove decisions by default and offer intelligent choices when the user asks for control.**
-2. **Song DNA is the creative control surface.**
-3. Default path: `Song → Song DNA → Generate`.
-4. Optional path: `Song → Song DNA → Explore Options → AI-generated visual direction → optional Fine Tune → Generate`.
-5. AI Explore directions are not generic presets.
-6. Portrait management belongs at the top of Gallery for now. Create should eventually use the active/default portrait automatically.
-7. Mobile is canonical; desktop expands the same product architecture.
+1. Removed customer-facing StyleMap copy (`Uses … internally`).
+2. StyleMap bridge retained only as private `data-style-name` / `data-style-id` on cards for debugging.
+3. Replaced “Gemini’s strongest fit” sentence with a visual **Recommended** chip on the first card.
+4. Direction cards are larger full-width tap targets with clearer focus/hover and `aria-selected`.
+5. Selected card uses a strong selected state.
+6. After selection, shows dominant **Create this direction** CTA (bridges into existing Review → Create my image flow).
+7. While an AI direction is active, legacy **Choose your world** style grid and the old Review button are collapsed.
+8. Secondary **Choose a style manually** restores the legacy style picker.
+9. **Generate for me** remains the primary button before Explore opens.
+10. Failure diagnostics still append sanitized codes; success UI no longer leads with build/diagnostic chrome (build SHA kept visually hidden for private deploy checks).
 
-## Immediate task — clean up the working Explore experience
+## Files changed
 
-Preserve the now-working Gemini pipeline. Do not rewrite the provider logic unless necessary for a regression.
+- `public/assets/js/explore.js`
+- `tests/run.php`
+- `docs/design/CURSOR-HANDOFF.md`
 
-Improve only the product interaction around the successful result:
+No Gemini/provider PHP changes in this slice.
 
-1. Remove customer-facing implementation text such as:
-   - `Uses Gothic Romance internally`
-   - `Uses Cinematic Realism internally`
-   - `Uses Heirloom Oil Portrait internally`
-2. Keep StyleMap mapping available only in owner/dev diagnostics if useful.
-3. Replace the explanatory sentence `The first option is Gemini’s strongest fit` with a subtle visual `Recommended` treatment on the first card.
-4. Make each direction card a large, clear, accessible tap target.
-5. Add a strong selected state.
-6. After a direction is selected, expose one dominant continuation CTA such as `Create this direction` (choose wording that fits the current Review/generation contract without introducing misleading behavior).
-7. When an Explore direction is active, hide or collapse the legacy `Choose your world` grid so the new intelligent-control system and the old style picker do not compete visually.
-8. Provide a deliberate secondary path back to manual direction/style selection for development/fallback use.
-9. Keep `Generate for me` visually primary before Explore is opened.
-10. Keep safe private-build diagnostics available for failures, but diagnostics should not dominate successful customer UI.
-11. Do not break Quick Generate, current draft/job contracts, credits/paywall, portraits, or generation.
-12. Test mobile touch behavior, keyboard behavior, loading, failure, retry, direction selection, and transition to Review/generation.
-13. Run the full test suite.
-14. Commit directly to `main`.
+## Tests / results
 
-## Premium redesign program
+```text
+php tests/run.php
+=== Results: 981 passed, 0 failed ===
+```
 
-A canonical program now exists at:
+## Final commit
 
-`docs/design/process/PREMIUM-SITE-DESIGN-BUILD-PLAN.md`
+- **Hash:** `01ad649079aeb70d3cf090b28209f23c0f163de8`
+- **Message:** Clean up Explore direction selection UX for review
+- **Branch:** `main`
+- **Requires:** Hostinger git sync; no `.env` changes
 
-Read it in full before beginning broad redesign work.
+## Exact iPhone retest
 
-This is the governing implementation sequence:
+1. Sync Hostinger `/yatsnV2` to latest `main` (git pull). No `.env` changes.
+2. Soft-refresh `/create`.
+3. Discover a song with Song DNA → select portrait → open Direction.
+4. Confirm **Generate for me** is the primary action; **Explore options** is secondary.
+5. Tap **Explore options** → three cards appear; first has **Recommended**; no “Uses … internally” text.
+6. Tap a card → strong selected state; **Create this direction** appears; style grid is hidden.
+7. Tap **Choose a style manually** → style grid returns.
+8. Select a direction again → **Create this direction** → continues into existing review/generation.
+9. Retest **Generate for me** still auto-continues.
+10. Force/observe a failure only if convenient; diagnostic suffix should still appear on errors.
 
-1. Clean up working Explore first build
-2. Formalize Create journey/state architecture
-3. Run visual-direction comparison
-4. Lock foundational tokens/primitives
-5. Rebuild Create Home + Song selection
-6. Build Song DNA selector
-7. Integrate Quick Generate + Explore into canonical Create flow
-8. Build generation experience
-9. Build premium reveal/result
-10. Rebuild Gallery + portraits
-11. Rebuild shell/navigation responsively
-12. Account/membership/onboarding
-13. Discover/marketing as needed
-14. Full accessibility/performance cleanup
-15. Flutter handoff consolidation
+## Desktop implications discovered
 
-Do **not** execute the entire redesign as one giant task. Work in focused slices using the loop:
+- At ≥700px the three direction cards sit in one row; selected-state border/background remains readable beside neighbors.
+- Primary/secondary CTA wrap in the lab header; on narrow widths actions become full-width 48px targets.
+- Collapsing the style grid on desktop removes a large competing control block and makes the AI cards the clear decision surface; quality/format/no-text remain visible for fine control.
+- Summary board still shows Style after AI selection because the StyleMap bridge still patches the existing draft style — expected for Build 1 compatibility, but visually the customer no longer chooses that style directly.
 
-`Inspect → Define intent → Wireframe → Critique → Refine → Specify → Implement → Test → Visual review → Iterate → Lock`
+## Design questions for GPT
 
-GPT is design director / UX critic / design-system architect. Cursor is implementation engineer / repo analyst / test runner.
+1. Is **Create this direction** the right CTA wording versus **Continue** / **Use this direction** / **Create my image**?
+2. Should quality/format/no-text remain visible while an Explore direction is active, or should those also collapse behind Fine Tune?
+3. When restoring manual styles, should the Explore card selection clear completely (current) or remain visible as a non-selected reference?
+4. Should the Recommended chip stay text-only, or become a quieter mark / ordering cue only?
+5. Is hiding the Review button while Explore is active correct, or should Review remain as a secondary path beside Create this direction?
 
-## Current task stopping point
+## Recommended next slice
 
-For this Cursor run, implement **only the Explore cleanup** above.
+From `PREMIUM-SITE-DESIGN-BUILD-PLAN.md`, after GPT reviews this cleanup:
 
-Then update this handoff with:
-
-- files changed
-- interaction changes
-- tests/results
-- final commit hash
-- iPhone retest steps
-- desktop implications discovered
-- any design questions that should go back to GPT
-- recommended next slice from the premium build plan
-
-Do not begin the full visual redesign until GPT reviews the cleaned-up Explore implementation.
+**Formalize Create journey/state architecture** (program step 2) — define the canonical Create Home → Song → Song DNA → Quick Generate / Explore → Fine Tune → Generation → Reveal states and contracts before any broad visual rebuild.
