@@ -3,13 +3,13 @@ type: asset-requests
 status: active
 updated: 2026-08-30
 area: visual-design
-phase: round-004-premium-venue
+phase: round-006-platinum-blue
 collaborator: ChatGPT image generation
 ---
 
-# Asset Request Manifest — Round 004 (Premium Private Venue)
+# Asset Request Manifest — Round 006 (Platinum + Blue on Black)
 
-Assets should support a **premium private creative venue** identity: luxury interior light, gallery calm, and tactile dark materials. Not concert haze, not studio equipment, not music-player chrome.
+Assets support a **premium private venue** on a **platinum + sapphire/cobalt on black** palette. Luxury automotive interior + gallery + Apple-grade dark interface. Not gaming RGB, neon fog, cyberpunk chrome, or casino gold.
 
 User-generated artwork remains the dominant content. Integrate via replaceable paths under `public/assets/images/system/`.
 
@@ -31,13 +31,13 @@ Global atmospheric field behind the app scaffold. Should feel like expensive spa
 | desktop | 2400 × 1600 | 3:2 |
 
 **Composition**  
-Deep graphite/midnight field. Subtle cool shadow in upper regions. Warm architectural light grazing one edge (lower-left or right rim). Extremely restrained grain. Calm center for UI readability. No literal room, furniture, fixtures, or focal subject.
+Black/graphite atmospheric field. Deep sapphire shadow and restrained cobalt edge illumination. Cool platinum light grazing one edge. Extremely restrained grain. Calm center for UI. No literal room or focal subject.
 
 **Style**  
-Luxury interior atmospheric photography, abstracted. Premium, restrained, photographic grain optional and very light.
+Ultra-premium dark interior light, abstracted. Architectural, not neon.
 
 **Colors**  
-Charcoal / midnight base. Accents: muted indigo shadow, warm brass/champagne edge light. No neon, no rainbow, no pure orange CTA glow in the image itself.
+Near-black / graphite base. Accents: deep sapphire, restrained cobalt, cool platinum edge. **No amber, brass, or gold.**
 
 **Background**  
 Opaque dark, gradient-compatible. Not transparent.
@@ -72,13 +72,10 @@ Top bar brand mark; future Flutter launch icon exploration reference (not replac
 | small UI | derived 128 / 256 | 1:1 |
 
 **Composition**  
-Abstract square emblem suggesting a private doorway or luminous aperture. Center glow warm brass/champagne; outer field deep indigo/graphite. Flat-enough edges for small sizes. Safe margin 10% inside canvas.
-
-**Style**  
-Premium app icon family: simple, memorable, gallery-adjacent. No skeuomorphic vinyl or instrument shapes.
+Black/graphite outer field. Platinum aperture rim. Sapphire core. Tiny cobalt luminosity at center if useful. Simple at 28–32px.
 
 **Colors**  
-Indigo/graphite field, brass core light, charcoal rim.
+Graphite/black field, platinum rim, sapphire core. **No gold/brass.**
 
 **Background**  
 Opaque (for app icon testing) plus optional transparent version for in-app chrome.
@@ -113,13 +110,10 @@ Quiet textured backdrop for Create so the suite feels like a private viewing/lis
 | desktop | 2200 × 1600 | landscape |
 
 **Composition**  
-Very dark honed stone or lacquer surface. Soft warm light falloff from upper edge. Extremely subtle grain. Center 60% low-contrast for form readability. No hard objects in lower two-thirds.
-
-**Style**  
-Private suite wall / gallery anteroom, tactile and matte. Not a recording studio.
+Black lacquer / graphite stone. Soft sapphire edge shadow. Faint platinum upper-edge light. Almost monochrome center for form readability.
 
 **Colors**  
-Charcoal lacquer, soft indigo edge shadow, faint brass crown light.
+Black graphite, sapphire shadow, platinum crown edge. **No brass.**
 
 **Background**  
 Opaque dark.
@@ -154,13 +148,10 @@ Premium empty state for Gallery when the user has no finished works yet. Private
 | @2x optional | 1800 × 1800 | 1:1 |
 
 **Composition**  
-Centered abstract unlit gallery frame or quiet alcove. Soft rim light on a dark square aperture. Single warm brass accent deep within. Generous outer margin (safe ~12%) for caption below.
-
-**Style**  
-Museum empty wall / private collection waiting. Quiet, collectible, not cartoon or SaaS blank slate.
+Black gallery alcove. Platinum rim on dark square aperture. Subtle sapphire depth. One tiny cobalt point of light if necessary.
 
 **Colors**  
-Graphite frame, indigo rim light, single brass spark. Mostly desaturated.
+Black frame, platinum rim, sapphire depth. **No warm sparks.**
 
 **Background**  
 Transparent preferred (PNG/WebP with alpha) so it sits on `--color-bg`.
@@ -197,7 +188,7 @@ Cinematic threshold into a luminous landscape. Silhouettes optional only (no rec
 Same family as launch hero photography: emotional, adventurous, hospitality not sales.
 
 **Colors**  
-Indigo dusk + brass horizon.
+Indigo dusk + sapphire horizon. **No brass horizon.**
 
 **Background**  
 Opaque.

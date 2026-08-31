@@ -3,7 +3,7 @@ type: flutter-handoff
 status: active
 updated: 2026-08-30
 area: visual-design
-phase: round-005
+phase: round-006-platinum-blue
 target: iOS + Android (Flutter)
 ---
 
@@ -13,16 +13,16 @@ The web prototype (`public/assets/css/app.css`, templates) is the visual specifi
 
 ---
 
-## Design intent (locked Round 005)
+## Design intent (Round 006)
 
-Premium **private creative venue**: calm, hosted, material-rich, artwork-first. Not a music player, mixer, or dating/membership product.
+Premium **private creative venue** on a **platinum + blue on black** palette: calm, hosted, artwork-first. Not gaming RGB, nightclub neon, cyberpunk, casino gold, or fintech blue wash.
 
 **Material hierarchy (do not expand casually):**
 
-1. Midnight base — scaffold
-2. Stone surface — working areas, inputs, trays
-3. Lacquer surface — elevated panels, sheets, overview
-4. Hairline / brass detail — selection, primary action, fine markers
+1. Black / near-black — scaffold
+2. Graphite — structural surfaces
+3. Smoked graphite — sheets, controls, trays
+4. Platinum hairlines + sapphire/cobalt light — selection, action, micro-detail
 5. Artwork — strongest color and emotion
 
 ---
@@ -33,24 +33,29 @@ Map web CSS variables to Dart `ThemeExtension` / `ColorScheme` names. OKLCH valu
 
 | Dart name | Web CSS | Role |
 | --- | --- | --- |
-| `appBackground` | `--color-bg` | Scaffold midnight base |
-| `surfaceStone` | `--color-surface-stone` | Inputs, trays, quiet areas |
-| `surfaceLacquer` | `--color-surface-lacquer` | Elevated curated panels |
-| `surfaceElevated` | `--color-surface-elevated` | Secondary elevation |
+| `appBackground` | `--color-bg` | Near-black scaffold |
+| `surfaceGraphite` | `--color-surface` | Structural graphite |
+| `surfaceStone` | `--color-surface-stone` | Quiet working areas |
+| `surfaceLacquer` | `--color-surface-lacquer` | Smoked graphite sheets |
+| `surfaceElevated` | `--color-surface-elevated` | Raised graphite |
 | `surfaceChrome` | `--color-surface-chrome` | App bar / tab bar (translucent) |
-| `textPrimary` | `--color-text` | Warm ivory body |
+| `textPrimary` | `--color-text` | Cool platinum white |
 | `textSecondary` | `--color-text-secondary` | Supporting copy |
 | `textTertiary` | `--color-text-tertiary` | Metadata, captions |
-| `accentBrass` | `--color-accent-brass` | Architectural light / hardware |
-| `accentPrimary` | `--color-accent` | Primary CTA (brass family) |
-| `accentSoft` | `--color-accent-soft` | Selected wash |
-| `hazeIndigo` | `--color-haze` | Atmospheric cool shadow (decorative) |
-| `borderHairline` | `--color-border-hairline` | Ultra-quiet structure |
+| `platinum` | `--color-platinum` | Hairlines, fine borders, micro-labels |
+| `silver` | `--color-silver` | Secondary metallic tone |
+| `accentSapphire` | `--color-accent-sapphire` | Calm brand light / selection |
+| `accentCobalt` | `--color-accent-cobalt` | Strong action emphasis |
+| `accentPrimary` | `--color-accent` | Alias → sapphire |
+| `accentSoft` | `--color-accent-soft` | Sapphire wash |
+| `hazeSapphire` | `--color-haze` | Atmospheric deep blue (decorative) |
+| `borderHairline` | `--color-border-hairline` | Platinum hairline |
 | `borderDefault` | `--color-border` | Standard outline |
 | `borderStrong` | `--color-border-strong` | Interactive outline |
 | `destructive` | `--color-destructive` | Delete / danger |
 | `success` | `--color-success` | Success states |
-| `focusRing` | `--focus-ring` | Focus highlight |
+| `warning` | `--color-warning` | Semantic warning (only warm brand-adjacent color) |
+| `focusRing` | `--focus-ring` | Sapphire focus highlight |
 
 ### Spacing scale
 
@@ -124,7 +129,7 @@ Honor `MediaQuery.disableAnimations` / platform reduced-motion.
 | `.session-progress` | `StageIndicator` | Song / People / Direction |
 | `.movement` sections | `VenueSection` | Numbered stage container |
 | `.track-source__fields` + inputs | `VenueTextField` ×2 in `SongStageForm` | Hairline grouped layout |
-| `.btn--primary` | `VenuePrimaryButton` | Brass gradient, full-width where needed |
+| `.btn--primary` | `VenuePrimaryButton` | Sapphire→cobalt gradient, full-width where needed |
 | `.btn--secondary` | `VenueSecondaryButton` | Lacquer outline |
 | `.btn--danger` | `VenueDestructiveButton` | Delete confirm |
 | `.portrait-tray` + `.portrait-chip` | `PortraitGalleryTray` + `PortraitTile` | Square crop, select + delete |

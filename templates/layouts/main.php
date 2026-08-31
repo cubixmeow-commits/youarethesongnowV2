@@ -37,7 +37,7 @@ $bodyClass = trim(($layoutClass ?? '') . ($isHome ? ' is-home' : '') . ($authed 
   <link rel="preload" as="image" href="/assets/images/launch/example-solo-560.webp" imagesrcset="/assets/images/launch/example-solo-560.webp 560w, /assets/images/launch/example-solo-1122.webp 1122w" imagesizes="100vw" fetchpriority="high">
   <?php endif; ?>
   <link rel="stylesheet" href="/assets/css/app.css?v=<?= e($cssVersion) ?>">
-  <meta name="theme-color" content="#0E1118">
+  <meta name="theme-color" content="#080A10">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
