@@ -2,7 +2,7 @@
 
 **Date:** 2026-08-31  
 **Branch:** `cursor/design-system-audit-95fa`  
-**Primary delivery commit (this turn):** `8f7adfed0ef7c86be66a1e0861a9cc57af412441`  
+**Primary delivery commit (this turn):** `1b43cd38747047601202567aa3b1f11bc9c2f72d`  
 **Phase:** 1 — Audit & structure + **Create-flow architecture documentation**  
 **Do not begin Phase 2 token migration or DNA-first Create UX implementation** until this handoff is reviewed and First Build / Onboarding contracts are amended where required.
 
@@ -123,5 +123,5 @@ This unblocks Explore Options / Fine Tune / generation checklist design without 
 ## Git
 
 - **Branch:** `cursor/design-system-audit-95fa`
-- **Primary delivery commit (this turn):** `8f7adfed0ef7c86be66a1e0861a9cc57af412441`
+- **Primary delivery commit (this turn):** `1b43cd38747047601202567aa3b1f11bc9c2f72d`
 - **Scope this turn:** documentation / vault / dashboard only — no Create template or CSS behavior changes
