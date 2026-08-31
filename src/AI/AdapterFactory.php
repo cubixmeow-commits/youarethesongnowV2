@@ -106,6 +106,10 @@ final class AdapterFactory
             'replicateLiveCalls' => Config::getBool('ai.replicate_live_calls'),
             'deterministicFallbackAllowed' => Config::getBool('ai.allow_deterministic_fallback'),
             'geminiModel' => Config::get('ai.gemini_model'),
+            'geminiExploreModel' => Config::get('ai.gemini_explore_model') !== ''
+                ? Config::get('ai.gemini_explore_model')
+                : Config::get('ai.gemini_model'),
+            'geminiExploreModelOverride' => Config::get('ai.gemini_explore_model'),
             'geminiImageModel' => Config::get('ai.gemini_image_model'),
             'geminiImageSize' => Config::get('ai.gemini_image_size'),
             'geminiImageAdapterAvailable' => $geminiImage->isAvailable(),

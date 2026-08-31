@@ -115,7 +115,11 @@
         body: JSON.stringify({ songDna: latestSongDna }),
       });
       const payload = await response.json();
-      if (!response.ok) throw new Error(payload?.error?.message || 'Could not create directions.');
+      if (!response.ok) {
+        const message = payload?.error?.message || 'Could not create directions.';
+        const diagnostic = payload?.error?.fields?.diagnostic;
+        throw new Error(diagnostic ? `${message} (${diagnostic})` : message);
+      }
       const directions = payload?.data?.directions || [];
       if (!directions.length) throw new Error('Gemini returned no visual directions.');
 

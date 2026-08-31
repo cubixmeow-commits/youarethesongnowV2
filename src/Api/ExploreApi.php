@@ -9,6 +9,7 @@ use Yatsn\Auth\SessionService;
 use Yatsn\Http\Request;
 use Yatsn\Http\Router;
 use Yatsn\Styles\StyleService;
+use Yatsn\Support\Config;
 use Yatsn\Support\JsonResponse;
 
 final class ExploreApi
@@ -38,17 +39,81 @@ final class ExploreApi
                     StyleService::activeForClient()
                 ));
             } catch (\InvalidArgumentException $e) {
-                JsonResponse::error('song_dna_required', 'Discover a song before exploring directions.', 422);
+                self::fail(
+                    'song_dna_required',
+                    'Discover a song before exploring directions.',
+                    422,
+                    GeminiExploreService::lastDiagnostic() !== ''
+                        ? GeminiExploreService::lastDiagnostic()
+                        : 'song-dna-required'
+                );
             } catch (\RuntimeException $e) {
                 $code = $e->getMessage();
+                $diagnostic = GeminiExploreService::lastDiagnostic();
+                if ($diagnostic === '') {
+                    $diagnostic = GeminiExploreService::safeFailureStatus($code);
+                }
+
                 if ($code === 'provider_http_429') {
-                    JsonResponse::error('explore_rate_limited', 'Gemini is busy or the free quota was reached. Try again shortly.', 429, [], null, 30);
+                    self::fail(
+                        'explore_rate_limited',
+                        'Gemini is busy or the free quota was reached. Try again shortly.',
+                        429,
+                        $diagnostic,
+                        30
+                    );
                 }
                 if (in_array($code, ['gemini_unavailable', 'provider_http_401', 'provider_http_403', 'provider_http_404'], true)) {
-                    JsonResponse::error('explore_unavailable', 'AI directions are unavailable right now. You can still choose a direction manually.', 503);
+                    self::fail(
+                        'explore_unavailable',
+                        'AI directions are unavailable right now. You can still choose a direction manually.',
+                        503,
+                        $diagnostic
+                    );
                 }
-                JsonResponse::error('explore_failed', 'We could not create visual directions for this song yet. Try again.', 503);
+                self::fail(
+                    'explore_failed',
+                    'We could not create visual directions for this song yet. Try again.',
+                    503,
+                    $diagnostic
+                );
             }
         });
+
+        // Development/owner readiness only. Never calls the provider and never returns secrets.
+        $router->get('/api/v1/explore-directions/readiness', function () {
+            $session = SessionService::current();
+            if (!$session) {
+                JsonResponse::error('unauthorized', 'Sign in to continue.', 401);
+            }
+            if (!self::allowDiagnostics()) {
+                JsonResponse::error('not_found', 'Not found.', 404);
+            }
+            if (($session['role'] ?? '') !== 'owner') {
+                JsonResponse::error('forbidden', 'Owner access required.', 403);
+            }
+            JsonResponse::data(GeminiExploreService::readiness());
+        });
+    }
+
+    private static function fail(
+        string $code,
+        string $message,
+        int $status,
+        string $diagnostic,
+        ?int $retryAfterSeconds = null
+    ): never {
+        $fields = [];
+        if (self::allowDiagnostics() && $diagnostic !== '') {
+            // Concise machine-readable status only. No keys, prompts, DNA, or provider bodies.
+            $fields['diagnostic'] = $diagnostic;
+        }
+        JsonResponse::error($code, $message, $status, $fields, null, $retryAfterSeconds);
+    }
+
+    private static function allowDiagnostics(): bool
+    {
+        return Config::getBool('app.debug')
+            || (string) Config::get('app.env', 'production') === 'development';
     }
 }

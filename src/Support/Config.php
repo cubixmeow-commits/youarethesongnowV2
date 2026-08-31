@@ -78,6 +78,9 @@ final class Config
                 'creative_provider' => strtolower((string) env_value('CREATIVE_PROVIDER', 'auto')),
                 'image_provider' => strtolower((string) env_value('IMAGE_PROVIDER', 'auto')),
                 'gemini_model' => env_value('GEMINI_MODEL', 'gemini-3.6-flash'),
+                // Optional Explore override. Empty means reuse gemini_model (the proven Song DNA path).
+                // Do not hard-default to gemini-2.5-flash-lite: many API keys receive HTTP 404 for 2.5 models.
+                'gemini_explore_model' => trim((string) env_value('GEMINI_EXPLORE_MODEL', '')),
                 'gemini_image_model' => env_value('GEMINI_IMAGE_MODEL', 'gemini-3.1-flash-image'),
                 'gemini_image_size' => env_value('GEMINI_IMAGE_SIZE', '1K'),
                 'groq_model' => env_value('GROQ_MODEL', 'openai/gpt-oss-20b'),

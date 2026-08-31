@@ -595,6 +595,266 @@ assert_true(!str_contains(json_encode($interactionsSearch, JSON_THROW_ON_ERROR),
 $mailLogPath = Config::get('app.log_path') . '/mail.log';
 $mailBeforeInteractions = file_exists($mailLogPath) ? (string) file_get_contents($mailLogPath) : '';
 assert_true(!str_contains($mailBeforeInteractions, (string) ($interactionsResponse['id'] ?? 'int_fixture')), 'raw interaction identifiers are not written into mail logs by Song DNA parsing');
+
+// --- Gemini Explore directions (Song DNA → 3 visual directions) ---
+$exploreSongDna = [
+    'essence' => 'A restless night drive toward release.',
+    'emotionalArc' => 'tension to release',
+    'themes' => ['restlessness', 'desire'],
+    'mood' => ['yearning', 'electric'],
+    'narrativeArchetype' => 'transformation',
+    'originalVisualMoment' => 'A lone figure stands at a neon-lit intersection as warm sodium light cuts the dark.',
+    'symbols' => ['intersection', 'sodium light'],
+    'environment' => ['night city'],
+];
+$exploreStyles = [
+    ['id' => 'style_a', 'name' => 'Cinematic Realism', 'description' => 'Cinema', 'category' => 'Cinematic'],
+    ['id' => 'style_b', 'name' => 'Luminous Watercolor', 'description' => 'Soft', 'category' => 'Fine Art'],
+    ['id' => 'style_c', 'name' => 'Neon Noir', 'description' => 'Night', 'category' => 'Cinematic'],
+];
+$exploreDirectionPayload = [
+    'directions' => [
+        ['name' => 'Sodium Crossing', 'description' => 'Warm night light at a lonely intersection.', 'styleId' => 'style_a', 'promptHint' => 'neon intersection sodium light'],
+        ['name' => 'Watercolor Drift', 'description' => 'Soft washes over a restless drive.', 'styleId' => 'style_b', 'promptHint' => 'watercolor night road'],
+        ['name' => 'Noir Voltage', 'description' => 'Electric desire under cold neon.', 'styleId' => 'style_c', 'promptHint' => 'neon noir tension'],
+    ],
+];
+
+putenv('AI_PROVIDERS_ENABLED=true');
+putenv('GEMINI_LIVE_CALLS=true');
+putenv('GEMINI_API_KEY=test-gemini-key-not-real');
+putenv('GEMINI_MODEL=gemini-3.6-flash');
+putenv('GEMINI_EXPLORE_MODEL=');
+$_ENV['AI_PROVIDERS_ENABLED'] = 'true';
+$_ENV['GEMINI_LIVE_CALLS'] = 'true';
+$_ENV['GEMINI_API_KEY'] = 'test-gemini-key-not-real';
+$_ENV['GEMINI_MODEL'] = 'gemini-3.6-flash';
+$_ENV['GEMINI_EXPLORE_MODEL'] = '';
+Config::boot($root);
+
+\Yatsn\AI\GeminiExploreService::resetDiagnosticsForTests();
+\Yatsn\AI\GeminiExploreService::setTransportForTests(null);
+
+assert_true(\Yatsn\AI\GeminiExploreService::resolveModel() === 'gemini-3.6-flash', 'Explore reuses proven GEMINI_MODEL when override is empty');
+assert_true(\Yatsn\AI\GeminiExploreService::fallbackModel('gemini-3.6-flash') === null, 'no fallback when already using general model');
+assert_true(\Yatsn\AI\GeminiExploreService::availabilityFailure() === null, 'Explore gates pass when providers + live calls + key are set');
+$exploreReadiness = \Yatsn\AI\GeminiExploreService::readiness();
+assert_true(($exploreReadiness['ready'] ?? false) === true, 'Explore readiness is true with working Gemini config');
+assert_true(($exploreReadiness['usesGeneralGeminiModel'] ?? false) === true, 'Explore readiness reports reuse of general Gemini model');
+assert_true(str_contains((string) ($exploreReadiness['endpoint'] ?? ''), 'gemini-3.6-flash:generateContent'), 'Explore endpoint targets generateContent for resolved model');
+
+$explorePayload = \Yatsn\AI\GeminiExploreService::requestPayload('fixture', \Yatsn\AI\GeminiExploreService::responseSchema(['style_a', 'style_b']));
+assert_true(($explorePayload['generationConfig']['responseMimeType'] ?? '') === 'application/json', 'Explore request uses responseMimeType application/json');
+assert_true(isset($explorePayload['generationConfig']['responseJsonSchema']), 'Explore structured request includes responseJsonSchema');
+assert_true(!isset($explorePayload['generationConfig']['responseFormat']), 'Explore does not use Interactions-style responseFormat nesting');
+$explorePlainPayload = \Yatsn\AI\GeminiExploreService::requestPayload('fixture', null);
+assert_true(!isset($explorePlainPayload['generationConfig']['responseJsonSchema']), 'Explore JSON-mode fallback omits responseJsonSchema');
+
+$safeExploreDna = \Yatsn\AI\GeminiExploreService::safeSongDna(array_merge($exploreSongDna, [
+    'lyrics' => 'SECRET LYRIC LINE',
+    'rawLyrics' => 'more secret',
+    'portraitBytes' => 'BINARY',
+]));
+assert_true(!isset($safeExploreDna['lyrics']) && !isset($safeExploreDna['rawLyrics']) && !isset($safeExploreDna['portraitBytes']), 'Explore Song DNA sanitizer drops lyrics and portrait fields');
+assert_true(($safeExploreDna['essence'] ?? '') === 'A restless night drive toward release.', 'Explore Song DNA sanitizer keeps derived essence');
+
+\Yatsn\AI\GeminiExploreService::setTransportForTests(static function (string $url, array $payload, array $headers, int $timeout) use ($exploreDirectionPayload): array {
+    assert_true(str_contains($url, 'gemini-3.6-flash:generateContent'), 'successful Explore call uses general Gemini model');
+    assert_true(($payload['generationConfig']['responseMimeType'] ?? '') === 'application/json', 'live Explore transport receives JSON mime type');
+    $headerBlob = implode("\n", $headers);
+    assert_true(str_contains($headerBlob, 'x-goog-api-key:'), 'Explore sends Gemini API key header');
+    assert_true(!str_contains(json_encode($payload, JSON_THROW_ON_ERROR), 'SECRET LYRIC'), 'Explore request body never includes raw lyrics');
+    return [
+        'candidates' => [[
+            'finishReason' => 'STOP',
+            'content' => ['parts' => [['text' => json_encode($exploreDirectionPayload, JSON_THROW_ON_ERROR)]]],
+        ]],
+    ];
+});
+$exploreOk = \Yatsn\AI\GeminiExploreService::directions($exploreSongDna, $exploreStyles);
+assert_true(count($exploreOk['directions'] ?? []) === 3, 'successful Explore returns exactly three directions');
+assert_true(($exploreOk['directions'][0]['name'] ?? '') === 'Sodium Crossing', 'Explore preserves ranked first recommendation');
+assert_true(($exploreOk['model'] ?? '') === 'gemini-3.6-flash', 'Explore success reports the model used');
+assert_true(\Yatsn\AI\GeminiExploreService::lastDiagnostic() === 'ok', 'Explore success diagnostic is ok');
+
+// Provider 400 structured-output fallback (schema rejected → plain JSON mode)
+$explore400Calls = 0;
+\Yatsn\AI\GeminiExploreService::setTransportForTests(static function (string $url, array $payload) use (&$explore400Calls, $exploreDirectionPayload): array {
+    $explore400Calls++;
+    if ($explore400Calls === 1) {
+        assert_true(isset($payload['generationConfig']['responseJsonSchema']), 'first Explore attempt includes schema');
+        throw new RuntimeException('provider_http_400');
+    }
+    assert_true(!isset($payload['generationConfig']['responseJsonSchema']), 'Explore 400 fallback omits schema');
+    return [
+        'candidates' => [[
+            'finishReason' => 'STOP',
+            'content' => ['parts' => [['text' => json_encode($exploreDirectionPayload, JSON_THROW_ON_ERROR)]]],
+        ]],
+    ];
+});
+$exploreAfter400 = \Yatsn\AI\GeminiExploreService::directions($exploreSongDna, $exploreStyles);
+assert_true(count($exploreAfter400['directions']) === 3, 'Explore recovers from provider 400 via JSON-mode fallback');
+assert_true($explore400Calls === 2, 'Explore makes exactly one structured-output retry after HTTP 400');
+
+// Optional explore override 404 → fallback to general GEMINI_MODEL
+putenv('GEMINI_EXPLORE_MODEL=gemini-2.5-flash-lite');
+$_ENV['GEMINI_EXPLORE_MODEL'] = 'gemini-2.5-flash-lite';
+Config::boot($root);
+assert_true(\Yatsn\AI\GeminiExploreService::resolveModel() === 'gemini-2.5-flash-lite', 'Explore override model is used when configured');
+assert_true(\Yatsn\AI\GeminiExploreService::fallbackModel('gemini-2.5-flash-lite') === 'gemini-3.6-flash', 'Explore 404 path can fall back to general Gemini model');
+$explore404Calls = [];
+\Yatsn\AI\GeminiExploreService::setTransportForTests(static function (string $url, array $payload) use (&$explore404Calls, $exploreDirectionPayload): array {
+    $explore404Calls[] = $url;
+    if (str_contains($url, 'gemini-2.5-flash-lite')) {
+        throw new RuntimeException('provider_http_404');
+    }
+    assert_true(str_contains($url, 'gemini-3.6-flash:generateContent'), 'Explore retries generateContent on proven general model after 404');
+    return [
+        'candidates' => [[
+            'finishReason' => 'STOP',
+            'content' => ['parts' => [['text' => json_encode($exploreDirectionPayload, JSON_THROW_ON_ERROR)]]],
+        ]],
+    ];
+});
+$exploreAfter404 = \Yatsn\AI\GeminiExploreService::directions($exploreSongDna, $exploreStyles);
+assert_true(count($exploreAfter404['directions']) === 3, 'Explore recovers from model 404 via general Gemini fallback');
+assert_true(($exploreAfter404['model'] ?? '') === 'gemini-3.6-flash', 'Explore reports fallback model after 404 recovery');
+assert_true(count($explore404Calls) === 2, 'Explore attempts override then general model on 404');
+
+// Auth / permission mapping
+foreach (['provider_http_401' => 'provider-auth-or-permission-failed', 'provider_http_403' => 'provider-auth-or-permission-failed'] as $httpCode => $expectedDiag) {
+    \Yatsn\AI\GeminiExploreService::setTransportForTests(static function () use ($httpCode): array {
+        throw new RuntimeException($httpCode);
+    });
+    $authMapped = false;
+    try {
+        \Yatsn\AI\GeminiExploreService::directions($exploreSongDna, $exploreStyles);
+    } catch (RuntimeException $e) {
+        $authMapped = $e->getMessage() === $httpCode
+            && \Yatsn\AI\GeminiExploreService::lastDiagnostic() === $expectedDiag
+            && \Yatsn\AI\GeminiExploreService::safeFailureStatus($httpCode) === $expectedDiag;
+    }
+    assert_true($authMapped, 'Explore maps ' . $httpCode . ' to auth/permission diagnostic');
+}
+
+// Hard 404 when override equals general model (no secondary fallback available)
+putenv('GEMINI_EXPLORE_MODEL=');
+$_ENV['GEMINI_EXPLORE_MODEL'] = '';
+Config::boot($root);
+\Yatsn\AI\GeminiExploreService::setTransportForTests(static function (): array {
+    throw new RuntimeException('provider_http_404');
+});
+$modelUnavailable = false;
+try {
+    \Yatsn\AI\GeminiExploreService::directions($exploreSongDna, $exploreStyles);
+} catch (RuntimeException $e) {
+    $modelUnavailable = $e->getMessage() === 'provider_http_404'
+        && \Yatsn\AI\GeminiExploreService::lastDiagnostic() === 'provider-model-unavailable';
+}
+assert_true($modelUnavailable, 'Explore maps terminal provider 404 to model-unavailable diagnostic');
+
+// Rate limit mapping
+\Yatsn\AI\GeminiExploreService::setTransportForTests(static function (): array {
+    throw new RuntimeException('provider_http_429');
+});
+$rateLimited = false;
+try {
+    \Yatsn\AI\GeminiExploreService::directions($exploreSongDna, $exploreStyles);
+} catch (RuntimeException $e) {
+    $rateLimited = $e->getMessage() === 'provider_http_429'
+        && \Yatsn\AI\GeminiExploreService::safeFailureStatus('provider_http_429') === 'provider-rate-limited'
+        && \Yatsn\AI\GeminiExploreService::lastDiagnostic() === 'provider-rate-limited';
+}
+assert_true($rateLimited, 'Explore maps provider 429 to rate-limit diagnostic');
+
+// Incomplete / invalid JSON output
+\Yatsn\AI\GeminiExploreService::setTransportForTests(static function (): array {
+    return [
+        'candidates' => [[
+            'finishReason' => 'STOP',
+            'content' => ['parts' => [['text' => '{"directions":[{"name":"Only One","description":"incomplete","styleId":"style_a","promptHint":"x"}]}']]],
+        ]],
+    ];
+});
+$incomplete = false;
+try {
+    \Yatsn\AI\GeminiExploreService::directions($exploreSongDna, $exploreStyles);
+} catch (RuntimeException $e) {
+    $incomplete = $e->getMessage() === 'gemini_explore_incomplete'
+        && \Yatsn\AI\GeminiExploreService::lastDiagnostic() === 'provider-incomplete-output';
+}
+assert_true($incomplete, 'Explore rejects incomplete direction sets');
+
+\Yatsn\AI\GeminiExploreService::setTransportForTests(static function (): array {
+    return [
+        'candidates' => [[
+            'finishReason' => 'STOP',
+            'content' => ['parts' => [['text' => 'not-json-at-all']]],
+        ]],
+    ];
+});
+$invalidJson = false;
+try {
+    \Yatsn\AI\GeminiExploreService::directions($exploreSongDna, $exploreStyles);
+} catch (RuntimeException $e) {
+    $invalidJson = $e->getMessage() === 'gemini_explore_incomplete'
+        && \Yatsn\AI\GeminiExploreService::lastDiagnostic() === 'provider-invalid-json';
+}
+assert_true($invalidJson, 'Explore maps invalid provider JSON to incomplete/invalid diagnostic');
+
+// Config gate diagnostics (providers disabled / live calls off / key missing)
+putenv('AI_PROVIDERS_ENABLED=false');
+$_ENV['AI_PROVIDERS_ENABLED'] = 'false';
+Config::boot($root);
+assert_true(\Yatsn\AI\GeminiExploreService::availabilityFailure() === 'config-ai-providers-disabled', 'Explore detects AI providers gate disabled');
+$gateDisabled = false;
+try {
+    \Yatsn\AI\GeminiExploreService::directions($exploreSongDna, $exploreStyles);
+} catch (RuntimeException $e) {
+    $gateDisabled = $e->getMessage() === 'gemini_unavailable'
+        && \Yatsn\AI\GeminiExploreService::lastDiagnostic() === 'config-ai-providers-disabled';
+}
+assert_true($gateDisabled, 'Explore throws gemini_unavailable when AI providers gate is off');
+
+putenv('AI_PROVIDERS_ENABLED=true');
+putenv('GEMINI_LIVE_CALLS=false');
+$_ENV['AI_PROVIDERS_ENABLED'] = 'true';
+$_ENV['GEMINI_LIVE_CALLS'] = 'false';
+Config::boot($root);
+assert_true(\Yatsn\AI\GeminiExploreService::availabilityFailure() === 'config-gemini-live-calls-disabled', 'Explore detects Gemini live-calls disabled');
+
+putenv('GEMINI_LIVE_CALLS=true');
+putenv('GEMINI_API_KEY=');
+$_ENV['GEMINI_LIVE_CALLS'] = 'true';
+$_ENV['GEMINI_API_KEY'] = '';
+Config::boot($root);
+assert_true(\Yatsn\AI\GeminiExploreService::availabilityFailure() === 'config-gemini-api-key-missing', 'Explore detects missing Gemini API key');
+
+$providerLog = @file_get_contents($testLog . '/ai-providers.log') ?: '';
+assert_true(str_contains($providerLog, 'gemini-explore'), 'Explore writes sanitized provider diagnostics');
+assert_true(!str_contains($providerLog, 'test-gemini-key-not-real'), 'Explore diagnostics never log API keys');
+assert_true(!str_contains($providerLog, 'SECRET LYRIC'), 'Explore diagnostics never log lyrics');
+assert_true(!str_contains($providerLog, 'A restless night drive'), 'Explore diagnostics never log Song DNA prompt content');
+
+\Yatsn\AI\GeminiExploreService::setTransportForTests(null);
+\Yatsn\AI\GeminiExploreService::resetDiagnosticsForTests();
+putenv('AI_PROVIDERS_ENABLED=false');
+putenv('GEMINI_LIVE_CALLS=false');
+putenv('GEMINI_API_KEY=');
+putenv('GEMINI_EXPLORE_MODEL=');
+$_ENV['AI_PROVIDERS_ENABLED'] = 'false';
+$_ENV['GEMINI_LIVE_CALLS'] = 'false';
+$_ENV['GEMINI_API_KEY'] = '';
+$_ENV['GEMINI_EXPLORE_MODEL'] = '';
+Config::boot($root);
+
+$exploreJs = (string) file_get_contents($root . '/public/assets/js/explore.js');
+assert_true(str_contains($exploreJs, 'fields?.diagnostic'), 'Explore UI surfaces development diagnostic codes when present');
+assert_true(is_file($root . '/bin/diagnose-gemini-explore.php'), 'Explore host diagnostic command exists');
+$aiStatus = \Yatsn\AI\AdapterFactory::runtimeStatus();
+assert_true(array_key_exists('geminiExploreModel', $aiStatus), 'runtime status exposes resolved Explore model');
+
 $groqDecoded = \Yatsn\AI\GroqCreativeAdapter::decodeResponse([
     'choices' => [['message' => ['content' => json_encode($analysisFixture, JSON_THROW_ON_ERROR)]]],
 ]);
