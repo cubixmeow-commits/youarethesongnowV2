@@ -855,6 +855,42 @@ assert_true(is_file($root . '/bin/diagnose-gemini-explore.php'), 'Explore host d
 $aiStatus = \Yatsn\AI\AdapterFactory::runtimeStatus();
 assert_true(array_key_exists('geminiExploreModel', $aiStatus), 'runtime status exposes resolved Explore model');
 
+// Private-build diagnostics must not depend on APP_ENV / APP_DEBUG (.env changes).
+assert_true(\Yatsn\Support\BuildInfo::isPrivateBuild() === true, 'tests run as private build while external users are gated');
+assert_true(\Yatsn\Support\BuildInfo::allowDiagnostics() === true, 'private build enables Explore diagnostics without APP_ENV=development');
+$buildSummary = \Yatsn\Support\BuildInfo::publicSummary();
+assert_true(!empty($buildSummary['privateBuild']), 'public build summary marks private build');
+assert_true(!empty($buildSummary['commit']), 'build summary exposes a commit short hash for iPhone verification');
+assert_true(in_array($buildSummary['source'] ?? '', ['git', 'stamp'], true), 'build summary reports git or stamp source');
+assert_true(!isset($buildSummary['GEMINI_API_KEY']), 'build summary never includes env secrets');
+
+putenv('APP_ENV=production');
+putenv('APP_DEBUG=false');
+$_ENV['APP_ENV'] = 'production';
+$_ENV['APP_DEBUG'] = 'false';
+putenv('ALLOW_EXTERNAL_USERS=false');
+$_ENV['ALLOW_EXTERNAL_USERS'] = 'false';
+Config::boot($root);
+assert_true(\Yatsn\Support\BuildInfo::allowDiagnostics() === true, 'Hostinger-like production env still shows diagnostics while private');
+putenv('ALLOW_EXTERNAL_USERS=true');
+$_ENV['ALLOW_EXTERNAL_USERS'] = 'true';
+Config::boot($root);
+assert_true(\Yatsn\Support\BuildInfo::allowDiagnostics() === false, 'diagnostics hide once external users are enabled without debug');
+assert_true((\Yatsn\Support\BuildInfo::publicSummary()['privateBuild'] ?? true) === false, 'public build commit is omitted when external access is enabled');
+putenv('ALLOW_EXTERNAL_USERS=false');
+$_ENV['ALLOW_EXTERNAL_USERS'] = 'false';
+putenv('APP_ENV=development');
+putenv('APP_DEBUG=true');
+$_ENV['APP_ENV'] = 'development';
+$_ENV['APP_DEBUG'] = 'true';
+Config::boot($root);
+
+$createTemplate = (string) file_get_contents($root . '/templates/pages/create.php');
+assert_true(str_contains($createTemplate, 'data-build-commit'), 'Create page can expose private build commit');
+assert_true(str_contains($exploreJs, 'data-ai-build'), 'Explore UI can show deployed build commit');
+assert_true(str_contains($exploreJs, 'fields?.build'), 'Explore UI surfaces build id from error fields');
+assert_true(is_file($root . '/app/build-stamp.php'), 'committed build stamp exists for non-git hosts');
+
 $groqDecoded = \Yatsn\AI\GroqCreativeAdapter::decodeResponse([
     'choices' => [['message' => ['content' => json_encode($analysisFixture, JSON_THROW_ON_ERROR)]]],
 ]);

@@ -28,11 +28,16 @@ final class ApiV1
     public static function register(Router $router): void
     {
         $router->get('/api/v1/health', function () {
-            JsonResponse::data([
+            $payload = [
                 'status' => 'ok',
                 'service' => 'yatsn-v2',
                 'time' => now_utc(),
-            ]);
+            ];
+            $build = \Yatsn\Support\BuildInfo::publicSummary();
+            if (!empty($build['privateBuild'])) {
+                $payload['build'] = $build;
+            }
+            JsonResponse::data($payload);
         });
 
         $router->post('/api/v1/auth/activations/complete', function (Request $request) {

@@ -59,7 +59,7 @@
     panel.innerHTML = `
       <div class="ai-direction-lab__top">
         <div>
-          <div class="ai-direction-lab__badge">First build · Song DNA</div>
+          <div class="ai-direction-lab__badge">First build · Song DNA<span data-ai-build></span></div>
           <h3>Let AI shape the direction</h3>
           <p class="quiet">Generate immediately with the strongest fit, or explore three directions created specifically for this Song DNA.</p>
         </div>
@@ -75,6 +75,11 @@
 
     panel.querySelector('[data-ai-explore]').addEventListener('click', () => loadDirections(false));
     panel.querySelector('[data-ai-quick]').addEventListener('click', () => loadDirections(true));
+    const buildCommit = document.querySelector('[data-create]')?.dataset.buildCommit;
+    const buildLabel = panel.querySelector('[data-ai-build]');
+    if (buildLabel && buildCommit) {
+      buildLabel.textContent = ` · ${buildCommit}`;
+    }
     updateAvailability();
   }
 
@@ -118,7 +123,9 @@
       if (!response.ok) {
         const message = payload?.error?.message || 'Could not create directions.';
         const diagnostic = payload?.error?.fields?.diagnostic;
-        throw new Error(diagnostic ? `${message} (${diagnostic})` : message);
+        const build = payload?.error?.fields?.build;
+        const suffix = [diagnostic, build ? `build ${build}` : ''].filter(Boolean).join(' · ');
+        throw new Error(suffix ? `${message} (${suffix})` : message);
       }
       const directions = payload?.data?.directions || [];
       if (!directions.length) throw new Error('Gemini returned no visual directions.');

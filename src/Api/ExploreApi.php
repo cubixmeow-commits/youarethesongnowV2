@@ -9,7 +9,7 @@ use Yatsn\Auth\SessionService;
 use Yatsn\Http\Request;
 use Yatsn\Http\Router;
 use Yatsn\Styles\StyleService;
-use Yatsn\Support\Config;
+use Yatsn\Support\BuildInfo;
 use Yatsn\Support\JsonResponse;
 
 final class ExploreApi
@@ -80,19 +80,22 @@ final class ExploreApi
             }
         });
 
-        // Development/owner readiness only. Never calls the provider and never returns secrets.
+        // Private-build / owner readiness. Never calls the provider and never returns secrets.
         $router->get('/api/v1/explore-directions/readiness', function () {
             $session = SessionService::current();
             if (!$session) {
                 JsonResponse::error('unauthorized', 'Sign in to continue.', 401);
             }
-            if (!self::allowDiagnostics()) {
+            if (!BuildInfo::allowDiagnostics()) {
                 JsonResponse::error('not_found', 'Not found.', 404);
             }
             if (($session['role'] ?? '') !== 'owner') {
                 JsonResponse::error('forbidden', 'Owner access required.', 403);
             }
-            JsonResponse::data(GeminiExploreService::readiness());
+            JsonResponse::data([
+                'explore' => GeminiExploreService::readiness(),
+                'build' => BuildInfo::publicSummary(),
+            ]);
         });
     }
 
@@ -104,16 +107,14 @@ final class ExploreApi
         ?int $retryAfterSeconds = null
     ): never {
         $fields = [];
-        if (self::allowDiagnostics() && $diagnostic !== '') {
+        if (BuildInfo::allowDiagnostics() && $diagnostic !== '') {
             // Concise machine-readable status only. No keys, prompts, DNA, or provider bodies.
             $fields['diagnostic'] = $diagnostic;
+            $build = BuildInfo::publicSummary();
+            if (!empty($build['commit'])) {
+                $fields['build'] = (string) $build['commit'];
+            }
         }
         JsonResponse::error($code, $message, $status, $fields, null, $retryAfterSeconds);
-    }
-
-    private static function allowDiagnostics(): bool
-    {
-        return Config::getBool('app.debug')
-            || (string) Config::get('app.env', 'production') === 'development';
     }
 }
