@@ -7,6 +7,6 @@ declare(strict_types=1);
  * Prefer the live Git checkout when the Hostinger tree is synchronized from main.
  */
 return [
-    'commit' => '9557316e9aac76c3993f085a10e12a2aeec4a216',
+    'commit' => '5a1dfde676486b6affcccbf70397e0cab2547423',
     'note' => 'Explore decoder skips Gemini 3 thought parts',
 ];

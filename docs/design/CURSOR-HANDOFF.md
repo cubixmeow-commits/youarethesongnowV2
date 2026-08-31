@@ -95,8 +95,8 @@ php tests/run.php
 
 ## Final commit
 
-- **Hash:** 
+- **Hash:** `5a1dfde676486b6affcccbf70397e0cab2547423`
 - **Message:** Fix Explore JSON decode for Gemini 3 thought parts
-- **Branch:** 
-- **Build stamp:** 
-- **Requires:** Hostinger git sync only (no  changes)
+- **Branch:** `main`
+- **Build stamp:** `5a1dfde676486b6affcccbf70397e0cab2547423`
+- **Requires:** Hostinger git sync only (no `.env` changes)
