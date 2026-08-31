@@ -1,10 +1,29 @@
 # CURSOR-HANDOFF — Design Operating System
 
 **Date:** 2026-08-31  
-**Branch:** `cursor/design-system-audit-95fa`  
-**Primary delivery commit (this turn):** `1b43cd38747047601202567aa3b1f11bc9c2f72d`  
+**Branch:** `main`  
 **Phase:** 1 — Audit & structure + **Create-flow architecture documentation**  
 **Do not begin Phase 2 token migration or DNA-first Create UX implementation** until this handoff is reviewed and First Build / Onboarding contracts are amended where required.
+
+---
+
+## Latest owner decision — portrait placement
+
+**Locked for now:** portrait management belongs at the **top of Gallery**, not inside the primary Create flow.
+
+Implications:
+
+- Gallery should expose a `Your portraits` area above saved creations, with the active/default portrait visually clear and actions to add/change portraits.
+- The primary Create flow should remain streamlined and should **not** require a dedicated People/Portrait step by default.
+- Create should use the user’s active/default portrait automatically unless a later design explicitly adds an optional change affordance.
+- The intended repeat-user path remains:
+
+```text
+Song → Song DNA → Generate
+```
+
+- First-time portrait onboarding/empty-state handling still needs a focused design pass, but portrait library management should live in Gallery for now.
+- This resolves the open question “Where do portraits sit in the new flow?” for the current design phase.
 
 ---
 
@@ -84,7 +103,7 @@ See earlier sections of branch history / prior handoff commits for full UI audit
 ### Create-flow (new)
 
 1. Amend First Build + Onboarding contracts for DNA-first Create? (Required before implementation.)
-2. Where do **portraits** sit in the new flow?
+2. ~~Where do portraits sit in the new flow?~~ **Resolved for now: portrait management lives at top of Gallery; Create uses active/default portrait automatically.**
 3. Final DNA dimension labels vs provisional Emotional Core / World / etc.?
 4. Is `originalVisualMoment` selectable or system-owned?
 5. **Variation** vs **Reimagine** vs regenerate — definitions?
@@ -112,7 +131,7 @@ See earlier sections of branch history / prior handoff commits for full UI audit
 
 1. Map provisional dimension labels → exact `song-dna-v2.0` fields and customer-safe copy.
 2. Specify progressive multi-select (“add another layer”) states and empty/loading/unavailable.
-3. Resolve **portrait placement** relative to DNA.
+3. Treat portrait management as a Gallery concern; only design the minimal active/default portrait assumption needed by Create.
 4. Define Quick Generate CTA + credit/paywall handoff on the DNA-ready screen.
 5. Produce a review pack under `design/review/` when owners want visuals — structural first.
 
@@ -122,6 +141,5 @@ This unblocks Explore Options / Fine Tune / generation checklist design without 
 
 ## Git
 
-- **Branch:** `cursor/design-system-audit-95fa`
-- **Primary delivery commit (this turn):** `1b43cd38747047601202567aa3b1f11bc9c2f72d`
-- **Scope this turn:** documentation / vault / dashboard only — no Create template or CSS behavior changes
+- **Current working branch:** `main`
+- **Scope:** documentation / vault / dashboard / design decisions unless explicitly authorized otherwise
