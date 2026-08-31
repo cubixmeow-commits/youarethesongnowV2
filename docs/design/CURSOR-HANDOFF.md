@@ -47,7 +47,7 @@ php tests/run.php
 
 ## Final commit
 
-- **Hash:** `01ad649079aeb70d3cf090b28209f23c0f163de8`
+- **Hash:** `72df74e7afe2ea0d238322919cec77bae69eee22`
 - **Message:** Clean up Explore direction selection UX for review
 - **Branch:** `main`
 - **Requires:** Hostinger git sync; no `.env` changes
