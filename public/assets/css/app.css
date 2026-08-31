@@ -1,6 +1,7 @@
 /* =============================================================================
-   You Are The Song Now — Mobile-app-first design system (Round 004)
-   Premium private creative venue. Tokens map to Flutter ThemeData (see design/DESIGN_SYSTEM.md)
+   You Are The Song Now — Design system baseline (Round 005)
+   Premium private creative venue. Tokens → Flutter (design/FLUTTER_DESIGN_HANDOFF.md)
+   Material hierarchy: midnight base → stone → lacquer → hairline/brass → artwork
    ============================================================================= */
 
 :root {
@@ -100,11 +101,15 @@
   --focus: var(--focus-ring);
   --header-h: var(--topbar-h);
 
-  /* Asset hooks (swap when ChatGPT assets land) */
+  /* Asset hooks — see design/ASSET_INTEGRATION_MAP.md */
   --asset-atmosphere: none;
+  --asset-launch-mark: none;
+  --asset-empty-collection: none;
   --asset-session-phone: url("/assets/images/launch/layout-mobile-480.webp");
   --asset-session-desktop: url("/assets/images/launch/layout-groove-1254.webp");
   --asset-session-tablet: url("/assets/images/launch/layout-groove-640.webp");
+  --asset-atmosphere-opacity: 1;
+  --asset-session-overlay: color-mix(in oklab, var(--color-bg) 92%, transparent);
 }
 
 *,
@@ -230,9 +235,13 @@ a:hover {
   height: 28px;
   flex: 0 0 auto;
   border-radius: 7px;
-  background:
-    radial-gradient(circle at 38% 38%, color-mix(in oklab, var(--color-accent-brass) 75%, white), transparent 58%),
-    linear-gradient(155deg, color-mix(in oklab, var(--color-haze) 35%, transparent), var(--color-surface-lacquer));
+  background-image:
+    var(--asset-launch-mark),
+    radial-gradient(circle at 38% 38%, color-mix(in oklab, var(--color-accent-brass) 65%, white), transparent 58%),
+    linear-gradient(155deg, color-mix(in oklab, var(--color-haze) 28%, transparent), var(--color-surface-lacquer));
+  background-size: cover, auto, auto;
+  background-position: center;
+  background-repeat: no-repeat;
   box-shadow: inset 0 0 0 1px var(--color-border-hairline), var(--shadow-inset-stone);
 }
 
@@ -274,8 +283,8 @@ a:hover {
   min-height: calc(var(--tabbar-h) + env(safe-area-inset-bottom));
   padding: var(--space-2) var(--space-2) calc(var(--space-2) + env(safe-area-inset-bottom));
   background: color-mix(in oklab, var(--color-bg) 82%, transparent);
-  border-top: 1px solid var(--color-border);
-  backdrop-filter: blur(18px) saturate(150%);
+  border-top: 1px solid var(--color-border-hairline);
+  backdrop-filter: blur(18px) saturate(120%);
   -webkit-backdrop-filter: blur(18px) saturate(150%);
 }
 
@@ -303,7 +312,7 @@ a:hover {
 }
 
 .app-nav__item.is-active {
-  color: var(--color-accent);
+  color: color-mix(in oklab, var(--color-accent-brass) 85%, var(--color-text));
 }
 
 .app-nav__label {
@@ -475,7 +484,7 @@ h3 {
   letter-spacing: 0.14em;
   font-size: var(--type-meta);
   font-weight: 600;
-  color: color-mix(in oklab, var(--color-accent) 70%, var(--color-text-secondary));
+  color: color-mix(in oklab, var(--color-accent-brass) 55%, var(--color-text-secondary));
   margin: 0 0 var(--space-3);
 }
 
@@ -513,9 +522,9 @@ h3 {
 }
 
 .btn--primary {
-  background: linear-gradient(180deg, color-mix(in oklab, var(--color-accent) 92%, white), var(--color-accent-brass));
+  background: linear-gradient(180deg, color-mix(in oklab, var(--color-accent) 85%, white), var(--color-accent-brass));
   color: oklch(0.17 0.02 68);
-  box-shadow: var(--shadow-1), 0 0 0 1px color-mix(in oklab, var(--color-accent-brass) 40%, transparent);
+  box-shadow: var(--shadow-1), 0 0 0 1px color-mix(in oklab, var(--color-accent-brass) 28%, transparent);
 }
 
 .btn--primary:hover {
@@ -914,7 +923,7 @@ textarea {
   margin: calc(var(--space-5) * -1) calc(var(--space-4) * -1) 0;
   padding: var(--space-6) var(--space-4) var(--space-7);
   background-image:
-    linear-gradient(180deg, color-mix(in oklab, var(--color-bg) 92%, transparent) 0%, color-mix(in oklab, var(--color-bg) 96%, transparent) 35%, var(--color-bg) 100%),
+    linear-gradient(180deg, var(--asset-session-overlay) 0%, color-mix(in oklab, var(--color-bg) 96%, transparent) 35%, var(--color-bg) 100%),
     var(--asset-session-phone);
   background-size: cover;
   background-position: center top;
@@ -1094,8 +1103,8 @@ textarea {
 }
 
 .direction-controls .style-option {
-  min-height: 88px;
-  padding: var(--space-4) var(--space-5);
+  min-height: 76px;
+  padding: var(--space-3) var(--space-4);
   border-color: var(--color-border-hairline);
   background: color-mix(in oklab, var(--color-surface-stone) 55%, transparent);
 }
@@ -1126,8 +1135,8 @@ textarea {
   margin: 0;
   padding: var(--space-5);
   border-radius: var(--radius-lg);
-  border: 1px solid var(--color-border);
-  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border-hairline);
+  background: linear-gradient(175deg, color-mix(in oklab, var(--color-surface-lacquer) 92%, transparent), var(--color-surface-stone));
   box-shadow: var(--shadow-3);
   color: var(--color-text);
 }
@@ -1163,13 +1172,13 @@ textarea {
 }
 
 .style-grid {
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
 }
 
 .style-option {
   text-align: left;
-  min-height: 92px;
-  padding: var(--space-4) var(--space-5);
+  min-height: 76px;
+  padding: var(--space-3) var(--space-4);
   border: 1px solid var(--color-border-hairline);
   background: color-mix(in oklab, var(--color-surface-stone) 60%, transparent);
   color: var(--color-text);
@@ -1316,12 +1325,67 @@ textarea {
 
 .gallery-page.empty-gallery {
   background-image:
-    linear-gradient(180deg, color-mix(in oklab, var(--color-bg) 90%, transparent), var(--color-bg)),
+    linear-gradient(180deg, var(--asset-session-overlay), var(--color-bg)),
     var(--asset-session-tablet);
   background-size: cover;
   background-position: center;
   border-radius: var(--radius-lg);
   padding: var(--space-5);
+}
+
+.gallery-empty {
+  display: none;
+  text-align: center;
+  padding: var(--space-6) var(--space-4) var(--space-7);
+  max-width: 22rem;
+  margin: 0 auto;
+}
+
+.gallery-grid:empty ~ .gallery-empty {
+  display: block;
+}
+
+.gallery-empty__art {
+  width: min(72vw, 240px);
+  aspect-ratio: 1;
+  margin: 0 auto var(--space-5);
+  border-radius: var(--radius-md);
+  background-image: var(--asset-empty-collection);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  box-shadow: inset 0 0 0 1px var(--color-border-hairline);
+}
+
+.gallery-grid:empty ~ .gallery-empty .gallery-empty__art {
+  background-image:
+    var(--asset-empty-collection),
+    radial-gradient(circle at 50% 42%, color-mix(in oklab, var(--color-accent-brass) 12%, transparent), transparent 55%),
+    linear-gradient(165deg, var(--color-surface-stone), var(--color-surface-lacquer));
+}
+
+.gallery-empty__title {
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-display);
+  font-size: var(--type-headline);
+}
+
+.gallery-empty__copy {
+  margin: 0;
+  color: var(--color-text-tertiary);
+  font-size: var(--type-callout);
+}
+
+.gallery-page:has(.gallery-grid:empty) [data-gallery-status]:not([data-error="true"]) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .gallery-grid {
