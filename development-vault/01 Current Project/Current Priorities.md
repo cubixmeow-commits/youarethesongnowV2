@@ -1,7 +1,7 @@
 ---
 type: current-project
 status: active
-updated: 2026-08-30
+updated: 2026-08-31
 area: priorities
 ---
 
@@ -20,6 +20,8 @@ This note is the daily “what matters now” list for CuBiX Meow and Brut. Keep
 7. **Print/poster/T-shirt/upscaling remain post-Build-1.** Vault = workshop; `/docs` = Meow Control.
 
 ## Newly documented
+
+- **Permanent design OS established (2026-08-31):** Phase 1 audit + documentation only. Permanent tree at `docs/design/` with reconstituted `DESIGN-OPERATING-SYSTEM.md`, foundations, screen/component inventories, Flutter portability notes, and `CURSOR-HANDOFF.md`. Non-runtime artifacts at `assets/design/` including proposed semantic tokens JSON. No UI migration. Awaiting GPT/design-director review before Phase 2. Note: original `YouAreTheSongNow_Design_Operating_System.md` was not found in-repo/attachments and was reconstituted from the task brief + verified contracts.
 
 - **V1 sample showcase integrated (2026-08-30):** Round 009 copied all 77 V1 sample artworks into V2, replaced Home hardcoded examples with a featured archive hero and progressively loaded carousel, and added `/showcase` with Masonry v4 + imagesLoaded v5, orientation filters, legacy disclosure and an accessible viewing dialog. Review pack: `design/review/round-009/`. Archive remains separate from signed-in Gallery and SQLite.
 
