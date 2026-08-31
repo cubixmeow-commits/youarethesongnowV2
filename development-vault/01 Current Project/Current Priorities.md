@@ -21,6 +21,8 @@ This note is the daily “what matters now” list for CuBiX Meow and Brut. Keep
 
 ## Newly documented
 
+- **Round 008 local baseline verified (2026-08-30):** the local Cursor checkout is clean, contains the complete YS production asset/handoff delivery, includes the owner-page style activate/deactivate control from `3953689`, and passes **178 tests with 0 failures**. The responsive redesign must preserve and re-verify that owner control. Cursor may commit locally but must not push or deploy without separate owner authorization.
+
 - **YS production identity delivered (2026-08-30):** the current web/mobile redesign now has final flat and premium YS marks, wordmark, app icon, phone/desktop atmosphere, Create backdrops, Gallery empty-state art and phone/desktop paywall previews. Integration and screenshot review are the next visual step. Flutter remains documentation-only.
 
 - **Gemini Interactions Song DNA (2026-08-30):** replaced legacy `generateContent` grounding. Live Springsteen/`Dancing in the Dark` incomplete structure traced to Search without enforced JSON schema. V1 JSON-repair recorded as historical emergency fallback only. Mandatory `store=false`.

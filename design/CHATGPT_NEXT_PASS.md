@@ -37,6 +37,7 @@ Inspect every delivered image at full resolution before integrating it.
 - Do not add fake commerce buttons or inactive controls that look functional.
 - Do not modify the production image/SVG files unless a verified encoding problem blocks rendering.
 - Preserve all approved product copy and no-em-dash rules.
+- Preserve and re-verify the owner-page style activate/deactivate control introduced in commit `3953689`; do not rename, remove or restyle it into an ambiguous control.
 
 ## 1. Wire the delivered assets
 
@@ -217,6 +218,8 @@ Update only where implementation evidence changes current truth:
 Do not add Flutter implementation. `design/FLUTTER_DESIGN_HANDOFF.md` may receive a brief parity note only.
 
 Run the full existing test suite. Inspect the real browser at phone and desktop sizes. Review the diff for functional scope creep.
+
+Before stopping, explicitly report the owner style activate/deactivate verification, the final test counts and any intentional deviation from this brief. Commit the completed pass locally. Do not push or deploy unless the owners separately authorize it.
 
 Report in `design/CHATGPT_CURSOR_DESIGN_HANDOFF.md`:
 

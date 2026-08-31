@@ -4,7 +4,7 @@
 
 **Branch:** `main`
 
-**Last updated by ChatGPT:** 2026-08-30 (production asset delivery)
+**Last updated by ChatGPT:** 2026-08-30 (Round 008 local dispatch)
 
 **Active round:** 008 (ready for Cursor implementation)
 
@@ -18,6 +18,14 @@
 ## Current Objective
 
 Integrate the delivered **YS monogram identity** and black/platinum/sapphire production assets into the current responsive web/mobile app. Preserve all application behavior and portrait deletion. Flutter remains documentation-only.
+
+### Verified local baseline before implementation
+
+- Cursor checkout: `/Users/realiainreid/Documents/You Are The Song Now V2/repo V2`
+- Local `main` is clean and includes the owner style activate/deactivate control from commit `3953689`.
+- The YS production asset and redesign documentation delivery is included locally in commit `0d8ed39`.
+- Baseline test result: **178 passed, 0 failed**.
+- Round 008 must preserve and re-verify the owner style activate/deactivate control along with all existing owner, style-catalog and portrait-delete behavior.
 
 ---
 
@@ -152,8 +160,9 @@ Stop for ChatGPT review of `design/review/round-005/`. Do not start Round 006 un
 - Phone/desktop composition plan: `design/RESPONSIVE_REDESIGN_PLAN.md`.
 - Exact implementation instructions: `design/CHATGPT_NEXT_PASS.md` (Round 008).
 - Do not begin Flutter, commerce or unrelated functional work.
+- Preserve the owner-page style activate/deactivate control added in `3953689`; this is part of the verified baseline, not redesign scope.
 
-Cursor should implement Round 008, capture the required responsive review pack, run tests, update this handoff, commit/push and stop for ChatGPT visual review.
+Cursor should implement Round 008, capture the required responsive review pack, run tests, update this handoff, commit locally and stop for ChatGPT visual review. Do not push or deploy unless the owners separately authorize it.
 
 ---
 
@@ -213,7 +222,7 @@ ChatGPT delivered the complete brand/system asset set, production manifest, resp
 - Premium private venue via materials (not literal hotel UI)
 - Selected identity is the intertwined YS monogram
 - Brand palette is black/graphite, platinum and sapphire/cobalt; no brass/gold chrome
-- Material hierarchy: midnight → stone → lacquer → brass → artwork
+- Material hierarchy: midnight → stone → lacquer → platinum/sapphire light → artwork
 - Portrait delete supported
 - Bottom tabs + ~88px rail; no nav hotfix unless authorized
 - Square artwork/portrait crops
@@ -228,7 +237,7 @@ ChatGPT delivered the complete brand/system asset set, production manifest, resp
 3. Capture `design/review/round-XXX/` when possible  
 4. Update this canonical handoff  
 5. Mark inbox consumed  
-6. Commit/push  
+6. Commit locally; do not push or deploy without separate owner authorization
 7. Stop for ChatGPT review  
 
 Keep human chat replies short; detailed reports live here.
