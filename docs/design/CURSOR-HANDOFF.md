@@ -3,7 +3,7 @@
 **Date:** 2026-08-31  
 **Branch:** `cursor/design-system-audit-95fa`  
 **Primary delivery commit:** `be911ac1db56e05e5157301ca293a95922b6a5bb`  
-**Branch tip:** `ea89d0dd90782620afab032f18e3a0e0a94a63e1`  
+**Branch tip:** `5855926250aa0b1460d04614be84781c9a0c2259`
 **Phase:** 1 — Audit & structure (**complete; awaiting GPT / design-director review**)  
 **Do not begin Phase 2** until this handoff is reviewed.
 
@@ -190,4 +190,4 @@ Then stop for visual/AT review. Token migration can be slice B in the same phase
 
 - **Branch:** `cursor/design-system-audit-95fa`
 - **Primary delivery commit:** `be911ac1db56e05e5157301ca293a95922b6a5bb`
-- **Branch tip:** `ea89d0dd90782620afab032f18e3a0e0a94a63e1`
+- **Branch tip:** `5855926250aa0b1460d04614be84781c9a0c2259`
