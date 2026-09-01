@@ -16,6 +16,14 @@
     pollTimer: null,
   };
 
+  const generation = {
+    reviewed: false,
+    pending: false,
+    issue: null,
+  };
+  let reviewTimer = null;
+  let generationSubmitLock = false;
+
   function $(sel, root = document) {
     return root.querySelector(sel);
   }
@@ -69,6 +77,178 @@
 
   function idem() {
     return crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random();
+  }
+
+  function getReadinessIssues() {
+    const issues = [];
+    if (!state.songConfirmed || !state.songLookup) {
+      issues.push('Choose and confirm a song.');
+    } else if (!['found', 'fallbackFound'].includes(state.songLookup.state)) {
+      issues.push('Confirm a valid song match before generating.');
+    }
+    if (state.selectedPortraitIds.length < 1) {
+      issues.push('Add at least one portrait.');
+    }
+    if (!state.selectedStyleId) {
+      issues.push('Choose a style.');
+    }
+    return issues;
+  }
+
+  async function syncDraftFromForm() {
+    state.noText = !!$('[data-no-text]')?.checked;
+    state.special = $('[data-special-toggle]')?.checked ? ($('[data-special]')?.value || '') : '';
+    return patchDraft({
+      noTextInImage: state.noText,
+      specialInstructions: state.special || null,
+      styleId: state.selectedStyleId,
+      portraitIds: state.selectedPortraitIds,
+      quality: state.quality,
+      orientation: state.orientation,
+    });
+  }
+
+  function invalidateGenerationReview() {
+    generation.reviewed = false;
+    generation.issue = null;
+    updateGenerateAction();
+  }
+
+  function scheduleGenerationReview() {
+    clearTimeout(reviewTimer);
+    reviewTimer = setTimeout(() => {
+      refreshGenerationReadiness().catch(() => {
+        // updateGenerateAction already reflects the failure state.
+      });
+    }, 250);
+  }
+
+  function updateGenerateAction() {
+    const root = $('[data-create]');
+    const bar = $('[data-generate-bar]');
+    const direction = $('#the-direction');
+    const hint = $('[data-generate-hint]');
+    const button = $('[data-create-image]');
+    if (!bar || !direction) return;
+
+    const directionVisible = !direction.hidden;
+    bar.hidden = !directionVisible;
+    root?.classList.toggle('has-generate-bar', directionVisible);
+
+    const issues = getReadinessIssues();
+    const ready = issues.length === 0 && generation.reviewed && !generation.pending;
+    if (button) {
+      button.disabled = !ready;
+      button.setAttribute('aria-disabled', ready ? 'false' : 'true');
+      button.classList.toggle('is-loading', generation.pending);
+      if (generation.pending) {
+        button.setAttribute('aria-busy', 'true');
+      } else {
+        button.removeAttribute('aria-busy');
+      }
+    }
+
+    let hintText = '';
+    if (generation.pending) {
+      hintText = 'Starting generation…';
+    } else if (issues.length) {
+      hintText = issues[0];
+    } else if (generation.issue) {
+      hintText = generation.issue;
+    } else if (!generation.reviewed) {
+      hintText = 'Checking your creation is ready…';
+    }
+    if (hint) {
+      hint.textContent = hintText;
+    }
+  }
+
+  async function refreshGenerationReadiness() {
+    const direction = $('#the-direction');
+    if (!direction || direction.hidden) return { ready: false };
+    const issues = getReadinessIssues();
+    if (issues.length) {
+      generation.reviewed = false;
+      generation.issue = issues[0];
+      updateGenerateAction();
+      return { ready: false, issue: issues[0] };
+    }
+    try {
+      await syncDraftFromForm();
+      const summary = await api(`/api/v1/creation-drafts/${state.draftId}/summary`, { method: 'POST', body: {} });
+      if (!summary.data.ready) {
+        const first = Object.values(summary.data.issues || {})[0] || 'Finish your creation before continuing.';
+        generation.reviewed = false;
+        generation.issue = first;
+        updateGenerateAction();
+        return { ready: false, issue: first };
+      }
+      generation.reviewed = true;
+      generation.issue = null;
+      updateGenerateAction();
+      return { ready: true };
+    } catch (err) {
+      generation.reviewed = false;
+      generation.issue = err.message || 'Could not verify your creation.';
+      updateGenerateAction();
+      return { ready: false, issue: generation.issue };
+    }
+  }
+
+  async function runReview() {
+    const status = $('[data-direction-status]');
+    const result = await refreshGenerationReadiness();
+    if (result.ready) {
+      setStatus(status, '');
+      $('[data-paywall]').hidden = true;
+    } else if (status) {
+      setStatus(status, result.issue || 'Finish your creation before continuing.', true);
+    }
+    return result;
+  }
+
+  async function submitGeneration() {
+    const button = $('[data-create-image]');
+    if (!button || button.disabled || generation.pending || generationSubmitLock) {
+      return { started: false };
+    }
+    generationSubmitLock = true;
+    try {
+      const summary = await api(`/api/v1/creation-drafts/${state.draftId}/summary`, { method: 'POST', body: {} });
+      if (!summary.data.ready) {
+        const first = Object.values(summary.data.issues || {})[0] || 'Finish your creation before continuing.';
+        generation.reviewed = false;
+        generation.issue = first;
+        updateGenerateAction();
+        return { started: false, issue: first };
+      }
+      if (summary.data.requiresMembership) {
+        $('[data-generate-bar]').hidden = true;
+        $('[data-paywall]').hidden = false;
+        return { started: false, requiresMembership: true };
+      }
+      generation.pending = true;
+      updateGenerateAction();
+      await startGeneration();
+      return { started: true };
+    } catch (err) {
+      generation.pending = false;
+      generation.reviewed = true;
+      generation.issue = err.message || 'Could not start generation.';
+      updateGenerateAction();
+      return { started: false, issue: generation.issue };
+    } finally {
+      generationSubmitLock = false;
+    }
+  }
+
+  function restoreGenerateActionAfterFailure(message) {
+    generation.pending = false;
+    generation.reviewed = true;
+    generation.issue = message || null;
+    $('[data-progress]').hidden = true;
+    $('[data-generate-bar]').hidden = false;
+    updateGenerateAction();
   }
 
   async function ensureDraft() {
@@ -131,6 +311,7 @@
     if (createRoot) {
       createRoot.classList.toggle('has-song', Boolean(state.songConfirmed && state.songLookup));
     }
+    updateGenerateAction();
   }
 
   function renderPortraits() {
@@ -160,6 +341,8 @@
         renderPortraits();
         updateSummary();
         maybeShowDirection();
+        invalidateGenerationReview();
+        scheduleGenerationReview();
       });
 
       const deleteBtn = document.createElement('button');
@@ -221,12 +404,15 @@
       btn.className = 'style-option' + (state.selectedStyleId === s.id ? ' is-selected' : '');
       btn.setAttribute('role', 'option');
       btn.setAttribute('aria-selected', state.selectedStyleId === s.id ? 'true' : 'false');
+      btn.dataset.styleId = String(s.id);
       btn.innerHTML = `<strong>${s.name}</strong><span class="quiet">${s.description}</span>`;
       btn.addEventListener('click', async () => {
         state.selectedStyleId = s.id;
         await patchDraft({ styleId: s.id });
         renderStyles();
         updateSummary();
+        invalidateGenerationReview();
+        scheduleGenerationReview();
       });
       grid.appendChild(btn);
     });
@@ -245,6 +431,8 @@
         state.quality = q.id;
         await patchDraft({ quality: q.id });
         updateSummary();
+        invalidateGenerationReview();
+        scheduleGenerationReview();
       });
       qRow.appendChild(label);
     });
@@ -255,6 +443,8 @@
         state.orientation = o.id;
         await patchDraft({ orientation: o.id });
         updateSummary();
+        invalidateGenerationReview();
+        scheduleGenerationReview();
       });
       oRow.appendChild(label);
     });
@@ -270,6 +460,11 @@
       direction.hidden = !(state.selectedPortraitIds.length > 0);
     }
     updateSummary();
+    if (!direction?.hidden) {
+      scheduleGenerationReview();
+    } else {
+      updateGenerateAction();
+    }
   }
 
   function renderDevelopmentAnalysis(lookup) {
@@ -451,6 +646,8 @@
     await loadCreateEntryContext();
 
     updateSummary();
+    updateGenerateAction();
+    scheduleGenerationReview();
 
     $('#portrait-form')?.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -469,6 +666,8 @@
         renderPortraits();
         updateSummary();
         maybeShowDirection();
+        invalidateGenerationReview();
+        scheduleGenerationReview();
       } catch (err) {
         setStatus(status, 'We could not upload this photo. Choose another photo or try again.', true);
       }
@@ -488,44 +687,29 @@
     $('[data-special-toggle]')?.addEventListener('change', (e) => {
       const wrap = $('[data-special-wrap]');
       if (wrap) wrap.hidden = !e.target.checked;
+      invalidateGenerationReview();
+      scheduleGenerationReview();
+    });
+    $('[data-special]')?.addEventListener('input', () => {
+      invalidateGenerationReview();
+      scheduleGenerationReview();
+    });
+    $('[data-special]')?.addEventListener('focus', () => {
+      window.setTimeout(() => {
+        $('[data-generate-bar]')?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }, 250);
+    });
+    $('[data-no-text]')?.addEventListener('change', () => {
+      invalidateGenerationReview();
+      scheduleGenerationReview();
     });
 
     $('[data-review]')?.addEventListener('click', async () => {
-      const status = $('[data-direction-status]');
-      try {
-        state.noText = !!$('[data-no-text]')?.checked;
-        state.special = $('[data-special-toggle]')?.checked ? ($('[data-special]')?.value || '') : '';
-        await patchDraft({
-          noTextInImage: state.noText,
-          specialInstructions: state.special || null,
-          styleId: state.selectedStyleId,
-          portraitIds: state.selectedPortraitIds,
-          quality: state.quality,
-          orientation: state.orientation,
-        });
-        const summary = await api(`/api/v1/creation-drafts/${state.draftId}/summary`, { method: 'POST', body: {} });
-        if (!summary.data.ready) {
-          const first = Object.values(summary.data.issues || {})[0] || 'Finish your creation before continuing.';
-          setStatus(status, first, true);
-          return;
-        }
-        setStatus(status, '');
-        $('[data-summary-actions]').hidden = false;
-        $('[data-paywall]').hidden = true;
-        updateSummary();
-      } catch (err) {
-        setStatus(status, err.message, true);
-      }
+      await runReview();
     });
 
     $('[data-create-image]')?.addEventListener('click', async () => {
-      const summary = await api(`/api/v1/creation-drafts/${state.draftId}/summary`, { method: 'POST', body: {} });
-      if (summary.data.requiresMembership) {
-        $('[data-summary-actions]').hidden = true;
-        $('[data-paywall]').hidden = false;
-        return;
-      }
-      await startGeneration();
+      await submitGeneration();
     });
 
     $('[data-dev-activate]')?.addEventListener('click', async () => {
@@ -563,7 +747,7 @@
   }
 
   async function startGeneration() {
-    $('[data-summary-actions]').hidden = true;
+    $('[data-generate-bar]').hidden = true;
     $('[data-progress]').hidden = false;
     const progressNote = $('[data-progress-note]');
     if (progressNote) progressNote.hidden = false;
@@ -576,11 +760,14 @@
       });
       pollJob(res.data.id, copy);
     } catch (err) {
+      generation.pending = false;
       if (err.code === 'membership_required') {
         $('[data-progress]').hidden = true;
         $('[data-paywall]').hidden = false;
+        updateGenerateAction();
         return;
       }
+      restoreGenerateActionAfterFailure(err.message);
       if (copy) copy.textContent = err.message;
     }
   }
@@ -596,6 +783,7 @@
           return;
         }
         if (job.status === 'failed') {
+          restoreGenerateActionAfterFailure(job.message || 'We could not deliver a usable image. Your credits were returned. You can try again.');
           if (copyEl) copyEl.textContent = job.message || 'We could not deliver a usable image. Your credits were returned. You can try again.';
           const progressNote = $('[data-progress-note]');
           if (progressNote) progressNote.hidden = true;
@@ -603,6 +791,7 @@
         }
         state.pollTimer = setTimeout(tick, 1200);
       } catch (err) {
+        restoreGenerateActionAfterFailure(err.message);
         if (copyEl) copyEl.textContent = err.message;
       }
     };
@@ -1012,4 +1201,63 @@
     initAccount();
     initOwner();
   });
+
+  window.YatsnCreate = {
+    prepareAndReview: runReview,
+    refreshGenerationReadiness,
+    submitGeneration,
+    isGenerateReady: () => getReadinessIssues().length === 0 && generation.reviewed && !generation.pending,
+    setGenerationFixtureState: (fixture = {}) => {
+      if (typeof fixture.reviewed === 'boolean') generation.reviewed = fixture.reviewed;
+      if (typeof fixture.pending === 'boolean') generation.pending = fixture.pending;
+      if (Object.prototype.hasOwnProperty.call(fixture, 'issue')) generation.issue = fixture.issue;
+      updateGenerateAction();
+    },
+  };
+
+  if (document.querySelector('[data-create]')?.dataset.privateBuild === '1') {
+    window.YatsnCreateFixtures = {
+      showDirectionStage() {
+        const direction = $('#the-direction');
+        if (direction) direction.hidden = false;
+        updateGenerateAction();
+      },
+      showReady() {
+        this.showDirectionStage();
+        state.songConfirmed = true;
+        state.songLookup = state.songLookup || { title: 'Seven Pillars of Wisdom', artist: 'Sabaton', state: 'found' };
+        state.selectedPortraitIds = state.selectedPortraitIds.length ? state.selectedPortraitIds : ['fixture-portrait'];
+        state.selectedStyleId = state.selectedStyleId || state.styles[0]?.id || null;
+        generation.reviewed = true;
+        generation.pending = false;
+        generation.issue = null;
+        updateSummary();
+        updateGenerateAction();
+      },
+      showMissingStyle() {
+        this.showDirectionStage();
+        state.songConfirmed = true;
+        state.songLookup = state.songLookup || { title: 'Seven Pillars of Wisdom', artist: 'Sabaton', state: 'found' };
+        state.selectedPortraitIds = ['fixture-portrait'];
+        state.selectedStyleId = null;
+        generation.reviewed = false;
+        generation.pending = false;
+        generation.issue = null;
+        updateSummary();
+        updateGenerateAction();
+      },
+      showPending() {
+        this.showReady();
+        generation.pending = true;
+        updateGenerateAction();
+      },
+      showRecoverableError() {
+        this.showReady();
+        generation.pending = false;
+        generation.reviewed = true;
+        generation.issue = 'We could not deliver a usable image. Your credits were returned. You can try again.';
+        updateGenerateAction();
+      },
+    };
+  }
 })();

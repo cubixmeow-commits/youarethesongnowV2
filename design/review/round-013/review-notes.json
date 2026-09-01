@@ -1,0 +1,35 @@
+{
+  "capturedAt": "2026-09-01T23:17:17.182Z",
+  "shots": [
+    {
+      "file": "mobile-320-ready.png",
+      "width": 320,
+      "height": 640,
+      "fixture": "showReady"
+    },
+    {
+      "file": "mobile-390-ready.png",
+      "width": 390,
+      "height": 844,
+      "fixture": "showReady"
+    },
+    {
+      "file": "mobile-390-missing-style.png",
+      "width": 390,
+      "height": 844,
+      "fixture": "showMissingStyle"
+    },
+    {
+      "file": "mobile-390-pending.png",
+      "width": 390,
+      "height": 844,
+      "fixture": "showPending"
+    },
+    {
+      "file": "mobile-390-recoverable-error.png",
+      "width": 390,
+      "height": 844,
+      "fixture": "showRecoverableError"
+    }
+  ]
+}

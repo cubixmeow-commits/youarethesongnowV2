@@ -336,8 +336,15 @@
     setExploreChrome(true);
 
     const styleButtons = Array.from(document.querySelectorAll('.style-option'));
-    const styleButton = styleButtons.find((candidate) => candidate.querySelector('strong')?.textContent?.trim() === direction.styleName);
-    if (styleButton) styleButton.click();
+    const styleButton = styleButtons.find((candidate) => {
+      if (direction.styleId && candidate.dataset.styleId === String(direction.styleId)) {
+        return true;
+      }
+      return candidate.querySelector('strong')?.textContent?.trim() === direction.styleName;
+    });
+    if (styleButton) {
+      styleButton.click();
+    }
 
     const specialToggle = document.querySelector('[data-special-toggle]');
     const special = document.querySelector('[data-special]');
@@ -356,26 +363,28 @@
     }
 
     if (autoContinue) {
-      continueWithDirection(direction);
+      void continueWithDirection(direction);
     }
   }
 
-  function continueWithDirection(direction) {
+  async function continueWithDirection(direction) {
     if (exploreInFlight) return;
     const status = document.querySelector('[data-ai-status]');
     if (status) {
       status.classList.remove('is-error', 'yatsn-status--error');
-      status.textContent = `Creating “${direction.name}”…`;
+      status.textContent = `Preparing “${direction.name}”…`;
     }
-    // Compatibility bridge for the current Build 1 flow. Style selection updates local state immediately;
-    // allow its draft patch to settle, then use the existing review/generation pipeline.
-    window.setTimeout(() => {
-      document.querySelector('[data-review]')?.click();
-      window.setTimeout(() => {
-        const create = document.querySelector('[data-create-image]');
-        if (create && !create.closest('[hidden]')) create.click();
-      }, 900);
-    }, 700);
+    if (window.YatsnCreate?.prepareAndReview) {
+      const result = await window.YatsnCreate.prepareAndReview();
+      if (result?.ready && window.YatsnCreate?.submitGeneration) {
+        await window.YatsnCreate.submitGeneration();
+      } else if (status && result?.issue) {
+        status.classList.add('is-error', 'yatsn-status--error');
+        status.textContent = result.issue;
+      }
+      return;
+    }
+    document.querySelector('[data-review]')?.click();
   }
 
   function restoreManualDirection() {

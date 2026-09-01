@@ -163,9 +163,9 @@
         <div><dt>Format</dt><dd data-sum-orientation>Square</dd></div>
         <div><dt>Credits</dt><dd data-sum-credits>—</dd></div>
       </dl>
-      <div data-summary-actions hidden>
-        <p data-summary-headline>Your cinematic world is ready to create</p>
-        <button class="btn btn--primary btn--generate" type="button" data-create-image>Create my image</button>
+      <div class="create__generate-bar" data-generate-bar hidden>
+        <p class="create__generate-hint quiet" data-generate-hint role="status" aria-live="polite"></p>
+        <button class="btn btn--primary btn--generate" type="button" data-create-image disabled>Generate image</button>
       </div>
       <div data-progress hidden>
         <div class="venue-progress" aria-hidden="true"><span data-playhead></span></div>

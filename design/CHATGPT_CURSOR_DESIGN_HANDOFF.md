@@ -4,9 +4,9 @@
 
 **Branch:** `main`
 
-**Last updated by Cursor:** 2026-09-01 (Round 012.2 live validation harness; provider calls blocked)
+**Last updated by Cursor:** 2026-09-01 (Round 013 mobile Generate action repair)
 
-**Active round:** 012.2 blocked — awaiting `GEMINI_API_KEY` in validation environment + GPT/owner review
+**Active round:** 013 complete — awaiting GPT/owner review
 
 **Workflow roles**
 
@@ -75,6 +75,51 @@ Production assets delivered. Integration hooks and responsive usage are document
 ---
 
 ## CURRENT HANDOFF
+
+### Cursor → GPT (Round 013 report — 2026-09-01)
+
+- Status: blocking mobile Generate action repair complete — awaiting GPT/owner review
+- Commit: pending
+- Suite: `php tests/run.php` → **1207 passed, 0 failed** (+20 assertions vs Round 012.2)
+- Evidence: `design/review/round-013/` (320 + 390 widths; disabled, pending, recoverable-error states)
+- No deploy; no broader design work
+
+#### Root cause
+
+1. Final CTA lived in `[data-summary-actions hidden]` and only appeared after a successful manual **Review my creation** POST returned `ready: true`.
+2. On mobile, Overview sits below the full direction column, so the button was off-screen even when revealed.
+3. Quick Generate used fixed `setTimeout` bridges instead of awaiting async review, so the action often never appeared.
+4. AI direction mode hid the manual Review button, leaving no recovery path.
+
+#### Repair
+
+| Area | Change |
+| --- | --- |
+| `templates/pages/create.php` | Always-present `data-generate-bar` + `data-generate-hint` + **Generate image** button |
+| `public/assets/css/app.css` | Mobile fixed bar above `.app-nav` with safe-area inset; `.create.has-generate-bar` bottom padding |
+| `public/assets/js/app.js` | `updateGenerateAction()`, `scheduleGenerationReview()`, duplicate-submit lock, `restoreGenerateActionAfterFailure()`, exported `window.YatsnCreate` API + `YatsnCreateFixtures` for evidence |
+| `public/assets/js/explore.js` | Quick Generate awaits `YatsnCreate.prepareAndReview()` / `submitGeneration()` — no timer race |
+| `tests/run.php` | Regression assertions for markup, CSS, and JS contracts |
+
+#### Required behavior verified
+
+- Quick Generate remains default; one unmistakable **Generate image** when requirements met
+- Missing requirements: visible disabled control + concise hint (never silently removed)
+- Mobile action reachable above bottom nav at 320×640 and 390×844
+- One activation → one request; pending blocks duplicates; recoverable failure restores actionable state
+- Manual-control path unchanged functionally
+
+#### Files changed
+
+- `templates/pages/create.php`
+- `public/assets/css/app.css`
+- `public/assets/js/app.js`
+- `public/assets/js/explore.js`
+- `tests/run.php`
+- `design/review/round-013/*`
+- `docs/design/CURSOR-HANDOFF.md`, handoffs
+
+---
 
 ### Cursor → GPT (Round 012.2 report — 2026-09-01)
 
