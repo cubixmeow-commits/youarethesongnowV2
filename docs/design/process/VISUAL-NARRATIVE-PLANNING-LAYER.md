@@ -1,7 +1,7 @@
 # Visual Narrative Planning Layer — Product and Implementation Plan
 
 **Project:** YouAreTheSongNow V2  
-**Status:** Approved for contract-first planning and implementation  
+**Status:** Approved for backend-first implementation before further design work  
 **Reference:** https://github.com/cubixmeow-commits/POV-Campaign-Engine  
 **Design principle:** AI removes decisions by default and offers intelligent choices when the user asks for control.
 
@@ -15,18 +15,22 @@ Do not copy Campaign Engine text formats, real-world verification rules, investi
 
 The published V2 baseline has completed Luminous Night Studio Phase 2: Create entry and song selection.
 
-The existing recommended next slice remains contract-first customer-safe Song DNA. This plan extends that work in order:
+Owner sequencing decision: implement and validate the POV-derived visual planning engine before continuing the rest of the customer-facing design.
 
-1. customer-safe Song DNA projection and selector;
-2. Visual Campaign Board;
-3. exactly three Song-DNA-specific scene directions;
-4. Visual Scene Contract;
-5. portrait integration plan;
-6. structured prompt compiler;
-7. existing generation pipeline;
-8. controlled evaluation and retry.
+Backend-first order:
 
-Do not build scene-direction UI against unapproved Song DNA projection fields.
+1. audit and reuse the richest existing internal Song DNA representation;
+2. define versioned internal contracts;
+3. implement Visual Campaign Board generation;
+4. implement exactly three Song-DNA-specific scene directions and ranking;
+5. implement Visual Scene Contract compilation;
+6. integrate portrait roles after direction planning;
+7. compile the final provider prompt through the structured pipeline;
+8. wire the planning layer into the existing development generation path;
+9. implement controlled fallbacks, traceability, and evaluation;
+10. only after GPT/owner acceptance, design the customer-safe Song DNA selector, Explore Options, and Fine Tune UI.
+
+Do not expose raw internal Song DNA or planning artifacts to customers. No new customer-facing design is required for the backend integration pass.
 
 ## Locked UX
 
@@ -295,42 +299,47 @@ Use configured provider abstractions and credentials. Do not duplicate clients o
 
 ## Implementation sequencing
 
-### Slice A — Contract only
+### Phase A — Existing-system audit and contracts
 
-- Audit existing Song DNA model, API, storage, privacy, draft, and queue boundaries.
-- Propose customer-safe Song DNA projection fields.
-- Define typed/validated contracts for projection, selection, board, directions, and scene.
-- Define versions, validation, fallback, persistence, and API boundaries.
-- Add contract tests and fixtures.
-- Do not build UI against unapproved fields.
+- Trace current Song DNA, prompt, portrait, style, draft, queue, provider, credit, and persistence boundaries.
+- Reuse the richest existing internal Song DNA representation.
+- Define versioned contracts for Visual Campaign Board, three directions, ranking, and Visual Scene Contract.
+- Add strict validation, bounded repair, deterministic fallback, and sanitized trace records.
 
-### Slice B — Planning service
+### Phase B — Planning engine
 
-- Implement board creation, three directions, ranking, selection, and scene compilation behind application services.
-- Use fixtures and deterministic model stubs where available.
-- Preserve current generation execution.
-- Do not expose raw planning artifacts in customer payloads.
+- Implement board creation from internal Song DNA.
+- Produce exactly three materially distinct directions: primary, alternate, unexpected.
+- Rank directions for Song DNA fidelity, narrative coherence, visual distinctiveness, and portrait suitability.
+- Select the strongest direction automatically for the current/default generation path.
+- Compile the selected direction into the Visual Scene Contract.
+- Keep portrait images out of board and direction planning.
 
-### Slice C — Quick Generate wiring
+### Phase C — Prompt and generation integration
 
-- Connect selected Song DNA to planning services.
-- Automatically select the strongest valid direction.
-- Compile the prompt through the new structure.
-- Preserve auth, credits, privacy, queue, providers, storage, gallery, and owner controls.
+- Integrate portrait roles only after Scene Contract selection.
+- Compile the provider prompt in the approved structured order.
+- Preserve style as rendering language subordinate to scene meaning.
+- Wire the new compiler into the existing development generation path without changing auth, credits, queue ownership, provider credentials, storage, or gallery contracts.
+- Preserve a safe switch/fallback to the current compiler during evaluation.
 
-### Slice D — Explore Options and Fine Tune
+### Phase D — Evaluation and controlled retry foundation
 
-- Expose safe direction summaries.
-- Reuse already generated directions.
-- Keep Fine Tune optional and context-specific.
-- Follow the canonical mobile-first screen specifications.
+- Persist/version the selected internal artifacts or sanitized trace data.
+- Add five contrasting fixtures and old-versus-new compiler comparisons.
+- Where affordable, run controlled development generations.
+- Classify prompt/planning failures and preserve successful upstream decisions.
+- Do not change retry charging or customer credit behavior in this phase.
 
-### Slice E — Controlled retry and evaluation
+### Phase E — Design after acceptance
 
-- Persist attempt relationships.
-- Classify failures where practical.
-- Retry only failing dimensions.
-- Compare old/new output honestly.
+Only after the backend planning layer is working and reviewed:
+
+- define the customer-safe Song DNA projection and selector;
+- expose the three direction summaries through Explore Options;
+- add optional Fine Tune controls;
+- complete remaining mobile/desktop design work;
+- update Flutter interaction/component specifications.
 
 ## Verification fixtures
 
