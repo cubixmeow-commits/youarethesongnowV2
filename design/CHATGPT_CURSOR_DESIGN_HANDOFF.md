@@ -19,13 +19,16 @@
 
 Continue from the published Luminous Night Studio Phase 2 baseline by implementing and validating the POV-derived Visual Narrative Planning Layer in the development backend before continuing customer-facing design. Reuse the richest existing internal Song DNA, generate and rank three directions, compile a Visual Scene Contract, integrate portrait roles afterward, and feed the structured result into the existing generation path with safe fallback and traceability. Do not add new customer-facing design in this round.
 
-### Verified local baseline before implementation
+### Verified baseline before implementation
 
-- Cursor checkout: `/Users/realiainreid/Documents/You Are The Song Now V2/repo V2`
-- Local `main` is clean and includes the owner style activate/deactivate control from commit `3953689`.
-- The YS production asset and redesign documentation delivery is included locally in commit `0d8ed39`.
-- Baseline test result: **178 passed, 0 failed**.
-- Round 008 must preserve and re-verify the owner style activate/deactivate control along with all existing owner, style-catalog and portrait-delete behavior.
+- Correct repository: `cubixmeow-commits/youarethesongnowV2`.
+- Working branch: `main`.
+- Published Luminous Night Studio Phase 2 status commit: `72240dfd`.
+- Phase 2 implementation commit: `d567188e`.
+- Baseline test result: **1092 passed, 0 failed**.
+- Song selection uses the existing `POST /api/v1/song-lookups` contract.
+- Song DNA API/persistence and POV-derived planning integration are not yet implemented.
+- Preserve and re-verify owner style activate/deactivate, portrait deletion, auth, privacy, credits, queue, provider, storage, gallery, responsive, and Flutter-documentation contracts.
 
 ---
 
