@@ -34,11 +34,17 @@ Customer Create must not be designed around direct lyric selection. Selectable d
 
 ## Shell
 
-Mobile remains canonical. Conceptual destinations: Create, Gallery, Discover, Account. Discover is not shipped; do not change primary nav until IA is resolved. Focused Create may hide nav on mobile; desktop expands the same product (rail + main + optional context panel).
+Mobile remains canonical. Approved customer destinations are Create, Gallery and Account; Owner remains owner-only. Discover is not added without a separate product decision. Focused Create may hide nav after safe draft/exit behavior exists; desktop expands the same product (rail + main + optional context panel).
 
-## Open questions
+## Resolved in the Luminous Night Studio package
 
-See `docs/design/screens/create-flow.md` §12. Highest blockers: portrait placement in the new flow; supersession of onboarding/first-build configuration steps; Variation vs Reimagine; whether visual directions need a new model step vs heuristic MVP.
+- Portrait management lives at the top of Gallery; Create uses active/default identity after that server contract exists.
+- Download remains the accurate current action; Save is not introduced without a distinct saved/favorite state.
+- Current regeneration can become Create a variation; Reimagine remains future and distinct.
+- Discover is not added to navigation.
+- Fine Tune starts with orientation, no-text, Special instructions, and quality only while economics require it.
+
+Remaining blockers: explicit amendment of First Build/Onboarding configuration requirements; customer-safe DNA projection and persistence; active/default portrait persistence if absent; DNA conflict rules; Quick Generate server auto-resolution.
 
 ## Related
 

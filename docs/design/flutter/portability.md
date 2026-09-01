@@ -36,10 +36,10 @@ Design and validate phone compositions first. Tablet/desktop web and Flutter lar
 
 ## Open decisions before Flutter start
 
-1. Exact sRGB hex table derived from OKLCH tokens.
+1. Final contrast-reviewed sRGB table derived from canonical OKLCH tokens.
 2. Whether marketing Home/Showcase ship in v1 Flutter or remain web-only.
 3. Owner admin — web-only forever vs limited mobile ops.
-4. Icon asset pipeline ownership (`assets/design/` → Flutter `assets/`).
+4. Approved utility icon export from `assets/design/` → Flutter `assets/` after the web component slice.
 5. Navigation pattern: Flutter adaptive scaffold vs always bottom bar on phone and rail on tablet+.
 
 Do not start Flutter UI until Phase 2+ web foundations stabilize and owners authorize mobile work.

@@ -20,6 +20,7 @@ If a round handoff in `/design/` conflicts with this tree, update this tree deli
 - Long-term target: **premium Flutter iOS and Android app**
 - Current website: **desktop/responsive expression of a mobile-first product system**
 - Canonical viewport order: **phone → tablet → desktop**
+- Approved baseline: **Luminous Night Studio**
 - Feel: premium creative media application (listening room / gallery / album sleeve)
 - Not: generic SaaS dashboard, AI utility console, or marketing microsite with a separate “app mode”
 
@@ -32,11 +33,11 @@ Premium comes from hierarchy, restraint, typography, spacing, image treatment, e
 | [DESIGN-OPERATING-SYSTEM.md](./DESIGN-OPERATING-SYSTEM.md) | Governing principles, phases, roles |
 | [CURSOR-HANDOFF.md](./CURSOR-HANDOFF.md) | Latest agent handoff (read before continuing) |
 | [foundations/](./foundations/) | Tokens, color, type, space, motion, imagery |
-| [components/](./components/) | Component inventory and canonical candidates |
-| [screens/](./screens/) | Route inventory + Create-flow architecture spec |
+| [components/](./components/) | Component inventory + production state contracts |
+| [screens/](./screens/) | Route inventory, Create architecture, and nine production screen specs |
 | [audits/](./audits/) | UI audits (Phase 1) |
-| [flutter/](./flutter/) | Flutter portability guidance |
-| [process/](./process/) | Phases and review gates |
+| [flutter/](./flutter/) | Flutter portability, component, and screen maps |
+| [process/](./process/) | Phases, approved roadmap, and review gates |
 
 Design artifacts (token exports, audit packs, references): `/assets/design/`
 
@@ -44,6 +45,6 @@ Working round history (ChatGPT ↔ Cursor): `/design/` (kept; not deleted)
 
 ## Current phase
 
-**Phase 1 — Repository-aware audit and documentation structure**, plus Create-flow structural architecture (2026-08-31).
+**Design package locked; Phase 1 runtime foundations are ready.**
 
-Do **not** begin Phase 2 token migration or implement the DNA-first Create UX until GPT / design-director review of `CURSOR-HANDOFF.md` and the relevant contract amendments. See [screens/create-flow.md](./screens/create-flow.md).
+Cursor should execute only the foundation/component-lab/current Explore presentation slice in [CURSOR-HANDOFF.md](./CURSOR-HANDOFF.md), then stop for screenshot review. Song DNA API/database work remains contract-first and belongs to a later roadmap phase.

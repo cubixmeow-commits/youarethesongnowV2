@@ -11,15 +11,18 @@ This note is the daily “what matters now” list for CuBiX Meow and Brut. Keep
 
 ## Active now
 
-1. **Run controlled private image tests:** compare the same one- and two-person inputs on Flash Lite and full Flash; change one variable at a time and record identity, narrative fidelity, coherence, prohibited text, latency, cost and usability.
-2. **Resolve no-text and unusable-image detection:** one otherwise successful no-text image rendered `TICKET`. Prompt-only enforcement and human-only identity acceptance are not sufficient for the final 90-image gate.
-3. **Provisional routing only:** Flash Lite is the low-cost candidate at about $0.0336 per 1K output; full Flash is the quality anchor at about $0.067. Medium/default and high routing are not decided.
-4. **Complete live functional checks:** share/revoke, deletion, failure/refund, account recovery/change, Stripe lifecycle, complimentary access, admin, mobile API, accessibility and Hostinger operational drills.
-5. **Keep release gates closed:** external beta, live Stripe and commercial protected-lyrics use remain blocked. Lyrics remain transient and never saved.
-6. **Automated foundation healthy:** **162 passed, 0 failed** on 2026-08-30. See [[Build 1 Assessment 2026-08-30]].
-7. **Print/poster/T-shirt/upscaling remain post-Build-1.** Vault = workshop; `/docs` = Meow Control.
+1. **Execute Luminous Night Studio Phase 1 only:** semantic runtime foundation, private component lab, and current Explore presentation migration; preserve all backend contracts; stop for screenshot review. See [[../05 Product Design/Luminous Night Studio Design Contract]].
+2. **Run controlled private image tests:** compare the same one- and two-person inputs on Flash Lite and full Flash; change one variable at a time and record identity, narrative fidelity, coherence, prohibited text, latency, cost and usability.
+3. **Resolve no-text and unusable-image detection:** one otherwise successful no-text image rendered `TICKET`. Prompt-only enforcement and human-only identity acceptance are not sufficient for the final 90-image gate.
+4. **Provisional routing only:** Flash Lite is the low-cost candidate at about $0.0336 per 1K output; full Flash is the quality anchor at about $0.067. Medium/default and high routing are not decided.
+5. **Complete live functional checks:** share/revoke, deletion, failure/refund, account recovery/change, Stripe lifecycle, complimentary access, admin, mobile API, accessibility and Hostinger operational drills.
+6. **Keep release gates closed:** external beta, live Stripe and commercial protected-lyrics use remain blocked. Lyrics remain transient and never saved.
+7. **Automated foundation healthy:** **981 passed, 0 failed** on current `main` during the 2026-08-31 premium design package verification. The earlier assessment baseline was 162. See [[Build 1 Assessment 2026-08-30]].
+8. **Print/poster/T-shirt/upscaling remain post-Build-1.** Vault = workshop; `/docs` = Meow Control.
 
 ## Newly documented
+
+- **Luminous Night Studio approved (2026-08-31):** production visual baseline, semantic tokens, component states, nine core screen specs, compact/medium/expanded behavior, Flutter mapping, phased acceptance roadmap and exact Cursor Phase 1 handoff are synchronized under `docs/design/` and `assets/design/`. Portraits are resolved to Gallery; Discover stays out of nav; Download remains the current action; Reimagine stays future. No backend contracts changed. ADR-20260831.
 
 - **Create-flow architecture locked into design OS (2026-08-31):** GPT/design-review decisions — AI removes decisions by default; Song DNA is the creative control surface; Quick Generate default; Explore Options = AI visual directions (not generic presets); Fine Tune advanced-only; DNA-aware generation experience; artwork-first reveal. Spec: `docs/design/screens/create-flow.md`. Vault: `05 Product Design/Create Flow Architecture Contract.md`. ADR-20260831. **No Create UX implementation yet**; First Build / Onboarding contracts still describe shipped Song → People → Direction until amended. Discover nav and immersive Create shell documented as implications only.
 

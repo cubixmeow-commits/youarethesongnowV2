@@ -43,7 +43,7 @@ Owner: invitations, users, jobs, style activate/deactivate
 | Authed | Create, Gallery, Account |
 | Owner | + Owner (secondary) |
 
-**Conceptual target (not shipped):** Create, Gallery, Discover, Account. See [create-flow.md](./create-flow.md) §10 before changing nav.
+**Approved customer destinations:** Create, Gallery, Account. Owner remains owner-only. Discover requires a separate product decision and must not be added during the premium implementation slices.
 
 ## Screen notes
 

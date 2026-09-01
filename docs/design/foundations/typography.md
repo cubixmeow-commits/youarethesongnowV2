@@ -9,6 +9,8 @@
 
 Fallbacks: Iowan/Palatino/Georgia for display; Avenir Next / Segoe UI / system-ui for UI.
 
+This pairing is finalized for Luminous Night Studio. Self-host licensed WOFF2 files before external beta and bundle equivalent assets for Flutter so product typography does not depend on a runtime font network.
+
 ## Type roles
 
 | Role | CSS | Approx | Flutter map |
@@ -27,6 +29,11 @@ Fallbacks: Iowan/Palatino/Georgia for display; Avenir Next / Segoe UI / system-u
 - No em dashes in product copy (owner rule).
 - Prefer emotional, music-aware language over AI/technical jargon.
 - Do not expose model/provider names in customer UI.
+- Instrument Serif is reserved for emotional headings, the Song DNA/reveal moment, and sparse editorial labels. Do not use it for long body copy, dense settings, buttons, or error messages.
+- DM Sans owns body, navigation, labels, controls, status, account, and owner operations.
+- Minimum mobile form/control text is 16px. Meta text stays at 12px only when contrast and line height pass.
+- Use tabular numerals for credits, prices, durations, and aligned counts.
+- Keep body measure near 36rem; major display headings target 2–3 lines on compact screens.
 
 ## Audit findings
 

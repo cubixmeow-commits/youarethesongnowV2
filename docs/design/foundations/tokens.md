@@ -8,9 +8,11 @@ There is a **legacy alias layer** (`--ink`, `--paper`, `--stage`, etc.) retained
 
 Breakpoints are **not** tokenized in CSS — they are hardcoded media queries.
 
-## Proposed first canonical semantic set (Phase 1 — do not migrate yet)
+## Approved canonical semantic set
 
-These names are intended to be stable across CSS custom properties, a future JSON export, and Flutter `ThemeExtension`s. Values mirror the current app unless marked *propose*.
+These names are stable across CSS custom properties, the canonical JSON export, and Flutter `ThemeExtension`s. Runtime migration is incremental and begins with the Phase 1 foundation slice; visual/behavioral changes still require screenshot review.
+
+Canonical export: `assets/design/tokens/semantic-tokens.json`. The older `semantic-tokens.proposed.json` is superseded.
 
 ### Color — surfaces
 
@@ -80,7 +82,7 @@ These names are intended to be stable across CSS custom properties, a future JSO
 | `layout.appMax` | `--app-max` | 1120px |
 | `layout.measure` | `--measure` | 36rem reading |
 
-### Breakpoints (*propose — not in CSS today*)
+### Layout bands
 
 | Semantic | Value | Behavior today |
 | --- | --- | --- |
@@ -91,17 +93,18 @@ These names are intended to be stable across CSS custom properties, a future JSO
 
 Also present in CSS but not in the Round 008 design-system table: `390`, `480`, `700`, `768`, `1100`. Phase 2 should decide whether to collapse to the four named breakpoints above.
 
-### Deprecate (Phase 2+)
+### Deprecate incrementally
 
 - Legacy aliases: `--ink`, `--charcoal`, `--paper`, `--muted`, `--stage`, `--line`, …
 - Unused / weakly used: `--color-silver`, `--asset-launch-mark` (token declared; markup uses path directly), duplicate max-width hardcodes
 
-## Proposed first adoption slice (after review — not this PR)
+## First adoption slice
 
-1. Document-only freeze of semantic names above.
-2. Add CSS custom properties for breakpoints (no behavior change).
-3. Split `--focus-ring` into `color.focus` + `elevation.focusRing`.
-4. Replace hardcoded oklch in body/hero/reveal with token references (no visual change if values match).
-5. Export JSON → Flutter ThemeExtension in a later phase.
+1. Add semantic aliases while retaining legacy aliases until usage reaches zero.
+2. Split `--focus-ring` into `color.focus` + `elevation.focusRing`.
+3. Raise/test tertiary content contrast before applying it broadly.
+4. Render canonical component states in a private component lab.
+5. Refactor current Explore presentation onto canonical components without changing its endpoint/bridge.
+6. Export reviewed sRGB values to Flutter ThemeExtensions only when Flutter work is authorized.
 
-See `assets/design/tokens/semantic-tokens.proposed.json`.
+See `assets/design/tokens/semantic-tokens.json` and `docs/design/process/LUMINOUS-NIGHT-STUDIO-IMPLEMENTATION-ROADMAP.md`.

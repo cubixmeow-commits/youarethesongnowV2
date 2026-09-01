@@ -3,6 +3,8 @@
 | Doc | Purpose |
 | --- | --- |
 | [phases.md](./phases.md) | Phase gates for the design OS |
+| [PREMIUM-SITE-DESIGN-BUILD-PLAN.md](./PREMIUM-SITE-DESIGN-BUILD-PLAN.md) | Research-backed end-to-end design program |
+| [LUMINOUS-NIGHT-STUDIO-IMPLEMENTATION-ROADMAP.md](./LUMINOUS-NIGHT-STUDIO-IMPLEMENTATION-ROADMAP.md) | Approved phased build order, acceptance criteria, and next executable slice |
 
 ## Agent checklist (any design-related task)
 

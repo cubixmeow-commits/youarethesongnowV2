@@ -1,0 +1,86 @@
+{
+  "$schema_note": "Canonical Luminous Night Studio semantic tokens. CSS remains the runtime source until the Phase 2 token slice wires these names in; Flutter maps the same semantics, not CSS syntax.",
+  "meta": {
+    "product": "YouAreTheSongNow",
+    "direction": "Luminous Night Studio",
+    "updated": "2026-08-31",
+    "status": "approved-baseline",
+    "canonicalViewportOrder": ["compact", "medium", "expanded"],
+    "runtimeCssSource": "public/assets/css/app.css"
+  },
+  "color": {
+    "surface": {
+      "canvas": { "oklch": "oklch(0.09 0.012 264)", "srgbGuide": "#07090F" },
+      "base": { "oklch": "oklch(0.13 0.014 262)", "srgbGuide": "#10141F" },
+      "elevated": { "oklch": "oklch(0.16 0.016 262)", "srgbGuide": "#171D2B" },
+      "interactive": { "oklch": "oklch(0.18 0.012 264)", "srgbGuide": "#1D2230" },
+      "selected": { "css": "color-mix(in oklab, var(--color-accent-sapphire) 16%, var(--color-surface-elevated))" },
+      "scrim": { "css": "color-mix(in oklab, black 68%, transparent)" }
+    },
+    "content": {
+      "primary": { "oklch": "oklch(0.91 0.008 250)", "srgbGuide": "#E8EAF0" },
+      "secondary": { "oklch": "oklch(0.70 0.012 252)", "srgbGuide": "#9DA5B6" },
+      "tertiary": { "oklch": "oklch(0.62 0.01 256)", "note": "Raised from current 0.56 pending contrast verification" },
+      "onAccent": { "srgbGuide": "#FFFFFF" }
+    },
+    "action": {
+      "primary": { "oklch": "oklch(0.58 0.16 268)", "srgbGuide": "#4F72FF" },
+      "primaryPressed": { "oklch": "oklch(0.52 0.15 268)" },
+      "selection": { "oklch": "oklch(0.50 0.12 264)", "srgbGuide": "#223B76" },
+      "focus": { "oklch": "oklch(0.72 0.14 268)" }
+    },
+    "border": {
+      "subtle": { "css": "color-mix(in oklab, var(--color-platinum) 12%, transparent)" },
+      "default": { "css": "color-mix(in oklab, var(--color-platinum) 18%, transparent)" },
+      "strong": { "css": "color-mix(in oklab, var(--color-platinum) 30%, transparent)" },
+      "selected": { "css": "color-mix(in oklab, var(--color-accent-cobalt) 74%, white)" }
+    },
+    "status": {
+      "success": "oklch(0.72 0.12 145)",
+      "warning": "oklch(0.78 0.12 75)",
+      "error": "oklch(0.67 0.16 25)",
+      "info": "oklch(0.70 0.10 255)"
+    }
+  },
+  "spacePx": { "1": 4, "2": 8, "3": 12, "4": 16, "5": 24, "6": 32, "7": 48, "8": 64, "9": 96 },
+  "radiusPx": { "sm": 8, "md": 14, "lg": 20, "xl": 28, "pill": 999 },
+  "controlPx": { "touchMinimum": 44, "height": 48, "primaryHeight": 52, "icon": 24, "iconButton": 44 },
+  "typography": {
+    "displayFamily": "Instrument Serif",
+    "uiFamily": "DM Sans",
+    "roles": {
+      "display": { "size": "clamp(2.5rem, 8vw, 3.5rem)", "lineHeight": 0.98, "weight": 400 },
+      "largeTitle": { "size": "clamp(1.85rem, 5.5vw, 2.5rem)", "lineHeight": 1.08, "weight": 400 },
+      "title": { "size": "clamp(1.35rem, 3vw, 1.75rem)", "lineHeight": 1.15, "weight": 400 },
+      "headline": { "sizePx": 18, "lineHeight": 1.3, "weight": 600 },
+      "body": { "sizePx": 16, "lineHeight": 1.55, "weight": 400 },
+      "callout": { "sizePx": 15, "lineHeight": 1.45, "weight": 500 },
+      "caption": { "sizePx": 13, "lineHeight": 1.4, "weight": 500 },
+      "meta": { "sizePx": 12, "lineHeight": 1.35, "weight": 600, "letterSpacingEm": 0.08 }
+    }
+  },
+  "motion": {
+    "instantMs": 0,
+    "fastMs": 140,
+    "baseMs": 220,
+    "panelMs": 300,
+    "revealMs": 420,
+    "easeStandard": "cubic-bezier(0.22, 1, 0.36, 1)",
+    "easeEmphasized": "cubic-bezier(0.2, 0, 0, 1)"
+  },
+  "elevation": {
+    "edge": "0 1px 0 color-mix(in oklab, white 3%, transparent)",
+    "sheet": "0 12px 32px color-mix(in oklab, black 32%, transparent)",
+    "dialog": "0 24px 52px color-mix(in oklab, black 42%, transparent)",
+    "focusRing": "0 0 0 3px color-mix(in oklab, var(--color-focus) 55%, transparent)"
+  },
+  "layoutPx": {
+    "topbar": 52,
+    "tabbar": 64,
+    "rail": 88,
+    "appMax": 1120,
+    "contextPanelMin": 320,
+    "contextPanelMax": 360
+  },
+  "breakpointsPx": { "medium": 600, "expanded": 900, "wide": 1200 }
+}

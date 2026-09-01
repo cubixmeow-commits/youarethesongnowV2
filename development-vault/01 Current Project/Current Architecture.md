@@ -112,9 +112,24 @@ SQLite is preferred initially because it reduces operational complexity for a sm
 
 Potential future measures once implementation begins: WAL mode, short transactions, atomic job claiming, append-only credit ledger, migrations, backups, and explicit database locking/error handling.
 
+## Product-interface architecture
+
+The approved client design architecture is **mobile-canonical and adaptive**:
+
+```text
+Compact: top/focused header + one task + optional bottom navigation
+Medium: same task/state with wider comparison or artwork
+Expanded: navigation rail + main workspace + optional context panel
+```
+
+Luminous Night Studio is the visual baseline. Web components and later Flutter widgets share semantic tokens, state contracts, screen intent, accessibility and `/api/v1` behavior rather than markup/CSS. The design OS lives under `docs/design/`; canonical non-runtime assets live under `assets/design/`.
+
+Flutter remains deferred. Backend business rules and privacy stay on PHP; no client duplicates credits, membership, authorization, creative-engine, sharing or deletion policy.
+
 ## Related decisions
 
 - [[../02 Decisions/ADR-20260827-rebuild-functionality-not-code]]
 - [[../02 Decisions/ADR-20260827-use-php-for-v2]]
 - [[../02 Decisions/ADR-20260827-use-sqlite-initially]]
 - [[../02 Decisions/ADR-20260827-web-first-then-flutter-ios]]
+- [[../02 Decisions/ADR-20260831-luminous-night-studio-baseline]]

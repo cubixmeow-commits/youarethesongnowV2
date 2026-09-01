@@ -1,12 +1,14 @@
 # YouAreTheSongNow — Premium Site Design + Build Program
 
-**Status:** Canonical planning document for the next design phase  
+**Status:** Research/program foundation; Luminous Night Studio selected 2026-08-31
 **Scope:** Mobile-first web product, responsive desktop expansion, Flutter portability  
 **Working model:** GPT = design director / UX critic / design-system architect. Cursor = implementation engineer / repo analyst / test runner.
 
 ## North star
 
 Build YouAreTheSongNow so it feels like a premium native creative product, not a generic AI dashboard or a desktop website squeezed onto a phone.
+
+**Selected visual baseline:** Luminous Night Studio. The production sequence and acceptance gates are now finalized in `LUMINOUS-NIGHT-STUDIO-IMPLEMENTATION-ROADMAP.md`. Candidate comparison is complete; do not reopen it inside an implementation slice without an explicit owner decision.
 
 The web product must establish the interaction model, visual language, component system, motion rules, responsive behavior, accessibility, and information hierarchy that can later transfer cleanly to Flutter on iOS and Android.
 

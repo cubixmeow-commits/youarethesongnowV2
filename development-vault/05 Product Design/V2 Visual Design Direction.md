@@ -17,6 +17,10 @@ approved: 2026-08-28
 
 CuBiX Meow approved this direction for Private Development Build 1 on 2026-08-28. Example imagery, final font files and measured color values may be refined during implementation without changing the core art direction.
 
+## 2026-08-31 premium refinement
+
+**Luminous Night Studio** is now the approved production baseline and named refinement of this contract. It preserves the black/graphite/platinum/sapphire YS foundation and artwork-first Listening Room thesis while finalizing semantic tokens, responsive behavior, component states, screen contracts, and Flutter mapping. See [[Luminous Night Studio Design Contract]] and ADR-20260831. Where an implementation detail differs, the newer contract/design OS governs; privacy, backend, billing, and Build 1 gates are unchanged.
+
 ## Visual thesis
 
 **A platinum threshold in a silent black gallery, lit by deep sapphire: dark, tactile, editorial and emotionally charged, with generated artwork providing the spectacle and the interface behaving like quiet album packaging.**

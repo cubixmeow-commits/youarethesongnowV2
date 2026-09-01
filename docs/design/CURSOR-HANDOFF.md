@@ -1,87 +1,138 @@
-# CURSOR-HANDOFF — Explore cleanup complete (awaiting GPT visual review)
+# CURSOR-HANDOFF — Luminous Night Studio foundation slice
 
-**Date:** 2026-08-31  
-**Working branch:** `main`  
-**Phase:** Immediate Explore product-interaction cleanup only  
-**Status:** Ready for GPT visual review before Phase 1 premium redesign continues
+**Date:** 2026-08-31
+**Branch convention:** work directly on `main` while the product remains private development
+**Design package status:** approved and implementation-ready
+**Design package commit:** `PACKAGE_COMMIT_PLACEHOLDER`
+**Execute now:** Phase 1 foundation/component-lab slice only
 
-## Scope completed
+## Outcome to deliver
 
-Implemented **only** the immediate Explore cleanup from this handoff / `docs/design/process/PREMIUM-SITE-DESIGN-BUILD-PLAN.md` Phase 0.
+Establish the approved **Luminous Night Studio** design foundation in runtime code, prove the canonical component states, and migrate the already-working Explore presentation onto those components without changing backend behavior.
 
-Preserved:
+Stop after screenshots, tests, and the handoff update. Do not begin Create Home, Song DNA API/database work, or the full screen rebuild.
 
-- working Gemini Explore provider/decoder path
-- Quick Generate / Explore API contract
-- draft/job, credits/paywall, portraits, generation handoff
+## Read first, in order
 
-Did **not** begin the broader premium redesign.
+1. `AGENTS.md`
+2. `development-vault/START HERE.md`
+3. `development-vault/01 Current Project/Current Priorities.md`
+4. `development-vault/01 Current Project/Current Architecture.md`
+5. `development-vault/05 Product Design/Luminous Night Studio Design Contract.md`
+6. `development-vault/05 Product Design/Create Flow Architecture Contract.md`
+7. `docs/design/DESIGN-OPERATING-SYSTEM.md`
+8. `docs/design/foundations/principles.md`
+9. `docs/design/foundations/tokens.md`
+10. `docs/design/foundations/color.md`
+11. `docs/design/foundations/typography.md`
+12. `docs/design/foundations/motion.md`
+13. `docs/design/foundations/responsive.md`
+14. `docs/design/components/core-components.md`
+15. `docs/design/screens/premium-product-screens.md` (Explore only in this slice)
+16. `docs/design/process/LUMINOUS-NIGHT-STUDIO-IMPLEMENTATION-ROADMAP.md` (Phase 1 only)
 
-## Interaction changes
+## Visual references
 
-1. Removed customer-facing StyleMap copy (`Uses … internally`).
-2. StyleMap bridge retained only as private `data-style-name` / `data-style-id` on cards for debugging.
-3. Replaced “Gemini’s strongest fit” sentence with a visual **Recommended** chip on the first card.
-4. Direction cards are larger full-width tap targets with clearer focus/hover and `aria-selected`.
-5. Selected card uses a strong selected state.
-6. After selection, shows dominant **Create this direction** CTA (bridges into existing Review → Create my image flow).
-7. While an AI direction is active, legacy **Choose your world** style grid and the old Review button are collapsed.
-8. Secondary **Choose a style manually** restores the legacy style picker.
-9. **Generate for me** remains the primary button before Explore opens.
-10. Failure diagnostics still append sanitized codes; success UI no longer leads with build/diagnostic chrome (build SHA kept visually hidden for private deploy checks).
+- Canonical board: `assets/design/references/luminous-night-studio-style-board.png`
+- Token source: `assets/design/tokens/semantic-tokens.json`
+- Current runtime baseline: `public/assets/css/app.css`
+- Responsive review evidence: `design/review/round-008/`
+- Brand/runtime assets: `public/assets/images/brand/` and `public/assets/images/system/`
 
-## Files changed
+The board is art-direction evidence, not a pixel template. Accessible token/component/screen rules override decorative board details. Do not copy its illustrative artwork into runtime assets.
 
+## Exact implementation slice
+
+### 1. Runtime semantic foundation
+
+Primary file: `public/assets/css/app.css`.
+
+- Add stable semantic aliases matching `semantic-tokens.json`; retain legacy aliases until usage reaches zero.
+- Split focus color from focus-ring shadow/elevation.
+- Raise and contrast-test tertiary content before using it for small text.
+- Add canonical variables for 44px minimum target, 48px control, 52px primary action, selected surface/edge, statuses, and sheet/dialog elevation.
+- Preserve the accepted black/graphite/platinum/sapphire appearance unless a documented token correction is required.
+- Do not introduce purple-pink gradients, glass panels, continuous glow, or `transition: all`.
+
+### 2. Private-development component lab
+
+Create the smallest repo-native fixture route/page fitting this PHP app. It must be owner/private-development-only or unreachable in external production mode.
+
+Show:
+
+- Button: primary/secondary/quiet/destructive; default, hover, focus, pressed, disabled, loading
+- IconButton: default/focus/disabled
+- StatusBanner: info/success/warning/error with retry
+- SongDnaCard: loading, recommended, selected, conflict-disabled (fixture only; no API work)
+- CreativeDirectionCard: loading, recommended, selected, selected+recommended, error
+- Sheet/Dialog and Confirmation
+- Artwork tile/figure: loading, ready, unavailable
+
+Use fixtures only. No lyrics, private portraits, provider payloads, copyrighted artwork, keys, or prompts.
+
+### 3. Current Explore presentation migration
+
+Likely files:
+
+- `templates/pages/create.php`
 - `public/assets/js/explore.js`
+- `public/assets/css/app.css`
 - `tests/run.php`
-- `docs/design/CURSOR-HANDOFF.md`
 
-No Gemini/provider PHP changes in this slice.
+Requirements:
 
-## Tests / results
+- preserve `POST /api/v1/explore-directions`, Gemini decoder/provider behavior, exact three-direction schema, derived-DNA-only privacy, diagnostics gating, and internal StyleMap bridge;
+- use canonical CreativeDirectionCard/Button/Status patterns;
+- keep `Generate for me` primary and `Explore options` secondary;
+- keep first server-ranked direction quietly Recommended;
+- maintain whole-card selection and selected state;
+- keep `Create this direction` because the current bridge enters the existing creation action; do not invent Fine Tune/review in this slice;
+- keep internal style data out of customer copy;
+- preserve manual-style escape while the legacy flow remains;
+- do not move quality/orientation/no-text yet.
 
-```text
-php tests/run.php
-=== Results: 981 passed, 0 failed ===
-```
+### 4. Touched accessibility defects
 
-## Final commit
+- Create must have a real `<h1>`.
+- Gallery empty-state `aria-hidden` may be fixed as an independent safe correction.
+- Focus ring renders on the actual interactive surface without clipping.
+- Selection works with keyboard and exposes state programmatically.
+- Reduced motion removes movement/shimmer from touched components.
 
-- **Hash:** `72df74e7afe2ea0d238322919cec77bae69eee22`
-- **Message:** Clean up Explore direction selection UX for review
-- **Branch:** `main`
-- **Requires:** Hostinger git sync; no `.env` changes
+## Explicit non-goals
 
-## Exact iPhone retest
+- no migrations or database fields;
+- no customer-safe Song DNA projection endpoint;
+- no changes to lookup, drafts/snapshots/jobs, credits, paywall, Stripe, portraits, private media, sharing, account, deletion, or provider contracts;
+- no Discover route/navigation;
+- no Flutter code;
+- no broad Create, Gallery, Reveal, Account, onboarding, marketing, owner, or dashboard redesign;
+- no runtime use of style-board artwork;
+- no push or deploy unless separately requested.
 
-1. Sync Hostinger `/yatsnV2` to latest `main` (git pull). No `.env` changes.
-2. Soft-refresh `/create`.
-3. Discover a song with Song DNA → select portrait → open Direction.
-4. Confirm **Generate for me** is the primary action; **Explore options** is secondary.
-5. Tap **Explore options** → three cards appear; first has **Recommended**; no “Uses … internally” text.
-6. Tap a card → strong selected state; **Create this direction** appears; style grid is hidden.
-7. Tap **Choose a style manually** → style grid returns.
-8. Select a direction again → **Create this direction** → continues into existing review/generation.
-9. Retest **Generate for me** still auto-continues.
-10. Force/observe a failure only if convenient; diagnostic suffix should still appear on errors.
+## Automated verification
 
-## Desktop implications discovered
+Run `php tests/run.php` and report the exact count. Add scoped tests for component-lab access, Explore semantics/state hooks, exclusion of customer-facing internal StyleMap copy, repeated async activation protection, and touched accessibility behavior. Fix scoped regressions rather than weakening unrelated contracts.
 
-- At ≥700px the three direction cards sit in one row; selected-state border/background remains readable beside neighbors.
-- Primary/secondary CTA wrap in the lab header; on narrow widths actions become full-width 48px targets.
-- Collapsing the style grid on desktop removes a large competing control block and makes the AI cards the clear decision surface; quality/format/no-text remain visible for fine control.
-- Summary board still shows Style after AI selection because the StyleMap bridge still patches the existing draft style — expected for Build 1 compatibility, but visually the customer no longer chooses that style directly.
+## Screenshot and manual review
 
-## Design questions for GPT
+Capture:
 
-1. Is **Create this direction** the right CTA wording versus **Continue** / **Use this direction** / **Create my image**?
-2. Should quality/format/no-text remain visible while an Explore direction is active, or should those also collapse behind Fine Tune?
-3. When restoring manual styles, should the Explore card selection clear completely (current) or remain visible as a non-selected reference?
-4. Should the Recommended chip stay text-only, or become a quieter mark / ordering cue only?
-5. Is hiding the Review button while Explore is active correct, or should Review remain as a secondary path beside Create this direction?
+- component lab at 320, 390, 768, 900, and 1440 CSS px;
+- Create/Explore at 320, 390, 900, and 1440;
+- Explore loading, ready/recommended, selected, error/retry, manual-style escape;
+- visible keyboard focus;
+- reduced-motion and increased-contrast evidence or clear notes;
+- 200% zoom at compact and expanded widths.
 
-## Recommended next slice
+Store under `design/review/round-010/` with a README naming route, state, viewport, and fixture setup. Include no private data.
 
-From `PREMIUM-SITE-DESIGN-BUILD-PLAN.md`, after GPT reviews this cleanup:
+## Review requirements
 
-**Formalize Create journey/state architecture** (program step 2) — define the canonical Create Home → Song → Song DNA → Quick Generate / Explore → Fine Tune → Generation → Reveal states and contracts before any broad visual rebuild.
+Verify primary action, restraint, Luminous material/type/selection direction, compact-first quality, expanded context without extra controls, keyboard/touch/screen-reader behavior, reduced motion, unchanged Explore backend/privacy, full tests, and explicitly no backend/API/migration change.
+
+## Required completion handoff
+
+Update this file with changed files, implemented token/component decisions, interaction notes, explicit backend/API/migration status, exact tests, screenshot paths/states, accessibility/contrast/motion/zoom results, deviations/questions, final commit hash, and next recommended slice.
+
+Commit directly to `main` and stop for review. After approval, the expected next slice is **Phase 2: Create entry and existing-contract song selection**, not Song DNA backend work.

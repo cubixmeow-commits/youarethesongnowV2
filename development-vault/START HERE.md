@@ -34,6 +34,7 @@ See [[02 Decisions/ADR-20260827-web-first-then-flutter-ios]].
 - Mobile direction: **Flutter + Dart, iOS first**, after the web rebuild is validated.
 - V1 is evidence for behavior and product ideas, not an implementation template.
 - The creative engine should preserve staged song interpretation while simplifying and modernizing the pipeline.
+- Premium product design baseline: **Luminous Night Studio**, implemented mobile-first in review-gated web slices and mapped explicitly to later Flutter. See [[05 Product Design/Luminous Night Studio Design Contract]].
 
 ## Current creative-engine direction
 

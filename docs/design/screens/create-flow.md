@@ -182,7 +182,7 @@ These conflict with the new principle that generic style presets should not be t
 | Create shell / session header | Create shell | **Reuse** chrome patterns; retitle stages |
 | 01 Song (artist/title + lookup) | Choose Song | **Reuse** lookup UX and API; improve loading/error states |
 | Dev Song DNA inspection panel | — | **Keep private-dev only**; never the customer DNA picker |
-| 02 People (portraits) | *Not in target diagram* | **Must keep product capability**; **placement TBD** (see §12). Do not drop portraits. |
+| 02 People (portraits) | Gallery portrait shelf + compact active portrait summary in Create | **Resolved:** manage portraits at the top of Gallery; Create uses an active/default portrait after explicit server support. Do not drop portrait capability or invent persistence. |
 | 03 Style grid (StyleMap catalog) | Explore Options → AI visual directions | **Change role**: curated StyleMaps become backend/compiler material and/or Fine Tune options — **not** the default customer path. Eventually **remove or demote** the primary style grid from Quick Generate |
 | Quality / orientation / no-text / special | Fine Tune (optional) and/or auto choices | **Change**: auto under Quick Generate; optional under Fine Tune. Exact which knobs survive Fine Tune is **open** |
 | Review summary | Pre-generate confirmation (lighter) | **Reuse** summary idea; content shifts to Song + DNA (+ direction if Explore) + people |
@@ -392,25 +392,28 @@ Port **tokens + API screen contracts**, not Create DOM structure.
 
 ---
 
-## 12. Unresolved product / design questions
+## 12. Resolved and remaining decisions
 
-Do not guess. Resolve with owners / GPT before implementation:
+### Resolved by the Luminous Night Studio package
 
-1. **Where do portraits live** in the new flow? (Still required by First Build Feature Contract; missing from the new diagram.)
-2. Final **customer-facing Song DNA dimension labels** and how many layers max.
-3. Is **`originalVisualMoment` user-selectable**, always auto, or shown read-only?
-4. Minimum selection: **exactly one** DNA element vs allowing Generate with “system chooses emphasis”?
-5. How do multi-selected DNA elements **conflict-resolve** in the compiler?
-6. Which fields belong in **Fine Tune** vs stay fully automatic (quality, orientation, no-text, special instructions, internal StyleMap)?
-7. Exact product difference: **Variation** vs **Reimagine** vs today’s “Create another image”.
-8. Does **Save** mean download, gallery pin, or both?
-9. Should **Explore Options** be visible as a text link, segmented control, or post-DNA choice gate?
-10. **Discover** destination definition and whether it replaces Showcase for authed users.
-11. When DNA analysis is **song-context fallback** (not lyric-grounded), what does the UI claim?
-12. Cost/latency budget for a **new visual-directions model call** vs heuristic MVP.
-13. Relationship to **Onboarding and First-Creation Paywall Contract** (still requires style/quality/orientation before paywall) — needs an explicit supersession or amendment decision.
-14. Whether inactive/admin StyleMaps remain owner tools only once customer Explore Options ships.
-15. Accessibility: DNA multi-select as listbox/radiogroup patterns; generation checklist semantics.
+1. Portrait management lives at the top of Gallery; Create shows/uses active/default identity only after an explicit server contract exists.
+2. Fine Tune initially allows orientation, no-text, Special instructions, and quality only while pricing/economics require it. StyleMap/provider/model/camera/palette controls stay hidden.
+3. Current regeneration may become `Create a variation`; `Reimagine` remains future until behavior/API are distinct.
+4. Use `Download`, not `Save`, while images already persist in Gallery and no favorite/pin state exists.
+5. Explore is a secondary action after DNA, not a top-level mode switch.
+6. Discover is not added to navigation without a separate product decision.
+7. DNA cards use checkbox semantics; Explore directions use radio semantics; DNA is context on generation, not fake checklist progress.
+
+### Remaining contract-first decisions
+
+1. Final customer-facing DNA labels, stable value IDs, and approved projection copy.
+2. Whether `originalVisualMoment` is selectable, read-only, or system-only.
+3. Minimum/maximum selection and compiler conflict resolution. The UI baseline is 1–3 layers, pending server approval.
+4. Truthful context-fallback language when analysis is not lyric-grounded.
+5. Customer-safe projection/persistence and active/default portrait persistence.
+6. Quick Generate server auto-resolution from selected DNA.
+7. Explicit amendments to First Build and Onboarding configuration requirements.
+8. Whether quality remains customer-visible after final economics are decided.
 
 ---
 

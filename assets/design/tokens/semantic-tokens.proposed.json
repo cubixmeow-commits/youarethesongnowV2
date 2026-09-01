@@ -1,11 +1,11 @@
 {
-  "$schema_note": "Proposed canonical semantic tokens for YouAreTheSongNow. Values mirror public/assets/css/app.css Round 008. NOT yet wired into the app. Phase 1 documentation only.",
+  "$schema_note": "Historical Phase 1 proposal. Superseded by assets/design/tokens/semantic-tokens.json. Do not implement from this file.",
   "meta": {
     "product": "YouAreTheSongNow",
     "updated": "2026-08-31",
     "canonicalViewportOrder": ["phone", "tablet", "desktop"],
     "cssSource": "public/assets/css/app.css",
-    "status": "proposed"
+    "status": "superseded"
   },
   "color": {
     "bg": "oklch(0.09 0.012 264)",
