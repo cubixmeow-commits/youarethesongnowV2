@@ -108,6 +108,11 @@
     panel.removeAttribute('aria-busy');
   }
 
+  function resultAccessibleName(lookup) {
+    const qualifier = matchQualifier(lookup.state);
+    return `${lookup.title}, ${lookup.artist}${qualifier ? `, ${qualifier}` : ''}`;
+  }
+
   function renderResultCard(lookup, { selectable = true } = {}) {
     const results = $('[data-song-results]');
     if (!results) return null;
@@ -118,6 +123,9 @@
     row.className = 'yatsn-song-result';
     if (lookup.state === 'notFound') row.classList.add('yatsn-song-result--unavailable');
     row.dataset.songResult = '';
+    if (isSelectable) {
+      row.setAttribute('aria-label', resultAccessibleName(lookup));
+    }
     row.innerHTML = `
       <span class="yatsn-song-result__art yatsn-artwork__stage">${artworkMarkup(lookup)}</span>
       <span class="yatsn-song-result__copy">
@@ -129,12 +137,6 @@
     `;
     if (isSelectable) {
       row.addEventListener('click', () => selectLookup(lookup));
-      row.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-          event.preventDefault();
-          selectLookup(lookup);
-        }
-      });
     }
     results.appendChild(row);
     results.hidden = false;

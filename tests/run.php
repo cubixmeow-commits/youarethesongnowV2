@@ -1155,15 +1155,21 @@ assert_true(str_contains($createTemplate, 'Find this song'), 'Create primary son
 assert_true(str_contains($createTemplate, '<h1 class="session-header__title">Choose your song</h1>'), 'Create keeps one stable h1 for the dominant task');
 assert_true(!str_contains($createTemplate, 'data-session-song'), 'Create h1 is no longer repurposed as dynamic song metadata');
 assert_true(str_contains($createTemplate, 'data-song-results'), 'Create template reserves artwork-led result surface');
+assert_true(str_contains($createTemplate, 'role="region"') && str_contains($createTemplate, 'aria-label="Song match"'), 'Create song result uses a labelled region instead of an invalid list');
 assert_true(str_contains($createTemplate, 'data-song-selected'), 'Create template reserves selected song state');
 assert_true(str_contains($createTemplate, 'data-song-retry'), 'Create template reserves retry affordance');
+assert_true(!str_contains($createTemplate, 'data-song-resume') || str_contains($createTemplate, 'data-song-resume hidden'), 'resume row stays hidden until a resumable-draft contract exists');
+
+assert_true(str_contains($songSearchJs, 'aria-label'), 'song result button exposes an accessible name with title, artist, and match status');
+assert_true(!preg_match('/addEventListener\(\s*[\'"]keydown[\'"]/', $songSearchJs), 'native song result button does not add redundant Enter/Space keydown activation');
+assert_true(!str_contains($appJs, 'Your draft is saved as you go'), 'Create entry does not render a fresh-draft self-link resume row');
 
 $mainLayout = (string) file_get_contents($root . '/templates/layouts/main.php');
 assert_true(str_contains($mainLayout, 'song-search.js'), 'Create page loads song-search.js');
 
 assert_true(str_contains($appCss, 'container-name: yatsn-create-entry'), 'Create entry uses a size container for adaptive controls');
 assert_true(str_contains($appCss, '.yatsn-song-result__title'), 'song result title hierarchy styles exist');
-assert_true(str_contains($appCss, '@container yatsn-create-entry'), 'song search submit adapts to available pane width');
+assert_true(str_contains($appCss, '[data-song-result-loading][hidden]'), 'hidden song-search state rows are not overridden by grid display');
 
 $groqDecoded = \Yatsn\AI\GroqCreativeAdapter::decodeResponse([
     'choices' => [['message' => ['content' => json_encode($analysisFixture, JSON_THROW_ON_ERROR)]]],

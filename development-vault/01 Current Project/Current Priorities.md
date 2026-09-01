@@ -11,7 +11,7 @@ This note is the daily “what matters now” list for CuBiX Meow and Brut. Keep
 
 ## Active now
 
-1. **Codex review of Luminous Night Studio Phase 2:** Create entry + song selection on `cursor/luminous-night-studio-phase2`. Pack: `design/review/round-011/`. Do not start Phase 3 contract/API work until review lands.
+1. **Codex second review of Luminous Night Studio Phase 2 correction pass:** resume row removed, screenshot harness fixed, result semantics repaired. Pack: `design/review/round-011/`. Do not start Phase 3 contract/API work until review lands.
 2. **Run controlled private image tests:** compare the same one- and two-person inputs on Flash Lite and full Flash; change one variable at a time and record identity, narrative fidelity, coherence, prohibited text, latency, cost and usability.
 3. **Resolve no-text and unusable-image detection:** one otherwise successful no-text image rendered `TICKET`. Prompt-only enforcement and human-only identity acceptance are not sufficient for the final 90-image gate.
 4. **Provisional routing only:** Flash Lite is the low-cost candidate at about $0.0336 per 1K output; full Flash is the quality anchor at about $0.067. Medium/default and high routing are not decided.
@@ -22,7 +22,7 @@ This note is the daily “what matters now” list for CuBiX Meow and Brut. Keep
 
 ## Newly documented
 
-- **Luminous Night Studio Phase 2 complete (2026-09-01):** Create entry upgraded with canonical song search, artwork-led result/selected states, resume + recent rows, explicit confirmation before People, and private screenshot fixtures. **1083 passed, 0 failed**. Review pack: `design/review/round-011/`. Backend contracts unchanged. Next: Codex review, then Phase 3 Song DNA contract.
+- **Luminous Night Studio Phase 2 correction pass (2026-09-01):** removed fresh-draft resume self-link; fixed hidden loading placeholder leak; repaired result region semantics and native-button activation; screenshot harness now asserts `targetVisible` with scroll offset. **1088 passed, 0 failed**. Review pack: `design/review/round-011/`.
 
 - **Luminous Night Studio Phase 1 published (2026-09-01):** Explore columns follow pane width; lab/Explore radios use a valid roving-tabindex pattern; screenshot fixtures are private-build-only; round-010 shots keep the Explore heading below the top bar. Codex independently verified **1058 passed, 0 failed** plus syntax, whitespace, privacy, responsive, and screenshot checks. Published to `main` at `6951f0c`; ready for private deployment review.
 
@@ -90,7 +90,7 @@ This note is the daily “what matters now” list for CuBiX Meow and Brut. Keep
 
 ## Next
 
-1. Codex review of Phase 2 screenshots, then Phase 3 customer-safe Song DNA contract and selector (contract-first).
+1. Codex second review of Phase 2 correction pass, then Phase 3 customer-safe Song DNA contract and selector (contract-first).
 2. Highest-leverage design follow-up: Song DNA selection interaction design (labels ↔ `song-dna-v2.0`, progressive multi-select, loading/unavailable, Quick Generate).
 3. Controlled same-input Flash Lite versus full Flash comparison for one and two people.
 4. Design no-text enforcement and unusable-image detection before the formal benchmark.

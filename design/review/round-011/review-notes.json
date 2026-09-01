@@ -1,8 +1,10 @@
 {
-  "generatedAt": "2026-09-01T04:13:06.883Z",
+  "generatedAt": "2026-09-01T04:45:57.591Z",
   "fixtureSetup": {
     "routeAuth": "owner session cookie from SessionService::create",
     "songSearch": "window.YatsnSongSearchFixtures on /create when data-private-build=1",
+    "scroll": "state targets scroll below sticky top bar (topbar height + 24px) with targetVisible assertion",
+    "resumeRow": "hidden in Phase 2 (no alternate-draft contract)",
     "noPrivateData": true
   },
   "captures": [
@@ -11,119 +13,1149 @@
       "width": 320,
       "height": 640,
       "url": "http://127.0.0.1:8765/create",
-      "fullPage": false
+      "fullPage": false,
+      "visibility": {
+        "label": "create-entry-320",
+        "found": true,
+        "targetVisible": true,
+        "targets": [
+          {
+            "selector": "[name=\"artist\"]",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 137,
+              "bottom": 187,
+              "left": 16,
+              "right": 304,
+              "width": 288,
+              "height": 50
+            }
+          },
+          {
+            "selector": "[name=\"title\"]",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 255.5,
+              "bottom": 305.5,
+              "left": 16,
+              "right": 304,
+              "width": 288,
+              "height": 50
+            }
+          },
+          {
+            "selector": ".yatsn-song-search__submit",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 346.5,
+              "bottom": 398.5,
+              "left": 16,
+              "right": 304,
+              "width": 288,
+              "height": 52
+            }
+          }
+        ],
+        "resumeHidden": true,
+        "offset": 77,
+        "topbarBounds": {
+          "top": 0,
+          "bottom": 53,
+          "height": 53
+        },
+        "scrollY": 466,
+        "viewport": {
+          "width": 320,
+          "height": 640
+        }
+      }
     },
     {
       "file": "create-entry-390.png",
       "width": 390,
       "height": 844,
       "url": "http://127.0.0.1:8765/create",
-      "fullPage": false
+      "fullPage": false,
+      "visibility": {
+        "label": "create-entry-390",
+        "found": true,
+        "targetVisible": true,
+        "targets": [
+          {
+            "selector": "[name=\"artist\"]",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 137.5,
+              "bottom": 187.5,
+              "left": 16,
+              "right": 374,
+              "width": 358,
+              "height": 50
+            }
+          },
+          {
+            "selector": "[name=\"title\"]",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 256,
+              "bottom": 306,
+              "left": 16,
+              "right": 374,
+              "width": 358,
+              "height": 50
+            }
+          },
+          {
+            "selector": ".yatsn-song-search__submit",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 347,
+              "bottom": 399,
+              "left": 16,
+              "right": 374,
+              "width": 358,
+              "height": 52
+            }
+          }
+        ],
+        "resumeHidden": true,
+        "offset": 77,
+        "topbarBounds": {
+          "top": 0,
+          "bottom": 53,
+          "height": 53
+        },
+        "scrollY": 375,
+        "viewport": {
+          "width": 390,
+          "height": 844
+        }
+      }
     },
     {
       "file": "create-entry-768.png",
       "width": 768,
       "height": 1024,
       "url": "http://127.0.0.1:8765/create",
-      "fullPage": false
+      "fullPage": false,
+      "visibility": {
+        "found": true,
+        "targetVisible": true,
+        "selector": ".yatsn-song-search__submit",
+        "offset": 77,
+        "targetBounds": {
+          "top": 157.84375,
+          "bottom": 209.84375,
+          "left": 16,
+          "right": 153.53125,
+          "width": 137.53125,
+          "height": 52
+        },
+        "topbarBounds": {
+          "top": 0,
+          "bottom": 53,
+          "height": 53
+        },
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        }
+      }
     },
     {
       "file": "create-entry-900.png",
       "width": 900,
       "height": 900,
       "url": "http://127.0.0.1:8765/create",
-      "fullPage": false
+      "fullPage": false,
+      "visibility": {
+        "found": true,
+        "targetVisible": true,
+        "selector": ".yatsn-song-search__submit",
+        "offset": 77,
+        "targetBounds": {
+          "top": 510.265625,
+          "bottom": 562.265625,
+          "left": 120,
+          "right": 515,
+          "width": 395,
+          "height": 52
+        },
+        "topbarBounds": {
+          "top": 0,
+          "bottom": 53,
+          "height": 53
+        },
+        "viewport": {
+          "width": 900,
+          "height": 900
+        }
+      }
     },
     {
       "file": "create-entry-1440.png",
       "width": 1440,
       "height": 900,
       "url": "http://127.0.0.1:8765/create",
-      "fullPage": false
+      "fullPage": false,
+      "visibility": {
+        "found": true,
+        "targetVisible": true,
+        "selector": ".yatsn-song-search__submit",
+        "offset": 77,
+        "targetBounds": {
+          "top": 491.390625,
+          "bottom": 543.390625,
+          "left": 236,
+          "right": 373.53125,
+          "width": 137.53125,
+          "height": 52
+        },
+        "topbarBounds": {
+          "top": 0,
+          "bottom": 53,
+          "height": 53
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        }
+      }
     },
     {
       "file": "song-loading-390.png",
       "width": 390,
       "height": 844,
       "url": "http://127.0.0.1:8765/create",
-      "fullPage": false
+      "fullPage": false,
+      "visibility": {
+        "found": true,
+        "targetVisible": true,
+        "selector": "[data-song-result-loading]",
+        "offset": 77,
+        "targetBounds": {
+          "top": 76.5,
+          "bottom": 174.5,
+          "left": 16,
+          "right": 374,
+          "width": 358,
+          "height": 98
+        },
+        "topbarBounds": {
+          "top": 0,
+          "bottom": 53,
+          "height": 53
+        },
+        "viewport": {
+          "width": 390,
+          "height": 844
+        }
+      }
     },
     {
       "file": "song-results-390.png",
       "width": 390,
       "height": 844,
       "url": "http://127.0.0.1:8765/create",
-      "fullPage": false
+      "fullPage": false,
+      "visibility": {
+        "found": true,
+        "targetVisible": true,
+        "selector": "[data-song-results] .yatsn-song-result",
+        "offset": 77,
+        "targetBounds": {
+          "top": 77,
+          "bottom": 175,
+          "left": 16,
+          "right": 374,
+          "width": 358,
+          "height": 98
+        },
+        "topbarBounds": {
+          "top": 0,
+          "bottom": 53,
+          "height": 53
+        },
+        "viewport": {
+          "width": 390,
+          "height": 844
+        }
+      }
     },
     {
       "file": "song-results-768.png",
       "width": 768,
       "height": 1024,
       "url": "http://127.0.0.1:8765/create",
-      "fullPage": false
+      "fullPage": false,
+      "visibility": {
+        "found": true,
+        "targetVisible": true,
+        "selector": "[data-song-results] .yatsn-song-result",
+        "offset": 77,
+        "targetBounds": {
+          "top": 111.34375,
+          "bottom": 209.34375,
+          "left": 16,
+          "right": 656,
+          "width": 640,
+          "height": 98
+        },
+        "topbarBounds": {
+          "top": 0,
+          "bottom": 53,
+          "height": 53
+        },
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        }
+      }
     },
     {
       "file": "song-results-1440.png",
       "width": 1440,
       "height": 900,
       "url": "http://127.0.0.1:8765/create",
-      "fullPage": false
+      "fullPage": false,
+      "visibility": {
+        "found": true,
+        "targetVisible": true,
+        "selector": "[data-song-results] .yatsn-song-result",
+        "offset": 77,
+        "targetBounds": {
+          "top": 444.890625,
+          "bottom": 542.890625,
+          "left": 236,
+          "right": 826.265625,
+          "width": 590.265625,
+          "height": 98
+        },
+        "topbarBounds": {
+          "top": 0,
+          "bottom": 53,
+          "height": 53
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        }
+      }
     },
     {
       "file": "song-no-results-390.png",
       "width": 390,
       "height": 844,
       "url": "http://127.0.0.1:8765/create",
-      "fullPage": false
+      "fullPage": false,
+      "visibility": {
+        "found": true,
+        "targetVisible": true,
+        "selector": "[data-song-status].is-error, [data-song-status].yatsn-status--error",
+        "offset": 77,
+        "targetBounds": {
+          "top": 77,
+          "bottom": 193,
+          "left": 16,
+          "right": 374,
+          "width": 358,
+          "height": 116
+        },
+        "topbarBounds": {
+          "top": 0,
+          "bottom": 53,
+          "height": 53
+        },
+        "viewport": {
+          "width": 390,
+          "height": 844
+        }
+      }
     },
     {
       "file": "song-error-390.png",
       "width": 390,
       "height": 844,
       "url": "http://127.0.0.1:8765/create",
-      "fullPage": false
+      "fullPage": false,
+      "visibility": {
+        "status": {
+          "found": true,
+          "targetVisible": true,
+          "selector": "[data-song-status].is-error, [data-song-status].yatsn-status--error",
+          "offset": 77,
+          "targetBounds": {
+            "top": 77,
+            "bottom": 125.5,
+            "left": 16,
+            "right": 374,
+            "width": 358,
+            "height": 48.5
+          },
+          "topbarBounds": {
+            "top": 0,
+            "bottom": 53,
+            "height": 53
+          },
+          "viewport": {
+            "width": 390,
+            "height": 844
+          }
+        },
+        "retry": {
+          "found": true,
+          "targetVisible": true,
+          "selector": "[data-song-retry]",
+          "offset": 77,
+          "targetBounds": {
+            "top": 76.5,
+            "bottom": 125,
+            "left": 16,
+            "right": 374,
+            "width": 358,
+            "height": 48.5
+          },
+          "topbarBounds": {
+            "top": 0,
+            "bottom": 53,
+            "height": 53
+          },
+          "viewport": {
+            "width": 390,
+            "height": 844
+          }
+        }
+      }
     },
     {
       "file": "song-selected-390.png",
       "width": 390,
       "height": 844,
       "url": "http://127.0.0.1:8765/create",
-      "fullPage": false
+      "fullPage": false,
+      "visibility": {
+        "selected": {
+          "found": true,
+          "targetVisible": true,
+          "selector": "[data-song-selected]",
+          "offset": 77,
+          "targetBounds": {
+            "top": 77,
+            "bottom": 237.703125,
+            "left": 16,
+            "right": 374,
+            "width": 358,
+            "height": 160.703125
+          },
+          "topbarBounds": {
+            "top": 0,
+            "bottom": 53,
+            "height": 53
+          },
+          "viewport": {
+            "width": 390,
+            "height": 844
+          }
+        },
+        "change": {
+          "found": true,
+          "targetVisible": true,
+          "selector": "[data-song-change]",
+          "offset": 77,
+          "targetBounds": {
+            "top": 77.203125,
+            "bottom": 125.703125,
+            "left": 16,
+            "right": 132.484375,
+            "width": 116.484375,
+            "height": 48.5
+          },
+          "topbarBounds": {
+            "top": 0,
+            "bottom": 53,
+            "height": 53
+          },
+          "viewport": {
+            "width": 390,
+            "height": 844
+          }
+        }
+      }
     },
     {
       "file": "song-selected-1440.png",
       "width": 1440,
       "height": 900,
       "url": "http://127.0.0.1:8765/create",
-      "fullPage": false
+      "fullPage": false,
+      "visibility": {
+        "found": true,
+        "targetVisible": true,
+        "selector": "[data-song-selected]",
+        "offset": 77,
+        "targetBounds": {
+          "top": 76.890625,
+          "bottom": 237.59375,
+          "left": 236,
+          "right": 826.265625,
+          "width": 590.265625,
+          "height": 160.703125
+        },
+        "topbarBounds": {
+          "top": 0,
+          "bottom": 53,
+          "height": 53
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        }
+      }
     },
     {
       "file": "song-focus-390.png",
       "width": 390,
       "height": 844,
       "url": "http://127.0.0.1:8765/create",
-      "fullPage": false
+      "fullPage": false,
+      "visibility": {
+        "selector": ".yatsn-song-search__submit:focus",
+        "tag": "BUTTON",
+        "className": "btn btn--primary yatsn-btn yatsn-btn--primary yatsn-song-search__submit",
+        "targetVisible": true,
+        "targetBounds": {
+          "top": 722,
+          "bottom": 774,
+          "left": 16,
+          "right": 374,
+          "width": 358,
+          "height": 52
+        },
+        "topbarBounds": {
+          "bottom": 53,
+          "height": 53
+        }
+      }
     },
     {
       "file": "song-focus-result-390.png",
       "width": 390,
       "height": 844,
       "url": "http://127.0.0.1:8765/create",
-      "fullPage": false
+      "fullPage": false,
+      "visibility": {
+        "found": true,
+        "targetVisible": true,
+        "selector": "[data-song-results] .yatsn-song-result",
+        "offset": 77,
+        "targetBounds": {
+          "top": 77,
+          "bottom": 175,
+          "left": 16,
+          "right": 374,
+          "width": 358,
+          "height": 98
+        },
+        "topbarBounds": {
+          "top": 0,
+          "bottom": 53,
+          "height": 53
+        },
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "focused": true
+      }
     },
     {
       "file": "song-reduced-motion-390.png",
       "width": 390,
       "height": 844,
       "url": "http://127.0.0.1:8765/create",
-      "fullPage": false
+      "fullPage": false,
+      "visibility": {
+        "found": true,
+        "targetVisible": true,
+        "selector": "[data-song-result-loading]",
+        "offset": 77,
+        "targetBounds": {
+          "top": 76.5,
+          "bottom": 174.5,
+          "left": 16,
+          "right": 374,
+          "width": 358,
+          "height": 98
+        },
+        "topbarBounds": {
+          "top": 0,
+          "bottom": 53,
+          "height": 53
+        },
+        "viewport": {
+          "width": 390,
+          "height": 844
+        }
+      }
     },
     {
       "file": "song-increased-contrast-390.png",
       "width": 390,
       "height": 844,
       "url": "http://127.0.0.1:8765/create",
-      "fullPage": false
+      "fullPage": false,
+      "visibility": {
+        "found": true,
+        "targetVisible": true,
+        "selector": "[data-song-selected]",
+        "offset": 77,
+        "targetBounds": {
+          "top": 77,
+          "bottom": 237.703125,
+          "left": 16,
+          "right": 374,
+          "width": 358,
+          "height": 160.703125
+        },
+        "topbarBounds": {
+          "top": 0,
+          "bottom": 53,
+          "height": 53
+        },
+        "viewport": {
+          "width": 390,
+          "height": 844
+        }
+      }
+    }
+  ],
+  "visibilityChecks": [
+    {
+      "label": "create-entry-320",
+      "found": true,
+      "targetVisible": true,
+      "targets": [
+        {
+          "selector": "[name=\"artist\"]",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 137,
+            "bottom": 187,
+            "left": 16,
+            "right": 304,
+            "width": 288,
+            "height": 50
+          }
+        },
+        {
+          "selector": "[name=\"title\"]",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 255.5,
+            "bottom": 305.5,
+            "left": 16,
+            "right": 304,
+            "width": 288,
+            "height": 50
+          }
+        },
+        {
+          "selector": ".yatsn-song-search__submit",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 346.5,
+            "bottom": 398.5,
+            "left": 16,
+            "right": 304,
+            "width": 288,
+            "height": 52
+          }
+        }
+      ],
+      "resumeHidden": true,
+      "offset": 77,
+      "topbarBounds": {
+        "top": 0,
+        "bottom": 53,
+        "height": 53
+      },
+      "scrollY": 466,
+      "viewport": {
+        "width": 320,
+        "height": 640
+      }
+    },
+    {
+      "label": "create-entry-390",
+      "found": true,
+      "targetVisible": true,
+      "targets": [
+        {
+          "selector": "[name=\"artist\"]",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 137.5,
+            "bottom": 187.5,
+            "left": 16,
+            "right": 374,
+            "width": 358,
+            "height": 50
+          }
+        },
+        {
+          "selector": "[name=\"title\"]",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 256,
+            "bottom": 306,
+            "left": 16,
+            "right": 374,
+            "width": 358,
+            "height": 50
+          }
+        },
+        {
+          "selector": ".yatsn-song-search__submit",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 347,
+            "bottom": 399,
+            "left": 16,
+            "right": 374,
+            "width": 358,
+            "height": 52
+          }
+        }
+      ],
+      "resumeHidden": true,
+      "offset": 77,
+      "topbarBounds": {
+        "top": 0,
+        "bottom": 53,
+        "height": 53
+      },
+      "scrollY": 375,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "label": "create-entry-768 submit",
+      "found": true,
+      "targetVisible": true,
+      "selector": ".yatsn-song-search__submit",
+      "offset": 77,
+      "targetBounds": {
+        "top": 157.84375,
+        "bottom": 209.84375,
+        "left": 16,
+        "right": 153.53125,
+        "width": 137.53125,
+        "height": 52
+      },
+      "topbarBounds": {
+        "top": 0,
+        "bottom": 53,
+        "height": 53
+      },
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      }
+    },
+    {
+      "label": "create-entry-900 submit",
+      "found": true,
+      "targetVisible": true,
+      "selector": ".yatsn-song-search__submit",
+      "offset": 77,
+      "targetBounds": {
+        "top": 510.265625,
+        "bottom": 562.265625,
+        "left": 120,
+        "right": 515,
+        "width": 395,
+        "height": 52
+      },
+      "topbarBounds": {
+        "top": 0,
+        "bottom": 53,
+        "height": 53
+      },
+      "viewport": {
+        "width": 900,
+        "height": 900
+      }
+    },
+    {
+      "label": "create-entry-1440 submit",
+      "found": true,
+      "targetVisible": true,
+      "selector": ".yatsn-song-search__submit",
+      "offset": 77,
+      "targetBounds": {
+        "top": 491.390625,
+        "bottom": 543.390625,
+        "left": 236,
+        "right": 373.53125,
+        "width": 137.53125,
+        "height": 52
+      },
+      "topbarBounds": {
+        "top": 0,
+        "bottom": 53,
+        "height": 53
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      }
+    },
+    {
+      "label": "song-loading-390",
+      "found": true,
+      "targetVisible": true,
+      "selector": "[data-song-result-loading]",
+      "offset": 77,
+      "targetBounds": {
+        "top": 76.5,
+        "bottom": 174.5,
+        "left": 16,
+        "right": 374,
+        "width": 358,
+        "height": 98
+      },
+      "topbarBounds": {
+        "top": 0,
+        "bottom": 53,
+        "height": 53
+      },
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "label": "song-results-390",
+      "found": true,
+      "targetVisible": true,
+      "selector": "[data-song-results] .yatsn-song-result",
+      "offset": 77,
+      "targetBounds": {
+        "top": 77,
+        "bottom": 175,
+        "left": 16,
+        "right": 374,
+        "width": 358,
+        "height": 98
+      },
+      "topbarBounds": {
+        "top": 0,
+        "bottom": 53,
+        "height": 53
+      },
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "label": "song-results-768",
+      "found": true,
+      "targetVisible": true,
+      "selector": "[data-song-results] .yatsn-song-result",
+      "offset": 77,
+      "targetBounds": {
+        "top": 111.34375,
+        "bottom": 209.34375,
+        "left": 16,
+        "right": 656,
+        "width": 640,
+        "height": 98
+      },
+      "topbarBounds": {
+        "top": 0,
+        "bottom": 53,
+        "height": 53
+      },
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      }
+    },
+    {
+      "label": "song-results-1440",
+      "found": true,
+      "targetVisible": true,
+      "selector": "[data-song-results] .yatsn-song-result",
+      "offset": 77,
+      "targetBounds": {
+        "top": 444.890625,
+        "bottom": 542.890625,
+        "left": 236,
+        "right": 826.265625,
+        "width": 590.265625,
+        "height": 98
+      },
+      "topbarBounds": {
+        "top": 0,
+        "bottom": 53,
+        "height": 53
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      }
+    },
+    {
+      "label": "song-no-results-390 status",
+      "found": true,
+      "targetVisible": true,
+      "selector": "[data-song-status].is-error, [data-song-status].yatsn-status--error",
+      "offset": 77,
+      "targetBounds": {
+        "top": 77,
+        "bottom": 193,
+        "left": 16,
+        "right": 374,
+        "width": 358,
+        "height": 116
+      },
+      "topbarBounds": {
+        "top": 0,
+        "bottom": 53,
+        "height": 53
+      },
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "label": "song-error-390 status",
+      "found": true,
+      "targetVisible": true,
+      "selector": "[data-song-status].is-error, [data-song-status].yatsn-status--error",
+      "offset": 77,
+      "targetBounds": {
+        "top": 77,
+        "bottom": 125.5,
+        "left": 16,
+        "right": 374,
+        "width": 358,
+        "height": 48.5
+      },
+      "topbarBounds": {
+        "top": 0,
+        "bottom": 53,
+        "height": 53
+      },
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "label": "song-error-390 retry",
+      "found": true,
+      "targetVisible": true,
+      "selector": "[data-song-retry]",
+      "offset": 77,
+      "targetBounds": {
+        "top": 76.5,
+        "bottom": 125,
+        "left": 16,
+        "right": 374,
+        "width": 358,
+        "height": 48.5
+      },
+      "topbarBounds": {
+        "top": 0,
+        "bottom": 53,
+        "height": 53
+      },
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "label": "song-selected-390 card",
+      "found": true,
+      "targetVisible": true,
+      "selector": "[data-song-selected]",
+      "offset": 77,
+      "targetBounds": {
+        "top": 77,
+        "bottom": 237.703125,
+        "left": 16,
+        "right": 374,
+        "width": 358,
+        "height": 160.703125
+      },
+      "topbarBounds": {
+        "top": 0,
+        "bottom": 53,
+        "height": 53
+      },
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "label": "song-selected-390 change",
+      "found": true,
+      "targetVisible": true,
+      "selector": "[data-song-change]",
+      "offset": 77,
+      "targetBounds": {
+        "top": 77.203125,
+        "bottom": 125.703125,
+        "left": 16,
+        "right": 132.484375,
+        "width": 116.484375,
+        "height": 48.5
+      },
+      "topbarBounds": {
+        "top": 0,
+        "bottom": 53,
+        "height": 53
+      },
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "label": "song-selected-1440",
+      "found": true,
+      "targetVisible": true,
+      "selector": "[data-song-selected]",
+      "offset": 77,
+      "targetBounds": {
+        "top": 76.890625,
+        "bottom": 237.59375,
+        "left": 236,
+        "right": 826.265625,
+        "width": 590.265625,
+        "height": 160.703125
+      },
+      "topbarBounds": {
+        "top": 0,
+        "bottom": 53,
+        "height": 53
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      }
+    },
+    {
+      "label": "song-focus-390",
+      "selector": ".yatsn-song-search__submit:focus",
+      "tag": "BUTTON",
+      "className": "btn btn--primary yatsn-btn yatsn-btn--primary yatsn-song-search__submit",
+      "targetVisible": true,
+      "targetBounds": {
+        "top": 722,
+        "bottom": 774,
+        "left": 16,
+        "right": 374,
+        "width": 358,
+        "height": 52
+      },
+      "topbarBounds": {
+        "bottom": 53,
+        "height": 53
+      },
+      "found": true
+    },
+    {
+      "label": "song-focus-result-390",
+      "found": true,
+      "targetVisible": true,
+      "selector": "[data-song-results] .yatsn-song-result",
+      "offset": 77,
+      "targetBounds": {
+        "top": 77,
+        "bottom": 175,
+        "left": 16,
+        "right": 374,
+        "width": 358,
+        "height": 98
+      },
+      "topbarBounds": {
+        "top": 0,
+        "bottom": 53,
+        "height": 53
+      },
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "focused": true
+    },
+    {
+      "label": "song-reduced-motion-390",
+      "found": true,
+      "targetVisible": true,
+      "selector": "[data-song-result-loading]",
+      "offset": 77,
+      "targetBounds": {
+        "top": 76.5,
+        "bottom": 174.5,
+        "left": 16,
+        "right": 374,
+        "width": 358,
+        "height": 98
+      },
+      "topbarBounds": {
+        "top": 0,
+        "bottom": 53,
+        "height": 53
+      },
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "label": "song-increased-contrast-390",
+      "found": true,
+      "targetVisible": true,
+      "selector": "[data-song-selected]",
+      "offset": 77,
+      "targetBounds": {
+        "top": 77,
+        "bottom": 237.703125,
+        "left": 16,
+        "right": 374,
+        "width": 358,
+        "height": 160.703125
+      },
+      "topbarBounds": {
+        "top": 0,
+        "bottom": 53,
+        "height": 53
+      },
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
     }
   ],
   "zoom200": [
@@ -131,30 +1163,102 @@
       "name": "zoom-create-entry-320",
       "width": 320,
       "height": 640,
+      "target": ".yatsn-song-search__submit",
       "pageScaleFactor": 2,
       "scrollWidth": 320,
       "innerWidth": 320,
-      "overflow": false
+      "overflow": false,
+      "visibility": {
+        "found": true,
+        "targetVisible": true,
+        "selector": ".yatsn-song-search__submit",
+        "offset": 77,
+        "targetBounds": {
+          "top": 76.5,
+          "bottom": 128.5,
+          "left": 16,
+          "right": 304,
+          "width": 288,
+          "height": 52
+        },
+        "topbarBounds": {
+          "top": 0,
+          "bottom": 53,
+          "height": 53
+        },
+        "viewport": {
+          "width": 320,
+          "height": 640
+        }
+      }
     },
     {
       "name": "zoom-song-results-390",
       "width": 390,
       "height": 844,
       "song": "showResult",
+      "target": "[data-song-results] .yatsn-song-result",
       "pageScaleFactor": 2,
       "scrollWidth": 390,
       "innerWidth": 390,
-      "overflow": false
+      "overflow": false,
+      "visibility": {
+        "found": true,
+        "targetVisible": true,
+        "selector": "[data-song-results] .yatsn-song-result",
+        "offset": 77,
+        "targetBounds": {
+          "top": 77,
+          "bottom": 175,
+          "left": 16,
+          "right": 374,
+          "width": 358,
+          "height": 98
+        },
+        "topbarBounds": {
+          "top": 0,
+          "bottom": 53,
+          "height": 53
+        },
+        "viewport": {
+          "width": 390,
+          "height": 844
+        }
+      }
     },
     {
       "name": "zoom-song-selected-1440",
       "width": 1440,
       "height": 900,
       "song": "showSelected",
+      "target": "[data-song-selected]",
       "pageScaleFactor": 2,
       "scrollWidth": 1440,
       "innerWidth": 1440,
-      "overflow": false
+      "overflow": false,
+      "visibility": {
+        "found": true,
+        "targetVisible": true,
+        "selector": "[data-song-selected]",
+        "offset": 77,
+        "targetBounds": {
+          "top": 76.890625,
+          "bottom": 237.59375,
+          "left": 236,
+          "right": 826.265625,
+          "width": 590.265625,
+          "height": 160.703125
+        },
+        "topbarBounds": {
+          "top": 0,
+          "bottom": 53,
+          "height": 53
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        }
+      }
     }
   ]
 }

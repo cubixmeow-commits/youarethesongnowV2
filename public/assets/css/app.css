@@ -1647,6 +1647,13 @@ textarea {
   display: none !important;
 }
 
+.yatsn-song-search [data-song-result-loading][hidden],
+.yatsn-song-search [data-song-results][hidden],
+.yatsn-song-search [data-song-selected][hidden],
+.yatsn-song-search [data-song-retry-wrap][hidden] {
+  display: none !important;
+}
+
 .yatsn-song-result,
 .yatsn-song-selected__card {
   display: grid;

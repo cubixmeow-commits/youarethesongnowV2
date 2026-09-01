@@ -66,7 +66,7 @@
             </span>
           </div>
 
-          <div class="yatsn-song-results" data-song-results hidden role="list" aria-label="Song matches"></div>
+          <div class="yatsn-song-results" data-song-results hidden role="region" aria-label="Song match"></div>
 
           <div class="yatsn-song-selected" data-song-selected hidden></div>
 

@@ -360,22 +360,8 @@
   }
 
   async function loadCreateEntryContext() {
-    const params = new URLSearchParams(window.location.search);
-    const resumeDraft = params.get('draft');
-    if (resumeDraft && resumeDraft !== state.draftId) {
-      window.YatsnSongSearch?.renderResume?.({
-        label: 'Resume your saved draft',
-        href: `/create?draft=${encodeURIComponent(resumeDraft)}`,
-      });
-    } else if (state.songLookup && state.songConfirmed) {
-      // Current draft already has a confirmed song; no separate resume row needed.
-    } else if (state.draftId && !state.songLookup) {
-      window.YatsnSongSearch?.renderResume?.({
-        label: 'Your draft is saved as you go',
-        href: `/create?draft=${encodeURIComponent(state.draftId)}`,
-      });
-    }
-
+    // Phase 2: no resume row. There is no list-drafts or alternate-draft contract to
+    // distinguish a genuinely resumable creation from the current empty draft.
     try {
       const images = await api('/api/v1/images');
       if (images.data?.length) {
