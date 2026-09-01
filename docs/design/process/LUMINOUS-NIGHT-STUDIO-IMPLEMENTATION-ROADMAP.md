@@ -201,4 +201,4 @@
 
 ## Next executable slice
 
-**Phase 1 is implemented** on `cursor/luminous-night-studio-phase1-6bc7` and awaiting Codex/GPT screenshot review (`design/review/round-010/`). After approval, execute **Phase 2: Create entry and existing-contract song selection**. Do not begin Song DNA API/database work in that slice.
+**Phase 1 is independently verified and published to `main`** at implementation commit `6951f0c` (`design/review/round-010/`). After private deployment review, execute **Phase 2: Create entry and existing-contract song selection**. Do not begin Song DNA API/database work in that slice.

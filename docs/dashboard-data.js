@@ -19,7 +19,7 @@ window.MEOW_CONTROL = {
   workshopStatus: "Core premise proven; controlled acceptance testing next",
   workshopDetail: "One- and two-person Gemini identity have succeeded live. Flash Lite is the low-cost candidate; full Flash is the quality anchor. fal and Replicate remain disabled experiments. Print/upscaling stay deferred.",
   brandStatus: "Luminous Night Studio Phase 1 implemented",
-  brandDetail: "Mobile-canonical black/smoked graphite, platinum, sapphire/cobalt, Instrument Serif + DM Sans. Phase 1 correction pass in review (design/review/round-010/): pane-fit Explore grid, radio/keyboard, private fixtures. Next: Phase 2 Create entry after screenshot review. Backend contracts are unchanged; Flutter remains deferred.",
+  brandDetail: "Mobile-canonical black/smoked graphite, platinum, sapphire/cobalt, Instrument Serif + DM Sans. Phase 1 is independently verified and published to main (design/review/round-010/): pane-fit Explore grid, radio/keyboard, private fixtures. Ready for private deployment review; next build slice is Phase 2 Create entry. Backend contracts are unchanged; Flutter remains deferred.",
   promptSystemStatus: "Gemini identity works; composition freedom restored",
   promptSystemDetail: "One authoritative identity section keeps every portrait recognizable while Song DNA controls staging. Interactions schema prevents malformed DNA. No-text and automatic usability checks remain open.",
   assessmentUrl: "https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/development-vault/01%20Current%20Project/Build%201%20Assessment%202026-08-30.md",

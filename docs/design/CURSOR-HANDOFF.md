@@ -4,7 +4,7 @@
 **Working branch:** `cursor/luminous-night-studio-phase1-6bc7`
 **Base:** `main` @ `750809ea759b8e5203df476bdf63d5fb3746f93f`
 **Phase:** 1 — runtime semantic foundation, private component lab, current Explore presentation
-**Status:** Codex correction pass complete. Stop for another Codex / GPT visual review. Do not merge yet.
+**Status:** Codex correction pass independently verified and published to `main` on 2026-09-01. Ready for private deployment review.
 
 ## Package / slice verification
 
@@ -115,7 +115,7 @@ Create/Explore loading/ready/selected/error/manual states used private fixtures 
 
 ## Deviations / questions
 
-1. Handoff said commit on `main`. This work is on the Cursor task branch and is **not merged**, per the executing agent instructions.
+1. Cursor implemented the slice on `cursor/luminous-night-studio-phase1-6bc7`; Codex independently reviewed it and fast-forwarded the verified commits to `main`.
 2. Explore remains inside the current Create Direction stage. No standalone Explore route.
 3. `Create this direction` is kept because the current bridge still submits through existing creation.
 4. Desktop Explore can still show quality/format under the cards. That is required for this slice, not Fine Tune.
@@ -127,9 +127,10 @@ Create/Explore loading/ready/selected/error/manual states used private fixtures 
 
 ## Final commit
 
-- **Hash:** `484fcc68bdb0c441a525c604cd711fb86857eabd`
-- **Branch:** `cursor/luminous-night-studio-phase1-6bc7`
-- **Requires:** second Codex / GPT screenshot review. Hostinger sync only after approval. No `.env` changes.
+- **Published implementation hash:** `6951f0c63f00270e7c895e809a01e7ad6a35f5c7`
+- **Source branch:** `cursor/luminous-night-studio-phase1-6bc7`
+- **Published branch:** `main`
+- **Review:** Codex independently verified 1058 tests, syntax, whitespace, privacy gating, keyboard behavior, responsive evidence, and the revised screenshots. No `.env` changes. Ready for private deployment review.
 
 ## Recommended next slice
 

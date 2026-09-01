@@ -22,7 +22,7 @@ This note is the daily “what matters now” list for CuBiX Meow and Brut. Keep
 
 ## Newly documented
 
-- **Luminous Night Studio Phase 1 correction (2026-09-01):** Explore columns now follow pane width; lab/Explore radios use a valid roving-tabindex pattern; screenshot fixtures are private-build-only; round-010 shots keep the Explore heading below the top bar. Tests **1058 passed, 0 failed**. Still awaiting Codex review. Do not merge.
+- **Luminous Night Studio Phase 1 published (2026-09-01):** Explore columns follow pane width; lab/Explore radios use a valid roving-tabindex pattern; screenshot fixtures are private-build-only; round-010 shots keep the Explore heading below the top bar. Codex independently verified **1058 passed, 0 failed** plus syntax, whitespace, privacy, responsive, and screenshot checks. Published to `main` at `6951f0c`; ready for private deployment review.
 
 - **Luminous Night Studio approved (2026-08-31):** production visual baseline, semantic tokens, component states, nine core screen specs, compact/medium/expanded behavior, Flutter mapping, phased acceptance roadmap and exact Cursor Phase 1 handoff are synchronized under `docs/design/` and `assets/design/`. Portraits are resolved to Gallery; Discover stays out of nav; Download remains the current action; Reimagine stays future. No backend contracts changed. ADR-20260831.
 

@@ -26,4 +26,4 @@ The approved board is `assets/design/references/luminous-night-studio-style-boar
 
 ## Immediate next work
 
-Phase 1 runtime is implemented and awaiting Codex/GPT screenshot review (`docs/design/CURSOR-HANDOFF.md`, `design/review/round-010/`). After approval, execute Phase 2 Create entry from `docs/design/process/LUMINOUS-NIGHT-STUDIO-IMPLEMENTATION-ROADMAP.md`. Do not begin backend Song DNA projection or a broad screen rebuild in that slice.
+Phase 1 runtime is independently verified and published to `main` at implementation commit `6951f0c` (`docs/design/CURSOR-HANDOFF.md`, `design/review/round-010/`). After private deployment review, execute Phase 2 Create entry from `docs/design/process/LUMINOUS-NIGHT-STUDIO-IMPLEMENTATION-ROADMAP.md`. Do not begin backend Song DNA projection or a broad screen rebuild in that slice.
