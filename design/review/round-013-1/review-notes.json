@@ -1,0 +1,113 @@
+{
+  "capturedAt": "2026-09-01T23:48:46.384Z",
+  "shots": [
+    {
+      "file": "mobile-390-people-stage.png",
+      "width": 390,
+      "height": 844,
+      "bounds": {
+        "barHidden": true,
+        "barDisplay": "none",
+        "quickVisible": true,
+        "exploreVisible": true,
+        "barAboveNav": true
+      }
+    },
+    {
+      "file": "mobile-390-direction-choice.png",
+      "width": 390,
+      "height": 844,
+      "bounds": {
+        "barHidden": true,
+        "barDisplay": "none",
+        "quickVisible": true,
+        "exploreVisible": true,
+        "barAboveNav": true
+      }
+    },
+    {
+      "file": "mobile-320-direction-choice.png",
+      "width": 320,
+      "height": 640,
+      "bounds": {
+        "barHidden": true,
+        "barDisplay": "none",
+        "quickVisible": true,
+        "exploreVisible": true,
+        "barAboveNav": true
+      }
+    },
+    {
+      "file": "mobile-390-explore-options.png",
+      "width": 390,
+      "height": 844,
+      "bounds": {
+        "barHidden": true,
+        "barDisplay": "none",
+        "quickVisible": true,
+        "exploreVisible": true,
+        "barAboveNav": true
+      }
+    },
+    {
+      "file": "mobile-390-prepared-ready.png",
+      "width": 390,
+      "height": 844,
+      "bounds": {
+        "barHidden": false,
+        "barDisplay": "grid",
+        "quickVisible": true,
+        "exploreVisible": true,
+        "barAboveNav": true
+      }
+    },
+    {
+      "file": "mobile-390-prepared-missing-style.png",
+      "width": 390,
+      "height": 844,
+      "bounds": {
+        "barHidden": false,
+        "barDisplay": "grid",
+        "quickVisible": true,
+        "exploreVisible": true,
+        "barAboveNav": true
+      }
+    },
+    {
+      "file": "mobile-390-prepared-pending.png",
+      "width": 390,
+      "height": 844,
+      "bounds": {
+        "barHidden": false,
+        "barDisplay": "grid",
+        "quickVisible": true,
+        "exploreVisible": true,
+        "barAboveNav": true
+      }
+    },
+    {
+      "file": "mobile-390-prepared-error.png",
+      "width": 390,
+      "height": 844,
+      "bounds": {
+        "barHidden": false,
+        "barDisplay": "grid",
+        "quickVisible": true,
+        "exploreVisible": true,
+        "barAboveNav": true
+      }
+    },
+    {
+      "file": "mobile-390-restored-draft.png",
+      "width": 390,
+      "height": 844,
+      "bounds": {
+        "barHidden": false,
+        "barDisplay": "grid",
+        "quickVisible": true,
+        "exploreVisible": true,
+        "barAboveNav": true
+      }
+    }
+  ]
+}

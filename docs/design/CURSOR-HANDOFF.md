@@ -1,3 +1,31 @@
+# NEXT DIRECTIVE — Round 013.1 complete, awaiting GPT review
+
+**Date:** 2026-09-01  
+**Working branch:** `main`  
+**Published to:** `main` at pending  
+**Status:** Direction choice hierarchy restored — stop for GPT/owner review
+
+## Root cause
+
+`.create__generate-bar { display: grid; }` overrode the native `hidden` attribute. Round 013 also showed the final CTA whenever the Direction stage opened, before **Generate for me** / **Explore options**, and Quick Generate auto-submitted generation.
+
+## Repair
+
+- `.create__generate-bar[hidden] { display: none !important; }`
+- `directionPrepared` + `directionPath` gate the final **Generate image** bar
+- Quick Generate prepares only — no auto-submit
+- `clearDirectionPrepared()` restores initial choice hierarchy on explore restart / manual back-out
+- Readiness copy distinguishes missing song vs unconfirmed song; restored drafts never report song missing
+
+## Verification
+
+- `php tests/run.php`: **1218 passed, 0 failed** (includes browser behavior harness)
+- Evidence: `design/review/round-013-1/`
+
+Do not deploy. Do not resume broader design work.
+
+---
+
 # NEXT DIRECTIVE — Round 013.1 Restore Direction Choice Hierarchy
 
 **Date:** 2026-09-01  

@@ -2644,6 +2644,10 @@ button.yatsn-song-result:focus-visible {
   margin-top: var(--space-4);
 }
 
+.create__generate-bar[hidden] {
+  display: none !important;
+}
+
 .create__generate-hint {
   margin: 0;
   min-height: 1.25em;

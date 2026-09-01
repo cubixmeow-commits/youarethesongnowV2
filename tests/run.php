@@ -1403,6 +1403,67 @@ assert_true(str_contains($appJs, 'YatsnCreateFixtures'), 'private Create fixture
 assert_true(str_contains($appCss, '.create__generate-bar'), 'mobile generate bar styles exist');
 assert_true(str_contains($appCss, '.create.has-generate-bar'), 'Create page reserves space above bottom navigation for generate bar');
 assert_true(str_contains($appCss, 'bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom))'), 'generate bar sits above tab bar and safe area');
+assert_true(str_contains($appCss, '.create__generate-bar[hidden]'), 'hidden generate bar cannot be overridden by grid display');
+assert_true(str_contains($appJs, 'directionPrepared'), 'Create gates final action on explicit prepared-direction state');
+assert_true(str_contains($appJs, 'shouldShowGenerateBar'), 'Create centralizes generate bar visibility');
+assert_true(str_contains($appJs, 'setDirectionPrepared'), 'Create exposes prepared-direction setter for Explore bridge');
+assert_true(str_contains($appJs, 'clearDirectionPrepared'), 'Create can restore initial direction-choice hierarchy');
+assert_true(str_contains($appJs, 'getGenerateBarState'), 'Create exposes behavior-test bar state hook');
+assert_true(str_contains($exploreJs, 'clearDirectionPrepared'), 'Explore clears prepared state when restarting direction choice');
+assert_true(!str_contains($exploreJs, 'submitGeneration'), 'Explore no longer auto-submits after Quick Generate prepares a direction');
+assert_true(str_contains($exploreJs, 'showInitialChoice'), 'Explore fixtures cover initial direction-choice state');
+assert_true(is_file($root . '/design/review/round-013-1/verify-create-direction-flow.mjs'), 'Round 013.1 behavior verification harness exists');
+
+$directionFlowVerifyOut = [];
+$directionFlowVerifyExit = 1;
+if (is_file('/usr/bin/google-chrome-stable') || is_executable((string) getenv('CHROME'))) {
+    putenv('ALLOW_EXTERNAL_USERS=false');
+    $_ENV['ALLOW_EXTERNAL_USERS'] = 'false';
+    Config::boot($root);
+
+    $verifyPort = 8766;
+    $verifyBase = "http://127.0.0.1:{$verifyPort}";
+    $portOpen = static function (int $port): bool {
+        $fp = @fsockopen('127.0.0.1', $port, $errno, $errstr, 1);
+        if ($fp) {
+            fclose($fp);
+            return true;
+        }
+        return false;
+    };
+    $phpServerProc = null;
+    if ($portOpen($verifyPort)) {
+        exec('fuser -k ' . $verifyPort . '/tcp 2>/dev/null');
+        usleep(200000);
+    }
+    $phpServerProc = proc_open(
+        'ALLOW_EXTERNAL_USERS=false php -S 127.0.0.1:' . $verifyPort . ' -t public public/router.php',
+        [0 => ['pipe', 'r'], 1 => ['file', '/dev/null', 'w'], 2 => ['file', '/dev/null', 'w']],
+        $pipes,
+        $root,
+    );
+    for ($attempt = 0; $attempt < 24; $attempt++) {
+        if ($portOpen($verifyPort)) {
+            break;
+        }
+        usleep(250000);
+    }
+    if ($portOpen($verifyPort)) {
+        $verifyCmd = 'cd ' . escapeshellarg($root . '/design/review/round-013-1')
+            . ' && YATSN_BASE=' . escapeshellarg($verifyBase)
+            . ' node verify-create-direction-flow.mjs 2>&1';
+        exec($verifyCmd, $directionFlowVerifyOut, $directionFlowVerifyExit);
+    }
+    if (isset($phpServerProc) && is_resource($phpServerProc)) {
+        proc_terminate($phpServerProc);
+    }
+}
+if ($directionFlowVerifyExit === 0) {
+    assert_true(true, 'Round 013.1 browser behavior verification passed');
+} else {
+    assert_true(false, 'Round 013.1 browser behavior verification failed: ' . trim(implode("\n", $directionFlowVerifyOut)));
+}
+
 assert_true(str_contains($exploreJs, 'window.YatsnCreate.prepareAndReview'), 'Quick Generate awaits canonical review instead of timer bridge');
 assert_true(!str_contains($exploreJs, 'if (create && !create.closest(\'[hidden]\')) create.click()'), 'Explore removed hidden-action auto-click race');
 

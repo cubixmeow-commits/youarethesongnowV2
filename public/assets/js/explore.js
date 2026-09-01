@@ -196,6 +196,7 @@
     const continueRow = panel.querySelector('[data-ai-continue]');
     const retryWrap = panel.querySelector('[data-ai-retry-wrap]');
     selectedDirection = null;
+    window.YatsnCreate?.clearDirectionPrepared?.();
     if (continueRow) continueRow.hidden = true;
     if (retryWrap) retryWrap.hidden = true;
     status.classList.remove('is-error');
@@ -376,8 +377,15 @@
     }
     if (window.YatsnCreate?.prepareAndReview) {
       const result = await window.YatsnCreate.prepareAndReview();
-      if (result?.ready && window.YatsnCreate?.submitGeneration) {
-        await window.YatsnCreate.submitGeneration();
+      if (result?.ready) {
+        window.YatsnCreate.setDirectionPrepared?.(lastQuickMode ? 'ai-quick' : 'ai-explore');
+        if (status) {
+          status.classList.remove('is-error', 'yatsn-status--error');
+          status.classList.add('yatsn-status--info');
+          status.textContent = lastQuickMode
+            ? `“${direction.name}” is ready. Tap Generate image when you are set.`
+            : `“${direction.name}” is prepared. Tap Generate image when you are set.`;
+        }
       } else if (status && result?.issue) {
         status.classList.add('is-error', 'yatsn-status--error');
         status.textContent = result.issue;
@@ -389,6 +397,7 @@
 
   function restoreManualDirection() {
     selectedDirection = null;
+    window.YatsnCreate?.clearDirectionPrepared?.();
     setExploreChrome(false);
     setExploreCopy('default');
     const options = document.querySelector('[data-ai-options]');
@@ -468,6 +477,32 @@
     }
 
     window.YatsnExploreFixtures = {
+      showInitialChoice() {
+        buildPanel();
+        unlockFixtureActions();
+        const direction = document.querySelector('#the-direction');
+        if (direction) direction.hidden = false;
+        window.YatsnCreate?.clearDirectionPrepared?.();
+        selectedDirection = null;
+        setExploreCopy('default');
+        const options = document.querySelector('[data-ai-options]');
+        if (options) {
+          options.hidden = true;
+          options.innerHTML = '';
+        }
+        const continueRow = document.querySelector('[data-ai-continue]');
+        if (continueRow) continueRow.hidden = true;
+        const retryWrap = document.querySelector('[data-ai-retry-wrap]');
+        if (retryWrap) retryWrap.hidden = true;
+        setExploreChrome(false);
+        const status = document.querySelector('[data-ai-status]');
+        if (status) {
+          status.classList.remove('is-error', 'yatsn-status--error');
+          status.classList.add('yatsn-status--info');
+          status.textContent = 'Song DNA ready for Seven Pillars of Wisdom · Sabaton.';
+        }
+        setExploreState('ready');
+      },
       showLoading() {
         buildPanel();
         unlockFixtureActions();

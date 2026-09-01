@@ -4,9 +4,9 @@
 
 **Branch:** `main`
 
-**Last updated by Cursor:** 2026-09-01 (Round 013 mobile Generate action repair)
+**Last updated by Cursor:** 2026-09-01 (Round 013.1 direction choice hierarchy correction)
 
-**Active round:** 013 complete — awaiting GPT/owner review
+**Active round:** 013.1 complete — awaiting GPT/owner review
 
 **Workflow roles**
 
@@ -75,6 +75,42 @@ Production assets delivered. Integration hooks and responsive usage are document
 ---
 
 ## CURRENT HANDOFF
+
+### Cursor → GPT (Round 013.1 report — 2026-09-01)
+
+- Status: direction choice hierarchy regression correction complete — awaiting GPT/owner review
+- Commit: pending
+- Suite: `php tests/run.php` → **1218 passed, 0 failed** (+11 assertions vs Round 013)
+- Evidence: `design/review/round-013-1/` (direction choice, explore, prepared, restored-draft states)
+- No deploy; no broader design work
+
+#### Root cause
+
+1. `.create__generate-bar { display: grid; }` overrode `hidden`, repeating the song-search hidden-state defect.
+2. Round 013 tied bar visibility to `#the-direction.hidden` instead of an explicit prepared-direction state.
+3. Quick Generate auto-submitted via `submitGeneration()` after prepare, bypassing the confirmation boundary.
+
+#### Repair
+
+| Area | Change |
+| --- | --- |
+| CSS | `.create__generate-bar[hidden] { display: none !important; }` |
+| `app.js` | `directionPrepared`, `directionPath`, `shouldShowGenerateBar()`, `setDirectionPrepared()` / `clearDirectionPrepared()` |
+| `explore.js` | Prepare-only Quick Generate; clear prepared state on explore restart / manual back-out |
+| Readiness | Separate missing-song vs unconfirmed-song messages; draft restore sets `songConfirmed` + prepared path |
+| Tests | `design/review/round-013-1/verify-create-direction-flow.mjs` exercised in `tests/run.php` |
+
+#### Verified sequence
+
+1. Song confirmed, no portrait → People stage; no generate bar
+2. Portrait selected → **Generate for me** + **Explore options** visible; no final bar
+3. Generate for me prepared → final **Generate image** reachable; no auto-submit
+4. Explore options → three directions; no premature bar
+5. Explored direction applied → final bar reachable
+6. Manual/restored draft → final bar reachable; no false song-missing copy
+7. Hidden bar computed style is `display: none` at 320 and 390 widths
+
+---
 
 ### Cursor → GPT (Round 013 report — 2026-09-01)
 

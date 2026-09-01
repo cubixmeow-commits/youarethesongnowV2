@@ -20,6 +20,8 @@
     reviewed: false,
     pending: false,
     issue: null,
+    directionPrepared: false,
+    directionPath: null,
   };
   let reviewTimer = null;
   let generationSubmitLock = false;
@@ -81,10 +83,10 @@
 
   function getReadinessIssues() {
     const issues = [];
-    if (!state.songConfirmed || !state.songLookup) {
+    if (!state.songLookup || !['found', 'fallbackFound'].includes(state.songLookup.state)) {
       issues.push('Choose and confirm a song.');
-    } else if (!['found', 'fallbackFound'].includes(state.songLookup.state)) {
-      issues.push('Confirm a valid song match before generating.');
+    } else if (!state.songConfirmed) {
+      issues.push('Confirm your song match before generating.');
     }
     if (state.selectedPortraitIds.length < 1) {
       issues.push('Add at least one portrait.');
@@ -93,6 +95,29 @@
       issues.push('Choose a style.');
     }
     return issues;
+  }
+
+  function setDirectionPrepared(path) {
+    generation.directionPrepared = true;
+    generation.directionPath = path || generation.directionPath || 'manual';
+    updateGenerateAction();
+  }
+
+  function clearDirectionPrepared() {
+    generation.directionPrepared = false;
+    generation.directionPath = null;
+    generation.reviewed = false;
+    generation.issue = null;
+    updateGenerateAction();
+  }
+
+  function shouldShowGenerateBar() {
+    const direction = $('#the-direction');
+    const paywall = $('[data-paywall]');
+    return generation.directionPrepared
+      && !!direction
+      && !direction.hidden
+      && (!paywall || paywall.hidden);
   }
 
   async function syncDraftFromForm() {
@@ -126,17 +151,16 @@
   function updateGenerateAction() {
     const root = $('[data-create]');
     const bar = $('[data-generate-bar]');
-    const direction = $('#the-direction');
     const hint = $('[data-generate-hint]');
     const button = $('[data-create-image]');
-    if (!bar || !direction) return;
+    if (!bar) return;
 
-    const directionVisible = !direction.hidden;
-    bar.hidden = !directionVisible;
-    root?.classList.toggle('has-generate-bar', directionVisible);
+    const showBar = shouldShowGenerateBar();
+    bar.hidden = !showBar;
+    root?.classList.toggle('has-generate-bar', showBar);
 
     const issues = getReadinessIssues();
-    const ready = issues.length === 0 && generation.reviewed && !generation.pending;
+    const ready = showBar && issues.length === 0 && generation.reviewed && !generation.pending;
     if (button) {
       button.disabled = !ready;
       button.setAttribute('aria-disabled', ready ? 'false' : 'true');
@@ -149,7 +173,9 @@
     }
 
     let hintText = '';
-    if (generation.pending) {
+    if (!showBar) {
+      hintText = '';
+    } else if (generation.pending) {
       hintText = 'Starting generation…';
     } else if (issues.length) {
       hintText = issues[0];
@@ -199,6 +225,7 @@
     const status = $('[data-direction-status]');
     const result = await refreshGenerationReadiness();
     if (result.ready) {
+      setDirectionPrepared('manual');
       setStatus(status, '');
       $('[data-paywall]').hidden = true;
     } else if (status) {
@@ -223,7 +250,6 @@
         return { started: false, issue: first };
       }
       if (summary.data.requiresMembership) {
-        $('[data-generate-bar]').hidden = true;
         $('[data-paywall]').hidden = false;
         return { started: false, requiresMembership: true };
       }
@@ -247,7 +273,6 @@
     generation.reviewed = true;
     generation.issue = message || null;
     $('[data-progress]').hidden = true;
-    $('[data-generate-bar]').hidden = false;
     updateGenerateAction();
   }
 
@@ -457,7 +482,11 @@
       if (people) people.hidden = false;
     }
     if (direction) {
-      direction.hidden = !(state.selectedPortraitIds.length > 0);
+      const showDirection = state.selectedPortraitIds.length > 0;
+      direction.hidden = !showDirection;
+      if (!showDirection) {
+        clearDirectionPrepared();
+      }
     }
     updateSummary();
     if (!direction?.hidden) {
@@ -590,6 +619,7 @@
       },
       onClear: () => {
         state.songConfirmed = false;
+        clearDirectionPrepared();
         const people = $('#the-people');
         const direction = $('#the-direction');
         if (people) people.hidden = true;
@@ -641,6 +671,10 @@
     if (state.songLookup && ['found', 'fallbackFound'].includes(state.songLookup.state)) {
       state.songConfirmed = true;
       window.YatsnSongSearch?.restoreConfirmed?.(state.songLookup);
+    }
+    if (state.selectedStyleId && state.selectedPortraitIds.length > 0 && state.songConfirmed) {
+      generation.directionPrepared = true;
+      generation.directionPath = 'manual';
     }
     maybeShowDirection();
     await loadCreateEntryContext();
@@ -1206,40 +1240,79 @@
     prepareAndReview: runReview,
     refreshGenerationReadiness,
     submitGeneration,
-    isGenerateReady: () => getReadinessIssues().length === 0 && generation.reviewed && !generation.pending,
+    setDirectionPrepared,
+    clearDirectionPrepared,
+    shouldShowGenerateBar,
+    isGenerateReady: () => shouldShowGenerateBar() && getReadinessIssues().length === 0 && generation.reviewed && !generation.pending,
+    getGenerateBarState: () => {
+      const bar = $('[data-generate-bar]');
+      const button = $('[data-create-image]');
+      const hint = $('[data-generate-hint]');
+      return {
+        prepared: generation.directionPrepared,
+        path: generation.directionPath,
+        hidden: bar?.hidden ?? true,
+        display: bar ? getComputedStyle(bar).display : 'none',
+        hint: hint?.textContent || '',
+        disabled: button?.disabled ?? true,
+        reviewed: generation.reviewed,
+        pending: generation.pending,
+      };
+    },
     setGenerationFixtureState: (fixture = {}) => {
       if (typeof fixture.reviewed === 'boolean') generation.reviewed = fixture.reviewed;
       if (typeof fixture.pending === 'boolean') generation.pending = fixture.pending;
       if (Object.prototype.hasOwnProperty.call(fixture, 'issue')) generation.issue = fixture.issue;
+      if (typeof fixture.directionPrepared === 'boolean') generation.directionPrepared = fixture.directionPrepared;
+      if (Object.prototype.hasOwnProperty.call(fixture, 'directionPath')) generation.directionPath = fixture.directionPath;
       updateGenerateAction();
     },
   };
 
   if (document.querySelector('[data-create]')?.dataset.privateBuild === '1') {
     window.YatsnCreateFixtures = {
-      showDirectionStage() {
+      showPeopleStage() {
+        state.songConfirmed = true;
+        state.songLookup = state.songLookup || { title: 'Seven Pillars of Wisdom', artist: 'Sabaton', state: 'found' };
+        state.selectedPortraitIds = [];
+        state.selectedStyleId = null;
+        clearDirectionPrepared();
+        const people = $('#the-people');
         const direction = $('#the-direction');
-        if (direction) direction.hidden = false;
+        if (people) people.hidden = false;
+        if (direction) direction.hidden = true;
+        updateSummary();
         updateGenerateAction();
       },
-      showReady() {
-        this.showDirectionStage();
+      showDirectionChoice() {
         state.songConfirmed = true;
         state.songLookup = state.songLookup || { title: 'Seven Pillars of Wisdom', artist: 'Sabaton', state: 'found' };
         state.selectedPortraitIds = state.selectedPortraitIds.length ? state.selectedPortraitIds : ['fixture-portrait'];
+        state.selectedStyleId = null;
+        clearDirectionPrepared();
+        const people = $('#the-people');
+        const direction = $('#the-direction');
+        if (people) people.hidden = false;
+        if (direction) direction.hidden = false;
+        updateSummary();
+        updateGenerateAction();
+      },
+      showPreparedReady() {
+        this.showDirectionChoice();
         state.selectedStyleId = state.selectedStyleId || state.styles[0]?.id || null;
+        generation.directionPrepared = true;
+        generation.directionPath = 'ai-quick';
         generation.reviewed = true;
         generation.pending = false;
         generation.issue = null;
         updateSummary();
         updateGenerateAction();
       },
-      showMissingStyle() {
-        this.showDirectionStage();
-        state.songConfirmed = true;
-        state.songLookup = state.songLookup || { title: 'Seven Pillars of Wisdom', artist: 'Sabaton', state: 'found' };
-        state.selectedPortraitIds = ['fixture-portrait'];
+      showPreparedMissingStyle() {
+        this.showDirectionChoice();
         state.selectedStyleId = null;
+        generation.directionPrepared = true;
+        generation.directionPath = 'ai-explore';
         generation.reviewed = false;
         generation.pending = false;
         generation.issue = null;
@@ -1247,15 +1320,32 @@
         updateGenerateAction();
       },
       showPending() {
-        this.showReady();
+        this.showPreparedReady();
         generation.pending = true;
         updateGenerateAction();
       },
       showRecoverableError() {
-        this.showReady();
+        this.showPreparedReady();
         generation.pending = false;
         generation.reviewed = true;
         generation.issue = 'We could not deliver a usable image. Your credits were returned. You can try again.';
+        updateGenerateAction();
+      },
+      showRestoredDraft() {
+        state.songConfirmed = true;
+        state.songLookup = { title: 'Seven Pillars of Wisdom', artist: 'Sabaton', state: 'found' };
+        state.selectedPortraitIds = ['fixture-portrait'];
+        state.selectedStyleId = state.styles[0]?.id || null;
+        generation.directionPrepared = true;
+        generation.directionPath = 'manual';
+        generation.reviewed = true;
+        generation.pending = false;
+        generation.issue = null;
+        const people = $('#the-people');
+        const direction = $('#the-direction');
+        if (people) people.hidden = false;
+        if (direction) direction.hidden = false;
+        updateSummary();
         updateGenerateAction();
       },
     };
