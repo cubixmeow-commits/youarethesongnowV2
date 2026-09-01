@@ -1,20 +1,23 @@
-# NEXT DIRECTIVE — Round 012 contract-first visual planning
+# NEXT DIRECTIVE — Round 012 backend-first POV integration
 
 **Date:** 2026-09-01  
 **Working branch:** `main`  
 **Status:** Ready for Cursor
 
-Phase 2 remains the published baseline: **1092 passed, 0 failed**.
+Owner sequencing decision: implement and validate the POV-derived Visual Narrative Planning Layer before continuing customer-facing Song DNA or broader design.
 
-Implement only Slice A from:
+Read:
 
-- `docs/design/process/VISUAL-NARRATIVE-PLANNING-LAYER.md`
 - `design/CHATGPT_NEXT_PASS.md`
 - `design/CHATGPT_CURSOR_DESIGN_HANDOFF.md`
+- `docs/design/process/VISUAL-NARRATIVE-PLANNING-LAYER.md`
+- https://github.com/cubixmeow-commits/POV-Campaign-Engine
 
-This slice defines customer-safe Song DNA and versioned contracts for selection, Visual Campaign Board, three directions, and Visual Scene Contract. It does not implement UI, live model planning, Quick Generate wiring, generation changes, or retry/credit changes.
+Implement the hidden/backend planning pipeline against the richest existing internal Song DNA: Visual Campaign Board → exactly three ranked directions → selected Visual Scene Contract → portrait roles → structured prompt compiler → current development generation path.
 
-After verification, update this file with the implementation commit and test results, push `main`, and stop for GPT review. Do not deploy.
+Preserve a safe fallback to the current compiler. Add five fixtures and old/new comparisons. Do not add the Song DNA selector, Explore Options, Fine Tune, or unrelated design yet.
+
+After verification, update both handoffs with commit, tests, sanitized artifacts, prompt comparison, and any controlled image evaluation. Push `main`, stop for GPT review, and do not deploy.
 
 ---
 
