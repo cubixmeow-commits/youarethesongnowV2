@@ -1,158 +1,160 @@
-# YouAreTheSongNow — Cursor Implementation Instructions
+# YouAreTheSongNow — Cursor Correction Instructions
 
-**Round:** 012  
-**Written by:** ChatGPT  
+**Round:** 012.1  
+**Written by:** GPT design/architecture review  
 **Date:** 2026-09-01  
-**Status:** Consumed by Cursor on 2026-09-01  
+**Status:** Ready for Cursor  
 **Repository:** `cubixmeow-commits/youarethesongnowV2`  
 **Working branch:** `main`  
-**Scope:** Backend-first POV Campaign Engine adaptation
+**Scope:** Make the POV-derived planner genuinely intelligent and establish one canonical prompt compiler
 
-## Owner sequencing decision
+## Review outcome
 
-Implement and validate the POV-derived visual planning engine first. Continue the rest of the customer-facing Song DNA and application design only after this backend integration is working and reviewed.
+Round 012 is structurally successful but not yet accepted as the completed POV Campaign Engine integration.
 
-Do not spend this round designing the Song DNA selector, Explore Options, Fine Tune, or unrelated screens.
+Accepted foundations:
 
-## Start
-
-1. Pull the latest `main`.
-2. Read:
-   - `design/CHATGPT_CURSOR_DESIGN_HANDOFF.md`
-   - `docs/design/CURSOR-HANDOFF.md`
-   - `docs/design/process/LUMINOUS-NIGHT-STUDIO-IMPLEMENTATION-ROADMAP.md`
-   - `docs/design/process/VISUAL-NARRATIVE-PLANNING-LAYER.md`
-3. Inspect the reference repository:
-   - https://github.com/cubixmeow-commits/POV-Campaign-Engine
-   - `SKILL.md`
-   - `references/board-components.md`
-   - `references/campaign-design.md`
-   - `references/scene-rules.md`
-   - `examples/crowdstrike-outage/campaign.md`
-   - `examples/crowdstrike-outage/scenes.md`
-
-Adapt staged extraction, information budgeting, viewpoint selection, structural pivots, scene contracts, motifs, and retained intermediate artifacts. Do not import investigative reporting rules, real-world verification requirements, X-thread/newsletter formats, or chronological observable-only restrictions.
-
-## Implement the working backend integration
-
-### 1. Audit actual V2 boundaries
-
-Trace and document:
-
-- richest existing internal Song DNA source;
-- song interpretation services;
-- prompt assembly/compiler;
-- portrait integration;
-- style mapping;
-- drafts and persistence;
-- queue/job creation and execution;
-- provider abstractions;
-- credit boundaries;
-- current test and fixture architecture.
-
-Map the implementation to actual files before editing.
-
-### 2. Contracts and validation
-
-Implement versioned, validated internal contracts for:
-
-- Visual Campaign Board;
-- exactly three directions: primary, alternate, unexpected;
-- direction ranking;
+- hidden Visual Campaign Board;
+- exactly three direction contracts;
 - Visual Scene Contract;
-- structured prompt sections;
-- sanitized planning trace/fallback records.
+- portrait boundary after planning;
+- versioned sanitized trace;
+- legacy fallback switch;
+- persistence migration;
+- five fixtures;
+- 1164 passing tests;
+- no customer-facing design work.
 
-Use strict structured output, validation, bounded repair, deterministic fallback, explicit template versions, and reasonable token limits.
+Acceptance blockers:
 
-### 3. Planning engine
+1. `VisualNarrativePlanner` is deterministic template assembly only.
+2. Direction scores are substantially hard-coded by direction type, so primary is designed to win regardless of the song.
+3. Direction titles, summaries, scores, and framing repeat across fixtures instead of demonstrating three genuinely song-specific alternatives.
+4. `StructuredPromptCompiler` produces `compiledPromptSafe`, but `GeminiImageAdapter::buildImagePrompt()` constructs a second large prompt from Song DNA and Scene Contract. There must be one canonical semantic compiler, not competing prompt assembly paths.
+5. The test assertion intended to limit arbitrary prompt growth is ineffective because `... || strlen($newPrompt) > 0` passes every non-empty prompt.
+6. Verification is prompt-level only; no controlled image A/B evidence exists yet.
 
-Using the richest current internal Song DNA:
+## Required correction
 
-- identify the emotional/relational pivot;
-- build the Visual Campaign Board;
-- generate three materially distinct scene directions;
-- score/rank them for Song DNA fidelity, narrative coherence, visual distinctiveness, and portrait suitability;
-- automatically choose the strongest valid direction;
-- compile the Visual Scene Contract;
-- enforce the approved information budget.
+### 1. Add configured structured planning-model calls
 
-Directions must differ in scene, viewpoint, relationship emphasis, or symbolism—not merely style.
+Use the existing text-provider abstraction. Prefer the approved/configured low-cost Gemini text model (Gemini 2.5 Flash-Lite if that remains the project setting).
 
-### 4. Portrait and prompt integration
-
-- Do not send portrait image data into board or direction planning.
-- Integrate portrait roles only after the Scene Contract is selected.
-- Compile the final provider prompt in the approved ordered sections.
-- Keep style subordinate to scene meaning.
-- Reuse existing provider clients and credentials.
-- Do not hardcode secrets.
-
-### 5. Existing generation path
-
-Wire the new planner/compiler into the current development generation flow.
-
-Preserve:
-
-- routes;
-- authentication/authorization;
-- privacy;
-- song lookup and drafts;
-- portrait security;
-- credits and plan rules;
-- queue ownership;
-- provider execution;
-- storage and gallery;
-- owner style activate/deactivate;
-- current responsive UI.
-
-Maintain a safe fallback or development switch to the current prompt compiler while evaluation is underway.
-
-Planning failure must not strand the user.
-
-### 6. Evaluation
-
-Add fixtures for:
-
-1. intimate loss;
-2. triumphant transformation;
-3. ambiguous relationship;
-4. kinetic adventure;
-5. quiet introspection.
-
-For each, record sanitized:
+The model must receive sanitized internal Song DNA and return strict JSON for:
 
 - Visual Campaign Board;
-- three directions and ranking;
-- selected Scene Contract;
-- compiled prompt;
-- fallback behavior.
+- exactly three materially distinct directions;
+- content-derived scoring/ranking inputs;
+- selected direction;
+- Visual Scene Contract or the inputs required to compile it deterministically.
 
-Compare old and new compiler prompts using identical inputs. Evaluate specificity, coherence, composition hierarchy, portrait role, symbol count, contradictions, and Song DNA fidelity. Do not claim improvement merely because a prompt is longer.
+Do not send portrait image bytes or raw lyrics.
 
-Where affordable and supported by the development environment, run controlled old/new image generations. Clearly separate prompt-level verification from image-level verification.
+Use:
 
-### 7. Controlled retry foundation
+- explicit schema;
+- versioned prompt/template;
+- strict validation;
+- bounded repair;
+- time/token limits;
+- sanitized logs;
+- deterministic planner as fallback only.
 
-Persist or trace enough versioned planning data to preserve successful upstream decisions. Classify failures where practical, but do not change customer retry charging or credit behavior in this round.
+Live text planning must be behind clear configuration and use existing credentials/provider clients.
 
-## Do not implement this round
+### 2. Make ranking meaningful
 
-- no new customer Song DNA selector;
-- no Explore Options UI;
-- no Fine Tune UI;
-- no unrelated screen redesign;
-- no production deployment;
-- no unsupported Flutter implementation;
-- no credit or billing behavior changes.
+Remove fixed “primary always has highest fidelity” behavior.
+
+Ranking must reflect the actual direction and Song DNA:
+
+- Song DNA fidelity;
+- narrative coherence;
+- visual distinctiveness;
+- portrait suitability;
+- information-budget compliance;
+- contradiction/risk penalties.
+
+`primary`, `alternate`, and `unexpected` describe creative roles, not guaranteed ranking order.
+
+Quick Generate selects the actual highest-ranked valid direction, whichever type wins.
+
+Tie-breaking must be deterministic and documented.
+
+### 3. Make directions song-specific
+
+Each direction needs:
+
+- distinct song-specific title;
+- distinct user-safe summary;
+- concrete scene premise;
+- different viewpoint, relationship emphasis, decisive instant, or symbolic strategy;
+- no generic “After the turn” / “Symbolic reframing” boilerplate as final output;
+- no template fragment such as “Immediately beside the main beat.”
+
+Tests must confirm meaningful textual/semantic differences, not only three distinct type labels.
+
+### 4. Establish one canonical prompt path
+
+`StructuredPromptCompiler` and the validated Scene Contract must be the semantic source of truth.
+
+Refactor `GeminiImageAdapter` so it wraps the canonical compiled prompt with only provider-specific identity attachment, image modality, aspect, and safety requirements.
+
+Do not reconstruct a second competing Song DNA/staging prompt.
+
+Other adapters should consume the same canonical compiled semantic prompt wherever their provider interface permits.
+
+Avoid duplicated or conflicting camera, composition, symbolism, staging, and “creative freedom” instructions.
+
+### 5. Strengthen tests
+
+Replace the ineffective prompt-length assertion.
+
+Add tests for:
+
+- model-output schema validation;
+- malformed response repair;
+- timeout/provider failure fallback;
+- portrait bytes absent from planning payload;
+- raw lyrics absent from planning payload and persisted trace;
+- non-primary direction capable of winning;
+- all three directions materially different;
+- content-derived scores;
+- deterministic tie break;
+- information-budget enforcement;
+- canonical compiled prompt used by Gemini image adapter;
+- legacy switch;
+- migration/persistence compatibility;
+- no extra credit charge from planning.
+
+Keep the deterministic fixtures, but identify them as fallback/contract fixtures rather than evidence of intelligent planning quality.
+
+### 6. Controlled evaluation
+
+Generate sanitized comparison artifacts for the five fixtures using:
+
+- deterministic fallback;
+- live/recorded structured planning output;
+- legacy compiler;
+- corrected canonical compiler.
+
+If configured live image calls and owner-authorized development credits are available, run a small controlled A/B image comparison. Otherwise provide an exact command/harness and state that image-quality acceptance remains pending.
+
+Do not claim improved images from prompt structure alone.
+
+## Preserve
+
+No new customer-facing Song DNA, Explore Options, Fine Tune, or broader design work.
+
+Preserve routes, auth, privacy, credits, queue ownership, portraits, owner controls, providers, storage, gallery, responsive behavior, and Flutter contracts.
+
+Do not deploy.
 
 ## Finish
 
-1. Run the full existing suite and all new tests.
-2. Update `design/CHATGPT_CURSOR_DESIGN_HANDOFF.md`.
-3. Update `docs/design/CURSOR-HANDOFF.md`.
-4. Update roadmap, architecture, contract, and prompt documentation.
-5. Clearly distinguish prompt-level verification from actual image-generation evaluation.
-6. Commit and push verified work directly to `main`.
-7. Do not deploy to Hostinger/production.
-8. Stop for GPT/owner review before continuing design.
+1. Run the full suite.
+2. Update both handoffs and Round 012 review evidence.
+3. Record exact planning model, schema/template versions, fallback rates, and provider boundaries.
+4. Include examples where alternate or unexpected legitimately outranks primary.
+5. Commit and push `main`.
+6. Stop for GPT/owner review.
