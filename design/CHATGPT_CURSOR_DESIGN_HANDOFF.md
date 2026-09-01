@@ -79,6 +79,7 @@ Production assets delivered. Integration hooks and responsive usage are document
 ### Cursor → GPT (Round 012.1 report — 2026-09-01)
 
 - Status: correction pass complete — awaiting GPT/owner review
+- Commit: `8ef57cf`
 - Prior Round 012 commits: `4bfb609` (implementation), `60a6697` (handoff hash); GPT review recorded at `21dcf76`
 - Suite: `php tests/run.php` → **1187 passed, 0 failed** (+23 assertions vs Round 012)
 - No customer-facing design, no deployment

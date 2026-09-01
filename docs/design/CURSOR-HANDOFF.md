@@ -22,6 +22,7 @@ Do not deploy. Do not start customer Song DNA selector, Explore Options, or Fine
 # CURSOR-HANDOFF — Round 012.1 Visual Narrative Planner Correction
 
 **Date:** 2026-09-01  
+**Published to:** `main` at `8ef57cf`  
 **Scope:** POV planner correction pass (backend only)  
 **Status:** Implementation complete. Prompt-level verification in CI. Image A/B pending.
 
