@@ -3001,6 +3001,12 @@ textarea {
   cursor: not-allowed;
 }
 
+.ai-direction-lab [hidden],
+.yatsn-status__actions[hidden],
+.ai-direction-lab__continue[hidden] {
+  display: none !important;
+}
+
 .direction-controls.is-ai-direction-active [data-style-world] {
   display: none;
 }

@@ -426,9 +426,18 @@
     })[char]);
   }
 
+  function unlockFixtureActions() {
+    latestSongDna = latestSongDna || { fixture: true };
+    const quick = document.querySelector('[data-ai-quick]');
+    const explore = document.querySelector('[data-ai-explore]');
+    if (quick) quick.disabled = false;
+    if (explore) explore.disabled = false;
+  }
+
   window.YatsnExploreFixtures = {
     showLoading() {
       buildPanel();
+      unlockFixtureActions();
       const direction = document.querySelector('#the-direction');
       if (direction) direction.hidden = false;
       lastQuickMode = false;
@@ -442,6 +451,7 @@
     },
     showReady() {
       buildPanel();
+      unlockFixtureActions();
       const direction = document.querySelector('#the-direction');
       if (direction) direction.hidden = false;
       selectedDirection = null;
@@ -467,6 +477,7 @@
     },
     showError() {
       buildPanel();
+      unlockFixtureActions();
       const direction = document.querySelector('#the-direction');
       if (direction) direction.hidden = false;
       showError('Could not create visual directions. (explore_unavailable)');

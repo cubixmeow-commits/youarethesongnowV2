@@ -201,4 +201,4 @@
 
 ## Next executable slice
 
-Execute **Phase 1 foundation slice and component lab only**. Stop for screenshot/design review before rebuilding Create Home or adding any Song DNA API/database behavior.
+**Phase 1 is implemented** on `cursor/luminous-night-studio-phase1-6bc7` and awaiting Codex/GPT screenshot review (`design/review/round-010/`). After approval, execute **Phase 2: Create entry and existing-contract song selection**. Do not begin Song DNA API/database work in that slice.

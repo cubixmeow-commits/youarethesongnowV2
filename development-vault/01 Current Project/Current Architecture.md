@@ -1,7 +1,7 @@
 ---
 type: current-project
 status: active
-updated: 2026-08-30
+updated: 2026-09-01
 area: architecture
 ---
 
@@ -9,7 +9,7 @@ area: architecture
 
 ## Status
 
-**Private Development Build 1 is implemented and deployed on Hostinger for owner-only testing.** External beta and commercial launch remain gated.
+**Private Development Build 1 is implemented and deployed on Hostinger for owner-only testing.** External beta and commercial launch remain gated. Luminous Night Studio Phase 1 added runtime semantic tokens, a private owner-only `/owner/component-lab`, and an Explore presentation that uses canonical direction/button/status classes without changing `/api/v1` contracts.
 
 Implemented shape:
 

@@ -45,6 +45,6 @@ Working round history (ChatGPT ↔ Cursor): `/design/` (kept; not deleted)
 
 ## Current phase
 
-**Design package locked; Phase 1 runtime foundations are ready.**
+**Phase 1 runtime is implemented and awaiting screenshot review.**
 
-Cursor should execute only the foundation/component-lab/current Explore presentation slice in [CURSOR-HANDOFF.md](./CURSOR-HANDOFF.md), then stop for screenshot review. Song DNA API/database work remains contract-first and belongs to a later roadmap phase.
+Cursor should stop for Codex/GPT review of [CURSOR-HANDOFF.md](./CURSOR-HANDOFF.md) and `design/review/round-010/`. The next gated slice is Phase 2 Create entry. Song DNA API/database work remains contract-first.

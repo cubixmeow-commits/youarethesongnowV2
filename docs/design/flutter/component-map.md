@@ -19,19 +19,19 @@
 
 | Product component | Web direction | Flutter direction |
 | --- | --- | --- |
-| Button | PHP/HTML + canonical class/state | `YatsnButton` wrappers around Filled/Outlined/Text buttons |
-| Icon button | named SVG/currentColor | `YatsnIconButton` using bundled vector assets |
+| Button | `.yatsn-btn` + `--primary/--secondary/--quiet/--destructive`; states via `:hover/:focus-visible/:active/:disabled` and `.is-loading` | `YatsnButton` wrappers around Filled/Outlined/Text buttons |
+| Icon button | `.yatsn-icon-btn`; named SVG/`currentColor` | `YatsnIconButton` using bundled vector assets |
 | App chrome | top bar + bottom nav/rail | one destination model feeding `NavigationBar` / `NavigationRail` |
 | Focused Create shell | compact header, optional hidden global nav | nested navigator/adaptive scaffold without bottom bar |
 | Song search | labeled inputs + async result | `TextField`/custom result list with repository state |
-| Song DNA card | checkbox-like selection card | custom `Semantics(checked:)` widget |
-| Direction card | radio-card group | custom radio-card group with selected/recommended states |
+| Song DNA card | `.yatsn-dna-card` checkbox-like selection; `.is-selected` / `.is-recommended` / `.is-conflict` / `.is-loading` | custom `Semantics(checked:)` widget |
+| Direction card | `.yatsn-direction-card` radiogroup; Explore also keeps `.ai-direction-card` | custom radio-card group with selected/recommended states |
 | Fine Tune | sheet/panel | `showModalBottomSheet` compact; constrained side panel expanded |
 | Portrait shelf | horizontal shelf in Gallery | sliver/list section with private thumbnail loader |
-| Status banner | inline live status | shared inline widget + selective live-region semantics |
+| Status banner | `.yatsn-status` + tone modifiers; Explore error uses the same class | shared inline widget + selective live-region semantics |
 | Generation stage | full-screen job status | route backed by lifecycle-safe polling state |
-| Artwork figure/tile | responsive image/content endpoint | `AspectRatio`, cached thumbnail, authenticated network loader, error builder |
-| Sheet/dialog | `<dialog>`/sheet pattern | modal bottom sheet / `AlertDialog` with shared content contracts |
+| Artwork figure/tile | `.yatsn-artwork` loading/ready/unavailable; later private image/content endpoints | `AspectRatio`, cached thumbnail, authenticated network loader, error builder |
+| Sheet/dialog | `.yatsn-sheet` / `.yatsn-dialog` on `<dialog>` | modal bottom sheet / `AlertDialog` with shared content contracts |
 | Confirmation | canonical confirm sheet | dialog/sheet; haptic only as enhancement |
 | Gallery | CSS grid, no required masonry | slivers/grid; preserve original ratio and private authorization |
 
@@ -52,6 +52,8 @@ Use one immutable state model per feature and different compact/expanded composi
 - `AccountState`
 
 Exact state-management library is not chosen here. Domain rules remain on PHP; Flutter repositories call versioned `/api/v1` endpoints and translate transport errors into these UI states.
+
+Phase 1 web class names (`.yatsn-btn`, `.yatsn-direction-card`, `.yatsn-status`, `.yatsn-dna-card`, `.yatsn-sheet`, `.yatsn-dialog`, `.yatsn-artwork`) are the current visual/state source. Flutter should recreate the same roles, compact-first composition, and states — not CSS. Explore `dataset.yatsnExploreState` is a platform-neutral hook (`idle|loading|ready|selected|error|manual`) that a later Flutter Explore repository can mirror without depending on DOM.
 
 ## Platform behavior
 

@@ -18,6 +18,7 @@ Interactive client: `public/assets/js/app.js` (product) + `showcase.js` (marketi
 | `GET /images/{id}` | Required | `pages/image.php` | Reveal + share/download/regenerate/delete |
 | `GET /account` | Required | `pages/account.php` | Profile, sessions, deletion, sign-out |
 | `GET /owner` | Owner | `owner/dashboard.php` | Ops: invites, users, jobs, styles |
+| `GET /owner/component-lab` | Owner + private build | `owner/component-lab.php` | Fixture lab for Luminous Night Studio components; 404 when `ALLOW_EXTERNAL_USERS=true` |
 | `GET /terms` | Open | `pages/legal.php` | Provisional terms |
 | `GET /privacy` | Open | `pages/legal.php` | Provisional privacy |
 | `GET /shared/{token}` | Guest chrome | `pages/shared.php` or legal 404 | Public shared image |
@@ -29,10 +30,10 @@ Interactive client: `public/assets/js/app.js` (product) + `showcase.js` (marketi
 Guest: Home → Showcase? → Sign in / Activate → Create
 Create (as-built Build 1): Song → People → Direction → Review → [Paywall?] → Generating → Image reveal
 Create (target architecture): Song → Song DNA → Quick Generate | Explore Options → [Fine Tune?] → Generate → Reveal
-  See create-flow.md — not implemented yet.
+  See create-flow.md — Song DNA selector and Fine Tune remain unimplemented. Phase 1 migrated the current Explore presentation onto canonical cards without changing the endpoint.
 Collection: Gallery → Image detail → share / download / regenerate / delete
 Account: profile / email / password / sessions / delete / sign out
-Owner: invitations, users, jobs, style activate/deactivate
+Owner: invitations, users, jobs, style activate/deactivate, private component lab
 ```
 
 ## Nav destinations (chrome)
@@ -59,7 +60,10 @@ Largest product surface. Progressive disclosure of People/Direction. Sticky summ
 **Target architecture (documentation only):** Song DNA selection, Quick Generate / Explore Options / Fine Tune, DNA-aware generation experience, reveal CTAs Save/Share/Variation/Reimagine. Full map: [create-flow.md](./create-flow.md). Do not treat the style grid as the long-term primary creative control.
 
 ### Gallery / Image / Account / Owner
-Thin PHP shells; content hydrated by `app.js` + `/api/v1/*`.
+Thin PHP shells; content hydrated by `app.js` + `/api/v1/*`. Gallery empty state is no longer `aria-hidden`; CSS still hides it when the grid has items.
+
+### Owner component lab (`/owner/component-lab`)
+Private-development fixture page only. Canonical Button, IconButton, StatusBanner, SongDnaCard, CreativeDirectionCard, sheet/dialog, and artwork states. No lyrics, portraits, StyleMap internals, provider payloads, or style-board artwork. Unreachable once external users are enabled.
 
 ### Auth / Activate / Legal / Shared
 Mostly form + status or server-rendered media.

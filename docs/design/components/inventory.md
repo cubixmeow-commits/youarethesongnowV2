@@ -45,7 +45,7 @@
 | Hero launchpad | `.hero--launchpad` | Home |
 | World carousel | `.world-carousel*` | Home + `showcase.js` |
 | Gallery tile | `.gallery-item` | JS |
-| Gallery empty | `.gallery-empty` | Template (a11y gap) |
+| Gallery empty | `.gallery-empty` | Template; `aria-hidden` removed in Phase 1 |
 | Reveal figure | `.reveal` | Image detail |
 | Showcase masonry | `.showcase-tile`, Masonry.js | Web-specific |
 | Showcase lightbox | `.showcase-dialog` | `<dialog>` |

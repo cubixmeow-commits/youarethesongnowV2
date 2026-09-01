@@ -986,6 +986,7 @@ Config::boot($root);
 
 $createTemplate = (string) file_get_contents($root . '/templates/pages/create.php');
 assert_true(str_contains($createTemplate, 'data-build-commit'), 'Create page can expose private build commit');
+assert_true(str_contains($createTemplate, 'data-style-world'), 'Create style world block is marked so Explore can collapse it');
 assert_true(preg_match('/<h1[^>]*class="session-header__title"/', $createTemplate) === 1, 'Create page uses a real h1 for the session title');
 assert_true(!preg_match('/<p class="session-header__title"/', $createTemplate), 'Create session title is no longer a paragraph');
 assert_true(str_contains($exploreJs, 'data-ai-build'), 'Explore UI can show deployed build commit');
@@ -1004,6 +1005,7 @@ assert_true(str_contains($appCss, '--color-status-info:'), 'status color tokens 
 assert_true(!preg_match('/transition\s*:\s*all\b/', $appCss), 'CSS does not introduce transition all');
 assert_true(str_contains($appCss, '.yatsn-direction-card'), 'canonical CreativeDirectionCard styles exist');
 assert_true(str_contains($appCss, '.yatsn-btn--primary'), 'canonical primary button styles exist');
+assert_true(str_contains($appCss, '.ai-direction-lab [hidden]'), 'Explore hidden rows are not overridden by flex display');
 
 assert_true(str_contains($exploreJs, '/api/v1/explore-directions'), 'Explore still posts to the existing directions endpoint');
 assert_true(str_contains($exploreJs, 'JSON.stringify({ songDna: latestSongDna })'), 'Explore still sends derived Song DNA only');

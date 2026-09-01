@@ -18,8 +18,6 @@ Eleven linked reports prepared on 2026-08-31. Reports 01–10 build sequentially
 
 Read Reports 01–10 in sequence; Report 10 is the operating synthesis. Then read Report 11 and the approved baseline note below.
 
-## Immediate next work
-
 ## Selected baseline
 
 **Luminous Night Studio** is selected and approved as the production design baseline. It won because it best combines Spotify-like emotional object hierarchy, VSCO restraint, Canva ease, Adobe-like iteration, and invisible music-AI sophistication while remaining distinctively Song-DNA-led.
@@ -28,4 +26,4 @@ The approved board is `assets/design/references/luminous-night-studio-style-boar
 
 ## Immediate next work
 
-Execute the foundation/component-lab slice in `docs/design/process/LUMINOUS-NIGHT-STUDIO-IMPLEMENTATION-ROADMAP.md`, then stop for screenshot review. Do not begin backend Song DNA projection or broad screen rebuild in that slice.
+Phase 1 runtime is implemented and awaiting Codex/GPT screenshot review (`docs/design/CURSOR-HANDOFF.md`, `design/review/round-010/`). After approval, execute Phase 2 Create entry from `docs/design/process/LUMINOUS-NIGHT-STUDIO-IMPLEMENTATION-ROADMAP.md`. Do not begin backend Song DNA projection or a broad screen rebuild in that slice.

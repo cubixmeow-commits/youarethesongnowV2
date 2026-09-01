@@ -1,7 +1,7 @@
 ---
 type: dashboard-snapshot
 status: active
-updated: 2026-08-31
+updated: 2026-09-01
 area: project
 ---
 
@@ -17,7 +17,7 @@ Private Development Build 1 — live quality and reliability testing
 
 ## Build status
 
-CORE PRIVATE PIPELINE WORKING: song → Gemini Interactions (`gemini-3.6-flash`, Google Search + JSON Schema, `store=false`) → saved derived DNA → portrait inlineData → Gemini image → Hostinger worker → gallery. One- and two-person identity have succeeded live. Flash Lite is the low-cost candidate; full Flash is the quality anchor. Automated tests **981 passed, 0 failed** on current `main` during 2026-08-31 design-package verification. No-text, quality consistency, provider routing, live operational checks, rights and commercial gates remain open. See `Build 1 Assessment 2026-08-30.md` for the earlier assessment baseline.
+CORE PRIVATE PIPELINE WORKING: song → Gemini Interactions (`gemini-3.6-flash`, Google Search + JSON Schema, `store=false`) → saved derived DNA → portrait inlineData → Gemini image → Hostinger worker → gallery. One- and two-person identity have succeeded live. Flash Lite is the low-cost candidate; full Flash is the quality anchor. Automated tests **1036 passed, 0 failed** after the 2026-09-01 Luminous Night Studio Phase 1 runtime slice. No-text, quality consistency, provider routing, live operational checks, rights and commercial gates remain open. See `Build 1 Assessment 2026-08-30.md` for the earlier assessment baseline.
 
 ## Assessment headline
 
@@ -105,7 +105,7 @@ The final quality set contains 90 generations, tests every launch-style and qual
 
 CuBiX Meow and Brut lifted the freeze for Private Development Build 1 on 2026-08-28. Cursor may now build the internal V2 foundation from the approved vault using Stripe sandbox, configurable development credits, private provider credentials, SQLite and local image storage. External access, live charges and commercial protected-lyrics use remain blocked until their unfinished gates are completed.
 
-The approved Build 1 visual direction preserves V1's dark cinematic atmosphere and artwork-led reveal while replacing futuristic typography, neon gradients, glass panels, glowing borders, emoji controls and AI-console presentation. Round 008 integrated the YS identity/runtime assets and Round 009 integrated the 77-image V1 sample showcase. On 2026-08-31 the owners selected **Luminous Night Studio** as the production premium baseline: mobile-canonical black/smoked-graphite studio material, platinum editorial structure, one sapphire/cobalt action light, Instrument Serif + DM Sans, Song-DNA-first interaction and artwork-led reveal. The repo now contains the canonical board, semantic tokens, component/state contracts, nine core screen specs, responsive rules, Flutter maps, phased acceptance roadmap and exact Cursor Phase 1 handoff. Portraits are resolved to Gallery; Discover stays out of nav; Download remains current; Reimagine remains future. No backend contracts changed. Next implementation is foundations/component lab/current Explore presentation only, then screenshot review. Flutter remains documentation-only.
+The approved Build 1 visual direction preserves V1's dark cinematic atmosphere and artwork-led reveal while replacing futuristic typography, neon gradients, glass panels, glowing borders, emoji controls and AI-console presentation. Round 008 integrated the YS identity/runtime assets and Round 009 integrated the 77-image V1 sample showcase. On 2026-08-31 the owners selected **Luminous Night Studio** as the production premium baseline. On 2026-09-01 Phase 1 landed in runtime: semantic aliases, private `/owner/component-lab`, and the current Explore presentation on canonical DirectionCard/Button/Status patterns. Review pack: `design/review/round-010/`. Backend contracts unchanged. Next gated slice is Phase 2 Create entry, not Song DNA API work. Flutter remains documentation-only.
 
 ## Prompt-system status
 

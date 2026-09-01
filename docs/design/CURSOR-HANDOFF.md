@@ -1,147 +1,128 @@
-# CURSOR-HANDOFF — Luminous Night Studio foundation slice
+# CURSOR-HANDOFF — Luminous Night Studio Phase 1 complete
 
-**Date:** 2026-08-31
-**Branch convention:** work directly on `main` while the product remains private development
-**Design package status:** approved and implementation-ready
-**Design package commit:** `9fc4e53de268a064d888f0c703fd4c81bb7dee15`
-**Execute now:** Phase 1 foundation/component-lab slice only
+**Date:** 2026-09-01
+**Working branch:** `cursor/luminous-night-studio-phase1-6bc7`
+**Base:** `main` @ `750809ea759b8e5203df476bdf63d5fb3746f93f`
+**Phase:** 1 — runtime semantic foundation, private component lab, current Explore presentation
+**Status:** Implemented, tested, screenshot pack captured. Stop for Codex / GPT visual review. Do not merge yet.
 
-## Package verification
+## Package / slice verification
 
-- `php tests/run.php`: **981 passed, 0 failed**
-- canonical token JSON: valid
-- Markdown relative links under `docs/design/` and `assets/design/`: valid
-- `git diff --check`: clean
-- runtime/backend/API/migration changes in the package: **none**
-- reference asset SHA-256: `65c8ab28b1160121ef24f35c7393dbc9a91892f8954e0c89a3f84ebd3e1a83f8`
+- `php tests/run.php`: **1036 passed, 0 failed**
+- Runtime/backend/API/migration changes: **none**
+- Explore endpoint: still `POST /api/v1/explore-directions`
+- Three-direction schema, derived-DNA-only body, StyleMap data attributes, diagnostics gating: **preserved**
+- Style-board PNG: art-direction evidence only; not copied into runtime
 
-## Outcome to deliver
+## Changed files
 
-Establish the approved **Luminous Night Studio** design foundation in runtime code, prove the canonical component states, and migrate the already-working Explore presentation onto those components without changing backend behavior.
+Runtime
 
-Stop after screenshots, tests, and the handoff update. Do not begin Create Home, Song DNA API/database work, or the full screen rebuild.
-
-## Read first, in order
-
-1. `AGENTS.md`
-2. `development-vault/START HERE.md`
-3. `development-vault/01 Current Project/Current Priorities.md`
-4. `development-vault/01 Current Project/Current Architecture.md`
-5. `development-vault/05 Product Design/Luminous Night Studio Design Contract.md`
-6. `development-vault/05 Product Design/Create Flow Architecture Contract.md`
-7. `docs/design/DESIGN-OPERATING-SYSTEM.md`
-8. `docs/design/foundations/principles.md`
-9. `docs/design/foundations/tokens.md`
-10. `docs/design/foundations/color.md`
-11. `docs/design/foundations/typography.md`
-12. `docs/design/foundations/motion.md`
-13. `docs/design/foundations/responsive.md`
-14. `docs/design/components/core-components.md`
-15. `docs/design/screens/premium-product-screens.md` (Explore only in this slice)
-16. `docs/design/process/LUMINOUS-NIGHT-STUDIO-IMPLEMENTATION-ROADMAP.md` (Phase 1 only)
-
-## Visual references
-
-- Canonical board: `assets/design/references/luminous-night-studio-style-board.png`
-- Token source: `assets/design/tokens/semantic-tokens.json`
-- Current runtime baseline: `public/assets/css/app.css`
-- Responsive review evidence: `design/review/round-008/`
-- Brand/runtime assets: `public/assets/images/brand/` and `public/assets/images/system/`
-
-The board is art-direction evidence, not a pixel template. Accessible token/component/screen rules override decorative board details. Do not copy its illustrative artwork into runtime assets.
-
-## Exact implementation slice
-
-### 1. Runtime semantic foundation
-
-Primary file: `public/assets/css/app.css`.
-
-- Add stable semantic aliases matching `semantic-tokens.json`; retain legacy aliases until usage reaches zero.
-- Split focus color from focus-ring shadow/elevation.
-- Raise and contrast-test tertiary content before using it for small text.
-- Add canonical variables for 44px minimum target, 48px control, 52px primary action, selected surface/edge, statuses, and sheet/dialog elevation.
-- Preserve the accepted black/graphite/platinum/sapphire appearance unless a documented token correction is required.
-- Do not introduce purple-pink gradients, glass panels, continuous glow, or `transition: all`.
-
-### 2. Private-development component lab
-
-Create the smallest repo-native fixture route/page fitting this PHP app. It must be owner/private-development-only or unreachable in external production mode.
-
-Show:
-
-- Button: primary/secondary/quiet/destructive; default, hover, focus, pressed, disabled, loading
-- IconButton: default/focus/disabled
-- StatusBanner: info/success/warning/error with retry
-- SongDnaCard: loading, recommended, selected, conflict-disabled (fixture only; no API work)
-- CreativeDirectionCard: loading, recommended, selected, selected+recommended, error
-- Sheet/Dialog and Confirmation
-- Artwork tile/figure: loading, ready, unavailable
-
-Use fixtures only. No lyrics, private portraits, provider payloads, copyrighted artwork, keys, or prompts.
-
-### 3. Current Explore presentation migration
-
-Likely files:
-
-- `templates/pages/create.php`
-- `public/assets/js/explore.js`
 - `public/assets/css/app.css`
+- `public/assets/js/explore.js`
+- `public/assets/js/component-lab.js` (new)
+- `public/index.php`
+- `src/Support/BuildInfo.php`
+- `templates/layouts/main.php`
+- `templates/owner/component-lab.php` (new)
+- `templates/owner/dashboard.php`
+- `templates/pages/create.php`
+- `templates/pages/gallery.php`
 - `tests/run.php`
 
-Requirements:
+Evidence / docs
 
-- preserve `POST /api/v1/explore-directions`, Gemini decoder/provider behavior, exact three-direction schema, derived-DNA-only privacy, diagnostics gating, and internal StyleMap bridge;
-- use canonical CreativeDirectionCard/Button/Status patterns;
-- keep `Generate for me` primary and `Explore options` secondary;
-- keep first server-ranked direction quietly Recommended;
-- maintain whole-card selection and selected state;
-- keep `Create this direction` because the current bridge enters the existing creation action; do not invent Fine Tune/review in this slice;
-- keep internal style data out of customer copy;
-- preserve manual-style escape while the legacy flow remains;
-- do not move quality/orientation/no-text yet.
+- `design/review/round-010/`
+- `docs/design/CURSOR-HANDOFF.md`
+- `docs/design/DESIGN-OPERATING-SYSTEM.md`
+- `docs/design/foundations/tokens.md`
+- `docs/design/foundations/color.md`
+- `docs/design/foundations/motion.md`
+- `docs/design/screens/inventory.md`
+- `docs/design/components/README.md`
+- `docs/design/components/inventory.md`
+- `docs/design/flutter/component-map.md`
+- `docs/design/README.md`
+- `docs/design/process/LUMINOUS-NIGHT-STUDIO-IMPLEMENTATION-ROADMAP.md`
+- `docs/design/research/README.md`
+- `docs/dashboard-data.js`
+- `development-vault/START HERE.md`
+- `development-vault/01 Current Project/Current Priorities.md`
+- `development-vault/01 Current Project/Current Architecture.md`
+- `development-vault/01 Current Project/Dashboard Snapshot.md`
 
-### 4. Touched accessibility defects
+## Token / component decisions
 
-- Create must have a real `<h1>`.
-- Gallery empty-state `aria-hidden` may be fixed as an independent safe correction.
-- Focus ring renders on the actual interactive surface without clipping.
-- Selection works with keyboard and exposes state programmatically.
-- Reduced motion removes movement/shimmer from touched components.
+- Canonical aliases added beside legacy `--color-*` / `--ink` names. Usage was not rewritten globally.
+- `--color-focus` is a color. `--elevation-focus-ring` is the 3px ring. `--focus-ring` remains a legacy alias of the elevation token.
+- `--color-text-tertiary` raised from `oklch(0.56 …)` to `oklch(0.62 0.01 256)` before caption use on new components.
+- Control tokens: `--control-touch-min: 44px`, `--control-height: 48px`, `--control-primary-height: 52px`. `--touch-min` now aliases control height so existing chrome stays 48px.
+- Selected surface/edge and status/info tokens added. Sheet/dialog use `--elevation-sheet` / `--elevation-dialog`.
+- Canonical classes: `.yatsn-btn`, `.yatsn-icon-btn`, `.yatsn-status`, `.yatsn-dna-card`, `.yatsn-direction-card`, `.yatsn-sheet`, `.yatsn-dialog`, `.yatsn-artwork`. Explore keeps `.ai-direction-card` as the same card.
+- Lab and Explore primary actions use solid cobalt, not a decorative gradient. No `transition: all`, glass stacks, or purple-pink glow.
+- Explore flex rows were overriding native `[hidden]`. Canonical continue/status rows now force `display: none` when hidden; disabled opacity on lab controls is preserved.
 
-## Explicit non-goals
+## Interaction notes
 
-- no migrations or database fields;
-- no customer-safe Song DNA projection endpoint;
-- no changes to lookup, drafts/snapshots/jobs, credits, paywall, Stripe, portraits, private media, sharing, account, deletion, or provider contracts;
-- no Discover route/navigation;
-- no Flutter code;
-- no broad Create, Gallery, Reveal, Account, onboarding, marketing, owner, or dashboard redesign;
-- no runtime use of style-board artwork;
-- no push or deploy unless separately requested.
+- `Generate for me` remains primary. `Explore options` remains secondary.
+- First server-ranked direction still has a quiet Recommended label.
+- Whole-card radio selection, selected surface + edge + marker, `aria-checked` / `aria-selected`.
+- After selection, `Create this direction` still bridges into the existing Review → Create my image path. Fine Tune was not invented.
+- Internal `styleName` / `styleId` stay on `data-*` only.
+- While an AI direction is active, the legacy style grid and Review button collapse. `Choose a style manually` restores them.
+- Quality, format, and no-text stay visible.
+- Loading shows three stable placeholders. Error shows a status banner and Try again. In-flight clicks are ignored via `exploreInFlight`.
+- Component lab is `GET /owner/component-lab`: owner + private build. 404 when `ALLOW_EXTERNAL_USERS` is true. Quiet link from Owner operations.
 
-## Automated verification
+## Backend / API / migration status
 
-Run `php tests/run.php` and report the exact count. Add scoped tests for component-lab access, Explore semantics/state hooks, exclusion of customer-facing internal StyleMap copy, repeated async activation protection, and touched accessibility behavior. Fix scoped regressions rather than weakening unrelated contracts.
+**none**
 
-## Screenshot and manual review
+No schema, endpoint, provider, credit, paywall, portrait, or privacy-boundary changes.
 
-Capture:
+## Tests
 
-- component lab at 320, 390, 768, 900, and 1440 CSS px;
-- Create/Explore at 320, 390, 900, and 1440;
-- Explore loading, ready/recommended, selected, error/retry, manual-style escape;
-- visible keyboard focus;
-- reduced-motion and increased-contrast evidence or clear notes;
-- 200% zoom at compact and expanded widths.
+```text
+php tests/run.php
+=== Results: 1036 passed, 0 failed ===
+```
 
-Store under `design/review/round-010/` with a README naming route, state, viewport, and fixture setup. Include no private data.
+Scoped coverage added for lab access, Explore semantics/state hooks, StyleMap copy exclusion, repeated async lock, Create `h1`, Gallery empty-state semantics, and token/hidden-row guards.
 
-## Review requirements
+## Screenshots
 
-Verify primary action, restraint, Luminous material/type/selection direction, compact-first quality, expanded context without extra controls, keyboard/touch/screen-reader behavior, reduced motion, unchanged Explore backend/privacy, full tests, and explicitly no backend/API/migration change.
+Stored under `design/review/round-010/`. Index: `design/review/round-010/README.md`.
 
-## Required completion handoff
+Create/Explore loading/ready/selected/error/manual states used private fixtures on `/create` because this slice does not change lookup or portrait contracts.
 
-Update this file with changed files, implemented token/component decisions, interaction notes, explicit backend/API/migration status, exact tests, screenshot paths/states, accessibility/contrast/motion/zoom results, deviations/questions, final commit hash, and next recommended slice.
+## Accessibility / contrast / motion / zoom
 
-Commit directly to `main` and stop for review. After approval, the expected next slice is **Phase 2: Create entry and existing-contract song selection**, not Song DNA backend work.
+- Create has a real `<h1 class="session-header__title">`.
+- Gallery empty state is no longer `aria-hidden`; CSS `display: none` still hides it when the grid has items.
+- Focus is a 3px outline on the interactive surface (`outline-offset: 2px`), not a clipped box-shadow.
+- Explore selection is keyboard operable and programmatic.
+- Reduced motion clears travel, spinner, and shimmer on touched canonical components.
+- Increased-contrast CSS already forces black/white edges; the 390 evidence shot injects those rules because Puppeteer-core cannot emulate `prefers-contrast`.
+- 200% zoom: no horizontal overflow at 320 Create, 390 Explore, 900 lab, 1440 Explore (`review-notes.json`).
+
+## Deviations / questions
+
+1. Handoff said commit on `main`. This work is on the Cursor task branch and is **not merged**, per the executing agent instructions.
+2. Explore remains inside the current Create Direction stage. No standalone Explore route.
+3. `Create this direction` is kept because the current bridge still submits through existing creation.
+4. Desktop Explore can still show quality/format under the cards. That is required for this slice, not Fine Tune.
+5. Error restores the legacy style grid as the existing manual escape. Confirm whether error should hide it.
+6. Tertiary contrast was raised for new components; leftover product captions still using tertiary were not recertified globally.
+7. Flutter remains documentation-only. Web class names and the Explore `dataset.yatsnExploreState` hook are recorded in `docs/design/flutter/component-map.md`. Compact layout is canonical; expanded layout adds comparison columns, not extra controls.
+
+## Final commit
+
+- **Hash:** (filled after the documentation commit)
+- **Branch:** `cursor/luminous-night-studio-phase1-6bc7`
+- **Requires:** Codex / GPT screenshot review. Hostinger sync only after approval. No `.env` changes.
+
+## Recommended next slice
+
+**Phase 2: Create entry and existing-contract song selection** from `docs/design/process/LUMINOUS-NIGHT-STUDIO-IMPLEMENTATION-ROADMAP.md`.
+
+Do not begin Song DNA API, persistence, or customer-safe projection work in that slice.

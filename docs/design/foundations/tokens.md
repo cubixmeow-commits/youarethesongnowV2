@@ -10,7 +10,7 @@ Breakpoints are **not** tokenized in CSS — they are hardcoded media queries.
 
 ## Approved canonical semantic set
 
-These names are stable across CSS custom properties, the canonical JSON export, and Flutter `ThemeExtension`s. Runtime migration is incremental and begins with the Phase 1 foundation slice; visual/behavioral changes still require screenshot review.
+These names are stable across CSS custom properties, the canonical JSON export, and Flutter `ThemeExtension`s. Phase 1 added the runtime aliases, split focus color from ring elevation, and raised tertiary content on new components. Remaining product surfaces still use the Round 008 class names until later slices migrate them.
 
 Canonical export: `assets/design/tokens/semantic-tokens.json`. The older `semantic-tokens.proposed.json` is superseded.
 
@@ -100,11 +100,13 @@ Also present in CSS but not in the Round 008 design-system table: `390`, `480`, 
 
 ## First adoption slice
 
-1. Add semantic aliases while retaining legacy aliases until usage reaches zero.
-2. Split `--focus-ring` into `color.focus` + `elevation.focusRing`.
-3. Raise/test tertiary content contrast before applying it broadly.
-4. Render canonical component states in a private component lab.
-5. Refactor current Explore presentation onto canonical components without changing its endpoint/bridge.
+Phase 1 implemented items 1–5. Item 6 remains gated on Flutter authorization.
+
+1. Semantic aliases added; legacy aliases retained.
+2. `--focus-ring` split into `color.focus` + `elevation.focusRing`.
+3. Tertiary content raised to `oklch(0.62 0.01 256)` for new components.
+4. Private component lab renders canonical states.
+5. Current Explore presentation uses DirectionCard/Button/Status without changing the endpoint/bridge.
 6. Export reviewed sRGB values to Flutter ThemeExtensions only when Flutter work is authorized.
 
 See `assets/design/tokens/semantic-tokens.json` and `docs/design/process/LUMINOUS-NIGHT-STUDIO-IMPLEMENTATION-ROADMAP.md`.

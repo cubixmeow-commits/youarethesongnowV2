@@ -1,0 +1,223 @@
+{
+  "generatedAt": "2026-09-01T03:30:56.082Z",
+  "fixtureSetup": {
+    "routeAuth": "owner session cookie from SessionService::create",
+    "componentLab": "/owner/component-lab static fixtures",
+    "explore": "window.YatsnExploreFixtures on /create; Direction stage unhidden without lookup/portraits because this slice does not change those contracts",
+    "noPrivateData": true
+  },
+  "captures": [
+    {
+      "file": "lab-320.png",
+      "width": 320,
+      "height": 640,
+      "url": "http://127.0.0.1:8765/owner/component-lab",
+      "fullPage": true
+    },
+    {
+      "file": "lab-390.png",
+      "width": 390,
+      "height": 844,
+      "url": "http://127.0.0.1:8765/owner/component-lab",
+      "fullPage": true
+    },
+    {
+      "file": "lab-768.png",
+      "width": 768,
+      "height": 1024,
+      "url": "http://127.0.0.1:8765/owner/component-lab",
+      "fullPage": true
+    },
+    {
+      "file": "lab-900.png",
+      "width": 900,
+      "height": 900,
+      "url": "http://127.0.0.1:8765/owner/component-lab",
+      "fullPage": true
+    },
+    {
+      "file": "lab-1440.png",
+      "width": 1440,
+      "height": 900,
+      "url": "http://127.0.0.1:8765/owner/component-lab",
+      "fullPage": true
+    },
+    {
+      "file": "lab-390-sheet.png",
+      "width": 390,
+      "height": 844,
+      "url": "http://127.0.0.1:8765/owner/component-lab",
+      "fullPage": false
+    },
+    {
+      "file": "lab-390-confirm.png",
+      "width": 390,
+      "height": 844,
+      "url": "http://127.0.0.1:8765/owner/component-lab",
+      "fullPage": false
+    },
+    {
+      "file": "create-320.png",
+      "width": 320,
+      "height": 640,
+      "url": "http://127.0.0.1:8765/create",
+      "fullPage": false
+    },
+    {
+      "file": "create-390.png",
+      "width": 390,
+      "height": 844,
+      "url": "http://127.0.0.1:8765/create",
+      "fullPage": false
+    },
+    {
+      "file": "create-900.png",
+      "width": 900,
+      "height": 900,
+      "url": "http://127.0.0.1:8765/create",
+      "fullPage": false
+    },
+    {
+      "file": "create-1440.png",
+      "width": 1440,
+      "height": 900,
+      "url": "http://127.0.0.1:8765/create",
+      "fullPage": false
+    },
+    {
+      "file": "explore-ready-320.png",
+      "width": 320,
+      "height": 640,
+      "url": "http://127.0.0.1:8765/create",
+      "fullPage": false
+    },
+    {
+      "file": "explore-ready-390.png",
+      "width": 390,
+      "height": 844,
+      "url": "http://127.0.0.1:8765/create",
+      "fullPage": false
+    },
+    {
+      "file": "explore-ready-900.png",
+      "width": 900,
+      "height": 900,
+      "url": "http://127.0.0.1:8765/create",
+      "fullPage": false
+    },
+    {
+      "file": "explore-ready-1440.png",
+      "width": 1440,
+      "height": 900,
+      "url": "http://127.0.0.1:8765/create",
+      "fullPage": false
+    },
+    {
+      "file": "explore-loading-390.png",
+      "width": 390,
+      "height": 844,
+      "url": "http://127.0.0.1:8765/create",
+      "fullPage": false
+    },
+    {
+      "file": "explore-selected-390.png",
+      "width": 390,
+      "height": 844,
+      "url": "http://127.0.0.1:8765/create",
+      "fullPage": false
+    },
+    {
+      "file": "explore-selected-1440.png",
+      "width": 1440,
+      "height": 900,
+      "url": "http://127.0.0.1:8765/create",
+      "fullPage": false
+    },
+    {
+      "file": "explore-error-390.png",
+      "width": 390,
+      "height": 844,
+      "url": "http://127.0.0.1:8765/create",
+      "fullPage": false
+    },
+    {
+      "file": "explore-manual-390.png",
+      "width": 390,
+      "height": 844,
+      "url": "http://127.0.0.1:8765/create",
+      "fullPage": false
+    },
+    {
+      "file": "explore-focus-390.png",
+      "width": 390,
+      "height": 844,
+      "url": "http://127.0.0.1:8765/create",
+      "fullPage": false
+    },
+    {
+      "file": "explore-reduced-motion-390.png",
+      "width": 390,
+      "height": 844,
+      "url": "http://127.0.0.1:8765/create",
+      "fullPage": false
+    },
+    {
+      "file": "explore-increased-contrast-390.png",
+      "width": 390,
+      "height": 844,
+      "url": "http://127.0.0.1:8765/create",
+      "fullPage": false
+    },
+    {
+      "file": "lab-reduced-motion-390.png",
+      "width": 390,
+      "height": 844,
+      "url": "http://127.0.0.1:8765/owner/component-lab",
+      "fullPage": true
+    }
+  ],
+  "zoom200": [
+    {
+      "name": "zoom-create-320",
+      "url": "http://127.0.0.1:8765/create",
+      "width": 320,
+      "height": 640,
+      "pageScaleFactor": 2,
+      "scrollWidth": 320,
+      "innerWidth": 320,
+      "overflow": false
+    },
+    {
+      "name": "zoom-explore-390",
+      "url": "http://127.0.0.1:8765/create",
+      "width": 390,
+      "height": 844,
+      "explore": "showReady",
+      "pageScaleFactor": 2,
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "overflow": false
+    },
+    {
+      "name": "zoom-lab-900",
+      "url": "http://127.0.0.1:8765/owner/component-lab",
+      "width": 900,
+      "height": 900,
+      "pageScaleFactor": 2,
+      "scrollWidth": 900,
+      "innerWidth": 900,
+      "overflow": false
+    },
+    {
+      "name": "zoom-explore-1440",
+      "url": "http://127.0.0.1:8765/create",
+      "width": 1440,
+      "height": 900,
+      "explore": "showSelected",
+      "pageScaleFactor": 2,
+      "scrollWidth": 1440,
+      "innerWidth": 1440,
+      "overflow": false
+    }
+  ]
+}

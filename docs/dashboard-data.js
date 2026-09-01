@@ -3,12 +3,12 @@
  * Source of working truth: development-vault/
  */
 window.MEOW_CONTROL = {
-  updated: "2026-08-31",
+  updated: "2026-09-01",
   owners: ["CuBiX Meow", "Brut"],
   project: "YouAreTheSongNow V2",
   phase: "Private Development Build 1 — live quality and reliability testing",
   buildStatus: "CORE PRIVATE PIPELINE WORKING",
-  buildStatusDetail: "Hostinger live: invite + SMTP → Gemini Interactions Song DNA (Search + schema, store=false) → saved DNA → Gemini one/two-person portrait image → cron worker → gallery. 981 tests pass on current main. Quality consistency, no-text enforcement, live operations, rights and commercial gates remain open.",
+  buildStatusDetail: "Hostinger live: invite + SMTP → Gemini Interactions Song DNA (Search + schema, store=false) → saved DNA → Gemini one/two-person portrait image → cron worker → gallery. 1036 tests pass after Luminous Night Studio Phase 1. Quality consistency, no-text enforcement, live operations, rights and commercial gates remain open.",
   backend: "PHP",
   database: "SQLite (initial)",
   mobile: "Flutter + Dart (iOS second)",
@@ -18,8 +18,8 @@ window.MEOW_CONTROL = {
   mission: "Turn a song into an interpreted cinematic visual experience, optionally placing the user inside that visual world.",
   workshopStatus: "Core premise proven; controlled acceptance testing next",
   workshopDetail: "One- and two-person Gemini identity have succeeded live. Flash Lite is the low-cost candidate; full Flash is the quality anchor. fal and Replicate remain disabled experiments. Print/upscaling stay deferred.",
-  brandStatus: "Luminous Night Studio approved; Phase 1 ready",
-  brandDetail: "Mobile-canonical black/smoked graphite, platinum, sapphire/cobalt, Instrument Serif + DM Sans. The canonical board, semantic tokens, component states, nine core screen specs, responsive rules, Flutter maps and phased roadmap are synced under docs/design/ and assets/design/. Next: foundations/component lab/current Explore presentation only, then screenshot review. Backend contracts are unchanged; Flutter remains deferred.",
+  brandStatus: "Luminous Night Studio Phase 1 implemented",
+  brandDetail: "Mobile-canonical black/smoked graphite, platinum, sapphire/cobalt, Instrument Serif + DM Sans. Phase 1 runtime tokens, private component lab and current Explore presentation are in review (design/review/round-010/). Next: Phase 2 Create entry after screenshot review. Backend contracts are unchanged; Flutter remains deferred.",
   promptSystemStatus: "Gemini identity works; composition freedom restored",
   promptSystemDetail: "One authoritative identity section keeps every portrait recognizable while Song DNA controls staging. Interactions schema prevents malformed DNA. No-text and automatic usability checks remain open.",
   assessmentUrl: "https://github.com/cubixmeow-commits/youarethesongnowV2/blob/main/development-vault/01%20Current%20Project/Build%201%20Assessment%202026-08-30.md",

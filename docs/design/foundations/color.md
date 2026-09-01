@@ -37,7 +37,7 @@ Live CSS values are OKLCH — convert carefully when exporting to Flutter `Color
 ## Contrast notes (audit)
 
 - Primary text on bg is strong.
-- `--color-text-tertiary` and secondary nav at reduced opacity may fail WCAG for small text — verify in Phase 2.
+- `--color-text-tertiary` / `content.tertiary` was raised to `oklch(0.62 0.01 256)` in Phase 1 before new caption use. Leftover product captions were not recertified globally.
 - `prefers-contrast: more` forces black/white borders (good escape hatch).
 - Three color systems exist in-repo: **app** (canonical), **site** (cream/sunset marketing), **docs** (Meow Control purple/cyan). Only app tokens belong in the product system.
 

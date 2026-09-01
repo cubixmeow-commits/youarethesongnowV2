@@ -35,9 +35,7 @@ Do not use `transition: all`, infinite ambient animation, decorative parallax in
 
 `prefers-reduced-motion: reduce` disables hero Ken Burns, example/gallery zooms, venue shimmer, button/nav transitions, and showcase tile motion.
 
-**Gap:** portrait-chip, style-option, choice-row, and movement transitions are not fully cleared.
-
-Phase 1 acceptance requires those gaps to be fixed for every touched canonical component. Reduced motion replaces travel/scale/shimmer with direct state or a short opacity change and never suppresses semantic feedback.
+**Phase 1:** touched canonical components (Button, IconButton, DirectionCard, SongDnaCard, skeleton/spinner, Explore lab) now clear travel, scale, spinner, and shimmer under `prefers-reduced-motion: reduce`. Remaining gaps: portrait-chip, style-option, choice-row until those surfaces are rebuilt.
 
 ## Flutter note
 

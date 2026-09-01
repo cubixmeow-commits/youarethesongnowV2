@@ -83,7 +83,7 @@
         <h2 id="direction-heading">The direction</h2>
 
         <div class="stack direction-controls">
-          <div>
+          <div data-style-world>
             <h3>Choose your world</h3>
             <p class="quiet">Select the visual treatment that will lead your image.</p>
             <div class="style-grid" data-style-grid role="listbox" aria-label="Styles"></div>
