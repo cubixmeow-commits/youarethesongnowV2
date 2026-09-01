@@ -1,3 +1,97 @@
+# NEXT DIRECTIVE — Round 012.2 Live POV Validation
+
+**Date:** 2026-09-01  
+**Working branch:** `main`  
+**Authority:** Owner approved a small live test  
+**Scope:** Validation only — no customer-facing design, deployment, or pipeline redesign
+
+GPT accepts the Round 012.1 architecture conditionally. Prove that the live planner is operational and that its canonical prompt can improve image results before any further design work.
+
+## Budget and boundaries
+
+- Maximum **5 live Gemini planning calls**.
+- Maximum **4 live Gemini image generations**: two songs × legacy/new.
+- Use existing development credentials and an existing authorized development portrait only.
+- Do not expose or commit API keys, raw lyrics, portrait bytes, private storage paths, or unsanitized provider responses.
+- Do not charge a customer account or alter customer credits.
+- Do not deploy.
+- If credentials, provider access, or a safe development portrait are unavailable, stop and report the exact blocker. Do not fabricate results.
+- Keep `VISUAL_NARRATIVE_PLANNING_LIVE_CALLS=false` as the committed default. Enable it only in the validation environment.
+
+## Pass A — live planning
+
+Run the five existing varied Song DNA fixtures with:
+
+- `AI_PROVIDERS_ENABLED=true`
+- `GEMINI_LIVE_CALLS=true`
+- `VISUAL_NARRATIVE_PLANNING_ENABLED=true`
+- `VISUAL_NARRATIVE_PLANNING_LIVE_CALLS=true`
+- `VISUAL_NARRATIVE_LEGACY_COMPILER=false`
+
+Record only sanitized evidence:
+
+- fixture name;
+- planner source and model;
+- three direction titles, types, summaries, and component scores;
+- winning direction and why its score won;
+- whether a non-primary direction won;
+- contract validation/repair outcome;
+- fallback or error classification;
+- latency and planning-call count;
+- confirmation that raw lyrics and portrait data were absent.
+
+Evaluate specificity, direction diversity, Song DNA fidelity, coherent decisive instant, useful portrait role, and avoidance of generic cinematic boilerplate.
+
+## Pass B — controlled image A/B
+
+Choose two contrasting fixtures:
+
+1. one relationship/emotional fixture;
+2. one kinetic, surreal, or high-motion fixture.
+
+Use the same portrait, model, aspect ratio, quality, no-text policy, and generation settings for each pair. The only intentional variable is:
+
+- **A:** legacy compiler;
+- **B:** live structured POV planner + canonical compiled prompt.
+
+Generate exactly four images. Label comparisons blindly as A/B in the review artifact before stating which pipeline produced each.
+
+Score each image from 1–5 for:
+
+- Song DNA specificity;
+- emotional legibility;
+- scene coherence;
+- visual distinctiveness;
+- composition/decisive instant;
+- portrait presence and identity fidelity;
+- unwanted text/artifacts;
+- overall preference.
+
+Also record provider/model, latency, dimensions, estimated cost, generation success/failure, and fallback state.
+
+## Artifacts
+
+Write sanitized results under `design/review/round-012-live/`:
+
+- `README.md` — method, environment flags without secrets, blockers, result summary, and recommendation;
+- `planning-results.json` — sanitized five-fixture planning output;
+- `image-ab-results.json` — scores/metadata and blind-label reveal;
+- visual comparison files only if they contain no private portrait or sensitive content; otherwise record local/private references and do not commit the images.
+
+The existing comparison harness currently reports prompt data but does not itself generate the promised image A/B. Extend it only as much as needed for a repeatable, budget-capped validation. It must default to dry-run and require an explicit live flag.
+
+## Acceptance gate
+
+Recommend one of:
+
+- **ACCEPT:** live planning works and new images clearly outperform or tie legacy without new reliability/privacy problems;
+- **ACCEPT WITH TUNING:** architecture works, but specific prompt/ranking adjustments are supported by the evidence;
+- **REJECT/ROLL BACK:** legacy wins materially or live planning introduces unacceptable failures.
+
+Run the full test suite after any harness-only or evidence-related code change. Commit the sanitized artifacts and handoff update to `main`, then stop for GPT/owner review. Do not begin the Song DNA selector, Explore Options, Fine Tune, or broader design work.
+
+---
+
 # NEXT DIRECTIVE — Round 012.1 complete, awaiting GPT review
 
 **Date:** 2026-09-01  
