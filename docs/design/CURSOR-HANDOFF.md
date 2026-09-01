@@ -127,7 +127,7 @@ Create/Explore loading/ready/selected/error/manual states used private fixtures 
 
 ## Final commit
 
-- **Hash:** (filled after this correction commit)
+- **Hash:** `484fcc68bdb0c441a525c604cd711fb86857eabd`
 - **Branch:** `cursor/luminous-night-studio-phase1-6bc7`
 - **Requires:** second Codex / GPT screenshot review. Hostinger sync only after approval. No `.env` changes.
 
