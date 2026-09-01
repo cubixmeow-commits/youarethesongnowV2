@@ -13,7 +13,7 @@ This vault is the shared development memory for YouAreTheSongNow V2.
 
 **Phase: Private Development Build 1 — live quality and reliability testing.**
 
-CuBiX Meow and Brut authorized Private Development Build 1 on 2026-08-28. The PHP/SQLite vertical slice is deployed on Hostinger and the defining one- and two-person Gemini portrait workflow has succeeded in private live tests. Luminous Night Studio Phase 1 runtime (tokens, private `/owner/component-lab`, current Explore presentation) is implemented on the Cursor task branch and awaiting Codex/GPT screenshot review. Do not start Phase 2 Create entry until that review lands. External beta access, live Stripe charges and commercial use of protected lyrics remain gated. See [[01 Current Project/Build 1 Assessment 2026-08-30]] and `docs/design/CURSOR-HANDOFF.md`.
+CuBiX Meow and Brut authorized Private Development Build 1 on 2026-08-28. The PHP/SQLite vertical slice is deployed on Hostinger and the defining one- and two-person Gemini portrait workflow has succeeded in private live tests. Luminous Night Studio Phase 1 is on the Cursor task branch after a Codex correction pass (pane-fit Explore grid, radio/keyboard, private fixtures) and is awaiting another screenshot review. Do not start Phase 2 Create entry until that review lands. External beta access, live Stripe charges and commercial use of protected lyrics remain gated. See [[01 Current Project/Build 1 Assessment 2026-08-30]] and `docs/design/CURSOR-HANDOFF.md`.
 
 ## Delivery path
 

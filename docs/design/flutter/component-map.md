@@ -53,7 +53,7 @@ Use one immutable state model per feature and different compact/expanded composi
 
 Exact state-management library is not chosen here. Domain rules remain on PHP; Flutter repositories call versioned `/api/v1` endpoints and translate transport errors into these UI states.
 
-Phase 1 web class names (`.yatsn-btn`, `.yatsn-direction-card`, `.yatsn-status`, `.yatsn-dna-card`, `.yatsn-sheet`, `.yatsn-dialog`, `.yatsn-artwork`) are the current visual/state source. Flutter should recreate the same roles, compact-first composition, and states — not CSS. Explore `dataset.yatsnExploreState` is a platform-neutral hook (`idle|loading|ready|selected|error|manual`) that a later Flutter Explore repository can mirror without depending on DOM.
+Phase 1 web class names (`.yatsn-btn`, `.yatsn-direction-card`, `.yatsn-status`, `.yatsn-dna-card`, `.yatsn-sheet`, `.yatsn-dialog`, `.yatsn-artwork`) are the current visual/state source. Flutter should recreate the same roles, compact-first composition, and states — not CSS. Explore `dataset.yatsnExploreState` is a platform-neutral hook (`idle|loading|ready|selected|error|manual`) that a later Flutter Explore repository can mirror without depending on DOM. The Explore card grid sizes columns with `repeat(auto-fit, minmax(min(100%, 16.5rem), 1fr))` inside a `yatsn-explore` size container. Flutter should use `LayoutBuilder` / available width so three columns appear only when names and descriptions stay readable.
 
 ## Platform behavior
 

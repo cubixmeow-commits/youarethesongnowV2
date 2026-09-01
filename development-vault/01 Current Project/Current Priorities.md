@@ -11,18 +11,18 @@ This note is the daily “what matters now” list for CuBiX Meow and Brut. Keep
 
 ## Active now
 
-1. **Codex/GPT review of Luminous Night Studio Phase 1:** runtime tokens, private component lab, and current Explore presentation are implemented on `cursor/luminous-night-studio-phase1-6bc7`. Screenshot pack: `design/review/round-010/`. Do not start Phase 2 until that review lands. See [[../05 Product Design/Luminous Night Studio Design Contract]].
+1. **Codex/GPT re-review of Luminous Night Studio Phase 1:** correction pass on `cursor/luminous-night-studio-phase1-6bc7` (Explore pane-fit grid, radio/keyboard, private fixtures, screenshot offset). Pack: `design/review/round-010/`. Do not start Phase 2 until that review lands. See [[../05 Product Design/Luminous Night Studio Design Contract]].
 2. **Run controlled private image tests:** compare the same one- and two-person inputs on Flash Lite and full Flash; change one variable at a time and record identity, narrative fidelity, coherence, prohibited text, latency, cost and usability.
 3. **Resolve no-text and unusable-image detection:** one otherwise successful no-text image rendered `TICKET`. Prompt-only enforcement and human-only identity acceptance are not sufficient for the final 90-image gate.
 4. **Provisional routing only:** Flash Lite is the low-cost candidate at about $0.0336 per 1K output; full Flash is the quality anchor at about $0.067. Medium/default and high routing are not decided.
 5. **Complete live functional checks:** share/revoke, deletion, failure/refund, account recovery/change, Stripe lifecycle, complimentary access, admin, mobile API, accessibility and Hostinger operational drills.
 6. **Keep release gates closed:** external beta, live Stripe and commercial protected-lyrics use remain blocked. Lyrics remain transient and never saved.
-7. **Automated foundation healthy:** **1036 passed, 0 failed** after the Luminous Night Studio Phase 1 runtime slice. The earlier assessment baseline was 162. See [[Build 1 Assessment 2026-08-30]].
+7. **Automated foundation healthy:** **1058 passed, 0 failed** after the Luminous Night Studio Phase 1 correction pass. The earlier assessment baseline was 162. See [[Build 1 Assessment 2026-08-30]].
 8. **Print/poster/T-shirt/upscaling remain post-Build-1.** Vault = workshop; `/docs` = Meow Control.
 
 ## Newly documented
 
-- **Luminous Night Studio Phase 1 runtime (2026-09-01):** semantic aliases, focus/contrast tokens, private `/owner/component-lab`, and current Explore presentation now use canonical DirectionCard/Button/Status patterns. Backend contracts unchanged. Review pack: `design/review/round-010/`. Next gated slice is Phase 2 Create entry, not Song DNA API work.
+- **Luminous Night Studio Phase 1 correction (2026-09-01):** Explore columns now follow pane width; lab/Explore radios use a valid roving-tabindex pattern; screenshot fixtures are private-build-only; round-010 shots keep the Explore heading below the top bar. Tests **1058 passed, 0 failed**. Still awaiting Codex review. Do not merge.
 
 - **Luminous Night Studio approved (2026-08-31):** production visual baseline, semantic tokens, component states, nine core screen specs, compact/medium/expanded behavior, Flutter mapping, phased acceptance roadmap and exact Cursor Phase 1 handoff are synchronized under `docs/design/` and `assets/design/`. Portraits are resolved to Gallery; Discover stays out of nav; Download remains the current action; Reimagine stays future. No backend contracts changed. ADR-20260831.
 

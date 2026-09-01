@@ -4,31 +4,15 @@
   let latestSongDna = null;
   let latestLookupLabel = '';
   let selectedDirection = null;
+  let currentDirections = [];
   let exploreActive = false;
   let exploreInFlight = false;
   let lastQuickMode = false;
   const nativeFetch = window.fetch.bind(window);
 
-  const FIXTURE_DIRECTIONS = [
-    {
-      name: 'Sodium Crossing',
-      description: 'Rain-slick overpass, warm lamps, two figures paused mid-step.',
-      styleName: 'Gothic Romance',
-      styleId: 'style-fixture-a',
-    },
-    {
-      name: 'Quiet Threshold',
-      description: 'A dim apartment doorway where the night still has one more hour.',
-      styleName: 'Cinematic Realism',
-      styleId: 'style-fixture-b',
-    },
-    {
-      name: 'Harbor Afterglow',
-      description: 'Wet stone, distant water, a coat catching the last sodium light.',
-      styleName: 'Dark Romance',
-      styleId: 'style-fixture-c',
-    },
-  ];
+  function privateBuildAllowsFixtures() {
+    return document.querySelector('[data-create]')?.dataset.privateBuild === '1';
+  }
 
   // Capture the already-derived development Song DNA from the existing song lookup.
   // This avoids sending portraits or lyrics to the Explore call and avoids re-running lyric research.
@@ -274,18 +258,34 @@
     }
   }
 
+  function directionCards() {
+    return Array.from(document.querySelectorAll('[data-ai-options] .ai-direction-card:not(.is-loading)'));
+  }
+
+  function syncDirectionTabStops(active) {
+    const cards = directionCards();
+    const current = active
+      || cards.find((card) => card.getAttribute('aria-checked') === 'true')
+      || cards[0];
+    cards.forEach((card) => {
+      card.tabIndex = card === current ? 0 : -1;
+    });
+    return current;
+  }
+
   function renderDirections(directions) {
     const grid = document.querySelector('[data-ai-options]');
     if (!grid) return;
+    currentDirections = Array.isArray(directions) ? directions : [];
     grid.innerHTML = '';
     grid.hidden = false;
-    directions.forEach((direction, index) => {
+    currentDirections.forEach((direction, index) => {
       const button = document.createElement('button');
       button.type = 'button';
       button.className = 'yatsn-direction-card ai-direction-card';
       button.setAttribute('role', 'radio');
       button.setAttribute('aria-checked', 'false');
-      button.setAttribute('aria-selected', 'false');
+      button.tabIndex = index === 0 ? 0 : -1;
       button.dataset.aiDirectionIndex = String(index);
       // Keep StyleMap bridge out of customer copy; retain for private debugging only.
       if (direction.styleName) button.dataset.styleName = direction.styleName;
@@ -301,33 +301,35 @@
   }
 
   function handleDirectionKey(event, button) {
-    const cards = Array.from(document.querySelectorAll('[data-ai-options] .ai-direction-card:not(.is-loading)'));
+    const cards = directionCards();
     const index = cards.indexOf(button);
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      button.click();
+      const direction = currentDirections[Number(button.dataset.aiDirectionIndex)];
+      if (direction) selectDirection(direction, button);
       return;
     }
     const map = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 };
     if (!(event.key in map) || index < 0) return;
     event.preventDefault();
     const next = cards[(index + map[event.key] + cards.length) % cards.length];
-    next?.focus();
+    const direction = currentDirections[Number(next?.dataset.aiDirectionIndex)];
+    if (next && direction) selectDirection(direction, next, { moveFocus: true });
   }
 
-  function selectDirection(direction, button) {
+  function selectDirection(direction, button, options = {}) {
     selectedDirection = direction;
-    document.querySelectorAll('[data-ai-options] .ai-direction-card').forEach((card) => {
+    directionCards().forEach((card) => {
       const selected = card === button;
       card.classList.toggle('is-selected', selected);
-      card.setAttribute('aria-selected', selected ? 'true' : 'false');
       card.setAttribute('aria-checked', selected ? 'true' : 'false');
     });
+    syncDirectionTabStops(button);
+    if (options.moveFocus) button.focus();
     applyDirection(direction, { autoContinue: false, announce: true });
     const continueRow = document.querySelector('[data-ai-continue]');
     if (continueRow) continueRow.hidden = false;
     setExploreState('selected');
-    document.querySelector('[data-ai-create-direction]')?.focus();
   }
 
   function applyDirection(direction, { autoContinue, announce }) {
@@ -384,9 +386,9 @@
     if (options) {
       options.querySelectorAll('.ai-direction-card').forEach((card) => {
         card.classList.remove('is-selected');
-        card.setAttribute('aria-selected', 'false');
         card.setAttribute('aria-checked', 'false');
       });
+      syncDirectionTabStops(options.querySelector('.ai-direction-card'));
     }
     const continueRow = document.querySelector('[data-ai-continue]');
     if (continueRow) continueRow.hidden = true;
@@ -426,73 +428,96 @@
     })[char]);
   }
 
-  function unlockFixtureActions() {
-    latestSongDna = latestSongDna || { fixture: true };
-    const quick = document.querySelector('[data-ai-quick]');
-    const explore = document.querySelector('[data-ai-explore]');
-    if (quick) quick.disabled = false;
-    if (explore) explore.disabled = false;
-  }
+  if (privateBuildAllowsFixtures()) {
+    const FIXTURE_DIRECTIONS = [
+      {
+        name: 'Sodium Crossing',
+        description: 'Rain-slick overpass, warm lamps, two figures paused mid-step.',
+        styleName: 'Gothic Romance',
+        styleId: 'style-fixture-a',
+      },
+      {
+        name: 'Quiet Threshold',
+        description: 'A dim apartment doorway where the night still has one more hour.',
+        styleName: 'Cinematic Realism',
+        styleId: 'style-fixture-b',
+      },
+      {
+        name: 'Harbor Afterglow',
+        description: 'Wet stone, distant water, a coat catching the last sodium light.',
+        styleName: 'Dark Romance',
+        styleId: 'style-fixture-c',
+      },
+    ];
 
-  window.YatsnExploreFixtures = {
-    showLoading() {
-      buildPanel();
-      unlockFixtureActions();
-      const direction = document.querySelector('#the-direction');
-      if (direction) direction.hidden = false;
-      lastQuickMode = false;
-      setExploreCopy('explore');
-      renderLoading();
-      const status = document.querySelector('[data-ai-status]');
-      if (status) {
-        status.classList.remove('is-error', 'yatsn-status--error');
-        status.textContent = 'Creating three visual directions from this Song DNA…';
-      }
-    },
-    showReady() {
-      buildPanel();
-      unlockFixtureActions();
-      const direction = document.querySelector('#the-direction');
-      if (direction) direction.hidden = false;
-      selectedDirection = null;
-      setExploreCopy('explore');
-      renderDirections(FIXTURE_DIRECTIONS);
-      setExploreChrome(true);
-      const status = document.querySelector('[data-ai-status]');
-      if (status) {
-        status.classList.remove('is-error', 'yatsn-status--error');
-        status.classList.add('yatsn-status--info');
-        status.textContent = 'Choose the direction that feels right.';
-      }
-      const continueRow = document.querySelector('[data-ai-continue]');
-      if (continueRow) continueRow.hidden = true;
-      const retryWrap = document.querySelector('[data-ai-retry-wrap]');
-      if (retryWrap) retryWrap.hidden = true;
-      setExploreState('ready');
-    },
-    showSelected() {
-      this.showReady();
-      const first = document.querySelector('[data-ai-options] .ai-direction-card');
-      if (first) selectDirection(FIXTURE_DIRECTIONS[0], first);
-    },
-    showError() {
-      buildPanel();
-      unlockFixtureActions();
-      const direction = document.querySelector('#the-direction');
-      if (direction) direction.hidden = false;
-      showError('Could not create visual directions. (explore_unavailable)');
-    },
-    showManual() {
-      this.showSelected();
-      restoreManualDirection();
-      const direction = document.querySelector('#the-direction');
-      if (direction) direction.hidden = false;
-    },
-    focusFirstCard() {
-      this.showReady();
-      document.querySelector('[data-ai-options] .ai-direction-card')?.focus();
-    },
-  };
+    function unlockFixtureActions() {
+      latestSongDna = latestSongDna || { fixture: true };
+      const quick = document.querySelector('[data-ai-quick]');
+      const explore = document.querySelector('[data-ai-explore]');
+      if (quick) quick.disabled = false;
+      if (explore) explore.disabled = false;
+    }
+
+    window.YatsnExploreFixtures = {
+      showLoading() {
+        buildPanel();
+        unlockFixtureActions();
+        const direction = document.querySelector('#the-direction');
+        if (direction) direction.hidden = false;
+        lastQuickMode = false;
+        setExploreCopy('explore');
+        renderLoading();
+        const status = document.querySelector('[data-ai-status]');
+        if (status) {
+          status.classList.remove('is-error', 'yatsn-status--error');
+          status.textContent = 'Creating three visual directions from this Song DNA…';
+        }
+      },
+      showReady() {
+        buildPanel();
+        unlockFixtureActions();
+        const direction = document.querySelector('#the-direction');
+        if (direction) direction.hidden = false;
+        selectedDirection = null;
+        setExploreCopy('explore');
+        renderDirections(FIXTURE_DIRECTIONS);
+        setExploreChrome(true);
+        const status = document.querySelector('[data-ai-status]');
+        if (status) {
+          status.classList.remove('is-error', 'yatsn-status--error');
+          status.classList.add('yatsn-status--info');
+          status.textContent = 'Choose the direction that feels right.';
+        }
+        const continueRow = document.querySelector('[data-ai-continue]');
+        if (continueRow) continueRow.hidden = true;
+        const retryWrap = document.querySelector('[data-ai-retry-wrap]');
+        if (retryWrap) retryWrap.hidden = true;
+        setExploreState('ready');
+      },
+      showSelected() {
+        this.showReady();
+        const first = document.querySelector('[data-ai-options] .ai-direction-card');
+        if (first) selectDirection(FIXTURE_DIRECTIONS[0], first);
+      },
+      showError() {
+        buildPanel();
+        unlockFixtureActions();
+        const direction = document.querySelector('#the-direction');
+        if (direction) direction.hidden = false;
+        showError('Could not create visual directions. (explore_unavailable)');
+      },
+      showManual() {
+        this.showSelected();
+        restoreManualDirection();
+        const direction = document.querySelector('#the-direction');
+        if (direction) direction.hidden = false;
+      },
+      focusFirstCard() {
+        this.showReady();
+        document.querySelector('[data-ai-options] .ai-direction-card')?.focus();
+      },
+    };
+  }
 
   // This script is deliberately loaded before app.js so it can observe song lookup responses.
   // UI injection can happen immediately because defer scripts run after parsing.

@@ -1,5 +1,8 @@
 <section class="create" data-create data-csrf="<?= e($csrf ?? '') ?>"<?php
   $build = \Yatsn\Support\BuildInfo::publicSummary();
+  if (!empty($build['privateBuild'])):
+?> data-private-build="1"<?php
+  endif;
   if (!empty($build['commit'])):
 ?> data-build-commit="<?= e((string) $build['commit']) ?>" data-build-source="<?= e((string) ($build['source'] ?? '')) ?>"<?php endif; ?>>
   <header class="session-header">

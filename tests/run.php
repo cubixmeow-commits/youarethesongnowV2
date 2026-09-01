@@ -948,7 +948,7 @@ assert_true(str_contains($exploreJs, 'Create this direction'), 'Explore exposes 
 assert_true(str_contains($exploreJs, 'Choose a style manually'), 'Explore provides a deliberate path back to manual style selection');
 assert_true(str_contains($exploreJs, 'is-ai-direction-active'), 'Explore collapses legacy style grid while an AI direction is active');
 assert_true(str_contains($exploreJs, 'is-selected'), 'Explore direction cards support a selected state');
-assert_true(str_contains($exploreJs, 'aria-selected'), 'Explore direction cards expose accessible selection state');
+assert_true(!str_contains($exploreJs, 'aria-selected'), 'Explore radios do not use redundant aria-selected');
 assert_true(str_contains($exploreJs, 'btn--primary') && str_contains($exploreJs, 'data-ai-quick'), 'Generate for me remains a primary action before Explore opens');
 assert_true(is_file($root . '/bin/diagnose-gemini-explore.php'), 'Explore host diagnostic command exists');
 $aiStatus = \Yatsn\AI\AdapterFactory::runtimeStatus();
@@ -987,11 +987,32 @@ Config::boot($root);
 $createTemplate = (string) file_get_contents($root . '/templates/pages/create.php');
 assert_true(str_contains($createTemplate, 'data-build-commit'), 'Create page can expose private build commit');
 assert_true(str_contains($createTemplate, 'data-style-world'), 'Create style world block is marked so Explore can collapse it');
+assert_true(str_contains($createTemplate, 'data-private-build'), 'Create template can emit a private-build fixture signal');
 assert_true(preg_match('/<h1[^>]*class="session-header__title"/', $createTemplate) === 1, 'Create page uses a real h1 for the session title');
 assert_true(!preg_match('/<p class="session-header__title"/', $createTemplate), 'Create session title is no longer a paragraph');
 assert_true(str_contains($exploreJs, 'data-ai-build'), 'Explore UI can show deployed build commit');
 assert_true(str_contains($exploreJs, 'fields?.build'), 'Explore UI surfaces build id from error fields');
 assert_true(is_file($root . '/app/build-stamp.php'), 'committed build stamp exists for non-git hosts');
+
+$createPagePrivate = \Yatsn\Support\View::page('pages/create', [
+    'title' => 'Create',
+    'session' => ['role' => 'owner', 'csrf_token' => 'test-csrf'],
+    'csrf' => 'test-csrf',
+]);
+assert_true(str_contains($createPagePrivate, 'data-private-build="1"'), 'private Create page exposes the fixture signal');
+
+putenv('ALLOW_EXTERNAL_USERS=true');
+$_ENV['ALLOW_EXTERNAL_USERS'] = 'true';
+Config::boot($root);
+$createPageExternal = \Yatsn\Support\View::page('pages/create', [
+    'title' => 'Create',
+    'session' => ['role' => 'member', 'csrf_token' => 'test-csrf'],
+    'csrf' => 'test-csrf',
+]);
+assert_true(!str_contains($createPageExternal, 'data-private-build'), 'external Create page does not expose screenshot fixtures');
+putenv('ALLOW_EXTERNAL_USERS=false');
+$_ENV['ALLOW_EXTERNAL_USERS'] = 'false';
+Config::boot($root);
 
 $appCss = (string) file_get_contents($root . '/public/assets/css/app.css');
 assert_true(str_contains($appCss, '--color-focus: oklch(0.72 0.14 268)'), 'runtime tokens split focus color from ring elevation');
@@ -1007,12 +1028,20 @@ assert_true(str_contains($appCss, '.yatsn-direction-card'), 'canonical CreativeD
 assert_true(str_contains($appCss, '.yatsn-btn--primary'), 'canonical primary button styles exist');
 assert_true(str_contains($appCss, '.ai-direction-lab [hidden]'), 'Explore hidden rows are not overridden by flex display');
 
+assert_true(str_contains($appCss, 'container-name: yatsn-explore'), 'Explore lab is a size container so Flutter can map LayoutBuilder later');
+assert_true(str_contains($appCss, 'repeat(auto-fit, minmax(min(100%, 16.5rem), 1fr))'), 'Explore columns follow available pane width, not the viewport');
+assert_true(!preg_match('/@media \(min-width: 700px\) \{\s*\.ai-direction-grid\s*\{/', $appCss), 'Explore cards are not forced into three viewport columns at 700px');
+
 assert_true(str_contains($exploreJs, '/api/v1/explore-directions'), 'Explore still posts to the existing directions endpoint');
 assert_true(str_contains($exploreJs, 'JSON.stringify({ songDna: latestSongDna })'), 'Explore still sends derived Song DNA only');
 assert_true(str_contains($exploreJs, 'exploreInFlight'), 'Explore protects repeated async activation');
 assert_true(str_contains($exploreJs, 'role="radiogroup"'), 'Explore options use radiogroup semantics');
 assert_true(str_contains($exploreJs, "setAttribute('role', 'radio')"), 'Explore direction cards expose radio semantics');
 assert_true(str_contains($exploreJs, 'aria-checked'), 'Explore selection is exposed programmatically');
+assert_true(str_contains($exploreJs, 'tabIndex = index === 0 ? 0 : -1'), 'Explore puts one radio in the initial tab order');
+assert_true(str_contains($exploreJs, 'tabIndex = selected ? 0 : -1') || str_contains($exploreJs, 'card.tabIndex = card === current ? 0 : -1'), 'Explore uses roving tabindex on direction radios');
+assert_true(str_contains($exploreJs, 'moveFocus: true'), 'Explore arrow keys move focus with selection');
+assert_true(!str_contains($exploreJs, "querySelector('[data-ai-create-direction]')?.focus()"), 'Explore does not steal focus to the Create CTA after selection');
 assert_true(str_contains($exploreJs, 'dataset.yatsnExploreState') || str_contains($exploreJs, 'data-yatsn-explore-state'), 'Explore exposes a platform-neutral state hook');
 assert_true(str_contains($exploreJs, 'is-loading'), 'Explore has a loading presentation');
 assert_true(str_contains($exploreJs, 'data-ai-retry'), 'Explore error state offers retry');
@@ -1020,6 +1049,13 @@ assert_true(str_contains($exploreJs, 'yatsn-direction-card'), 'Explore cards use
 assert_true(str_contains($exploreJs, 'dataset.styleName'), 'Explore retains internal StyleMap data attributes');
 assert_true(!str_contains($exploreJs, 'Uses ') || !str_contains($exploreJs, 'internally'), 'Explore customer copy still omits internal StyleMap names');
 assert_true(str_contains($exploreJs, 'YatsnExploreFixtures'), 'Explore private fixtures exist for screenshot review');
+assert_true(str_contains($exploreJs, 'privateBuildAllowsFixtures'), 'Explore fixtures are gated on a private-build helper');
+assert_true(str_contains($exploreJs, "dataset.privateBuild === '1'"), 'Explore fixtures require a server-rendered private-build signal');
+$fixtureExportAt = strpos($exploreJs, 'window.YatsnExploreFixtures');
+$fixtureGateAt = strpos($exploreJs, 'if (privateBuildAllowsFixtures())');
+assert_true($fixtureExportAt !== false && $fixtureGateAt !== false && $fixtureGateAt < $fixtureExportAt, 'fixture construction is inside the private-build gate');
+$fixtureDnaAt = strpos($exploreJs, '{ fixture: true }');
+assert_true($fixtureDnaAt !== false && $fixtureGateAt < $fixtureDnaAt, 'fixture Song DNA injection is inside the private-build gate');
 
 $galleryTemplate = (string) file_get_contents($root . '/templates/pages/gallery.php');
 assert_true(str_contains($galleryTemplate, 'class="gallery-empty"'), 'Gallery empty state remains in markup');
@@ -1057,6 +1093,32 @@ assert_true(str_contains($labTemplate, 'data-lab-sheet') && str_contains($labTem
 assert_true(str_contains($labTemplate, 'yatsn-artwork is-loading') && str_contains($labTemplate, 'is-unavailable'), 'component lab includes artwork loading and unavailable states');
 assert_true(!str_contains($labTemplate, 'luminous-night-studio-style-board'), 'component lab does not use the style-board image');
 assert_true(!str_contains(strtolower($labTemplate), 'lyric'), 'component lab fixtures contain no lyrics');
+
+preg_match_all('/role="radiogroup"/', $labTemplate, $labRadioGroups);
+assert_true(count($labRadioGroups[0]) === 1, 'component lab has exactly one live radiogroup');
+preg_match_all('/<button\b[^>]*data-lab-direction[^>]*>/', $labTemplate, $labDirectionButtons);
+assert_true(count($labDirectionButtons[0]) === 3, 'interactive lab radiogroup has three radios');
+$labChecked = 0;
+$labTabZero = 0;
+$labTabNegative = 0;
+foreach ($labDirectionButtons[0] as $buttonMarkup) {
+    if (str_contains($buttonMarkup, 'aria-checked="true"')) {
+        $labChecked++;
+    }
+    if (preg_match('/\btabindex="0"/', $buttonMarkup) === 1) {
+        $labTabZero++;
+    }
+    if (preg_match('/\btabindex="-1"/', $buttonMarkup) === 1) {
+        $labTabNegative++;
+    }
+}
+assert_true($labChecked === 1, 'lab radiogroup has exactly one checked radio');
+assert_true($labTabZero === 1 && $labTabNegative === 2, 'lab radiogroup uses roving tabindex');
+assert_true(!str_contains($labTemplate, 'aria-selected'), 'lab direction radios do not use redundant aria-selected');
+assert_true(str_contains($labTemplate, 'Direction card visual states'), 'lab keeps non-radio visual fixtures for selected states');
+$labJs = (string) file_get_contents($root . '/public/assets/js/component-lab.js');
+assert_true(str_contains($labJs, 'moveFocus'), 'lab direction arrows move focus with selection');
+assert_true(!str_contains($labJs, 'aria-selected'), 'lab direction script does not set aria-selected');
 
 $labHtml = \Yatsn\Support\View::page('owner/component-lab', [
     'title' => 'Component lab',

@@ -29,8 +29,9 @@
 | `create-1440.png` | `/create` | song stage, rail + summary | 1440 |
 | `explore-ready-320.png` | `/create` | three directions, Recommended | 320 |
 | `explore-ready-390.png` | `/create` | three directions, Recommended | 390 |
-| `explore-ready-900.png` | `/create` | three-column comparison | 900 |
-| `explore-ready-1440.png` | `/create` | expanded comparison + summary | 1440 |
+| `explore-ready-768.png` | `/create` | two-column fit, Recommended | 768 |
+| `explore-ready-900.png` | `/create` | stacked in the narrow Create pane | 900 |
+| `explore-ready-1440.png` | `/create` | two-column comparison + summary | 1440 |
 | `explore-loading-390.png` | `/create` | three loading placeholders | 390 |
 | `explore-selected-390.png` | `/create` | selected + Create this direction | 390 |
 | `explore-selected-1440.png` | `/create` | selected expanded | 1440 |
@@ -46,11 +47,13 @@
 
 ## Review notes
 
-- **Keyboard:** Direction cards are a radiogroup. Enter/Space select. Arrow keys move between cards. Focus uses a 3px outline on the interactive surface.
+- **Keyboard:** Direction cards are a radiogroup with roving tabindex. Arrow keys move focus and `aria-checked`. Tab leaves the group for the next widget. Focus uses a 3px outline on the interactive surface.
+- **Adaptivity:** Explore columns follow pane width (`auto-fit` + `minmax(16.5rem)`), not a 700px viewport media query. 900 Create stays stacked; 768/1440 use two columns; three columns only when the pane is wide enough.
 - **Reduced motion:** `prefers-reduced-motion: reduce` removes button/card travel, spinner, and skeleton shimmer on touched components.
 - **Increased contrast:** product CSS already forces black/white edges. The 390 screenshot injects the same rules because Puppeteer-core cannot emulate `prefers-contrast`.
 - **200% zoom:** `scrollWidth === innerWidth` on 320 Create, 390 Explore, 900 lab, and 1440 Explore. See `review-notes.json`.
-- **Privacy:** no lyrics, portraits, keys, or provider payloads in this pack.
+- **Scroll offset:** Explore shots scroll the lab below the sticky top bar so `Explore directions` stays visible. The parent stage title `The direction` may sit under the bar; product layout was not changed for the harness.
+- **Privacy:** no lyrics, portraits, keys, or provider payloads in this pack. `YatsnExploreFixtures` requires `data-private-build="1"`.
 
 ## Capture
 

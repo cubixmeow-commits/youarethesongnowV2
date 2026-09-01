@@ -38,14 +38,35 @@
     });
   });
 
-  root.querySelectorAll('[data-lab-direction]').forEach((card) => {
-    card.addEventListener('click', () => {
-      root.querySelectorAll('[data-lab-direction]').forEach((other) => {
-        const selected = other === card;
-        other.classList.toggle('is-selected', selected);
-        other.setAttribute('aria-checked', selected ? 'true' : 'false');
-        other.setAttribute('aria-selected', selected ? 'true' : 'false');
-      });
+  function labDirectionCards() {
+    return Array.from(root.querySelectorAll('[data-lab-direction]'));
+  }
+
+  function selectLabDirection(card, options = {}) {
+    labDirectionCards().forEach((other) => {
+      const selected = other === card;
+      other.classList.toggle('is-selected', selected);
+      other.setAttribute('aria-checked', selected ? 'true' : 'false');
+      other.tabIndex = selected ? 0 : -1;
+    });
+    if (options.moveFocus) card.focus();
+  }
+
+  labDirectionCards().forEach((card) => {
+    card.addEventListener('click', () => selectLabDirection(card));
+    card.addEventListener('keydown', (event) => {
+      const cards = labDirectionCards();
+      const index = cards.indexOf(card);
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        selectLabDirection(card);
+        return;
+      }
+      const map = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 };
+      if (!(event.key in map) || index < 0) return;
+      event.preventDefault();
+      const next = cards[(index + map[event.key] + cards.length) % cards.length];
+      if (next) selectLabDirection(next, { moveFocus: true });
     });
   });
 })();

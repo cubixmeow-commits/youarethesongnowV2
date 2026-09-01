@@ -19,6 +19,7 @@ const token = execSync(
 
 const zoomResults = [];
 const notes = [];
+const headingChecks = [];
 
 const browser = await puppeteer.launch({
   executablePath: CHROME,
@@ -61,15 +62,37 @@ async function waitForExplore() {
   await page.waitForFunction(() => typeof window.YatsnExploreFixtures === 'object', { timeout: 15000 });
 }
 
+async function scrollBelowTopbar(selector) {
+  return page.evaluate((sel) => {
+    const el = document.querySelector(sel) || document.querySelector('[data-ai-direction-lab]');
+    if (!el) return { scrolled: false };
+    const topbar = document.querySelector('.app-topbar');
+    const offset = Math.ceil((topbar?.getBoundingClientRect().height || 56) + 24);
+    const y = el.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo(0, Math.max(0, y));
+    const heading = document.querySelector('[data-ai-heading]');
+    const headingBox = heading?.getBoundingClientRect();
+    const topbarBottom = topbar?.getBoundingClientRect().bottom ?? 0;
+    return {
+      scrolled: true,
+      offset,
+      headingTop: headingBox ? headingBox.top : null,
+      topbarBottom,
+      headingVisible: headingBox ? headingBox.top >= topbarBottom - 1 && headingBox.bottom <= window.innerHeight : false,
+    };
+  }, selector);
+}
+
 async function showExplore(method, scrollSelector = '[data-ai-direction-lab]') {
   await waitForExplore();
-  await page.evaluate((fn, selector) => {
+  await page.evaluate((fn) => {
     const direction = document.querySelector('#the-direction');
     if (direction) direction.hidden = false;
     window.YatsnExploreFixtures[fn]();
-    const target = document.querySelector(selector) || document.querySelector('[data-ai-direction-lab]');
-    target?.scrollIntoView({ block: 'start' });
-  }, method, scrollSelector);
+  }, method);
+  const scroll = await scrollBelowTopbar(scrollSelector);
+  headingChecks.push({ fixture: method, ...scroll });
+  return scroll;
 }
 
 const lab = `${BASE}/owner/component-lab`;
@@ -93,7 +116,7 @@ for (const [w, h] of [[320, 640], [390, 844], [900, 900], [1440, 900]]) {
   await shot(`create-${w}.png`, w, h, create);
 }
 
-for (const [w, h] of [[320, 640], [390, 844], [900, 900], [1440, 900]]) {
+for (const [w, h] of [[320, 640], [390, 844], [768, 1024], [900, 900], [1440, 900]]) {
   await shot(`explore-ready-${w}.png`, w, h, create, async () => {
     await showExplore('showReady');
   });
@@ -104,11 +127,11 @@ await shot('explore-loading-390.png', 390, 844, create, async () => {
 });
 
 await shot('explore-selected-390.png', 390, 844, create, async () => {
-  await showExplore('showSelected', '.ai-direction-card.is-selected');
+  await showExplore('showSelected');
 });
 
 await shot('explore-selected-1440.png', 1440, 900, create, async () => {
-  await showExplore('showSelected', '.ai-direction-card.is-selected');
+  await showExplore('showSelected');
 });
 
 await shot('explore-error-390.png', 390, 844, create, async () => {
@@ -179,10 +202,12 @@ writeFileSync(join(OUT, 'review-notes.json'), JSON.stringify({
   fixtureSetup: {
     routeAuth: 'owner session cookie from SessionService::create',
     componentLab: '/owner/component-lab static fixtures',
-    explore: 'window.YatsnExploreFixtures on /create; Direction stage unhidden without lookup/portraits because this slice does not change those contracts',
+    explore: 'window.YatsnExploreFixtures on /create when data-private-build=1; Direction stage unhidden without lookup/portraits because this slice does not change those contracts',
+    scroll: 'Explore shots scroll the lab below the sticky top bar instead of scrollIntoView start',
     noPrivateData: true,
   },
   captures: notes,
+  headingVisibility: headingChecks,
   zoom200: zoomResults,
 }, null, 2));
 

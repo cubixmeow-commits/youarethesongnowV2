@@ -104,7 +104,7 @@ Phase 1 implemented items 1–5. Item 6 remains gated on Flutter authorization.
 
 1. Semantic aliases added; legacy aliases retained.
 2. `--focus-ring` split into `color.focus` + `elevation.focusRing`.
-3. Tertiary content raised to `oklch(0.62 0.01 256)` for new components.
+3. Tertiary content raised to `oklch(0.62 0.01 256)` for new components. Measured WCAG AA on intended dark surfaces: 5.69:1 canvas, 5.53:1 surface, 5.33:1 elevated, 5.17:1 lacquer. Not AAA; not a global recertification.
 4. Private component lab renders canonical states.
 5. Current Explore presentation uses DirectionCard/Button/Status without changing the endpoint/bridge.
 6. Export reviewed sRGB values to Flutter ThemeExtensions only when Flutter work is authorized.

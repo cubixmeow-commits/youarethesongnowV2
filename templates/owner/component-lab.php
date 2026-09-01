@@ -94,34 +94,56 @@
 
   <section class="stack" aria-labelledby="lab-direction">
     <h2 id="lab-direction">Creative direction card</h2>
-    <div class="component-lab__grid component-lab__grid--cards" role="radiogroup" aria-label="Explore direction fixtures">
+    <p class="quiet">Visual fixtures are not a live radiogroup, so selected and selected-plus-recommended can appear together for review.</p>
+    <div class="component-lab__grid component-lab__grid--cards" role="group" aria-label="Direction card visual states">
       <div class="yatsn-direction-card is-loading" aria-hidden="true">
         <span class="yatsn-skeleton"></span>
         <span class="yatsn-skeleton yatsn-skeleton--line"></span>
       </div>
-      <button class="yatsn-direction-card ai-direction-card" type="button" role="radio" aria-checked="false" aria-selected="false" data-lab-direction data-style-name="Gothic Romance" data-style-id="style-fixture-a">
+      <div class="yatsn-direction-card ai-direction-card">
         <span class="yatsn-recommend ai-direction-card__recommend">Recommended</span>
         <strong>Sodium Crossing</strong>
         <span>Rain-slick overpass, warm lamps, two figures paused mid-step.</span>
         <span class="yatsn-selected-mark" aria-hidden="true"></span>
-      </button>
-      <button class="yatsn-direction-card ai-direction-card is-selected" type="button" role="radio" aria-checked="true" aria-selected="true" data-lab-direction>
+      </div>
+      <div class="yatsn-direction-card ai-direction-card is-selected">
         <span class="yatsn-recommend ai-direction-card__recommend">Recommended</span>
         <strong>Quiet Threshold</strong>
         <span>A dim apartment doorway where the night still has one more hour.</span>
         <span class="yatsn-selected-mark" aria-hidden="true"></span>
-      </button>
-      <button class="yatsn-direction-card ai-direction-card is-selected" type="button" role="radio" aria-checked="true" aria-selected="true" data-lab-direction>
+      </div>
+      <div class="yatsn-direction-card ai-direction-card is-selected">
         <strong>Harbor Afterglow</strong>
         <span>Wet stone, distant water, a coat catching the last sodium light.</span>
         <span class="yatsn-selected-mark" aria-hidden="true"></span>
-      </button>
+      </div>
       <div class="yatsn-status yatsn-status--error">
         Could not create this direction.
         <div class="yatsn-status__actions">
           <button class="yatsn-btn yatsn-btn--secondary" type="button">Try again</button>
         </div>
       </div>
+    </div>
+
+    <h3>Interactive selection</h3>
+    <p class="quiet">One radiogroup with a single selected radio. Arrow keys move focus and selection; Tab leaves the group.</p>
+    <div class="component-lab__grid component-lab__grid--cards" role="radiogroup" aria-label="Explore direction fixtures" data-lab-direction-group>
+      <button class="yatsn-direction-card ai-direction-card is-selected" type="button" role="radio" aria-checked="true" tabindex="0" data-lab-direction data-style-name="Gothic Romance" data-style-id="style-fixture-a">
+        <span class="yatsn-recommend ai-direction-card__recommend">Recommended</span>
+        <strong>Sodium Crossing</strong>
+        <span>Rain-slick overpass, warm lamps, two figures paused mid-step.</span>
+        <span class="yatsn-selected-mark" aria-hidden="true"></span>
+      </button>
+      <button class="yatsn-direction-card ai-direction-card" type="button" role="radio" aria-checked="false" tabindex="-1" data-lab-direction>
+        <strong>Quiet Threshold</strong>
+        <span>A dim apartment doorway where the night still has one more hour.</span>
+        <span class="yatsn-selected-mark" aria-hidden="true"></span>
+      </button>
+      <button class="yatsn-direction-card ai-direction-card" type="button" role="radio" aria-checked="false" tabindex="-1" data-lab-direction>
+        <strong>Harbor Afterglow</strong>
+        <span>Wet stone, distant water, a coat catching the last sodium light.</span>
+        <span class="yatsn-selected-mark" aria-hidden="true"></span>
+      </button>
     </div>
   </section>
 

@@ -1,9 +1,10 @@
 {
-  "generatedAt": "2026-09-01T03:30:56.082Z",
+  "generatedAt": "2026-09-01T03:53:30.671Z",
   "fixtureSetup": {
     "routeAuth": "owner session cookie from SessionService::create",
     "componentLab": "/owner/component-lab static fixtures",
-    "explore": "window.YatsnExploreFixtures on /create; Direction stage unhidden without lookup/portraits because this slice does not change those contracts",
+    "explore": "window.YatsnExploreFixtures on /create when data-private-build=1; Direction stage unhidden without lookup/portraits because this slice does not change those contracts",
+    "scroll": "Explore shots scroll the lab below the sticky top bar instead of scrollIntoView start",
     "noPrivateData": true
   },
   "captures": [
@@ -99,6 +100,13 @@
       "fullPage": false
     },
     {
+      "file": "explore-ready-768.png",
+      "width": 768,
+      "height": 1024,
+      "url": "http://127.0.0.1:8765/create",
+      "fullPage": false
+    },
+    {
       "file": "explore-ready-900.png",
       "width": 900,
       "height": 900,
@@ -174,6 +182,128 @@
       "height": 844,
       "url": "http://127.0.0.1:8765/owner/component-lab",
       "fullPage": true
+    }
+  ],
+  "headingVisibility": [
+    {
+      "fixture": "showReady",
+      "scrolled": true,
+      "offset": 77,
+      "headingTop": 117.203125,
+      "topbarBottom": 53,
+      "headingVisible": true
+    },
+    {
+      "fixture": "showReady",
+      "scrolled": true,
+      "offset": 77,
+      "headingTop": 116.703125,
+      "topbarBottom": 53,
+      "headingVisible": true
+    },
+    {
+      "fixture": "showReady",
+      "scrolled": true,
+      "offset": 77,
+      "headingTop": 117.1875,
+      "topbarBottom": 53,
+      "headingVisible": true
+    },
+    {
+      "fixture": "showReady",
+      "scrolled": true,
+      "offset": 77,
+      "headingTop": 117.03125,
+      "topbarBottom": 53,
+      "headingVisible": true
+    },
+    {
+      "fixture": "showReady",
+      "scrolled": true,
+      "offset": 77,
+      "headingTop": 116.28125,
+      "topbarBottom": 53,
+      "headingVisible": true
+    },
+    {
+      "fixture": "showLoading",
+      "scrolled": true,
+      "offset": 77,
+      "headingTop": 116.703125,
+      "topbarBottom": 53,
+      "headingVisible": true
+    },
+    {
+      "fixture": "showSelected",
+      "scrolled": true,
+      "offset": 77,
+      "headingTop": 116.703125,
+      "topbarBottom": 53,
+      "headingVisible": true
+    },
+    {
+      "fixture": "showSelected",
+      "scrolled": true,
+      "offset": 77,
+      "headingTop": 116.28125,
+      "topbarBottom": 53,
+      "headingVisible": true
+    },
+    {
+      "fixture": "showError",
+      "scrolled": true,
+      "offset": 77,
+      "headingTop": 116.703125,
+      "topbarBottom": 53,
+      "headingVisible": true
+    },
+    {
+      "fixture": "showManual",
+      "scrolled": true,
+      "offset": 77,
+      "headingTop": -701.296875,
+      "topbarBottom": 53,
+      "headingVisible": false
+    },
+    {
+      "fixture": "focusFirstCard",
+      "scrolled": true,
+      "offset": 77,
+      "headingTop": 116.703125,
+      "topbarBottom": 53,
+      "headingVisible": true
+    },
+    {
+      "fixture": "showLoading",
+      "scrolled": true,
+      "offset": 77,
+      "headingTop": 116.703125,
+      "topbarBottom": 53,
+      "headingVisible": true
+    },
+    {
+      "fixture": "showSelected",
+      "scrolled": true,
+      "offset": 77,
+      "headingTop": 116.703125,
+      "topbarBottom": 53,
+      "headingVisible": true
+    },
+    {
+      "fixture": "showReady",
+      "scrolled": true,
+      "offset": 77,
+      "headingTop": 116.703125,
+      "topbarBottom": 53,
+      "headingVisible": true
+    },
+    {
+      "fixture": "showSelected",
+      "scrolled": true,
+      "offset": 77,
+      "headingTop": 116.28125,
+      "topbarBottom": 53,
+      "headingVisible": true
     }
   ],
   "zoom200": [
