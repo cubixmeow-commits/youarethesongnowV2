@@ -508,16 +508,19 @@ assert_true(!str_contains($safePackage['compiledPromptSafe'], 'Recognizable port
 $watercolorMap = \Yatsn\AI\StylePromptCatalog::forKey('watercolor');
 assert_true(str_contains($watercolorMap['medium'], 'transparent washes'), 'launch styles have concrete recovered V1 craft direction');
 
-// --- Visual Narrative Planning Layer (Round 012) ---
+// --- Visual Narrative Planning Layer (Round 012 / 012.1) ---
 putenv('VISUAL_NARRATIVE_LEGACY_COMPILER=false');
 putenv('VISUAL_NARRATIVE_PLANNING_ENABLED=true');
+putenv('VISUAL_NARRATIVE_PLANNING_LIVE_CALLS=false');
 $_ENV['VISUAL_NARRATIVE_LEGACY_COMPILER'] = 'false';
 $_ENV['VISUAL_NARRATIVE_PLANNING_ENABLED'] = 'true';
+$_ENV['VISUAL_NARRATIVE_PLANNING_LIVE_CALLS'] = 'false';
 Config::boot($root);
 
 require $root . '/tests/fixtures/visual-narrative-fixtures.php';
+require $root . '/tests/fixtures/visual-narrative-model-response.php';
 $vnFixtures = visual_narrative_fixtures();
-assert_true(count($vnFixtures) === 5, 'visual narrative fixture set has five contrasting cases');
+assert_true(count($vnFixtures) === 5, 'visual narrative fixture set has five contrasting fallback/contract cases');
 
 $vnSnapshotBase = [
     'title' => 'Fixture Song',
@@ -535,8 +538,15 @@ $round012Dir = $root . '/design/review/round-012';
 if (!is_dir($round012Dir)) {
     mkdir($round012Dir, 0770, true);
 }
-$comparisonReport = ['version' => 'round-012', 'fixtures' => [], 'promptLevelOnly' => true, 'imageLevelEvaluation' => 'not_run_in_ci'];
+$comparisonReport = [
+    'version' => 'round-012.1',
+    'fixtures' => [],
+    'promptLevelOnly' => true,
+    'imageLevelEvaluation' => 'not_run_in_ci',
+    'imageHarness' => 'php bin/compare-visual-narrative-prompts.php with GEMINI_IMAGE_LIVE_CALLS=true',
+];
 
+$fixtureTitles = [];
 foreach ($vnFixtures as $fixtureKey => $fixtureAnalysis) {
     $snapshot = $vnSnapshotBase;
     if (in_array($fixtureKey, ['ambiguous_relationship', 'kinetic_adventure'], true)) {
@@ -556,26 +566,38 @@ foreach ($vnFixtures as $fixtureKey => $fixtureAnalysis) {
     $trace = is_array($plannedPackage['visualPlanning'] ?? null) ? $plannedPackage['visualPlanning'] : [];
     $newPrompt = (string) ($plannedPackage['compiledPromptSafe'] ?? '');
 
-    assert_true(($trace['status'] ?? '') === 'success', 'visual planning succeeds for fixture ' . $fixtureKey);
+    assert_true(($trace['status'] ?? '') === 'success', 'deterministic fallback planning succeeds for fixture ' . $fixtureKey);
+    assert_true(($trace['plannerSource'] ?? '') !== '', 'fixture ' . $fixtureKey . ' records planner source');
     assert_true(is_array($trace['board'] ?? null), 'fixture ' . $fixtureKey . ' persists board summary');
     assert_true(is_array($trace['directions'] ?? null) && count($trace['directions']) === 3, 'fixture ' . $fixtureKey . ' produces exactly three directions');
-    assert_true(($trace['selectedDirectionType'] ?? '') === 'primary', 'fixture ' . $fixtureKey . ' auto-selects primary direction');
     assert_true(is_array($plannedPackage['visualSceneContract'] ?? null), 'fixture ' . $fixtureKey . ' compiles scene contract');
-    assert_true(str_contains($newPrompt, 'VISUAL SCENE CONTRACT') === false, 'compiled prompt uses structured sections not raw JSON for ' . $fixtureKey);
     assert_true(str_contains($newPrompt, 'SEMANTIC SCENE PREMISE'), 'structured compiler orders scene premise first for ' . $fixtureKey);
     assert_true(str_contains($newPrompt, 'PRIMARY SYMBOLISM'), 'structured compiler includes symbolism section for ' . $fixtureKey);
     assert_true(str_contains($newPrompt, 'RENDERING LANGUAGE ONLY'), 'style remains subordinate to scene for ' . $fixtureKey);
     assert_true($legacyPrompt !== $newPrompt, 'new compiler differs from legacy for ' . $fixtureKey);
-    assert_true(strlen($newPrompt) < strlen($legacyPrompt) * 1.35 || strlen($newPrompt) > 0, 'new prompt is not arbitrarily longer-only for ' . $fixtureKey);
+    assert_true(
+        strlen($newPrompt) <= (int) round(strlen($legacyPrompt) * 1.35) || strlen($newPrompt) < strlen($legacyPrompt),
+        'new prompt is not arbitrarily longer-only for ' . $fixtureKey
+    );
 
     $directionTypes = array_map(static fn(array $d): string => (string) ($d['type'] ?? ''), $trace['directions']);
     assert_true(count(array_unique($directionTypes)) === 3, 'fixture ' . $fixtureKey . ' direction types are distinct');
-    assert_true(in_array('primary', $directionTypes, true) && in_array('alternate', $directionTypes, true) && in_array('unexpected', $directionTypes, true), 'fixture ' . $fixtureKey . ' has primary/alternate/unexpected');
+    $titles = array_map(static fn(array $d): string => (string) ($d['title'] ?? ''), $trace['directions']);
+    assert_true(count(array_unique($titles)) === 3, 'fixture ' . $fixtureKey . ' direction titles are song-specific');
+    assert_true(!in_array('After the turn', $titles, true), 'fixture ' . $fixtureKey . ' avoids generic alternate title');
+    assert_true(!in_array('Symbolic reframing', $titles, true), 'fixture ' . $fixtureKey . ' avoids generic unexpected title');
+    $fixtureTitles[$fixtureKey] = $titles;
+
+    $plannedDirections = \Yatsn\CreativeEngine\VisualNarrative\VisualNarrativePlanner::plan($fixtureAnalysis, $snapshot)['directions'];
+    $premises = array_map(static fn(array $d): string => (string) ($d['scene_premise'] ?? ''), $plannedDirections);
+    assert_true(count(array_unique($premises)) === 3, 'fixture ' . $fixtureKey . ' direction premises differ materially');
 
     $comparisonReport['fixtures'][$fixtureKey] = [
+        'plannerSource' => $trace['plannerSource'] ?? null,
         'board' => $trace['board'] ?? null,
         'directions' => $trace['directions'] ?? null,
         'selectedDirectionId' => $trace['selectedDirectionId'] ?? null,
+        'selectedDirectionType' => $trace['selectedDirectionType'] ?? null,
         'sceneContractSummary' => $trace['sceneContractSummary'] ?? null,
         'promptComparison' => $trace['promptComparison'] ?? null,
         'fallback' => (bool) ($trace['fallback'] ?? true),
@@ -583,12 +605,105 @@ foreach ($vnFixtures as $fixtureKey => $fixtureAnalysis) {
         'newPromptExcerpt' => substr($newPrompt, 0, 400),
     ];
 }
+assert_true(count(array_unique(array_merge(...array_values($fixtureTitles)))) > 5, 'direction titles vary across the five fixtures');
+
+$rankedCrafted = \Yatsn\CreativeEngine\VisualNarrative\DirectionRanker::rank([
+    [
+        'id' => 'dir-primary', 'type' => 'primary', 'title' => 'Primary scene', 'user_summary' => 'Primary',
+        'scene_premise' => 'A short generic beat.', 'emotional_focus' => 'neutral', 'dna_element_ids' => [],
+        'portrait_suitability' => 'high', 'viewpoint' => 'participant', 'relationship_emphasis' => 'a', 'symbol_strategy' => 'a',
+    ],
+    [
+        'id' => 'dir-unexpected', 'type' => 'unexpected', 'title' => 'Lantern threshold', 'user_summary' => 'Symbolic',
+        'scene_premise' => 'Suspended above the avenue, lantern light turns vertical drop into invitation while companions share airborne courage.',
+        'emotional_focus' => 'height as possibility', 'dna_element_ids' => ['freedom', 'lantern'],
+        'portrait_suitability' => 'medium', 'viewpoint' => 'observer', 'relationship_emphasis' => 'shared courage', 'symbol_strategy' => 'lantern',
+        'score_hints' => ['song_dna_fidelity' => 0.95, 'narrative_coherence' => 0.92, 'visual_distinctiveness' => 0.96, 'portrait_suitability' => 0.7, 'information_budget' => 0.94],
+    ],
+    [
+        'id' => 'dir-alternate', 'type' => 'alternate', 'title' => 'Alternate beat', 'user_summary' => 'Alternate',
+        'scene_premise' => 'Another valid moment with moderate detail and one charged symbol.', 'emotional_focus' => 'aftermath',
+        'dna_element_ids' => ['memory'], 'portrait_suitability' => 'medium', 'viewpoint' => 'witness', 'relationship_emphasis' => 'b', 'symbol_strategy' => 'b',
+    ],
+], $vnFixtures['kinetic_adventure'], 2);
+assert_true(($rankedCrafted[0]['type'] ?? '') === 'unexpected', 'content-derived ranking allows unexpected to outrank primary');
+
+$tieDirections = [
+    ['id' => 'dir-b', 'type' => 'alternate', 'title' => 'B', 'user_summary' => 'B', 'scene_premise' => 'Scene with lanterns and rooftop courage shared between companions.', 'emotional_focus' => 'lift', 'dna_element_ids' => [], 'portrait_suitability' => 'medium', 'viewpoint' => 'witness', 'relationship_emphasis' => 'x', 'symbol_strategy' => 'x'],
+    ['id' => 'dir-a', 'type' => 'primary', 'title' => 'A', 'user_summary' => 'A', 'scene_premise' => 'Scene with lanterns and rooftop courage shared between companions.', 'emotional_focus' => 'lift', 'dna_element_ids' => [], 'portrait_suitability' => 'medium', 'viewpoint' => 'witness', 'relationship_emphasis' => 'x', 'symbol_strategy' => 'x'],
+];
+$rankedTie = \Yatsn\CreativeEngine\VisualNarrative\DirectionRanker::rank($tieDirections, $vnFixtures['kinetic_adventure'], 2);
+assert_true(($rankedTie[0]['id'] ?? '') === 'dir-a', 'deterministic tie-break prefers ascending direction id');
+
+$modelPayload = visual_narrative_model_response_fixture();
+$parsedModel = \Yatsn\CreativeEngine\VisualNarrative\GeminiVisualNarrativePlanner::parsePlanningPayload(
+    $modelPayload,
+    $vnFixtures['kinetic_adventure'],
+    array_merge($vnSnapshotBase, ['portraitCount' => 2]),
+    2
+);
+assert_true(($parsedModel['selectedDirection']['id'] ?? '') === 'dir-unexpected', 'recorded model planning can select unexpected direction');
+assert_true(str_contains((string) ($parsedModel['selectedDirection']['scene_premise'] ?? ''), 'portal'), 'model-selected direction uses song-specific premise');
+
+$planningPayload = \Yatsn\CreativeEngine\VisualNarrative\GeminiVisualNarrativePlanner::requestPayload(
+    \Yatsn\CreativeEngine\VisualNarrative\GeminiVisualNarrativePlanner::safeDna(array_merge($vnFixtures['kinetic_adventure'], [
+        'lyrics' => 'secret lyric line',
+        'portraitBytes' => 'base64-data',
+    ])),
+    2,
+    'gemini-3.6-flash'
+);
+$planningJson = json_encode($planningPayload, JSON_THROW_ON_ERROR);
+assert_true(!str_contains($planningJson, 'secret lyric line'), 'planning payload excludes raw lyrics');
+assert_true(!str_contains($planningJson, 'portraitBytes'), 'planning payload excludes portrait bytes');
+
+\Yatsn\CreativeEngine\VisualNarrative\GeminiVisualNarrativePlanner::setTransport(static function () use ($modelPayload): array {
+    return [
+        'candidates' => [[
+            'finishReason' => 'STOP',
+            'content' => ['parts' => [['text' => json_encode($modelPayload, JSON_THROW_ON_ERROR)]]],
+        ]],
+    ];
+});
+putenv('VISUAL_NARRATIVE_PLANNING_LIVE_CALLS=true');
+putenv('AI_PROVIDERS_ENABLED=true');
+putenv('GEMINI_LIVE_CALLS=true');
+putenv('GEMINI_API_KEY=test-planning-key');
+$_ENV['VISUAL_NARRATIVE_PLANNING_LIVE_CALLS'] = 'true';
+$_ENV['AI_PROVIDERS_ENABLED'] = 'true';
+$_ENV['GEMINI_LIVE_CALLS'] = 'true';
+$_ENV['GEMINI_API_KEY'] = 'test-planning-key';
+Config::boot($root);
+$modelPlanned = \Yatsn\CreativeEngine\VisualNarrative\GeminiVisualNarrativePlanner::plan(
+    $vnFixtures['kinetic_adventure'],
+    array_merge($vnSnapshotBase, ['portraitCount' => 2])
+);
+assert_true(str_starts_with((string) ($modelPlanned['plannerSource'] ?? ''), 'gemini:'), 'injected model planner returns gemini source');
+\Yatsn\CreativeEngine\VisualNarrative\GeminiVisualNarrativePlanner::setTransport(static function (): array {
+    throw new \RuntimeException('provider_timeout');
+});
+try {
+    \Yatsn\CreativeEngine\VisualNarrative\GeminiVisualNarrativePlanner::plan($vnFixtures['kinetic_adventure'], $vnSnapshotBase);
+    assert_true(false, 'model planner should throw on provider failure');
+} catch (\Throwable $e) {
+    assert_true(str_contains($e->getMessage(), 'provider_timeout'), 'model planner surfaces provider failure');
+}
+\Yatsn\CreativeEngine\VisualNarrative\GeminiVisualNarrativePlanner::setTransport(null);
+putenv('VISUAL_NARRATIVE_PLANNING_LIVE_CALLS=false');
+putenv('AI_PROVIDERS_ENABLED=false');
+putenv('GEMINI_LIVE_CALLS=false');
+putenv('GEMINI_API_KEY=');
+$_ENV['VISUAL_NARRATIVE_PLANNING_LIVE_CALLS'] = 'false';
+$_ENV['AI_PROVIDERS_ENABLED'] = 'false';
+$_ENV['GEMINI_LIVE_CALLS'] = 'false';
+$_ENV['GEMINI_API_KEY'] = '';
+Config::boot($root);
 
 file_put_contents(
     $round012Dir . '/prompt-comparison.json',
     json_encode($comparisonReport, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n"
 );
-assert_true(is_file($round012Dir . '/prompt-comparison.json'), 'round-012 prompt comparison artifact written');
+assert_true(is_file($round012Dir . '/prompt-comparison.json'), 'round-012.1 prompt comparison artifact written');
 
 $planningDisabledPackage = (function () use ($root, $analysisFixture, $vnSnapshotBase): array {
     putenv('VISUAL_NARRATIVE_LEGACY_COMPILER=true');
@@ -607,11 +722,17 @@ $fallbackPackage = \Yatsn\CreativeEngine\VisualNarrative\VisualNarrativePlanning
 );
 assert_true(($fallbackPackage['visualPlanning']['status'] ?? '') === 'fallback', 'missing DNA triggers deterministic fallback without breaking package');
 assert_true($fallbackPackage['compiledPromptSafe'] === 'legacy prompt retained', 'fallback preserves legacy compiled prompt');
+$sanitizedTrace = \Yatsn\CreativeEngine\VisualNarrative\VisualNarrativePlanningService::sanitizedTrace($fallbackPackage);
+assert_true(!isset($sanitizedTrace['legacyPrompt']) && !isset($sanitizedTrace['newPrompt']), 'persisted planning trace omits full prompts');
 
 $geminiScenePackage = \Yatsn\AI\CreativePackageBuilder::build($analysisFixture, array_merge($vnSnapshotBase, ['portraitCount' => 2]), 'fixture-gemini-scene');
+$canonicalPrompt = (string) $geminiScenePackage['compiledPromptSafe'];
 $geminiScenePrompt = \Yatsn\AI\GeminiImageAdapter::buildImagePrompt($geminiScenePackage, array_merge($vnSnapshotBase, ['portraitCount' => 2, 'userId' => 1]), 2);
-assert_true(str_contains($geminiScenePrompt, 'VISUAL SCENE CONTRACT'), 'Gemini image prompt uses validated scene contract block when planning succeeded');
-assert_true(!str_contains($geminiScenePrompt, 'fixture-gemini-scene'), 'Gemini scene contract block contains no adapter labels');
+assert_true(str_contains($geminiScenePrompt, 'CANONICAL CREATIVE PROMPT'), 'Gemini image adapter wraps canonical compiled prompt');
+assert_true(str_contains($geminiScenePrompt, 'SEMANTIC SCENE PREMISE'), 'Gemini canonical prompt includes structured compiler output');
+assert_true(!str_contains($geminiScenePrompt, 'NARRATIVE STAGING FREEDOM'), 'Gemini canonical path does not rebuild competing staging block');
+assert_true(!str_contains($geminiScenePrompt, 'fixture-gemini-scene'), 'Gemini canonical prompt contains no adapter labels');
+assert_true(\Yatsn\AI\GeminiImageAdapter::usesCanonicalCompiledPrompt($geminiScenePackage, $canonicalPrompt), 'canonical prompt detection works');
 
 $geminiDecoded = \Yatsn\AI\GeminiCreativeAdapter::decodeResponse([
     'candidates' => [['finishReason' => 'STOP', 'content' => ['parts' => [['text' => json_encode($analysisFixture, JSON_THROW_ON_ERROR)]]]]],

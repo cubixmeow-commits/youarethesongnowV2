@@ -38,11 +38,26 @@ final class VisualNarrativePlanningService
         }
 
         try {
-            $result = VisualNarrativePlanner::plan($dna, $snapshot);
+            $portraitCount = max(1, min(2, (int) ($snapshot['portraitCount'] ?? 1)));
+            $plannerSource = 'deterministic-fallback:' . VisualNarrativePlanner::class;
+            $fallbackReason = null;
+
+            if (\Yatsn\CreativeEngine\VisualNarrative\GeminiVisualNarrativePlanner::isAvailable()) {
+                try {
+                    $result = \Yatsn\CreativeEngine\VisualNarrative\GeminiVisualNarrativePlanner::plan($dna, $snapshot);
+                    $plannerSource = (string) ($result['plannerSource'] ?? 'gemini-structured');
+                } catch (\Throwable $modelError) {
+                    $result = VisualNarrativePlanner::plan($dna, $snapshot);
+                    $fallbackReason = $modelError->getMessage();
+                }
+            } else {
+                $result = VisualNarrativePlanner::plan($dna, $snapshot);
+            }
+
             $board = $result['board'];
-            $directions = $result['directions'];
-            $selected = $result['selectedDirection'];
-            $contract = $result['sceneContract'];
+            $directions = DirectionRanker::rank($result['directions'], $dna, $portraitCount);
+            $selected = $directions[0];
+            $contract = VisualNarrativePlanner::compileSceneContract($dna, $board, $selected, $portraitCount);
 
             $boardValidation = VisualNarrativeContracts::validateBoard($board);
             $contractValidation = VisualNarrativeContracts::validateSceneContract($contract);
@@ -69,7 +84,16 @@ final class VisualNarrativePlanningService
                 'selectedDirectionType' => (string) ($selected['type'] ?? 'primary'),
             ];
             $package['visualSceneContract'] = $contract;
-            $package['visualPlanning'] = self::successTrace($board, $directions, $selected, $contract, $legacyPrompt, $newPrompt);
+            $package['visualPlanning'] = self::successTrace(
+                $board,
+                $directions,
+                $selected,
+                $contract,
+                $legacyPrompt,
+                $newPrompt,
+                $plannerSource,
+                $fallbackReason
+            );
             return $package;
         } catch (\Throwable $e) {
             $package['visualPlanning'] = self::fallbackTrace($e->getMessage(), null, $package);
@@ -99,11 +123,20 @@ final class VisualNarrativePlanningService
         array $selected,
         array $contract,
         string $legacyPrompt,
-        string $newPrompt
+        string $newPrompt,
+        string $plannerSource = 'deterministic-fallback',
+        ?string $fallbackReason = null
     ): array {
         return [
             'version' => VisualNarrativeContracts::TRACE_VERSION,
             'status' => 'success',
+            'plannerSource' => $plannerSource,
+            'planningModel' => str_starts_with($plannerSource, 'gemini:') ? explode(':', $plannerSource, 2)[1] ?? null : null,
+            'promptTemplateVersion' => str_contains($plannerSource, 'visual-planning-prompt-v1')
+                ? \Yatsn\CreativeEngine\VisualNarrative\GeminiVisualNarrativePlanner::PROMPT_TEMPLATE_VERSION
+                : 'deterministic-fallback-v1',
+            'modelFallbackReason' => $fallbackReason !== null
+                ? VisualNarrativeContracts::clip($fallbackReason, 120) : null,
             'compilerVersion' => VisualNarrativeContracts::COMPILER_VERSION,
             'boardVersion' => VisualNarrativeContracts::BOARD_VERSION,
             'sceneContractVersion' => VisualNarrativeContracts::SCENE_VERSION,

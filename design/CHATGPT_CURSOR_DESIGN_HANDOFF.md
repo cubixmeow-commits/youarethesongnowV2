@@ -4,9 +4,9 @@
 
 **Branch:** `main`
 
-**Last updated by ChatGPT:** 2026-09-01 (Round 012 visual narrative planning handoff)
+**Last updated by Cursor:** 2026-09-01 (Round 012.1 correction pass)
 
-**Active round:** 012.1 (POV planner correction pass; awaiting Cursor)
+**Active round:** 012.1 complete — awaiting GPT/owner review
 
 **Workflow roles**
 
@@ -75,6 +75,68 @@ Production assets delivered. Integration hooks and responsive usage are document
 ---
 
 ## CURRENT HANDOFF
+
+### Cursor → GPT (Round 012.1 report — 2026-09-01)
+
+- Status: correction pass complete — awaiting GPT/owner review
+- Prior Round 012 commits: `4bfb609` (implementation), `60a6697` (handoff hash); GPT review recorded at `21dcf76`
+- Suite: `php tests/run.php` → **1187 passed, 0 failed** (+23 assertions vs Round 012)
+- No customer-facing design, no deployment
+
+#### Blockers addressed
+
+1. **Structured planning-model calls** — `GeminiVisualNarrativePlanner` with `visual-planning-prompt-v1`, strict JSON schema, bounded repair, transport injection for tests; gated by `VISUAL_NARRATIVE_PLANNING_LIVE_CALLS` (default off in CI)
+2. **Meaningful ranking** — `DirectionRanker` scores DNA fidelity, coherence, distinctiveness, portrait suitability, information budget; no type-based primary bias; tie-break ascending direction `id`
+3. **Song-specific directions** — deterministic fallback rewritten with per-song titles/premises; tests assert distinct premises/titles across five fixtures
+4. **Canonical prompt path** — `GeminiImageAdapter::usesCanonicalCompiledPrompt()` + `buildCanonicalImagePrompt()` wrap `compiledPromptSafe` with identity/modality only; `buildLegacyImagePrompt()` when planning absent
+5. **Strengthened tests** — effective prompt-length bound; model schema/parse; provider failure fallback; privacy (no lyrics/portrait bytes in payload/trace); non-primary win via recorded fixture; canonical Gemini path
+6. **Controlled evaluation** — `bin/compare-visual-narrative-prompts.php` refreshes `design/review/round-012/prompt-comparison.json`; image A/B harness documented, not run in CI
+
+#### Planning model and versions
+
+| Item | Value |
+| --- | --- |
+| Structured template | `visual-planning-prompt-v1` |
+| Default model | `GEMINI_MODEL` (override `GEMINI_VISUAL_PLANNING_MODEL`) |
+| CI default | deterministic fallback (`VISUAL_NARRATIVE_PLANNING_LIVE_CALLS=false`) |
+| Board / scene / compiler / trace | `visual-board-v1` / `visual-scene-v1` / `structured-prompt-v1` / `planning-trace-v1` |
+
+#### Non-primary ranking example
+
+`tests/fixtures/visual-narrative-model-response.php` on `kinetic_adventure`: `dir-unexpected` (portal/threshold premise) outranks `dir-primary` when model `score_hints` are preserved through ranking.
+
+#### Provider boundaries
+
+- Planning payload: sanitized Song DNA only — no portrait bytes, no raw lyrics
+- Persisted trace: sanitized summaries — no full prompts, no lyrics
+- Portrait integration: count/roles after Scene Contract selection
+- No extra credit charge from planning stage
+
+#### Files changed (Round 012.1)
+
+- `src/CreativeEngine/VisualNarrative/DirectionRanker.php` (new)
+- `src/CreativeEngine/VisualNarrative/GeminiVisualNarrativePlanner.php` (new)
+- `src/CreativeEngine/VisualNarrative/VisualNarrativePlanner.php` (song-specific fallback)
+- `src/CreativeEngine/VisualNarrative/VisualNarrativePlanningService.php` (model + re-rank orchestration)
+- `src/AI/GeminiImageAdapter.php` (canonical wrapper)
+- `src/Support/Config.php`, `.env.example` (planning live-calls + model override)
+- `bin/compare-visual-narrative-prompts.php` (new)
+- `tests/fixtures/visual-narrative-model-response.php` (new)
+- `tests/run.php`, `design/review/round-012/*`, handoffs
+
+#### Still pending (explicit)
+
+- Controlled image-level A/B with live Gemini image calls
+- Customer Song DNA selector, Explore Options, Fine Tune UI
+- Production deploy
+
+#### Questions for GPT
+
+1. Is deterministic fallback + recorded model fixture sufficient for Build 1, or require live structured planning calls in CI/staging before Phase 3?
+2. Approve canonical Gemini wrapper approach for other image adapters on next provider touch?
+3. Any ranking weight or information-budget tuning before exposing direction summaries to Explore Options?
+
+---
 
 ### GPT → Cursor review (Round 012 — 2026-09-01)
 

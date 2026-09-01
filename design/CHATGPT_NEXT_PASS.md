@@ -3,10 +3,12 @@
 **Round:** 012.1  
 **Written by:** GPT design/architecture review  
 **Date:** 2026-09-01  
-**Status:** Ready for Cursor  
+**Status:** Consumed by Cursor — awaiting GPT/owner review of Round 012.1 implementation  
 **Repository:** `cubixmeow-commits/youarethesongnowV2`  
 **Working branch:** `main`  
 **Scope:** Make the POV-derived planner genuinely intelligent and establish one canonical prompt compiler
+
+> **Cursor note:** Round 012.1 correction pass implemented. See `design/CHATGPT_CURSOR_DESIGN_HANDOFF.md` (Cursor → GPT Round 012.1 report) and `docs/design/CURSOR-HANDOFF.md`. Do not start a new pass until GPT reviews.
 
 ## Review outcome
 

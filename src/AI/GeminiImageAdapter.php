@@ -11,7 +11,7 @@ use Yatsn\Support\Config;
 /**
  * Native Gemini multimodal image adapter.
  * One generateContent call: text instructions + attached portrait inline images.
- * Does not re-run Song DNA / lyrics search; uses the locked creative package only.
+ * When structured planning succeeded, wraps the canonical compiled prompt only.
  */
 final class GeminiImageAdapter implements ImageAdapterInterface
 {
@@ -98,6 +98,62 @@ final class GeminiImageAdapter implements ImageAdapterInterface
      */
     public static function buildImagePrompt(array $package, array $snapshot, int $portraitCount): string
     {
+        $canonical = trim((string) ($package['compiledPromptSafe'] ?? ''));
+        if (self::usesCanonicalCompiledPrompt($package, $canonical)) {
+            return self::buildCanonicalImagePrompt($canonical, $snapshot, $portraitCount);
+        }
+        return self::buildLegacyImagePrompt($package, $snapshot, $portraitCount);
+    }
+
+    public static function usesCanonicalCompiledPrompt(array $package, string $canonical): bool
+    {
+        if ($canonical === '' || !str_contains($canonical, 'SEMANTIC SCENE PREMISE')) {
+            return false;
+        }
+        $planning = is_array($package['visualPlanning'] ?? null) ? $package['visualPlanning'] : [];
+        return ($planning['status'] ?? '') === 'success';
+    }
+
+    public static function buildCanonicalImagePrompt(string $canonical, array $snapshot, int $portraitCount): string
+    {
+        $identitySection = self::identitySection($portraitCount);
+        $aspect = self::aspectRatioForOrientation((string) ($snapshot['orientation'] ?? 'square'));
+        $aspectLine = $aspect . '. Frame the final image to a true ' . $aspect . ' canvas.';
+        $noText = !empty($snapshot['noTextInImage']);
+        $textPolicy = $noText
+            ? 'NO visible text of any kind: no words, letters, signs, captions, lyrics, titles, logos, signatures, or watermarks.'
+            : 'Text is optional. If present it must be newly invented and non-copyrighted.';
+
+        $prompt = implode("\n", [
+            'MISSION: Render one finished artwork from the canonical creative prompt below.',
+            'Attached portrait images are authoritative identity references only.',
+            '',
+            $identitySection,
+            '',
+            '═══════════════════════════════════════════════════════════════',
+            'CANONICAL CREATIVE PROMPT (semantic source of truth — do not contradict)',
+            '═══════════════════════════════════════════════════════════════',
+            $canonical,
+            '',
+            '═══════════════════════════════════════════════════════════════',
+            'PROVIDER MODALITY REQUIREMENTS',
+            '═══════════════════════════════════════════════════════════════',
+            'Aspect ratio target: ' . $aspectLine,
+            $textPolicy,
+            'Do not add other identifiable real people or celebrity likenesses.',
+            'No graphic violence or explicit sexual content.',
+            'An image that omits any required uploaded person is unusable.',
+        ]);
+
+        return substr($prompt, 0, 12000);
+    }
+
+    /**
+     * @param array<string, mixed> $package
+     * @param array<string, mixed> $snapshot
+     */
+    public static function buildLegacyImagePrompt(array $package, array $snapshot, int $portraitCount): string
+    {
         $dna = is_array($package['dna'] ?? null) ? $package['dna'] : [];
         $narrative = is_array($package['narrative'] ?? null) ? $package['narrative'] : [];
         $style = is_array($package['styleMap'] ?? null) ? $package['styleMap'] : [];
@@ -123,41 +179,13 @@ final class GeminiImageAdapter implements ImageAdapterInterface
             return implode(', ', $parts);
         };
 
-        if ($portraitCount >= 2) {
-            $identitySection = <<<'TXT'
-IDENTITY — AUTHORITATIVE (do not repeat or override elsewhere)
-The first attached image is CHARACTER 1. The second attached image is CHARACTER 2.
-Every attached portrait must appear. Preserve each person separately: facial features, bone structure, skin tone, hair, and apparent age.
-Never merge, swap, average, duplicate, or omit either identity.
-Both people must be meaningful protagonists of the story, not token background figures, silhouettes, ghosts, statues, or generic stand-ins.
-Faces must remain sufficiently visible and lit to recognize at gallery size.
-“Central subject” means narratively and emotionally central — not that anyone must sit in the geometric center or closest to the camera.
-Transform clothing, pose, lighting, and artistic treatment to fit the Song DNA and selected style while preserving identity.
-An image that omits any required person is unusable.
-TXT;
-        } else {
-            $identitySection = <<<'TXT'
-IDENTITY — AUTHORITATIVE (do not repeat or override elsewhere)
-The attached image is CHARACTER 1, the sole required uploaded person.
-That person must appear and remain separately recognizable: facial features, bone structure, skin tone, hair, and apparent age.
-Never merge, swap, average, duplicate, omit, or replace them with a generic stand-in, silhouette, ghost, or statue.
-They must be a meaningful protagonist of the story, not a token background figure.
-Their face must remain sufficiently visible and lit to recognize at gallery size.
-“Central subject” means narratively and emotionally central — not that they must sit in the geometric center or closest to the camera.
-Transform clothing, pose, lighting, and artistic treatment to fit the Song DNA and selected style while preserving identity.
-An image that omits the required person is unusable.
-TXT;
-        }
-
+        $identitySection = self::identitySection($portraitCount);
         $textPolicy = $noText
             ? 'NO visible text of any kind: no words, letters, signs, captions, lyrics, titles, logos, signatures, or watermarks.'
             : 'Text is optional. If present it must be newly invented and non-copyrighted. Never render lyrics, song titles, artist or band names, album text, logos, trademarks, or provider marks.';
 
         $essence = $join($dna['essence'] ?? '', 1);
-        $sceneContract = is_array($package['visualSceneContract'] ?? null) ? $package['visualSceneContract'] : null;
-        $moment = $sceneContract !== null
-            ? $join($sceneContract['decisive_instant'] ?? '', 1)
-            : $join($narrative['moment'] ?? ($dna['originalVisualMoment'] ?? ''), 1);
+        $moment = $join($narrative['moment'] ?? ($dna['originalVisualMoment'] ?? ''), 1);
         $themes = $join($dna['themes'] ?? [], 6);
         $mood = $join($dna['mood'] ?? [], 6);
         $symbols = $join($dna['symbols'] ?? [], 5);
@@ -195,31 +223,6 @@ TXT;
         $aspectLine = $aspect . '. Frame the final image to a true ' . $aspect . ' canvas.';
         $stagingPeople = $portraitCount >= 2 ? 'both required people' : 'the required person';
 
-        $sceneContractBlock = '';
-        if ($sceneContract !== null) {
-            $hierarchy = $join($sceneContract['composition_hierarchy'] ?? [], 5);
-            $sceneContractBlock = implode("\n", array_filter([
-                '═══════════════════════════════════════════════════════════════',
-                'VISUAL SCENE CONTRACT (validated planning — staging authority)',
-                '═══════════════════════════════════════════════════════════════',
-                'Decisive instant: ' . $moment,
-                'Visible action: ' . $join($sceneContract['visible_action'] ?? '', 1),
-                'Environment: ' . $join($sceneContract['environment'] ?? '', 1),
-                'Primary symbol: ' . $join($sceneContract['primary_symbol'] ?? '', 1),
-                'Relationship geometry: ' . $join($sceneContract['relationship_geometry'] ?? '', 1),
-                'Off-screen tension: ' . $join($sceneContract['offscreen_tension'] ?? '', 1),
-                'Camera: ' . $join($sceneContract['camera_position'] ?? '', 1),
-                'Shot scale: ' . $join($sceneContract['shot_scale'] ?? '', 1),
-                'Composition hierarchy: ' . $hierarchy,
-                'Lighting logic: ' . $join($sceneContract['lighting_logic'] ?? '', 1),
-                'Color logic: ' . $join($sceneContract['color_logic'] ?? '', 1),
-                'Atmosphere: ' . $join($sceneContract['atmosphere'] ?? '', 1),
-                'Motion: ' . $join($sceneContract['motion_state'] ?? '', 1),
-                'Portrait integration: ' . $join($sceneContract['portrait_integration_plan'] ?? '', 1),
-                'Viewer relationship: ' . $join($sceneContract['viewer_relationship'] ?? '', 1),
-            ]));
-        }
-
         $prompt = <<<PROMPT
 MISSION: Create one finished cinematic artwork in which the attached uploaded person or people are the recognizable emotional center of an original song-inspired world.
 
@@ -243,14 +246,12 @@ Palette: {$palette}
 Lighting: {$lighting}
 Surface and texture: {$texture}
 
-{$sceneContractBlock}
-
 ═══════════════════════════════════════════════════════════════
 NARRATIVE STAGING FREEDOM
 ═══════════════════════════════════════════════════════════════
-Let the Song DNA fields above — especially the original visual moment, subject roles, relationship dynamics, camera, composition, motion, environment, and selected style — determine staging.
+Let the Song DNA fields above determine staging.
 You have explicit creative freedom to choose where each person stands or sits; relative scale and distance; camera height and angle; whether subjects are together or spatially separated; pose, movement, gaze, and environmental interaction; and foreground, middle-ground, or deeper depth relationships.
-Do not default to a generic two-person portrait layout (for example one person left/middle-ground and another larger in the right foreground) unless that arrangement truly serves this specific narrative moment.
+Do not default to a generic two-person portrait layout unless that arrangement truly serves this specific narrative moment.
 The chosen arrangement must serve the narrative moment. Avoid passport/studio framing and empty decorative scenery that treats people as optional.
 
 ═══════════════════════════════════════════════════════════════
@@ -277,11 +278,36 @@ PROMPT;
                 . "User directions:\n" . substr($special, 0, 300);
         }
 
-        // Do not append compiledPromptSafe here. Identity and placement live in
-        // the single authoritative section above; duplicating them over-weighted
-        // a safe default two-person layout.
-
         return substr($prompt, 0, 12000);
+    }
+
+    private static function identitySection(int $portraitCount): string
+    {
+        if ($portraitCount >= 2) {
+            return <<<'TXT'
+IDENTITY — AUTHORITATIVE (do not repeat or override elsewhere)
+The first attached image is CHARACTER 1. The second attached image is CHARACTER 2.
+Every attached portrait must appear. Preserve each person separately: facial features, bone structure, skin tone, hair, and apparent age.
+Never merge, swap, average, duplicate, or omit either identity.
+Both people must be meaningful protagonists of the story, not token background figures, silhouettes, ghosts, statues, or generic stand-ins.
+Faces must remain sufficiently visible and lit to recognize at gallery size.
+“Central subject” means narratively and emotionally central — not that anyone must sit in the geometric center or closest to the camera.
+Transform clothing, pose, lighting, and artistic treatment to fit the scene while preserving identity.
+An image that omits any required person is unusable.
+TXT;
+        }
+
+        return <<<'TXT'
+IDENTITY — AUTHORITATIVE (do not repeat or override elsewhere)
+The attached image is CHARACTER 1, the sole required uploaded person.
+That person must appear and remain separately recognizable: facial features, bone structure, skin tone, hair, and apparent age.
+Never merge, swap, average, duplicate, omit, or replace them with a generic stand-in, silhouette, ghost, or statue.
+They must be a meaningful protagonist of the story, not a token background figure.
+Their face must remain sufficiently visible and lit to recognize at gallery size.
+“Central subject” means narratively and emotionally central — not that they must sit in the geometric center or closest to the camera.
+Transform clothing, pose, lighting, and artistic treatment to fit the scene while preserving identity.
+An image that omits the required person is unusable.
+TXT;
     }
 
     /** @return array{inlineData: array{mimeType: string, data: string}} */

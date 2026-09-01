@@ -94,6 +94,8 @@ final class Config
                 'allow_deterministic_fallback' => self::toBool(env_value('AI_ALLOW_DETERMINISTIC_FALLBACK', 'false')),
                 'visual_narrative_planning_enabled' => self::toBool(env_value('VISUAL_NARRATIVE_PLANNING_ENABLED', 'true')),
                 'visual_narrative_legacy_compiler' => self::toBool(env_value('VISUAL_NARRATIVE_LEGACY_COMPILER', 'false')),
+                'visual_narrative_planning_live_calls' => self::toBool(env_value('VISUAL_NARRATIVE_PLANNING_LIVE_CALLS', 'false')),
+                'gemini_visual_planning_model' => trim((string) env_value('GEMINI_VISUAL_PLANNING_MODEL', '')),
                 'text_timeout_seconds' => max(10, min(60, (int) (env_value('AI_TEXT_TIMEOUT_SECONDS', '45') ?? '45'))),
                 'image_timeout_seconds' => max(30, min(100, (int) (env_value('AI_IMAGE_TIMEOUT_SECONDS', '85') ?? '85'))),
                 'image_download_timeout_seconds' => max(10, min(45, (int) (env_value('AI_IMAGE_DOWNLOAD_TIMEOUT_SECONDS', '30') ?? '30'))),

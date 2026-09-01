@@ -25,7 +25,7 @@ final class VisualNarrativePlanner
         $portraitCount = max(1, min(2, (int) ($snapshot['portraitCount'] ?? 1)));
         $board = self::buildBoard($dna);
         $directions = self::buildDirections($dna, $board, $portraitCount);
-        $ranked = self::rankDirections($directions, $portraitCount);
+        $ranked = DirectionRanker::rank($directions, $dna, $portraitCount);
         $selected = $ranked[0];
         $contract = self::compileSceneContract($dna, $board, $selected, $portraitCount);
 
@@ -117,44 +117,46 @@ final class VisualNarrativePlanner
         $primary = [
             'id' => 'dir-primary',
             'type' => 'primary',
-            'title' => 'The decisive instant',
-            'user_summary' => 'The emotional pivot rendered as one clear, readable scene.',
+            'title' => self::titleFromMoment($moment, $essence, 'At the pivot'),
+            'user_summary' => self::summaryFromDna($dna, 'The decisive instant where ' . $board['emotional_pivot'] . ' becomes visible.'),
             'scene_premise' => $moment !== '' ? $moment : $essence,
             'emotional_focus' => $board['emotional_pivot'],
             'dna_element_ids' => $dnaIds,
             'portrait_suitability' => $portraitCount > 1 ? 'high' : 'high',
             'viewpoint' => 'participant',
-            'relationship_emphasis' => 'shared pivot',
-            'symbol_strategy' => 'primary symbol at turning point',
+            'relationship_emphasis' => implode(', ', array_slice(is_array($dna['relationshipDynamics'] ?? null) ? $dna['relationshipDynamics'] : ['shared pivot'], 0, 2)),
+            'symbol_strategy' => 'anchor the turning point on ' . self::firstSymbolLabel($board),
         ];
 
         $alternateFocus = $closing !== '' ? $closing : ($opening !== '' ? $opening : $board['emotional_pivot']);
         $alternate = [
             'id' => 'dir-alternate',
             'type' => 'alternate',
-            'title' => 'After the turn',
-            'user_summary' => 'A valid alternate emphasis on what follows or precedes the pivot.',
-            'scene_premise' => self::alternatePremise($moment, $alternateFocus, $environment, $roleLabel),
+            'title' => self::titleFromState($alternateFocus, $environment),
+            'user_summary' => self::summaryFromDna($dna, 'A neighboring beat where ' . $alternateFocus . ' reshapes the room.'),
+            'scene_premise' => self::alternatePremise($dna, $moment, $alternateFocus, $environment, $roleLabel),
             'emotional_focus' => $alternateFocus,
             'dna_element_ids' => $dnaIds,
             'portrait_suitability' => 'medium',
             'viewpoint' => 'witness',
-            'relationship_emphasis' => 'residual tension',
-            'symbol_strategy' => 'symbol in aftermath',
+            'relationship_emphasis' => 'residual tension in ' . $environment,
+            'symbol_strategy' => 'let aftermath echo through ' . self::firstSymbolLabel($board),
         ];
 
+        $metaphor = is_array($dna['visualMetaphors'] ?? null) && $dna['visualMetaphors'] !== []
+            ? (string) $dna['visualMetaphors'][0] : (string) ($dna['essence'] ?? 'transformation');
         $unexpected = [
             'id' => 'dir-unexpected',
             'type' => 'unexpected',
-            'title' => 'Symbolic reframing',
-            'user_summary' => 'A less literal but still DNA-grounded symbolic reading.',
+            'title' => self::titleFromMetaphor($metaphor, $primarySymbol),
+            'user_summary' => self::summaryFromDna($dna, $metaphor . ' becomes the visible scene instead of literal action.'),
             'scene_premise' => self::unexpectedPremise($dna, $environment, $primarySymbol, $roleLabel),
-            'emotional_focus' => implode(', ', array_slice(is_array($dna['visualMetaphors'] ?? null) ? $dna['visualMetaphors'] : ['transformation'], 0, 2)),
+            'emotional_focus' => implode(', ', array_slice(is_array($dna['visualMetaphors'] ?? null) ? $dna['visualMetaphors'] : [$metaphor], 0, 2)),
             'dna_element_ids' => $dnaIds,
             'portrait_suitability' => $portraitCount > 1 ? 'medium' : 'low',
             'viewpoint' => 'observer',
-            'relationship_emphasis' => 'symbol over literal action',
-            'symbol_strategy' => 'metaphor-led staging',
+            'relationship_emphasis' => 'symbol-led reading of ' . $metaphor,
+            'symbol_strategy' => 'let ' . self::firstSymbolLabel($board) . ' carry the metaphor',
         ];
 
         return [
@@ -167,24 +169,24 @@ final class VisualNarrativePlanner
     /**
      * @param list<array<string,mixed>> $directions
      * @return list<array<string,mixed>>
+     * @deprecated Use DirectionRanker::rank()
      */
     public static function rankDirections(array $directions, int $portraitCount): array
     {
-        $scored = [];
-        foreach ($directions as $direction) {
-            $fidelity = self::scoreFidelity($direction);
-            $coherence = self::scoreCoherence($direction);
-            $distinctiveness = self::scoreDistinctiveness($direction);
-            $portrait = self::scorePortraitSuitability($direction, $portraitCount);
-            $overall = ($fidelity * 0.35) + ($coherence * 0.30) + ($distinctiveness * 0.20) + ($portrait * 0.15);
-            $direction['song_dna_fidelity'] = round($fidelity, 3);
-            $direction['narrative_coherence'] = round($coherence, 3);
-            $direction['visual_distinctiveness'] = round($distinctiveness, 3);
-            $direction['overall_rank'] = round($overall, 3);
-            $scored[] = VisualNarrativeContracts::sanitizeDirection($direction);
+        return DirectionRanker::rank($directions, [], $portraitCount);
+    }
+
+    /** @param array<string, mixed> $direction */
+    public static function portraitIntegrationPlan(int $portraitCount, array $direction): string
+    {
+        $suitability = (string) ($direction['portrait_suitability'] ?? 'medium');
+        if ($portraitCount >= 2) {
+            return 'Both uploaded people are co-protagonists with separate readable faces; staging follows '
+                . (string) ($direction['relationship_emphasis'] ?? 'shared emphasis')
+                . ' (' . $suitability . ' suitability).';
         }
-        usort($scored, static fn(array $a, array $b): int => ($b['overall_rank'] <=> $a['overall_rank']));
-        return $scored;
+        return 'The uploaded person is the sole protagonist with motivated placement in the scene ('
+            . $suitability . ' suitability).';
     }
 
     /**
@@ -302,12 +304,20 @@ final class VisualNarrativePlanner
         return $text !== '' ? $text : 'a specific lived-in environment';
     }
 
-    private static function alternatePremise(string $moment, string $focus, string $environment, string $roleLabel): string
+    /** @param array<string, mixed> $dna */
+    private static function alternatePremise(array $dna, string $moment, string $focus, string $environment, string $roleLabel): string
     {
-        if ($moment === '') {
-            return $roleLabel . ' inhabits ' . $environment . ' while ' . $focus . ' lingers in the air.';
+        $weather = '';
+        if (is_array($dna['environment']['weather'] ?? null) && $dna['environment']['weather'] !== []) {
+            $weather = (string) $dna['environment']['weather'][0];
         }
-        return 'Immediately beside the main beat: ' . $roleLabel . ' in ' . $environment . ' as ' . $focus . ' reshapes what the moment means.';
+        if ($moment === '') {
+            return $roleLabel . ' remains in ' . $environment . ($weather !== '' ? ' under ' . $weather : '') . ' while ' . $focus . ' settles through the space.';
+        }
+        $setting = is_array($dna['environment']['settingTypes'] ?? null) && $dna['environment']['settingTypes'] !== []
+            ? (string) $dna['environment']['settingTypes'][0]
+            : $environment;
+        return $roleLabel . ' in ' . $setting . ' holds the echo of ' . $focus . ' while the room still remembers ' . substr($moment, 0, min(90, strlen($moment))) . '.';
     }
 
     /** @param array<string, mixed> $dna */
@@ -333,69 +343,43 @@ final class VisualNarrativePlanner
         return array_slice($hierarchy, 0, 4);
     }
 
-    /** @param array<string, mixed> $direction */
-    private static function portraitIntegrationPlan(int $portraitCount, array $direction): string
+    private static function titleFromMoment(string $moment, string $essence, string $fallback): string
     {
-        $suitability = (string) ($direction['portrait_suitability'] ?? 'medium');
-        if ($portraitCount >= 2) {
-            return 'Both uploaded people are co-protagonists with separate readable faces; staging follows '
-                . (string) ($direction['relationship_emphasis'] ?? 'shared emphasis')
-                . ' (' . $suitability . ' suitability).';
+        $source = $moment !== '' ? $moment : $essence;
+        if ($source === '') {
+            return $fallback;
         }
-        return 'The uploaded person is the sole protagonist with motivated placement in the scene ('
-            . $suitability . ' suitability).';
+        $words = preg_split('/\s+/', trim($source)) ?: [];
+        return VisualNarrativeContracts::clip(implode(' ', array_slice($words, 0, 6)), 72);
     }
 
-    /** @param array<string, mixed> $direction */
-    private static function scoreFidelity(array $direction): float
+    /** @param array<string, mixed> $dna */
+    private static function summaryFromDna(array $dna, string $suffix): string
     {
-        $type = (string) ($direction['type'] ?? '');
-        return match ($type) {
-            'primary' => 0.92,
-            'alternate' => 0.78,
-            'unexpected' => 0.68,
-            default => 0.5,
-        };
+        $essence = trim((string) ($dna['essence'] ?? ''));
+        if ($essence === '') {
+            return VisualNarrativeContracts::clip($suffix, 240);
+        }
+        return VisualNarrativeContracts::clip($essence . ' — ' . $suffix, 240);
     }
 
-    /** @param array<string, mixed> $direction */
-    private static function scoreCoherence(array $direction): float
+    private static function titleFromState(string $state, string $environment): string
     {
-        $premise = (string) ($direction['scene_premise'] ?? '');
-        $focus = (string) ($direction['emotional_focus'] ?? '');
-        $len = strlen($premise) + strlen($focus);
-        if ($len < 40) {
-            return 0.45;
-        }
-        if ($len > 400) {
-            return 0.72;
-        }
-        return 0.85;
+        $env = trim(explode(',', $environment)[0] ?? $environment);
+        return VisualNarrativeContracts::clip(ucfirst($state) . ' in ' . $env, 72);
     }
 
-    /** @param array<string, mixed> $direction */
-    private static function scoreDistinctiveness(array $direction): float
+    private static function titleFromMetaphor(string $metaphor, string $symbol): string
     {
-        return match ((string) ($direction['type'] ?? '')) {
-            'primary' => 0.70,
-            'alternate' => 0.82,
-            'unexpected' => 0.90,
-            default => 0.5,
-        };
+        $symbolLabel = trim(explode(':', $symbol)[0] ?? $symbol);
+        return VisualNarrativeContracts::clip(ucfirst($metaphor) . ' through ' . $symbolLabel, 72);
     }
 
-    /** @param array<string, mixed> $direction */
-    private static function scorePortraitSuitability(array $direction, int $portraitCount): float
+    /** @param array<string, mixed> $board */
+    private static function firstSymbolLabel(array $board): string
     {
-        $level = (string) ($direction['portrait_suitability'] ?? 'medium');
-        $base = match ($level) {
-            'high' => 0.9,
-            'low' => 0.55,
-            default => 0.75,
-        };
-        if ($portraitCount >= 2 && (string) ($direction['type'] ?? '') === 'unexpected') {
-            return max(0.4, $base - 0.15);
-        }
-        return $base;
+        $symbol = (string) ($board['symbolic_artifacts'][0] ?? 'a charged detail');
+        return trim(explode(':', $symbol)[0] ?? $symbol);
     }
 }
+
