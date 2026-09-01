@@ -201,4 +201,4 @@
 
 ## Next executable slice
 
-**Phase 1 is independently verified and published to `main`** at implementation commit `6951f0c` (`design/review/round-010/`). After private deployment review, execute **Phase 2: Create entry and existing-contract song selection**. Do not begin Song DNA API/database work in that slice.
+**Phase 2 is complete on `cursor/luminous-night-studio-phase2`** (`design/review/round-011/`). After Codex review, execute **Phase 3: customer-safe Song DNA contract and selector**. Contract-first only; no UI depending on unapproved projection fields.

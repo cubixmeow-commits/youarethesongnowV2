@@ -1,0 +1,160 @@
+{
+  "generatedAt": "2026-09-01T04:13:06.883Z",
+  "fixtureSetup": {
+    "routeAuth": "owner session cookie from SessionService::create",
+    "songSearch": "window.YatsnSongSearchFixtures on /create when data-private-build=1",
+    "noPrivateData": true
+  },
+  "captures": [
+    {
+      "file": "create-entry-320.png",
+      "width": 320,
+      "height": 640,
+      "url": "http://127.0.0.1:8765/create",
+      "fullPage": false
+    },
+    {
+      "file": "create-entry-390.png",
+      "width": 390,
+      "height": 844,
+      "url": "http://127.0.0.1:8765/create",
+      "fullPage": false
+    },
+    {
+      "file": "create-entry-768.png",
+      "width": 768,
+      "height": 1024,
+      "url": "http://127.0.0.1:8765/create",
+      "fullPage": false
+    },
+    {
+      "file": "create-entry-900.png",
+      "width": 900,
+      "height": 900,
+      "url": "http://127.0.0.1:8765/create",
+      "fullPage": false
+    },
+    {
+      "file": "create-entry-1440.png",
+      "width": 1440,
+      "height": 900,
+      "url": "http://127.0.0.1:8765/create",
+      "fullPage": false
+    },
+    {
+      "file": "song-loading-390.png",
+      "width": 390,
+      "height": 844,
+      "url": "http://127.0.0.1:8765/create",
+      "fullPage": false
+    },
+    {
+      "file": "song-results-390.png",
+      "width": 390,
+      "height": 844,
+      "url": "http://127.0.0.1:8765/create",
+      "fullPage": false
+    },
+    {
+      "file": "song-results-768.png",
+      "width": 768,
+      "height": 1024,
+      "url": "http://127.0.0.1:8765/create",
+      "fullPage": false
+    },
+    {
+      "file": "song-results-1440.png",
+      "width": 1440,
+      "height": 900,
+      "url": "http://127.0.0.1:8765/create",
+      "fullPage": false
+    },
+    {
+      "file": "song-no-results-390.png",
+      "width": 390,
+      "height": 844,
+      "url": "http://127.0.0.1:8765/create",
+      "fullPage": false
+    },
+    {
+      "file": "song-error-390.png",
+      "width": 390,
+      "height": 844,
+      "url": "http://127.0.0.1:8765/create",
+      "fullPage": false
+    },
+    {
+      "file": "song-selected-390.png",
+      "width": 390,
+      "height": 844,
+      "url": "http://127.0.0.1:8765/create",
+      "fullPage": false
+    },
+    {
+      "file": "song-selected-1440.png",
+      "width": 1440,
+      "height": 900,
+      "url": "http://127.0.0.1:8765/create",
+      "fullPage": false
+    },
+    {
+      "file": "song-focus-390.png",
+      "width": 390,
+      "height": 844,
+      "url": "http://127.0.0.1:8765/create",
+      "fullPage": false
+    },
+    {
+      "file": "song-focus-result-390.png",
+      "width": 390,
+      "height": 844,
+      "url": "http://127.0.0.1:8765/create",
+      "fullPage": false
+    },
+    {
+      "file": "song-reduced-motion-390.png",
+      "width": 390,
+      "height": 844,
+      "url": "http://127.0.0.1:8765/create",
+      "fullPage": false
+    },
+    {
+      "file": "song-increased-contrast-390.png",
+      "width": 390,
+      "height": 844,
+      "url": "http://127.0.0.1:8765/create",
+      "fullPage": false
+    }
+  ],
+  "zoom200": [
+    {
+      "name": "zoom-create-entry-320",
+      "width": 320,
+      "height": 640,
+      "pageScaleFactor": 2,
+      "scrollWidth": 320,
+      "innerWidth": 320,
+      "overflow": false
+    },
+    {
+      "name": "zoom-song-results-390",
+      "width": 390,
+      "height": 844,
+      "song": "showResult",
+      "pageScaleFactor": 2,
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "overflow": false
+    },
+    {
+      "name": "zoom-song-selected-1440",
+      "width": 1440,
+      "height": 900,
+      "song": "showSelected",
+      "pageScaleFactor": 2,
+      "scrollWidth": 1440,
+      "innerWidth": 1440,
+      "overflow": false
+    }
+  ]
+}

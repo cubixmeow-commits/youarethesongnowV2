@@ -1130,6 +1130,41 @@ assert_true(str_contains($labHtml, 'data-component-lab'), 'component lab page re
 assert_true(str_contains($labHtml, 'component-lab.js'), 'component lab page loads its fixture script');
 assert_true(is_file($root . '/public/assets/js/component-lab.js'), 'component lab script exists');
 
+$songSearchJs = (string) file_get_contents($root . '/public/assets/js/song-search.js');
+assert_true(str_contains($songSearchJs, '/api/v1/song-lookups') || str_contains($songSearchJs, 'onFind'), 'song search delegates lookup to app handler');
+assert_true(str_contains($songSearchJs, 'dataset.yatsnSongState'), 'song search exposes a platform-neutral state hook');
+assert_true(str_contains($songSearchJs, 'inFlight'), 'song search prevents repeated in-flight lookups');
+assert_true(str_contains($songSearchJs, 'yatsn-song-result'), 'song search renders artwork-led result rows');
+assert_true(str_contains($songSearchJs, 'data-song-change'), 'song search keeps selection reversible before continuing');
+assert_true(str_contains($songSearchJs, 'data-song-retry'), 'song search exposes retry on error');
+assert_true(str_contains($songSearchJs, 'YatsnSongSearchFixtures'), 'song search private fixtures exist for screenshot review');
+assert_true(str_contains($songSearchJs, 'privateBuildAllowsFixtures'), 'song search fixtures are gated on private build');
+$fixtureExportAt = strpos($songSearchJs, 'window.YatsnSongSearchFixtures');
+$fixtureGateAt = strpos($songSearchJs, 'if (privateBuildAllowsFixtures())');
+assert_true($fixtureExportAt !== false && $fixtureGateAt !== false && $fixtureGateAt < $fixtureExportAt, 'song search fixture construction is inside the private-build gate');
+assert_true(!str_contains($songSearchJs, 'Gemini'), 'song search customer copy omits provider names');
+assert_true(!str_contains($songSearchJs, 'diagnostic'), 'song search customer copy omits provider diagnostics');
+
+$appJs = (string) file_get_contents($root . '/public/assets/js/app.js');
+assert_true(str_contains($appJs, 'YatsnSongSearch.init'), 'Create wires the song search module');
+assert_true(str_contains($appJs, "body: { artist, title }"), 'Create still posts artist and title to song-lookups');
+assert_true(str_contains($appJs, 'songConfirmed'), 'Create requires explicit song confirmation before People');
+
+assert_true(str_contains($createTemplate, 'data-yatsn-song-search'), 'Create template includes canonical song search shell');
+assert_true(str_contains($createTemplate, 'Find this song'), 'Create primary song action uses approved copy');
+assert_true(str_contains($createTemplate, '<h1 class="session-header__title">Choose your song</h1>'), 'Create keeps one stable h1 for the dominant task');
+assert_true(!str_contains($createTemplate, 'data-session-song'), 'Create h1 is no longer repurposed as dynamic song metadata');
+assert_true(str_contains($createTemplate, 'data-song-results'), 'Create template reserves artwork-led result surface');
+assert_true(str_contains($createTemplate, 'data-song-selected'), 'Create template reserves selected song state');
+assert_true(str_contains($createTemplate, 'data-song-retry'), 'Create template reserves retry affordance');
+
+$mainLayout = (string) file_get_contents($root . '/templates/layouts/main.php');
+assert_true(str_contains($mainLayout, 'song-search.js'), 'Create page loads song-search.js');
+
+assert_true(str_contains($appCss, 'container-name: yatsn-create-entry'), 'Create entry uses a size container for adaptive controls');
+assert_true(str_contains($appCss, '.yatsn-song-result__title'), 'song result title hierarchy styles exist');
+assert_true(str_contains($appCss, '@container yatsn-create-entry'), 'song search submit adapts to available pane width');
+
 $groqDecoded = \Yatsn\AI\GroqCreativeAdapter::decodeResponse([
     'choices' => [['message' => ['content' => json_encode($analysisFixture, JSON_THROW_ON_ERROR)]]],
 ]);

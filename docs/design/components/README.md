@@ -14,7 +14,7 @@
 | Button | `.yatsn-btn` + `--primary/--secondary/--quiet/--destructive` | Component lab; Explore Generate / Explore options / Create this direction / retry |
 | IconButton | `.yatsn-icon-btn` | Component lab |
 | StatusBanner | `.yatsn-status` + `--info/--success/--warning/--error` | Component lab; Explore error/retry |
-| SongDnaCard | `.yatsn-dna-card` | Component lab fixtures only |
+| Song search | `.yatsn-song-search`, `.yatsn-song-result`, `.yatsn-song-selected` | Create entry (Phase 2) |
 | CreativeDirectionCard | `.yatsn-direction-card` (Explore also keeps `.ai-direction-card`) | Component lab; current Explore |
 | Sheet / Dialog | `.yatsn-sheet` / `.yatsn-dialog` | Component lab |
 | Artwork | `.yatsn-artwork` | Component lab |

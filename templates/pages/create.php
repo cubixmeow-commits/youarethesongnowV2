@@ -17,8 +17,8 @@
     </div>
     <div class="session-header__meta">
       <p class="session-header__eyebrow">Create</p>
-      <h1 class="session-header__title" data-session-song>Choose your song</h1>
-      <p class="session-header__hint quiet">Choose a song, add portraits, set the direction. Then create your world.</p>
+      <h1 class="session-header__title">Choose your song</h1>
+      <p class="session-header__hint quiet">Start with a meaningful song, then turn it into artwork with the people you love.</p>
     </div>
     <ol class="session-progress" aria-label="Session stages">
       <li class="session-progress__step is-current"><span>01</span> Song</li>
@@ -29,24 +29,53 @@
 
   <div class="create__layout">
     <div class="create__main">
-      <section class="movement movement--primary" id="the-song" aria-labelledby="song-heading">
+      <section class="movement movement--primary yatsn-create-entry" id="the-song" aria-labelledby="song-heading">
         <p class="movement__num">01</p>
         <h2 id="song-heading">The song</h2>
-        <p class="movement__lead">Choose the centerpiece of this experience.</p>
-        <form id="song-form" class="stack track-source">
-          <div class="track-source__fields">
-            <label>
-              <span>Artist or band</span>
-              <input type="text" name="artist" required placeholder="Enter the artist or band" autocomplete="off">
-            </label>
-            <label>
-              <span>Song title</span>
-              <input type="text" name="title" required placeholder="Enter the song title" autocomplete="off">
-            </label>
+        <p class="movement__lead yatsn-create-entry__lead">Search for the song that will lead your artwork.</p>
+
+        <div class="yatsn-resume-row" data-song-resume hidden></div>
+
+        <section
+          class="yatsn-song-search stack"
+          data-yatsn-song-search
+          data-yatsn-song-state="idle"
+          aria-labelledby="song-search-heading">
+          <h3 id="song-search-heading" class="visually-hidden">Song search</h3>
+          <form id="song-form" class="yatsn-song-search__form stack" novalidate>
+            <div class="yatsn-song-search__fields track-source__fields">
+              <label class="yatsn-field">
+                <span class="yatsn-field__label">Artist or band</span>
+                <input type="text" name="artist" required placeholder="Enter the artist or band" autocomplete="off" inputmode="search">
+              </label>
+              <label class="yatsn-field">
+                <span class="yatsn-field__label">Song title</span>
+                <input type="text" name="title" required placeholder="Enter the song title" autocomplete="off" inputmode="search">
+              </label>
+            </div>
+            <button class="btn btn--primary yatsn-btn yatsn-btn--primary yatsn-song-search__submit" type="submit">Find this song</button>
+          </form>
+
+          <div class="yatsn-status yatsn-status--info" data-song-status role="status" aria-live="polite" hidden></div>
+
+          <div class="yatsn-song-result yatsn-song-result--loading is-loading" data-song-result-loading hidden aria-hidden="true">
+            <span class="yatsn-song-result__art yatsn-artwork__stage"><span class="yatsn-skeleton yatsn-skeleton--square" aria-hidden="true"></span></span>
+            <span class="yatsn-song-result__copy">
+              <span class="yatsn-skeleton" aria-hidden="true"></span>
+              <span class="yatsn-skeleton yatsn-skeleton--line" aria-hidden="true"></span>
+            </span>
           </div>
-          <button class="btn btn--secondary btn--retrieve" type="submit">Discover my song</button>
-          <p class="status" data-song-status role="status" aria-live="polite"></p>
-        </form>
+
+          <div class="yatsn-song-results" data-song-results hidden role="list" aria-label="Song matches"></div>
+
+          <div class="yatsn-song-selected" data-song-selected hidden></div>
+
+          <div class="yatsn-status__actions" data-song-retry-wrap hidden>
+            <button class="btn btn--secondary yatsn-btn yatsn-btn--secondary" type="button" data-song-retry>Try again</button>
+          </div>
+        </section>
+
+        <div class="yatsn-recent-row" data-song-recent hidden></div>
         <div class="development-source" data-development-analysis-panel hidden>
           <h3>Development Song DNA inspection</h3>
           <p><strong data-development-analysis-song></strong></p>

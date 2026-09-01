@@ -3,6 +3,7 @@
     csrf: null,
     draftId: null,
     songLookup: null,
+    songConfirmed: false,
     portraits: [],
     selectedPortraitIds: [],
     styles: [],
@@ -88,24 +89,19 @@
 
   function updateSummary() {
     const songNodes = $all('[data-sum-song]');
-    const sessionSong = $('[data-session-song]');
+    if (!songNodes.length) return;
+
+    const songLabel = state.songLookup
+      ? `${state.songLookup.title} · ${state.songLookup.artist}`
+      : 'Not chosen yet';
+    songNodes.forEach((node) => {
+      node.textContent = songLabel;
+    });
     const people = $('[data-sum-people]');
     const style = $('[data-sum-style]');
     const quality = $('[data-sum-quality]');
     const orientation = $('[data-sum-orientation]');
     const credits = $('[data-sum-credits]');
-    if (!songNodes.length && !sessionSong) return;
-
-    const songLabel = state.songLookup
-      ? `${state.songLookup.title} · ${state.songLookup.artist}`
-      : 'Not chosen yet';
-    const sessionLabel = state.songLookup
-      ? `${state.songLookup.title} · ${state.songLookup.artist}`
-      : 'Choose your song';
-    songNodes.forEach((node) => {
-      node.textContent = songLabel;
-    });
-    if (sessionSong) sessionSong.textContent = sessionLabel;
     if (people) {
       people.textContent = state.selectedPortraitIds.length
         ? `${state.selectedPortraitIds.length} selected`
@@ -133,7 +129,7 @@
     }
     const createRoot = $('[data-create]');
     if (createRoot) {
-      createRoot.classList.toggle('has-song', Boolean(state.songLookup));
+      createRoot.classList.toggle('has-song', Boolean(state.songConfirmed && state.songLookup));
     }
   }
 
@@ -267,7 +263,7 @@
   function maybeShowDirection() {
     const people = $('#the-people');
     const direction = $('#the-direction');
-    if (state.songLookup && ['found', 'fallbackFound'].includes(state.songLookup.state)) {
+    if (state.songLookup && state.songConfirmed && ['found', 'fallbackFound'].includes(state.songLookup.state)) {
       if (people) people.hidden = false;
     }
     if (direction) {
@@ -363,6 +359,65 @@
     if (sources) sources.hidden = !(research.sources || []).length;
   }
 
+  async function loadCreateEntryContext() {
+    const params = new URLSearchParams(window.location.search);
+    const resumeDraft = params.get('draft');
+    if (resumeDraft && resumeDraft !== state.draftId) {
+      window.YatsnSongSearch?.renderResume?.({
+        label: 'Resume your saved draft',
+        href: `/create?draft=${encodeURIComponent(resumeDraft)}`,
+      });
+    } else if (state.songLookup && state.songConfirmed) {
+      // Current draft already has a confirmed song; no separate resume row needed.
+    } else if (state.draftId && !state.songLookup) {
+      window.YatsnSongSearch?.renderResume?.({
+        label: 'Your draft is saved as you go',
+        href: `/create?draft=${encodeURIComponent(state.draftId)}`,
+      });
+    }
+
+    try {
+      const images = await api('/api/v1/images');
+      if (images.data?.length) {
+        window.YatsnSongSearch?.renderRecent?.(images.data);
+      }
+    } catch (_) {
+      // Recent work is optional presentation; never block Create entry.
+    }
+  }
+
+  function initSongSearch() {
+    if (!window.YatsnSongSearch) return;
+    window.YatsnSongSearch.init({
+      onFind: async ({ artist, title }) => {
+        const res = await api('/api/v1/song-lookups', {
+          method: 'POST',
+          body: { artist, title },
+        });
+        state.songLookup = res.data;
+        state.songConfirmed = false;
+        renderDevelopmentAnalysis(res.data);
+        await patchDraft({ songLookupId: res.data.id });
+        updateSummary();
+        return res.data;
+      },
+      onConfirm: (lookup) => {
+        state.songLookup = lookup;
+        state.songConfirmed = true;
+        maybeShowDirection();
+        updateSummary();
+      },
+      onClear: () => {
+        state.songConfirmed = false;
+        const people = $('#the-people');
+        const direction = $('#the-direction');
+        if (people) people.hidden = true;
+        if (direction) direction.hidden = true;
+        updateSummary();
+      },
+    });
+  }
+
   async function initCreate() {
     const root = $('[data-create]');
     if (!root) return;
@@ -401,33 +456,15 @@
     renderStyles();
     renderChoices();
     renderPortraits();
+    initSongSearch();
+    if (state.songLookup && ['found', 'fallbackFound'].includes(state.songLookup.state)) {
+      state.songConfirmed = true;
+      window.YatsnSongSearch?.restoreConfirmed?.(state.songLookup);
+    }
     maybeShowDirection();
+    await loadCreateEntryContext();
 
-    $('#song-form')?.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const fd = new FormData(e.target);
-      const status = $('[data-song-status]');
-      setStatus(status, 'Finding your song...');
-      try {
-        const res = await api('/api/v1/song-lookups', {
-          method: 'POST',
-          body: { artist: fd.get('artist'), title: fd.get('title') },
-        });
-        state.songLookup = res.data;
-        renderDevelopmentAnalysis(res.data);
-        await patchDraft({ songLookupId: res.data.id });
-        if (res.data.state === 'notFound') {
-          setStatus(status, 'We could not find enough reliable information about that song. Check the artist and title, or choose another song. No generation credits were used.', true);
-        } else if (res.data.state === 'fallbackFound') {
-          setStatus(status, 'We found reliable information about your song and will use its themes and feeling to inspire your image.');
-        } else {
-          setStatus(status, 'We found your song and will use its themes and feeling to inspire your image.');
-        }
-        maybeShowDirection();
-      } catch (err) {
-        setStatus(status, err.message, true);
-      }
-    });
+    updateSummary();
 
     $('#portrait-form')?.addEventListener('submit', async (e) => {
       e.preventDefault();

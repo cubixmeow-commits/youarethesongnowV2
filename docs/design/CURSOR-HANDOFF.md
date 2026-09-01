@@ -1,139 +1,94 @@
-# CURSOR-HANDOFF — Luminous Night Studio Phase 1 complete
+# CURSOR-HANDOFF — Luminous Night Studio Phase 2 complete
 
 **Date:** 2026-09-01
-**Working branch:** `cursor/luminous-night-studio-phase1-6bc7`
-**Base:** `main` @ `750809ea759b8e5203df476bdf63d5fb3746f93f`
-**Phase:** 1 — runtime semantic foundation, private component lab, current Explore presentation
-**Status:** Codex correction pass independently verified and published to `main` on 2026-09-01. Ready for private deployment review.
+**Working branch:** `cursor/luminous-night-studio-phase2`
+**Base:** `main` @ `795fc2a`
+**Phase:** 2 — Create entry and existing-contract song selection
+**Status:** Ready for Codex review. Do not merge to `main`.
 
 ## Package / slice verification
 
-- `php tests/run.php`: **1058 passed, 0 failed**
+- `php tests/run.php`: **1083 passed, 0 failed**
 - Runtime/backend/API/migration changes: **none**
-- Explore endpoint: still `POST /api/v1/explore-directions`
-- Three-direction schema, derived-DNA-only body, StyleMap data attributes, diagnostics gating: **preserved**
-- Style-board PNG: art-direction evidence only; not copied into runtime
+- Song lookup endpoint: still `POST /api/v1/song-lookups` with `{ artist, title }`
+- Draft patch: still `songLookupId` on successful lookup
+- Privacy/rate-limit behavior: preserved (server-side)
+- Song DNA API/persistence: **not started**
 
 ## Changed files
 
 Runtime
 
 - `public/assets/css/app.css`
-- `public/assets/js/explore.js`
-- `public/assets/js/component-lab.js` (new)
-- `public/index.php`
-- `src/Support/BuildInfo.php`
+- `public/assets/js/app.js`
+- `public/assets/js/song-search.js` (new)
 - `templates/layouts/main.php`
-- `templates/owner/component-lab.php` (new)
-- `templates/owner/dashboard.php`
 - `templates/pages/create.php`
-- `templates/pages/gallery.php`
 - `tests/run.php`
 
 Evidence / docs
 
-- `design/review/round-010/`
+- `design/review/round-011/`
 - `docs/design/CURSOR-HANDOFF.md`
-- `docs/design/DESIGN-OPERATING-SYSTEM.md`
-- `docs/design/foundations/tokens.md`
-- `docs/design/foundations/color.md`
-- `docs/design/foundations/motion.md`
-- `docs/design/screens/inventory.md`
 - `docs/design/components/README.md`
-- `docs/design/components/inventory.md`
 - `docs/design/flutter/component-map.md`
-- `docs/design/README.md`
 - `docs/design/process/LUMINOUS-NIGHT-STUDIO-IMPLEMENTATION-ROADMAP.md`
-- `docs/design/research/README.md`
 - `docs/dashboard-data.js`
-- `development-vault/START HERE.md`
 - `development-vault/01 Current Project/Current Priorities.md`
-- `development-vault/01 Current Project/Current Architecture.md`
 - `development-vault/01 Current Project/Dashboard Snapshot.md`
 
-## Token / component decisions
+## Decisions and preserved contracts
 
-- Canonical aliases added beside legacy `--color-*` / `--ink` names. Usage was not rewritten globally.
-- `--color-focus` is a color. `--elevation-focus-ring` is the 3px ring. `--focus-ring` remains a legacy alias of the elevation token.
-- `--color-text-tertiary` raised from `oklch(0.56 …)` to `oklch(0.62 0.01 256)` before caption use on new components.
-- Control tokens: `--control-touch-min: 44px`, `--control-height: 48px`, `--control-primary-height: 52px`. `--touch-min` now aliases control height so existing chrome stays 48px.
-- Selected surface/edge and status/info tokens added. Sheet/dialog use `--elevation-sheet` / `--elevation-dialog`.
-- Canonical classes: `.yatsn-btn`, `.yatsn-icon-btn`, `.yatsn-status`, `.yatsn-dna-card`, `.yatsn-direction-card`, `.yatsn-sheet`, `.yatsn-dialog`, `.yatsn-artwork`. Explore keeps `.ai-direction-card` as the same card.
-- Lab and Explore primary actions use solid cobalt, not a decorative gradient. No `transition: all`, glass stacks, or purple-pink glow.
-- Explore flex rows were overriding native `[hidden]`. Canonical continue/status rows now force `display: none` when hidden; disabled opacity on lab controls is preserved.
-- Explore columns use `repeat(auto-fit, minmax(min(100%, 16.5rem), 1fr))` inside a `yatsn-explore` size container. They follow the Create pane, not a 700px viewport media query. Measured: 768 = two columns, 900 Create pane = stacked, 1440 = two columns. Three columns only when the pane is wide enough for 16.5rem cards.
-- `content.tertiary` measured contrast: 5.69:1 canvas, 5.53:1 surface, 5.33:1 elevated, 5.17:1 lacquer. WCAG AA for normal text on those intended dark surfaces. Not AAA. Not a global recertification.
-
-## Interaction notes
-
-- `Generate for me` remains primary. `Explore options` remains secondary.
-- First server-ranked direction still has a quiet Recommended label.
-- Whole-card radio selection, selected surface + edge + marker, `aria-checked` only. No redundant `aria-selected` on `role=radio`.
-- Explore uses roving tabindex: one radio in the tab order, others `-1`. Arrow keys move focus and selection. Tab moves to the next widget. Selecting a card does not steal focus to `Create this direction`.
-- Component lab shows selected visual states in a non-radio group. A separate interactive radiogroup has exactly one checked radio.
-- After selection, `Create this direction` still bridges into the existing Review → Create my image path. Fine Tune was not invented.
-- Internal `styleName` / `styleId` stay on `data-*` only.
-- While an AI direction is active, the legacy style grid and Review button collapse. `Choose a style manually` restores them.
-- Quality, format, and no-text stay visible.
-- Loading shows three stable placeholders. Error shows a status banner and Try again. In-flight clicks are ignored via `exploreInFlight`.
-- Component lab is `GET /owner/component-lab`: owner + private build. 404 when `ALLOW_EXTERNAL_USERS` is true. Quiet link from Owner operations.
-- Screenshot-only `window.YatsnExploreFixtures` and fixture Song DNA injection are constructed only when Create renders `data-private-build="1"` from `BuildInfo::publicSummary()`. External mode does not get the export.
-
-## Backend / API / migration status
-
-**none**
-
-No schema, endpoint, provider, credit, paywall, portrait, or privacy-boundary changes.
+- **Page hierarchy:** one stable `<h1>Choose your song</h1>`; stage title remains `The song` as `h2`. Song title/artist no longer replace the `h1`.
+- **Primary action:** `Find this song` uses canonical `.yatsn-btn--primary` at 52px height; full-width on compact, pane-aware width from `@container yatsn-create-entry`.
+- **Lookup contract:** unchanged request/response. `app.js` still posts `{ artist, title }` and patches `songLookupId` after a successful lookup.
+- **Selection flow:** lookup renders an artwork-led result row; user confirms by activating the row; People stage stays hidden until confirmation. `Change song` reverses confirmation without clearing typed fields.
+- **In-flight guard:** `song-search.js` blocks duplicate submits while lookup is pending.
+- **Artwork:** uses `artworkUrl` / `thumbnailUrl` when present on the lookup payload; otherwise a restrained circular fallback (no new provider integration).
+- **Resume / recent:** resume row uses existing draft URL (`?draft=`); recent creations use existing `GET /api/v1/images` thumbnails. No new list endpoints.
+- **Active portrait summary:** not added — no explicit server active/default portrait contract yet (per roadmap).
+- **Progress model:** `01 Song / 02 People / 03 Direction` preserved; presentation-only `is-current` / `is-complete` logic unchanged.
+- **Explore / Direction / DNA:** untouched in this slice.
 
 ## Tests
 
 ```text
 php tests/run.php
-=== Results: 1058 passed, 0 failed ===
+=== Results: 1083 passed, 0 failed ===
 ```
 
-Also: `php -l` on touched PHP templates, `node --check` on `explore.js` / `component-lab.js` / `capture-screenshots.mjs`, and `git diff --check` clean.
+Also: `php -l` on touched PHP templates, `node --check` on `song-search.js` / `app.js` / `capture-screenshots.mjs`, and `git diff --check` clean.
 
-Scoped coverage added for lab access, Explore semantics/state hooks, StyleMap copy exclusion, repeated async lock, Create `h1`, Gallery empty-state semantics, token/hidden-row guards, pane-fit Explore grid, roving tabindex, lab radiogroup invariants, and private vs external fixture gating.
+Scoped coverage added for song-search state hook, in-flight lock, reversible selection, canonical markup/classes, private fixture gating, Create `h1` stability, `song-lookups` body preservation, layout container hooks, and script registration.
 
 ## Screenshots
 
-Stored under `design/review/round-010/`. Index: `design/review/round-010/README.md`.
+Stored under `design/review/round-011/`. Index: `design/review/round-011/README.md`.
 
-Create/Explore loading/ready/selected/error/manual states used private fixtures on `/create` because this slice does not change lookup or portrait contracts. The capture harness scrolls the Explore lab below the sticky top bar (`topbar height + 24px`) so the `Explore directions` heading stays visible. Product layout was not changed for screenshots. Recaptured 768, 900, and 1440 Explore-ready evidence after the pane-fit grid fix.
+Song states use `window.YatsnSongSearchFixtures` on `/create` when `data-private-build="1"`. Entry shots are viewport captures; result/selected rows may sit below the first viewport on 390 when the resume row is visible.
 
 ## Accessibility / contrast / motion / zoom
 
-- Create has a real `<h1 class="session-header__title">`.
-- Gallery empty state is no longer `aria-hidden`; CSS `display: none` still hides it when the grid has items.
-- Focus is a 3px outline on the interactive surface (`outline-offset: 2px`), not a clipped box-shadow.
-- Explore selection is a radiogroup with roving tabindex, keyboard-operable, and programmatic via `aria-checked`.
-- Reduced motion clears travel, spinner, and shimmer on touched canonical components.
-- Increased-contrast CSS already forces black/white edges; the 390 evidence shot injects those rules because Puppeteer-core cannot emulate `prefers-contrast`.
-- 200% zoom: no horizontal overflow at 320 Create, 390 Explore, 900 lab, 1440 Explore (`review-notes.json`).
-- `content.tertiary` AA on intended dark surfaces: 5.69:1 canvas, 5.53:1 surface, 5.33:1 elevated, 5.17:1 lacquer. Do not claim AAA or global recertification.
+- Real `h1`, visible field labels, one `role="status"` region with `aria-live="polite"`.
+- Result row is a single `button` activation target with title-first hierarchy; `Change song` is a quiet text button ≥44px tall.
+- Focus uses the canonical 3px `outline` via `--elevation-focus-ring`.
+- Reduced motion removes row/button travel on touched song-search surfaces; loading skeleton shimmer inherits existing global reduced-motion rules.
+- Increased-contrast CSS forces white borders on song rows; the 390 evidence shot injects those rules because Puppeteer-core cannot emulate `prefers-contrast`.
+- 200% zoom: no horizontal overflow at 320 entry, 390 results, 1440 selected (`review-notes.json`).
 
 ## Deviations / questions
 
-1. Cursor implemented the slice on `cursor/luminous-night-studio-phase1-6bc7`; Codex independently reviewed it and fast-forwarded the verified commits to `main`.
-2. Explore remains inside the current Create Direction stage. No standalone Explore route.
-3. `Create this direction` is kept because the current bridge still submits through existing creation.
-4. Desktop Explore can still show quality/format under the cards. That is required for this slice, not Fine Tune.
-5. Error restores the legacy style grid as the existing manual escape. Confirm whether error should hide it.
-6. Tertiary contrast was raised for new components; leftover product captions still using tertiary were not recertified globally.
-7. Flutter remains documentation-only. Web class names, the Explore `dataset.yatsnExploreState` hook, and pane-fit Explore columns (`LayoutBuilder`) are recorded in `docs/design/flutter/component-map.md`.
-8. Codex correction: Explore 900 Create pane stays stacked because the component is ~395px; two columns appear at 768 and 1440. Three-up remains a wide-pane behavior, not a viewport media query.
-9. Explore evidence shots keep `Explore directions` below the top bar; the parent stage title `The direction` may sit under the bar. That is harness scroll, not a product layout change.
+1. Lookup API returns no artwork URL today; fallback art is intentional until a customer-safe artwork field is approved.
+2. Draft still patches on lookup success (existing behavior). Confirmation gates only the People stage reveal, not persistence timing.
+3. Resume row shows for fresh drafts (“saved as you go”) and for `?draft=` URLs; owners may prefer hiding it once a song is confirmed.
+4. `docs/design/screens/create.md` was not in the repo; implementation followed `premium-product-screens.md` §1 and `core-components.md` §4.
+5. Flutter mapping documented in `component-map.md`; no Dart code in this slice.
 
 ## Final commit
 
-- **Published implementation hash:** `6951f0c63f00270e7c895e809a01e7ad6a35f5c7`
-- **Source branch:** `cursor/luminous-night-studio-phase1-6bc7`
-- **Published branch:** `main`
-- **Review:** Codex independently verified 1058 tests, syntax, whitespace, privacy gating, keyboard behavior, responsive evidence, and the revised screenshots. No `.env` changes. Ready for private deployment review.
+- **Branch:** `cursor/luminous-night-studio-phase2`
+- **Commit:** _(filled after push)_
 
 ## Recommended next slice
 
-**Phase 2: Create entry and existing-contract song selection** from `docs/design/process/LUMINOUS-NIGHT-STUDIO-IMPLEMENTATION-ROADMAP.md`.
-
-Do not begin Song DNA API, persistence, or customer-safe projection work in that slice.
+**Phase 3: customer-safe Song DNA contract and selector** from `docs/design/process/LUMINOUS-NIGHT-STUDIO-IMPLEMENTATION-ROADMAP.md`. Contract-first only; no UI depending on unapproved projection fields.

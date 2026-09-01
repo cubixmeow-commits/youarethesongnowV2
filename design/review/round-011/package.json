@@ -1,0 +1,8 @@
+{
+  "name": "round-011-capture",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "puppeteer-core": "^24.6.1"
+  }
+}

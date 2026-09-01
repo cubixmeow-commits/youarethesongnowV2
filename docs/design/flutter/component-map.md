@@ -23,7 +23,7 @@
 | Icon button | `.yatsn-icon-btn`; named SVG/`currentColor` | `YatsnIconButton` using bundled vector assets |
 | App chrome | top bar + bottom nav/rail | one destination model feeding `NavigationBar` / `NavigationRail` |
 | Focused Create shell | compact header, optional hidden global nav | nested navigator/adaptive scaffold without bottom bar |
-| Song search | labeled inputs + async result | `TextField`/custom result list with repository state |
+| Song search | `.yatsn-song-search`, `.yatsn-song-result`, `.yatsn-song-selected`; `dataset.yatsnSongState` (`idle|typing|loading|result|selected|empty|error`) | `SongLookupState` + labeled `TextField`s and a custom result row; confirm before advancing |
 | Song DNA card | `.yatsn-dna-card` checkbox-like selection; `.is-selected` / `.is-recommended` / `.is-conflict` / `.is-loading` | custom `Semantics(checked:)` widget |
 | Direction card | `.yatsn-direction-card` radiogroup; Explore also keeps `.ai-direction-card` | custom radio-card group with selected/recommended states |
 | Fine Tune | sheet/panel | `showModalBottomSheet` compact; constrained side panel expanded |

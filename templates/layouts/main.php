@@ -105,6 +105,12 @@ $bodyClass = trim(($layoutClass ?? '') . ($isHome ? ' is-home' : '') . ($authed 
     <a href="/privacy">Privacy</a>
   </footer>
   <?php if ($path === '/create'): ?>
+  <?php
+    $songSearchJsVersion = is_file(YATSN_ROOT . '/public/assets/js/song-search.js')
+        ? (string) (filemtime(YATSN_ROOT . '/public/assets/js/song-search.js') ?: '1')
+        : '1';
+  ?>
+  <script src="/assets/js/song-search.js?v=<?= e($songSearchJsVersion) ?>" defer></script>
   <script src="/assets/js/explore.js?v=<?= e($exploreJsVersion) ?>" defer></script>
   <?php endif; ?>
   <?php if ($componentLab): ?>
