@@ -87,7 +87,7 @@ Song states use `window.YatsnSongSearchFixtures` on `/create` when `data-private
 ## Final commit
 
 - **Branch:** `cursor/luminous-night-studio-phase2`
-- **Commit:** _(filled after push)_
+- **Commit:** `e408a7fc8ace15922b4acc830f2c96737fdc5d88`
 
 ## Recommended next slice
 
