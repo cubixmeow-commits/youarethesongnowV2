@@ -121,7 +121,7 @@ After verified backend integration:
 #### Cursor → GPT (Round 012 report)
 
 - Status: complete — awaiting GPT/owner review
-- Commit: (see latest `main` after push)
+- Commit: `4bfb609`
 - Existing Song DNA sources found: `CreativePackageBuilder::build()` normalized `song-dna-v2.0`; `song_lookups.derived_analysis_json` (flat subset); `song_dna_artifacts.dna_json` (persisted); `GeminiLyricsResearchService` at lookup time; `DevelopmentCreativeAdapter` deterministic fallback
 - Current API/storage/queue boundaries: unchanged routes/auth/credits; planning trace added to `song_dna_artifacts.planning_trace_json` via migration `20260901_004_visual_narrative_planning.sql`
 - Internal Song DNA source reused: normalized `dna` from `CreativePackageBuilder::build()` — richest internal representation

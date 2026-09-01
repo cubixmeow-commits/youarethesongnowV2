@@ -18,7 +18,7 @@ Do not deploy. Do not start customer Song DNA selector, Explore Options, or Fine
 # CURSOR-HANDOFF — Round 012 Visual Narrative Planning Layer
 
 **Date:** 2026-09-01  
-**Published to:** `main` (pending push)  
+**Published to:** `main` at `4bfb609`  
 **Scope:** Backend-first POV Campaign Engine adaptation  
 **Status:** Implementation complete. Prompt-level verification only in CI. No Hostinger deployment.
 
