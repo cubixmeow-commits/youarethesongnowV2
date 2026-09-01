@@ -65,6 +65,26 @@
 - back/exit preserves draft;
 - existing lookup privacy/rate rules and tests pass.
 
+## Phase 2.5: Visual Narrative Planning Layer (backend-first)
+
+**Status:** implemented on `main` (Round 012, 2026-09-01) — awaiting GPT review before customer-facing design continues.
+
+**Implement**
+
+- deterministic Visual Campaign Board, three ranked directions, Visual Scene Contract, structured prompt compiler
+- wire into `CreativePackageBuilder` and existing generation path with legacy fallback
+- persist sanitized `planning_trace_json` on `song_dna_artifacts`
+- five-fixture prompt comparison harness (`design/review/round-012/`)
+
+**Acceptance**
+
+- Quick Generate path requires no new customer decisions (planning is hidden);
+- exactly three directions or safe fallback;
+- portrait bytes never enter planning;
+- style subordinate to scene contract;
+- **1164** PHP tests pass;
+- no deployment in this slice.
+
 ## Phase 3: customer-safe Song DNA contract and selector
 
 **Contract first**

@@ -11,18 +11,21 @@ This note is the daily “what matters now” list for CuBiX Meow and Brut. Keep
 
 ## Active now
 
-1. **Private deployment review of Luminous Night Studio Phase 2 on `main`:** Create entry and song selection published at reviewed commit `ab6f82a` (`design/review/round-011/`). Do not start Phase 3 contract/API implementation until the customer-safe Song DNA contract is approved.
+1. **GPT/owner review of Round 012 Visual Narrative Planning Layer on `main`:** backend pipeline complete (`design/review/round-012/`, **1164 passed, 0 failed**). Do not start customer Song DNA selector, Explore Options, or Fine Tune UI until accepted.
+2. **Private deployment review of Luminous Night Studio Phase 2 on `main`:** Create entry and song selection published at reviewed commit `ab6f82a` (`design/review/round-011/`).
 2. **Run controlled private image tests:** compare the same one- and two-person inputs on Flash Lite and full Flash; change one variable at a time and record identity, narrative fidelity, coherence, prohibited text, latency, cost and usability.
 3. **Resolve no-text and unusable-image detection:** one otherwise successful no-text image rendered `TICKET`. Prompt-only enforcement and human-only identity acceptance are not sufficient for the final 90-image gate.
 4. **Provisional routing only:** Flash Lite is the low-cost candidate at about $0.0336 per 1K output; full Flash is the quality anchor at about $0.067. Medium/default and high routing are not decided.
 5. **Complete live functional checks:** share/revoke, deletion, failure/refund, account recovery/change, Stripe lifecycle, complimentary access, admin, mobile API, accessibility and Hostinger operational drills.
 6. **Keep release gates closed:** external beta, live Stripe and commercial protected-lyrics use remain blocked. Lyrics remain transient and never saved.
-7. **Automated foundation healthy:** **1092 passed, 0 failed** after Luminous Night Studio Phase 2 final correction pass. Phase 1 baseline was 1058. See [[Build 1 Assessment 2026-08-30]].
+7. **Automated foundation healthy:** **1164 passed, 0 failed** after Round 012 Visual Narrative Planning Layer. Phase 2 baseline was 1092. See [[Build 1 Assessment 2026-08-30]].
 8. **Print/poster/T-shirt/upscaling remain post-Build-1.** Vault = workshop; `/docs` = Meow Control.
 
 ## Newly documented
 
-- **Luminous Night Studio Phase 2 published (2026-09-01):** Create entry and existing-contract song selection independently reviewed and fast-forward merged to `main` at `ab6f82a`. Review evidence: `design/review/round-011/`. **1092 passed, 0 failed**. Ready for private deployment review. Next slice: Phase 3 customer-safe Song DNA contract and selector (contract-first).
+- **Visual Narrative Planning Layer (Round 012, 2026-09-01):** backend-first POV adaptation — Visual Campaign Board, three ranked directions, Visual Scene Contract, structured prompt compiler wired into generation path with legacy fallback. Evidence: `design/review/round-012/`. **1164 passed, 0 failed**. Stop for GPT review before customer-facing Song DNA design.
+
+- **Luminous Night Studio Phase 2 published (2026-09-01):** Create entry and existing-contract song selection independently reviewed and fast-forward merged to `main` at `ab6f82a`. Review evidence: `design/review/round-011/`. **1092 passed, 0 failed**. Ready for private deployment review.
 
 - **Luminous Night Studio Phase 2 final correction pass (2026-09-01):** honest `create-entry-*` evidence at scrollY=0; optional `create-form-*` shots; compound screenshot harness with simultaneous group visibility; semantic recent-creations `<ul>`/`<li>`; compact mobile Create spacing only. **1092 passed, 0 failed**. Review pack: `design/review/round-011/`.
 

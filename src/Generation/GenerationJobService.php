@@ -278,9 +278,10 @@ final class GenerationJobService
                 );
                 GateService::assertGenerationAllowed();
             }
+            $planningTrace = \Yatsn\CreativeEngine\VisualNarrative\VisualNarrativePlanningService::sanitizedTrace($package);
             Database::exec(
-                'INSERT INTO song_dna_artifacts (public_id, job_id, schema_version, dna_json, narrative_json, portrait_plan_json, stylemap_json, compiled_prompt_safe, created_at)
-                 VALUES (:pid, :jid, :sv, :dna, :nar, :pp, :sm, :prompt, :c)',
+                'INSERT INTO song_dna_artifacts (public_id, job_id, schema_version, dna_json, narrative_json, portrait_plan_json, stylemap_json, compiled_prompt_safe, planning_trace_json, created_at)
+                 VALUES (:pid, :jid, :sv, :dna, :nar, :pp, :sm, :prompt, :plan, :c)',
                 [
                     'pid' => opaque_id(),
                     'jid' => $job['id'],
@@ -290,6 +291,7 @@ final class GenerationJobService
                     'pp' => json_encode($package['portraitPlan'], JSON_THROW_ON_ERROR),
                     'sm' => json_encode($package['styleMap'], JSON_THROW_ON_ERROR),
                     'prompt' => Security::redact($package['compiledPromptSafe']),
+                    'plan' => $planningTrace !== [] ? json_encode($planningTrace, JSON_THROW_ON_ERROR) : null,
                     'c' => now_utc(),
                 ]
             );

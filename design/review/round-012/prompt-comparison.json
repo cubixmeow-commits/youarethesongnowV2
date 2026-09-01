@@ -1,0 +1,349 @@
+{
+    "version": "round-012",
+    "fixtures": {
+        "intimate_loss": {
+            "board": {
+                "version": "visual-board-v1",
+                "emotional_pivot": "a small object remembered",
+                "relationship_dynamic": "former partners; unsaid apology",
+                "candidate_environments": [
+                    "small kitchen",
+                    "predawn interior",
+                    "tight domestic frame",
+                    "table as barrier"
+                ],
+                "symbolic_artifacts": [
+                    "empty chair: a pulled-out chair catching cold window light",
+                    "unfinished letter: folded paper beside the mug"
+                ],
+                "confidence": 0.88
+            },
+            "directions": [
+                {
+                    "id": "dir-primary",
+                    "type": "primary",
+                    "title": "The decisive instant",
+                    "user_summary": "The emotional pivot rendered as one clear, readable scene.",
+                    "overall_rank": 0.852,
+                    "song_dna_fidelity": 0.92,
+                    "narrative_coherence": 0.85,
+                    "visual_distinctiveness": 0.7,
+                    "portrait_suitability": "high"
+                },
+                {
+                    "id": "dir-alternate",
+                    "type": "alternate",
+                    "title": "After the turn",
+                    "user_summary": "A valid alternate emphasis on what follows or precedes the pivot.",
+                    "overall_rank": 0.805,
+                    "song_dna_fidelity": 0.78,
+                    "narrative_coherence": 0.85,
+                    "visual_distinctiveness": 0.82,
+                    "portrait_suitability": "medium"
+                },
+                {
+                    "id": "dir-unexpected",
+                    "type": "unexpected",
+                    "title": "Symbolic reframing",
+                    "user_summary": "A less literal but still DNA-grounded symbolic reading.",
+                    "overall_rank": 0.756,
+                    "song_dna_fidelity": 0.68,
+                    "narrative_coherence": 0.85,
+                    "visual_distinctiveness": 0.9,
+                    "portrait_suitability": "low"
+                }
+            ],
+            "selectedDirectionId": "dir-primary",
+            "sceneContractSummary": {
+                "decisive_instant": "One person sets down a chipped mug while the other watches from the doorway, neither reaching across the table.",
+                "environment": "small kitchen, predawn interior, timeless contemporary, tight domestic frame, table as barrier",
+                "primary_symbol": "empty chair: a pulled-out chair catching cold window light",
+                "viewer_relationship": "witness"
+            },
+            "promptComparison": {
+                "legacyLength": 5840,
+                "newLength": 4724,
+                "legacyCompiler": "creative-package-v1",
+                "newCompiler": "structured-prompt-v1"
+            },
+            "fallback": false,
+            "legacyPromptExcerpt": "MISSION\nCreate one spectacular, premium, emotionally legible artwork in which the authorized reference person or people become the heart of an original visual story.\nDeliver one cohesive, instantly readable dramatic moment rather than a generic portrait, character lineup, or decorative mood board.\n\nAPPROVED SONG DNA\nEssence: Grief held quietly between two people who still share a room.\nEmotional a",
+            "newPromptExcerpt": "MISSION\nCreate one spectacular, premium, emotionally legible artwork from a validated Visual Scene Contract.\nDeliver one cohesive, instantly readable dramatic instant \u2014 not a generic portrait or mood collage.\n\nSEMANTIC SCENE PREMISE\nOne person sets down a chipped mug while the other watches from the doorway, neither reaching across the table.\nEmotional truth: Grief held quietly between two peopl"
+        },
+        "triumphant_transformation": {
+            "board": {
+                "version": "visual-board-v1",
+                "emotional_pivot": "first committed stride",
+                "relationship_dynamic": "self versus doubt",
+                "candidate_environments": [
+                    "outdoor track",
+                    "stadium periphery",
+                    "wide horizon",
+                    "radial energy"
+                ],
+                "symbolic_artifacts": [
+                    "starting line: faded lane paint under rising sun"
+                ],
+                "confidence": 0.91
+            },
+            "directions": [
+                {
+                    "id": "dir-primary",
+                    "type": "primary",
+                    "title": "The decisive instant",
+                    "user_summary": "The emotional pivot rendered as one clear, readable scene.",
+                    "overall_rank": 0.852,
+                    "song_dna_fidelity": 0.92,
+                    "narrative_coherence": 0.85,
+                    "visual_distinctiveness": 0.7,
+                    "portrait_suitability": "high"
+                },
+                {
+                    "id": "dir-alternate",
+                    "type": "alternate",
+                    "title": "After the turn",
+                    "user_summary": "A valid alternate emphasis on what follows or precedes the pivot.",
+                    "overall_rank": 0.805,
+                    "song_dna_fidelity": 0.78,
+                    "narrative_coherence": 0.85,
+                    "visual_distinctiveness": 0.82,
+                    "portrait_suitability": "medium"
+                },
+                {
+                    "id": "dir-unexpected",
+                    "type": "unexpected",
+                    "title": "Symbolic reframing",
+                    "user_summary": "A less literal but still DNA-grounded symbolic reading.",
+                    "overall_rank": 0.756,
+                    "song_dna_fidelity": 0.68,
+                    "narrative_coherence": 0.85,
+                    "visual_distinctiveness": 0.9,
+                    "portrait_suitability": "low"
+                }
+            ],
+            "selectedDirectionId": "dir-primary",
+            "sceneContractSummary": {
+                "decisive_instant": "A runner bursts from shadow into gold stadium light as the crowd becomes a blur of lifted arms.",
+                "environment": "outdoor track, stadium periphery, present day, wide horizon, radial energy",
+                "primary_symbol": "starting line: faded lane paint under rising sun",
+                "viewer_relationship": "witness"
+            },
+            "promptComparison": {
+                "legacyLength": 5734,
+                "newLength": 4655,
+                "legacyCompiler": "creative-package-v1",
+                "newCompiler": "structured-prompt-v1"
+            },
+            "fallback": false,
+            "legacyPromptExcerpt": "MISSION\nCreate one spectacular, premium, emotionally legible artwork in which the authorized reference person or people become the heart of an original visual story.\nDeliver one cohesive, instantly readable dramatic moment rather than a generic portrait, character lineup, or decorative mood board.\n\nAPPROVED SONG DNA\nEssence: Fear converts into forward motion under open sky.\nEmotional arc: hesitati",
+            "newPromptExcerpt": "MISSION\nCreate one spectacular, premium, emotionally legible artwork from a validated Visual Scene Contract.\nDeliver one cohesive, instantly readable dramatic instant \u2014 not a generic portrait or mood collage.\n\nSEMANTIC SCENE PREMISE\nA runner bursts from shadow into gold stadium light as the crowd becomes a blur of lifted arms.\nEmotional truth: Fear converts into forward motion under open sky.\nVi"
+        },
+        "ambiguous_relationship": {
+            "board": {
+                "version": "visual-board-v1",
+                "emotional_pivot": "almost-touch",
+                "relationship_dynamic": "almost lovers; mirrored hesitation",
+                "candidate_environments": [
+                    "city night",
+                    "curbside",
+                    "flattened depth through glass",
+                    "noir contemporary"
+                ],
+                "symbolic_artifacts": [
+                    "glass barrier: rain on glass merging two reflections"
+                ],
+                "confidence": 0.86
+            },
+            "directions": [
+                {
+                    "id": "dir-primary",
+                    "type": "primary",
+                    "title": "The decisive instant",
+                    "user_summary": "The emotional pivot rendered as one clear, readable scene.",
+                    "overall_rank": 0.852,
+                    "song_dna_fidelity": 0.92,
+                    "narrative_coherence": 0.85,
+                    "visual_distinctiveness": 0.7,
+                    "portrait_suitability": "high"
+                },
+                {
+                    "id": "dir-alternate",
+                    "type": "alternate",
+                    "title": "After the turn",
+                    "user_summary": "A valid alternate emphasis on what follows or precedes the pivot.",
+                    "overall_rank": 0.805,
+                    "song_dna_fidelity": 0.78,
+                    "narrative_coherence": 0.85,
+                    "visual_distinctiveness": 0.82,
+                    "portrait_suitability": "medium"
+                },
+                {
+                    "id": "dir-unexpected",
+                    "type": "unexpected",
+                    "title": "Symbolic reframing",
+                    "user_summary": "A less literal but still DNA-grounded symbolic reading.",
+                    "overall_rank": 0.763,
+                    "song_dna_fidelity": 0.68,
+                    "narrative_coherence": 0.85,
+                    "visual_distinctiveness": 0.9,
+                    "portrait_suitability": "medium"
+                }
+            ],
+            "selectedDirectionId": "dir-primary",
+            "sceneContractSummary": {
+                "decisive_instant": "Two people lean across a rain-streaked taxi window, reflections doubling their faces so it is unclear who is inside or outside.",
+                "environment": "city night, curbside, noir contemporary, flattened depth through glass",
+                "primary_symbol": "glass barrier: rain on glass merging two reflections",
+                "viewer_relationship": "witness"
+            },
+            "promptComparison": {
+                "legacyLength": 5831,
+                "newLength": 4780,
+                "legacyCompiler": "creative-package-v1",
+                "newCompiler": "structured-prompt-v1"
+            },
+            "fallback": false,
+            "legacyPromptExcerpt": "MISSION\nCreate one spectacular, premium, emotionally legible artwork in which the authorized reference person or people become the heart of an original visual story.\nDeliver one cohesive, instantly readable dramatic moment rather than a generic portrait, character lineup, or decorative mood board.\n\nAPPROVED SONG DNA\nEssence: Attraction and uncertainty share the same breath.\nEmotional arc: charged ",
+            "newPromptExcerpt": "MISSION\nCreate one spectacular, premium, emotionally legible artwork from a validated Visual Scene Contract.\nDeliver one cohesive, instantly readable dramatic instant \u2014 not a generic portrait or mood collage.\n\nSEMANTIC SCENE PREMISE\nTwo people lean across a rain-streaked taxi window, reflections doubling their faces so it is unclear who is inside or outside.\nEmotional truth: Attraction and uncer"
+        },
+        "kinetic_adventure": {
+            "board": {
+                "version": "visual-board-v1",
+                "emotional_pivot": "weightlessness",
+                "relationship_dynamic": "companions in motion",
+                "candidate_environments": [
+                    "rooftop cityscape",
+                    "dusk skyline",
+                    "vertical drop",
+                    "layered city depth"
+                ],
+                "symbolic_artifacts": [
+                    "lantern: rising paper lights against dusk",
+                    "gap: open air between rooftops"
+                ],
+                "confidence": 0.9
+            },
+            "directions": [
+                {
+                    "id": "dir-primary",
+                    "type": "primary",
+                    "title": "The decisive instant",
+                    "user_summary": "The emotional pivot rendered as one clear, readable scene.",
+                    "overall_rank": 0.852,
+                    "song_dna_fidelity": 0.92,
+                    "narrative_coherence": 0.85,
+                    "visual_distinctiveness": 0.7,
+                    "portrait_suitability": "high"
+                },
+                {
+                    "id": "dir-alternate",
+                    "type": "alternate",
+                    "title": "After the turn",
+                    "user_summary": "A valid alternate emphasis on what follows or precedes the pivot.",
+                    "overall_rank": 0.805,
+                    "song_dna_fidelity": 0.78,
+                    "narrative_coherence": 0.85,
+                    "visual_distinctiveness": 0.82,
+                    "portrait_suitability": "medium"
+                },
+                {
+                    "id": "dir-unexpected",
+                    "type": "unexpected",
+                    "title": "Symbolic reframing",
+                    "user_summary": "A less literal but still DNA-grounded symbolic reading.",
+                    "overall_rank": 0.763,
+                    "song_dna_fidelity": 0.68,
+                    "narrative_coherence": 0.85,
+                    "visual_distinctiveness": 0.9,
+                    "portrait_suitability": "medium"
+                }
+            ],
+            "selectedDirectionId": "dir-primary",
+            "sceneContractSummary": {
+                "decisive_instant": "Two friends launch over a rooftop gap on battered boards as paper lanterns rise behind them and the avenue blurs below.",
+                "environment": "rooftop cityscape, dusk skyline, near future mundane, vertical drop, layered city depth",
+                "primary_symbol": "lantern: rising paper lights against dusk",
+                "viewer_relationship": "witness"
+            },
+            "promptComparison": {
+                "legacyLength": 5846,
+                "newLength": 4796,
+                "legacyCompiler": "creative-package-v1",
+                "newCompiler": "structured-prompt-v1"
+            },
+            "fallback": false,
+            "legacyPromptExcerpt": "MISSION\nCreate one spectacular, premium, emotionally legible artwork in which the authorized reference person or people become the heart of an original visual story.\nDeliver one cohesive, instantly readable dramatic moment rather than a generic portrait, character lineup, or decorative mood board.\n\nAPPROVED SONG DNA\nEssence: Velocity and wonder collide above a living city.\nEmotional arc: anticipat",
+            "newPromptExcerpt": "MISSION\nCreate one spectacular, premium, emotionally legible artwork from a validated Visual Scene Contract.\nDeliver one cohesive, instantly readable dramatic instant \u2014 not a generic portrait or mood collage.\n\nSEMANTIC SCENE PREMISE\nTwo friends launch over a rooftop gap on battered boards as paper lanterns rise behind them and the avenue blurs below.\nEmotional truth: Velocity and wonder collide "
+        },
+        "quiet_introspection": {
+            "board": {
+                "version": "visual-board-v1",
+                "emotional_pivot": "breath aligns with tide",
+                "relationship_dynamic": "self communion",
+                "candidate_environments": [
+                    "coastal rock shelf",
+                    "low tide",
+                    "intimate horizon",
+                    "horizontal calm"
+                ],
+                "symbolic_artifacts": [
+                    "tide pool: shallow mirror catching sky"
+                ],
+                "confidence": 0.87
+            },
+            "directions": [
+                {
+                    "id": "dir-primary",
+                    "type": "primary",
+                    "title": "The decisive instant",
+                    "user_summary": "The emotional pivot rendered as one clear, readable scene.",
+                    "overall_rank": 0.852,
+                    "song_dna_fidelity": 0.92,
+                    "narrative_coherence": 0.85,
+                    "visual_distinctiveness": 0.7,
+                    "portrait_suitability": "high"
+                },
+                {
+                    "id": "dir-alternate",
+                    "type": "alternate",
+                    "title": "After the turn",
+                    "user_summary": "A valid alternate emphasis on what follows or precedes the pivot.",
+                    "overall_rank": 0.805,
+                    "song_dna_fidelity": 0.78,
+                    "narrative_coherence": 0.85,
+                    "visual_distinctiveness": 0.82,
+                    "portrait_suitability": "medium"
+                },
+                {
+                    "id": "dir-unexpected",
+                    "type": "unexpected",
+                    "title": "Symbolic reframing",
+                    "user_summary": "A less literal but still DNA-grounded symbolic reading.",
+                    "overall_rank": 0.756,
+                    "song_dna_fidelity": 0.68,
+                    "narrative_coherence": 0.85,
+                    "visual_distinctiveness": 0.9,
+                    "portrait_suitability": "low"
+                }
+            ],
+            "selectedDirectionId": "dir-primary",
+            "sceneContractSummary": {
+                "decisive_instant": "One person kneels at a tide pool mirror, touching the surface so sky and face ripple together in the same small circle.",
+                "environment": "coastal rock shelf, low tide, timeless, intimate horizon, horizontal calm",
+                "primary_symbol": "tide pool: shallow mirror catching sky",
+                "viewer_relationship": "witness"
+            },
+            "promptComparison": {
+                "legacyLength": 5741,
+                "newLength": 4609,
+                "legacyCompiler": "creative-package-v1",
+                "newCompiler": "structured-prompt-v1"
+            },
+            "fallback": false,
+            "legacyPromptExcerpt": "MISSION\nCreate one spectacular, premium, emotionally legible artwork in which the authorized reference person or people become the heart of an original visual story.\nDeliver one cohesive, instantly readable dramatic moment rather than a generic portrait, character lineup, or decorative mood board.\n\nAPPROVED SONG DNA\nEssence: Solitude becomes clarity beside still water.\nEmotional arc: restless mind",
+            "newPromptExcerpt": "MISSION\nCreate one spectacular, premium, emotionally legible artwork from a validated Visual Scene Contract.\nDeliver one cohesive, instantly readable dramatic instant \u2014 not a generic portrait or mood collage.\n\nSEMANTIC SCENE PREMISE\nOne person kneels at a tide pool mirror, touching the surface so sky and face ripple together in the same small circle.\nEmotional truth: Solitude becomes clarity bes"
+        }
+    },
+    "promptLevelOnly": true,
+    "imageLevelEvaluation": "not_run_in_ci"
+}

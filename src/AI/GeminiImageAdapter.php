@@ -154,7 +154,10 @@ TXT;
             : 'Text is optional. If present it must be newly invented and non-copyrighted. Never render lyrics, song titles, artist or band names, album text, logos, trademarks, or provider marks.';
 
         $essence = $join($dna['essence'] ?? '', 1);
-        $moment = $join($narrative['moment'] ?? ($dna['originalVisualMoment'] ?? ''), 1);
+        $sceneContract = is_array($package['visualSceneContract'] ?? null) ? $package['visualSceneContract'] : null;
+        $moment = $sceneContract !== null
+            ? $join($sceneContract['decisive_instant'] ?? '', 1)
+            : $join($narrative['moment'] ?? ($dna['originalVisualMoment'] ?? ''), 1);
         $themes = $join($dna['themes'] ?? [], 6);
         $mood = $join($dna['mood'] ?? [], 6);
         $symbols = $join($dna['symbols'] ?? [], 5);
@@ -192,6 +195,31 @@ TXT;
         $aspectLine = $aspect . '. Frame the final image to a true ' . $aspect . ' canvas.';
         $stagingPeople = $portraitCount >= 2 ? 'both required people' : 'the required person';
 
+        $sceneContractBlock = '';
+        if ($sceneContract !== null) {
+            $hierarchy = $join($sceneContract['composition_hierarchy'] ?? [], 5);
+            $sceneContractBlock = implode("\n", array_filter([
+                '═══════════════════════════════════════════════════════════════',
+                'VISUAL SCENE CONTRACT (validated planning — staging authority)',
+                '═══════════════════════════════════════════════════════════════',
+                'Decisive instant: ' . $moment,
+                'Visible action: ' . $join($sceneContract['visible_action'] ?? '', 1),
+                'Environment: ' . $join($sceneContract['environment'] ?? '', 1),
+                'Primary symbol: ' . $join($sceneContract['primary_symbol'] ?? '', 1),
+                'Relationship geometry: ' . $join($sceneContract['relationship_geometry'] ?? '', 1),
+                'Off-screen tension: ' . $join($sceneContract['offscreen_tension'] ?? '', 1),
+                'Camera: ' . $join($sceneContract['camera_position'] ?? '', 1),
+                'Shot scale: ' . $join($sceneContract['shot_scale'] ?? '', 1),
+                'Composition hierarchy: ' . $hierarchy,
+                'Lighting logic: ' . $join($sceneContract['lighting_logic'] ?? '', 1),
+                'Color logic: ' . $join($sceneContract['color_logic'] ?? '', 1),
+                'Atmosphere: ' . $join($sceneContract['atmosphere'] ?? '', 1),
+                'Motion: ' . $join($sceneContract['motion_state'] ?? '', 1),
+                'Portrait integration: ' . $join($sceneContract['portrait_integration_plan'] ?? '', 1),
+                'Viewer relationship: ' . $join($sceneContract['viewer_relationship'] ?? '', 1),
+            ]));
+        }
+
         $prompt = <<<PROMPT
 MISSION: Create one finished cinematic artwork in which the attached uploaded person or people are the recognizable emotional center of an original song-inspired world.
 
@@ -214,6 +242,8 @@ Motion: {$motion}
 Palette: {$palette}
 Lighting: {$lighting}
 Surface and texture: {$texture}
+
+{$sceneContractBlock}
 
 ═══════════════════════════════════════════════════════════════
 NARRATIVE STAGING FREEDOM

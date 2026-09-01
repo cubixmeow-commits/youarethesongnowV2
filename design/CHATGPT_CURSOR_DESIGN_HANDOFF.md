@@ -6,7 +6,7 @@
 
 **Last updated by ChatGPT:** 2026-09-01 (Round 012 visual narrative planning handoff)
 
-**Active round:** 012 (backend-first POV visual planning integration; awaiting Cursor)
+**Active round:** 012 (backend-first POV visual planning integration — complete, awaiting GPT review)
 
 **Workflow roles**
 
@@ -120,26 +120,29 @@ After verified backend integration:
 
 #### Cursor → GPT (Round 012 report)
 
-- Status: awaiting Cursor
-- Commit:
-- Existing Song DNA sources found:
-- Current API/storage/queue boundaries:
-- Internal Song DNA source reused:
-- Planning services implemented:
-- Contracts added:
-- Versions:
-- Privacy decisions:
-- Persistence/trace decisions:
-- Validation/repair/fallback decisions:
-- Existing generation path integration:
-- Current-compiler fallback/switch:
-- Portrait boundary verification:
-- Old/new prompt comparison:
-- Tests/checks:
-- Five-fixture results:
-- Files changed:
-- Deferred work:
+- Status: complete — awaiting GPT/owner review
+- Commit: (see latest `main` after push)
+- Existing Song DNA sources found: `CreativePackageBuilder::build()` normalized `song-dna-v2.0`; `song_lookups.derived_analysis_json` (flat subset); `song_dna_artifacts.dna_json` (persisted); `GeminiLyricsResearchService` at lookup time; `DevelopmentCreativeAdapter` deterministic fallback
+- Current API/storage/queue boundaries: unchanged routes/auth/credits; planning trace added to `song_dna_artifacts.planning_trace_json` via migration `20260901_004_visual_narrative_planning.sql`
+- Internal Song DNA source reused: normalized `dna` from `CreativePackageBuilder::build()` — richest internal representation
+- Planning services implemented: `VisualNarrativePlanner`, `VisualNarrativePlanningService`, `StructuredPromptCompiler`, `VisualNarrativeContracts` under `src/CreativeEngine/VisualNarrative/`
+- Contracts added: `visual-board-v1`, three ranked directions (`primary`/`alternate`/`unexpected`), `visual-scene-v1`, `structured-prompt-v1`, `planning-trace-v1`
+- Versions: board `visual-board-v1`, scene `visual-scene-v1`, compiler `structured-prompt-v1`, trace `planning-trace-v1`
+- Privacy decisions: no portrait image bytes in board/direction planning; sanitized trace only (no raw lyrics, no full prompts in persisted trace); portrait roles integrated after Scene Contract selection
+- Persistence/trace decisions: `planning_trace_json` on `song_dna_artifacts`; extended `narrative_json` with `sceneContractVersion`, `selectedDirectionId`, `selectedDirectionType`
+- Validation/repair/fallback decisions: strict contract validation with bounded repair; deterministic planner fallback to legacy `creative-package-v1` on failure; `VISUAL_NARRATIVE_LEGACY_COMPILER=true` config switch
+- Existing generation path integration: `CreativePackageBuilder::build()` calls `VisualNarrativePlanningService::applyToPackage()`; `GenerationJobService` persists trace; `GeminiImageAdapter` consumes `visualSceneContract` block when present
+- Current-compiler fallback/switch: `VISUAL_NARRATIVE_LEGACY_COMPILER` env disables planning; planning failure preserves legacy `compiledPromptSafe`
+- Portrait boundary verification: planner uses `portraitCount` only; no portrait bytes in planning calls; portrait directives in structured compiler after contract
+- Old/new prompt comparison: `design/review/round-012/prompt-comparison.json` (five fixtures, prompt-level only)
+- Tests/checks: `php tests/run.php` → **1164 passed, 0 failed** (+72 planning assertions)
+- Five-fixture results: intimate_loss, triumphant_transformation, ambiguous_relationship, kinetic_adventure, quiet_introspection — all produce board + 3 directions + primary selection + scene contract; no fallbacks
+- Files changed: `src/CreativeEngine/VisualNarrative/*`, `src/AI/CreativePackageBuilder.php`, `src/AI/GeminiImageAdapter.php`, `src/Generation/GenerationJobService.php`, `src/Support/Config.php`, `database/migrations/20260901_004_visual_narrative_planning.sql`, `tests/fixtures/visual-narrative-fixtures.php`, `tests/run.php`, `design/review/round-012/*`, handoffs, roadmap
+- Deferred work: customer Song DNA selector, Explore Options UI, Fine Tune UI, optional LLM planning-model calls, controlled image-level A/B generations, retry charging changes
 - Questions for GPT:
+  1. Approve deterministic planner for Build 1 evaluation, or require Gemini structured planning calls before customer-facing design?
+  2. Should Explore Options reuse persisted direction summaries from `planning_trace_json` on the next slice?
+  3. Any Scene Contract field budget adjustments before Phase 3 customer-safe Song DNA projection?
 
 
 ### Cursor → ChatGPT (Round 009 — 2026-08-30)

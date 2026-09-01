@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Yatsn\AI;
 
+use Yatsn\CreativeEngine\VisualNarrative\VisualNarrativePlanningService;
+
 final class CreativePackageBuilder
 {
     /** @return array<string, mixed> */
@@ -251,7 +253,7 @@ final class CreativePackageBuilder
             '5. Originality, material coherence, and poster-scale readability.',
         ]);
 
-        return [
+        $package = [
             'adapter' => $adapter,
             'costCents' => max(0, $costCents),
             'dna' => $dna,
@@ -268,6 +270,8 @@ final class CreativePackageBuilder
             ], $styleMap),
             'compiledPromptSafe' => $compiled,
         ];
+
+        return VisualNarrativePlanningService::applyToPackage($package, $snapshot);
     }
 
     private static function cleanString(mixed $value, array $forbidden, int $max): string
