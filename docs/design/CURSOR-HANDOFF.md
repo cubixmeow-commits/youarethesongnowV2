@@ -1,3 +1,23 @@
+# NEXT DIRECTIVE — Round 012 contract-first visual planning
+
+**Date:** 2026-09-01  
+**Working branch:** `main`  
+**Status:** Ready for Cursor
+
+Phase 2 remains the published baseline: **1092 passed, 0 failed**.
+
+Implement only Slice A from:
+
+- `docs/design/process/VISUAL-NARRATIVE-PLANNING-LAYER.md`
+- `design/CHATGPT_NEXT_PASS.md`
+- `design/CHATGPT_CURSOR_DESIGN_HANDOFF.md`
+
+This slice defines customer-safe Song DNA and versioned contracts for selection, Visual Campaign Board, three directions, and Visual Scene Contract. It does not implement UI, live model planning, Quick Generate wiring, generation changes, or retry/credit changes.
+
+After verification, update this file with the implementation commit and test results, push `main`, and stop for GPT review. Do not deploy.
+
+---
+
 # CURSOR-HANDOFF — Luminous Night Studio Phase 2 published
 
 **Date:** 2026-09-01
