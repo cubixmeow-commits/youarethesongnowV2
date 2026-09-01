@@ -4,11 +4,11 @@
 **Working branch:** `cursor/luminous-night-studio-phase2`
 **Base:** `main` @ `795fc2a`
 **Phase:** 2 — Create entry and existing-contract song selection
-**Status:** Codex correction pass complete. Ready for second Codex review. Do not merge to `main`.
+**Status:** Final focused correction pass complete. Ready for Codex review. Do not merge to `main`.
 
 ## Package / slice verification
 
-- `php tests/run.php`: **1088 passed, 0 failed**
+- `php tests/run.php`: **1092 passed, 0 failed**
 - Runtime/backend/API/migration changes: **none**
 - Song lookup endpoint: still `POST /api/v1/song-lookups` with `{ artist, title }`
 - Draft patch: still `songLookupId` on successful lookup
@@ -46,32 +46,37 @@ Evidence / docs
 - **In-flight guard:** `song-search.js` blocks duplicate submits while lookup is pending.
 - **Result semantics:** `data-song-results` is `role="region"` with `aria-label="Song match"`. Selectable row is a native `<button>` with `aria-label` containing title, artist, and match status. No custom Enter/Space keydown handler on the native button.
 - **Resume row:** hidden in Phase 2. No list-drafts or alternate-draft contract exists to show a meaningful resume action without a self-link.
+- **Recent creations:** semantic `<ul>` / `<li>` list with one anchor per item; no invalid `role="list"` without `listitem`.
 - **Hidden state rows:** `[hidden]` song-search placeholders use `display: none !important` so `.yatsn-song-result { display: grid }` cannot leak the loading skeleton into the entry view.
+- **Mobile spacing:** compact Create entry spacing at `max-width: 599px` only so 390px honest entry evidence shows identity, progress, song context, both fields, and primary action at `scrollY = 0`.
 - **Artwork:** uses `artworkUrl` / `thumbnailUrl` when present; restrained circular fallback otherwise.
-- **Recent creations:** optional row from existing `GET /api/v1/images` only.
+- **Recent creations row:** optional from existing `GET /api/v1/images` only.
 - **Active portrait summary:** not added — no explicit server active/default portrait contract yet.
 
 ## Tests
 
 ```text
 php tests/run.php
-=== Results: 1088 passed, 0 failed ===
+=== Results: 1092 passed, 0 failed ===
 ```
 
 Also: `php -l` on touched PHP templates, `node --check` on `song-search.js` / `app.js` / `capture-screenshots.mjs`, and `git diff --check` clean.
 
-Scoped coverage includes song-search state hook, in-flight lock, reversible selection, labelled result region, native-button activation guard (no redundant keydown), hidden resume row, hidden-state CSS guard, private fixture gating, Create `h1` stability, and `song-lookups` body preservation.
+Scoped coverage includes song-search state hook, in-flight lock, reversible selection, labelled result region, native-button activation guard (no redundant keydown), hidden resume row, hidden-state CSS guard, compact mobile spacing guard, recent-creations list semantics, private fixture gating, Create `h1` stability, and `song-lookups` body preservation.
 
 ## Screenshots
 
 Stored under `design/review/round-011/`. Index: `design/review/round-011/README.md`.
 
-Capture harness scrolls each named state target below the sticky top bar and fails when `targetVisible` is false. Entry shots at 320/390 assert artist field, title field, submit, and hidden resume row without the fresh-draft self-link.
+- `create-entry-*` captured at `scrollY = 0` without pre-scroll (honest first-open evidence).
+- Optional `create-form-*` shots provide form-focused scroll evidence without substituting for entry captures.
+- Compound state screenshots use `positionAndAssertGroup()` so every required member is simultaneously visible below the sticky top bar; capture fails when any member has `targetVisible: false`. Bounds recorded per member in `review-notes.json`.
 
 ## Accessibility / contrast / motion / zoom
 
 - Real `h1`, visible field labels, one `role="status"` region with `aria-live="polite"`.
 - Result button accessible name includes title, artist, and match qualifier.
+- Recent creations use valid list/listitem semantics.
 - Focus uses the canonical 3px `outline` via `--elevation-focus-ring`.
 - Reduced motion removes row/button travel on touched song-search surfaces.
 - Increased-contrast CSS forces white borders on song rows; the 390 evidence shot injects those rules because Puppeteer-core cannot emulate `prefers-contrast`.
@@ -88,7 +93,7 @@ Capture harness scrolls each named state target below the sticky top bar and fai
 ## Final commit
 
 - **Branch:** `cursor/luminous-night-studio-phase2`
-- **Branch head:** `90d94319f35267e128d8af1d7ab39d2f9b4e6ca9`
+- **Branch head:** `e29811ce8733716fc97e84a42a05917ae13f3f47`
 
 ## Recommended next slice
 

@@ -1144,6 +1144,9 @@ $fixtureGateAt = strpos($songSearchJs, 'if (privateBuildAllowsFixtures())');
 assert_true($fixtureExportAt !== false && $fixtureGateAt !== false && $fixtureGateAt < $fixtureExportAt, 'song search fixture construction is inside the private-build gate');
 assert_true(!str_contains($songSearchJs, 'Gemini'), 'song search customer copy omits provider names');
 assert_true(!str_contains($songSearchJs, 'diagnostic'), 'song search customer copy omits provider diagnostics');
+assert_true(str_contains($songSearchJs, '<ul class="yatsn-recent-row__list">'), 'recent creations use semantic ul markup');
+assert_true(str_contains($songSearchJs, '<li class="yatsn-recent-row__item-wrap">'), 'recent creations wrap each link in a list item');
+assert_true(!str_contains($songSearchJs, 'role="list"'), 'recent creations do not use invalid role=list without listitem');
 
 $appJs = (string) file_get_contents($root . '/public/assets/js/app.js');
 assert_true(str_contains($appJs, 'YatsnSongSearch.init'), 'Create wires the song search module');
@@ -1170,6 +1173,7 @@ assert_true(str_contains($mainLayout, 'song-search.js'), 'Create page loads song
 assert_true(str_contains($appCss, 'container-name: yatsn-create-entry'), 'Create entry uses a size container for adaptive controls');
 assert_true(str_contains($appCss, '.yatsn-song-result__title'), 'song result title hierarchy styles exist');
 assert_true(str_contains($appCss, '[data-song-result-loading][hidden]'), 'hidden song-search state rows are not overridden by grid display');
+assert_true(str_contains($appCss, '.create .yatsn-create-entry.movement'), 'compact Create entry spacing is tightened on mobile only');
 
 $groqDecoded = \Yatsn\AI\GroqCreativeAdapter::decodeResponse([
     'choices' => [['message' => ['content' => json_encode($analysisFixture, JSON_THROW_ON_ERROR)]]],

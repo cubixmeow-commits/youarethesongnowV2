@@ -11,16 +11,18 @@ This note is the daily “what matters now” list for CuBiX Meow and Brut. Keep
 
 ## Active now
 
-1. **Codex second review of Luminous Night Studio Phase 2 correction pass:** resume row removed, screenshot harness fixed, result semantics repaired. Pack: `design/review/round-011/`. Do not start Phase 3 contract/API work until review lands.
+1. **Codex review of Luminous Night Studio Phase 2 final correction pass:** honest entry evidence at scrollY=0, compound group-visibility harness, recent-creations list semantics, compact mobile spacing. Pack: `design/review/round-011/`. Do not start Phase 3 contract/API work until review lands.
 2. **Run controlled private image tests:** compare the same one- and two-person inputs on Flash Lite and full Flash; change one variable at a time and record identity, narrative fidelity, coherence, prohibited text, latency, cost and usability.
 3. **Resolve no-text and unusable-image detection:** one otherwise successful no-text image rendered `TICKET`. Prompt-only enforcement and human-only identity acceptance are not sufficient for the final 90-image gate.
 4. **Provisional routing only:** Flash Lite is the low-cost candidate at about $0.0336 per 1K output; full Flash is the quality anchor at about $0.067. Medium/default and high routing are not decided.
 5. **Complete live functional checks:** share/revoke, deletion, failure/refund, account recovery/change, Stripe lifecycle, complimentary access, admin, mobile API, accessibility and Hostinger operational drills.
 6. **Keep release gates closed:** external beta, live Stripe and commercial protected-lyrics use remain blocked. Lyrics remain transient and never saved.
-7. **Automated foundation healthy:** **1083 passed, 0 failed** after Luminous Night Studio Phase 2 Create entry/song selection. Phase 1 baseline was 1058. See [[Build 1 Assessment 2026-08-30]].
+7. **Automated foundation healthy:** **1092 passed, 0 failed** after Luminous Night Studio Phase 2 final correction pass. Phase 1 baseline was 1058. See [[Build 1 Assessment 2026-08-30]].
 8. **Print/poster/T-shirt/upscaling remain post-Build-1.** Vault = workshop; `/docs` = Meow Control.
 
 ## Newly documented
+
+- **Luminous Night Studio Phase 2 final correction pass (2026-09-01):** honest `create-entry-*` evidence at scrollY=0; optional `create-form-*` shots; compound screenshot harness with simultaneous group visibility; semantic recent-creations `<ul>`/`<li>`; compact mobile Create spacing only. **1092 passed, 0 failed**. Review pack: `design/review/round-011/`.
 
 - **Luminous Night Studio Phase 2 correction pass (2026-09-01):** removed fresh-draft resume self-link; fixed hidden loading placeholder leak; repaired result region semantics and native-button activation; screenshot harness now asserts `targetVisible` with scroll offset. **1088 passed, 0 failed**. Review pack: `design/review/round-011/`.
 

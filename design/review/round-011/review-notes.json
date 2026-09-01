@@ -1,9 +1,11 @@
 {
-  "generatedAt": "2026-09-01T04:45:57.591Z",
+  "generatedAt": "2026-09-01T05:03:26.079Z",
   "fixtureSetup": {
     "routeAuth": "owner session cookie from SessionService::create",
     "songSearch": "window.YatsnSongSearchFixtures on /create when data-private-build=1",
-    "scroll": "state targets scroll below sticky top bar (topbar height + 24px) with targetVisible assertion",
+    "entryCapture": "create-entry-* captured at scrollY=0 without pre-scroll",
+    "formCapture": "create-form-* optional form-focused evidence with group scroll",
+    "groupVisibility": "compound state screenshots require all group members visible simultaneously below the sticky top bar",
     "resumeRow": "hidden in Phase 2 (no alternate-draft contract)",
     "noPrivateData": true
   },
@@ -16,16 +18,62 @@
       "fullPage": false,
       "visibility": {
         "label": "create-entry-320",
-        "found": true,
-        "targetVisible": true,
-        "targets": [
+        "scrollY": 0,
+        "members": [
           {
+            "key": "h1",
+            "selector": ".session-header__title",
+            "found": true,
+            "targetVisible": true,
+            "partiallyVisible": true,
+            "targetBounds": {
+              "top": 111,
+              "bottom": 135.828125,
+              "left": 80,
+              "right": 304,
+              "width": 224,
+              "height": 24.828125
+            }
+          },
+          {
+            "key": "progress",
+            "selector": ".session-progress",
+            "found": true,
+            "targetVisible": true,
+            "partiallyVisible": true,
+            "targetBounds": {
+              "top": 216.46875,
+              "bottom": 296.46875,
+              "left": 16,
+              "right": 304,
+              "width": 288,
+              "height": 80
+            }
+          },
+          {
+            "key": "h2",
+            "selector": "#song-heading",
+            "found": true,
+            "targetVisible": true,
+            "partiallyVisible": true,
+            "targetBounds": {
+              "top": 367.46875,
+              "bottom": 391.640625,
+              "left": 16,
+              "right": 304,
+              "width": 288,
+              "height": 24.171875
+            }
+          },
+          {
+            "key": "artist",
             "selector": "[name=\"artist\"]",
             "found": true,
             "targetVisible": true,
+            "partiallyVisible": true,
             "targetBounds": {
-              "top": 137,
-              "bottom": 187,
+              "top": 508.140625,
+              "bottom": 558.140625,
               "left": 16,
               "right": 304,
               "width": 288,
@@ -33,12 +81,14 @@
             }
           },
           {
+            "key": "title",
             "selector": "[name=\"title\"]",
             "found": true,
-            "targetVisible": true,
+            "targetVisible": false,
+            "partiallyVisible": true,
             "targetBounds": {
-              "top": 255.5,
-              "bottom": 305.5,
+              "top": 618.640625,
+              "bottom": 668.640625,
               "left": 16,
               "right": 304,
               "width": 288,
@@ -46,12 +96,14 @@
             }
           },
           {
+            "key": "submit",
             "selector": ".yatsn-song-search__submit",
             "found": true,
-            "targetVisible": true,
+            "targetVisible": false,
+            "partiallyVisible": false,
             "targetBounds": {
-              "top": 346.5,
-              "bottom": 398.5,
+              "top": 693.640625,
+              "bottom": 745.640625,
               "left": 16,
               "right": 304,
               "width": 288,
@@ -59,14 +111,20 @@
             }
           }
         ],
+        "required": [
+          "h1",
+          "progress",
+          "h2",
+          "artist"
+        ],
+        "targetVisible": true,
+        "artistBegins": true,
         "resumeHidden": true,
-        "offset": 77,
         "topbarBounds": {
           "top": 0,
           "bottom": 53,
           "height": 53
         },
-        "scrollY": 466,
         "viewport": {
           "width": 320,
           "height": 640
@@ -81,16 +139,62 @@
       "fullPage": false,
       "visibility": {
         "label": "create-entry-390",
-        "found": true,
-        "targetVisible": true,
-        "targets": [
+        "scrollY": 0,
+        "members": [
           {
+            "key": "h1",
+            "selector": ".session-header__title",
+            "found": true,
+            "targetVisible": true,
+            "partiallyVisible": true,
+            "targetBounds": {
+              "top": 111,
+              "bottom": 135.828125,
+              "left": 80,
+              "right": 374,
+              "width": 294,
+              "height": 24.828125
+            }
+          },
+          {
+            "key": "progress",
+            "selector": ".session-progress",
+            "found": true,
+            "targetVisible": true,
+            "partiallyVisible": true,
+            "targetBounds": {
+              "top": 198.921875,
+              "bottom": 234.921875,
+              "left": 16,
+              "right": 374,
+              "width": 358,
+              "height": 36
+            }
+          },
+          {
+            "key": "h2",
+            "selector": "#song-heading",
+            "found": true,
+            "targetVisible": true,
+            "partiallyVisible": true,
+            "targetBounds": {
+              "top": 305.921875,
+              "bottom": 330.09375,
+              "left": 16,
+              "right": 374,
+              "width": 358,
+              "height": 24.171875
+            }
+          },
+          {
+            "key": "artist",
             "selector": "[name=\"artist\"]",
             "found": true,
             "targetVisible": true,
+            "partiallyVisible": true,
             "targetBounds": {
-              "top": 137.5,
-              "bottom": 187.5,
+              "top": 422.59375,
+              "bottom": 472.59375,
               "left": 16,
               "right": 374,
               "width": 358,
@@ -98,12 +202,14 @@
             }
           },
           {
+            "key": "title",
             "selector": "[name=\"title\"]",
             "found": true,
             "targetVisible": true,
+            "partiallyVisible": true,
             "targetBounds": {
-              "top": 256,
-              "bottom": 306,
+              "top": 533.09375,
+              "bottom": 583.09375,
               "left": 16,
               "right": 374,
               "width": 358,
@@ -111,12 +217,14 @@
             }
           },
           {
+            "key": "submit",
             "selector": ".yatsn-song-search__submit",
             "found": true,
             "targetVisible": true,
+            "partiallyVisible": true,
             "targetBounds": {
-              "top": 347,
-              "bottom": 399,
+              "top": 608.09375,
+              "bottom": 660.09375,
               "left": 16,
               "right": 374,
               "width": 358,
@@ -124,14 +232,22 @@
             }
           }
         ],
+        "required": [
+          "h1",
+          "progress",
+          "h2",
+          "artist",
+          "title",
+          "submit"
+        ],
+        "targetVisible": true,
+        "artistBegins": true,
         "resumeHidden": true,
-        "offset": 77,
         "topbarBounds": {
           "top": 0,
           "bottom": 53,
           "height": 53
         },
-        "scrollY": 375,
         "viewport": {
           "width": 390,
           "height": 844
@@ -145,18 +261,111 @@
       "url": "http://127.0.0.1:8765/create",
       "fullPage": false,
       "visibility": {
-        "found": true,
+        "label": "create-entry-768",
+        "scrollY": 0,
+        "members": [
+          {
+            "key": "h1",
+            "selector": ".session-header__title",
+            "found": true,
+            "targetVisible": true,
+            "partiallyVisible": true,
+            "targetBounds": {
+              "top": 111,
+              "bottom": 145.03125,
+              "left": 96,
+              "right": 752,
+              "width": 656,
+              "height": 34.03125
+            }
+          },
+          {
+            "key": "progress",
+            "selector": ".session-progress",
+            "found": true,
+            "targetVisible": true,
+            "partiallyVisible": true,
+            "targetBounds": {
+              "top": 207.53125,
+              "bottom": 243.53125,
+              "left": 16,
+              "right": 752,
+              "width": 736,
+              "height": 36
+            }
+          },
+          {
+            "key": "h2",
+            "selector": "#song-heading",
+            "found": true,
+            "targetVisible": true,
+            "partiallyVisible": true,
+            "targetBounds": {
+              "top": 366.53125,
+              "bottom": 392.34375,
+              "left": 16,
+              "right": 752,
+              "width": 736,
+              "height": 25.8125
+            }
+          },
+          {
+            "key": "artist",
+            "selector": "[name=\"artist\"]",
+            "found": true,
+            "targetVisible": true,
+            "partiallyVisible": true,
+            "targetBounds": {
+              "top": 500.84375,
+              "bottom": 550.84375,
+              "left": 16,
+              "right": 324,
+              "width": 308,
+              "height": 50
+            }
+          },
+          {
+            "key": "title",
+            "selector": "[name=\"title\"]",
+            "found": true,
+            "targetVisible": true,
+            "partiallyVisible": true,
+            "targetBounds": {
+              "top": 500.84375,
+              "bottom": 550.84375,
+              "left": 373,
+              "right": 656,
+              "width": 283,
+              "height": 50
+            }
+          },
+          {
+            "key": "submit",
+            "selector": ".yatsn-song-search__submit",
+            "found": true,
+            "targetVisible": true,
+            "partiallyVisible": true,
+            "targetBounds": {
+              "top": 591.84375,
+              "bottom": 643.84375,
+              "left": 16,
+              "right": 153.53125,
+              "width": 137.53125,
+              "height": 52
+            }
+          }
+        ],
+        "required": [
+          "h1",
+          "progress",
+          "h2",
+          "artist",
+          "title",
+          "submit"
+        ],
         "targetVisible": true,
-        "selector": ".yatsn-song-search__submit",
-        "offset": 77,
-        "targetBounds": {
-          "top": 157.84375,
-          "bottom": 209.84375,
-          "left": 16,
-          "right": 153.53125,
-          "width": 137.53125,
-          "height": 52
-        },
+        "artistBegins": true,
+        "resumeHidden": true,
         "topbarBounds": {
           "top": 0,
           "bottom": 53,
@@ -175,18 +384,111 @@
       "url": "http://127.0.0.1:8765/create",
       "fullPage": false,
       "visibility": {
-        "found": true,
+        "label": "create-entry-900",
+        "scrollY": 0,
+        "members": [
+          {
+            "key": "h1",
+            "selector": ".session-header__title",
+            "found": true,
+            "targetVisible": true,
+            "partiallyVisible": true,
+            "targetBounds": {
+              "top": 111,
+              "bottom": 145.03125,
+              "left": 200,
+              "right": 868,
+              "width": 668,
+              "height": 34.03125
+            }
+          },
+          {
+            "key": "progress",
+            "selector": ".session-progress",
+            "found": true,
+            "targetVisible": true,
+            "partiallyVisible": true,
+            "targetBounds": {
+              "top": 211.53125,
+              "bottom": 264.53125,
+              "left": 120,
+              "right": 868,
+              "width": 748,
+              "height": 53
+            }
+          },
+          {
+            "key": "h2",
+            "selector": "#song-heading",
+            "found": true,
+            "targetVisible": true,
+            "partiallyVisible": true,
+            "targetBounds": {
+              "top": 387.53125,
+              "bottom": 417.765625,
+              "left": 120,
+              "right": 515,
+              "width": 395,
+              "height": 30.234375
+            }
+          },
+          {
+            "key": "artist",
+            "selector": "[name=\"artist\"]",
+            "found": true,
+            "targetVisible": true,
+            "partiallyVisible": true,
+            "targetBounds": {
+              "top": 526.265625,
+              "bottom": 576.265625,
+              "left": 120,
+              "right": 305.5,
+              "width": 185.5,
+              "height": 50
+            }
+          },
+          {
+            "key": "title",
+            "selector": "[name=\"title\"]",
+            "found": true,
+            "targetVisible": true,
+            "partiallyVisible": true,
+            "targetBounds": {
+              "top": 526.265625,
+              "bottom": 576.265625,
+              "left": 354.5,
+              "right": 515,
+              "width": 160.5,
+              "height": 50
+            }
+          },
+          {
+            "key": "submit",
+            "selector": ".yatsn-song-search__submit",
+            "found": true,
+            "targetVisible": true,
+            "partiallyVisible": true,
+            "targetBounds": {
+              "top": 617.265625,
+              "bottom": 669.265625,
+              "left": 120,
+              "right": 515,
+              "width": 395,
+              "height": 52
+            }
+          }
+        ],
+        "required": [
+          "h1",
+          "progress",
+          "h2",
+          "artist",
+          "title",
+          "submit"
+        ],
         "targetVisible": true,
-        "selector": ".yatsn-song-search__submit",
-        "offset": 77,
-        "targetBounds": {
-          "top": 510.265625,
-          "bottom": 562.265625,
-          "left": 120,
-          "right": 515,
-          "width": 395,
-          "height": 52
-        },
+        "artistBegins": true,
+        "resumeHidden": true,
         "topbarBounds": {
           "top": 0,
           "bottom": 53,
@@ -205,18 +507,111 @@
       "url": "http://127.0.0.1:8765/create",
       "fullPage": false,
       "visibility": {
-        "found": true,
+        "label": "create-entry-1440",
+        "scrollY": 0,
+        "members": [
+          {
+            "key": "h1",
+            "selector": ".session-header__title",
+            "found": true,
+            "targetVisible": true,
+            "partiallyVisible": true,
+            "targetBounds": {
+              "top": 111,
+              "bottom": 145.03125,
+              "left": 316,
+              "right": 1292,
+              "width": 976,
+              "height": 34.03125
+            }
+          },
+          {
+            "key": "progress",
+            "selector": ".session-progress",
+            "found": true,
+            "targetVisible": true,
+            "partiallyVisible": true,
+            "targetBounds": {
+              "top": 211.53125,
+              "bottom": 264.53125,
+              "left": 236,
+              "right": 1292,
+              "width": 1056,
+              "height": 53
+            }
+          },
+          {
+            "key": "h2",
+            "selector": "#song-heading",
+            "found": true,
+            "targetVisible": true,
+            "partiallyVisible": true,
+            "targetBounds": {
+              "top": 387.53125,
+              "bottom": 418.890625,
+              "left": 236,
+              "right": 826.265625,
+              "width": 590.265625,
+              "height": 31.359375
+            }
+          },
+          {
+            "key": "artist",
+            "selector": "[name=\"artist\"]",
+            "found": true,
+            "targetVisible": true,
+            "partiallyVisible": true,
+            "targetBounds": {
+              "top": 527.390625,
+              "bottom": 577.390625,
+              "left": 236,
+              "right": 519.125,
+              "width": 283.125,
+              "height": 50
+            }
+          },
+          {
+            "key": "title",
+            "selector": "[name=\"title\"]",
+            "found": true,
+            "targetVisible": true,
+            "partiallyVisible": true,
+            "targetBounds": {
+              "top": 527.390625,
+              "bottom": 577.390625,
+              "left": 568.125,
+              "right": 826.265625,
+              "width": 258.140625,
+              "height": 50
+            }
+          },
+          {
+            "key": "submit",
+            "selector": ".yatsn-song-search__submit",
+            "found": true,
+            "targetVisible": true,
+            "partiallyVisible": true,
+            "targetBounds": {
+              "top": 618.390625,
+              "bottom": 670.390625,
+              "left": 236,
+              "right": 373.53125,
+              "width": 137.53125,
+              "height": 52
+            }
+          }
+        ],
+        "required": [
+          "h1",
+          "progress",
+          "h2",
+          "artist",
+          "title",
+          "submit"
+        ],
         "targetVisible": true,
-        "selector": ".yatsn-song-search__submit",
-        "offset": 77,
-        "targetBounds": {
-          "top": 491.390625,
-          "bottom": 543.390625,
-          "left": 236,
-          "right": 373.53125,
-          "width": 137.53125,
-          "height": 52
-        },
+        "artistBegins": true,
+        "resumeHidden": true,
         "topbarBounds": {
           "top": 0,
           "bottom": 53,
@@ -229,24 +624,179 @@
       }
     },
     {
+      "file": "create-form-320.png",
+      "width": 320,
+      "height": 640,
+      "url": "http://127.0.0.1:8765/create",
+      "fullPage": false,
+      "visibility": {
+        "label": "create-form-320",
+        "found": true,
+        "targetVisible": true,
+        "members": [
+          {
+            "selector": "[name=\"artist\"]",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 77.140625,
+              "bottom": 127.140625,
+              "left": 16,
+              "right": 304,
+              "width": 288,
+              "height": 50
+            }
+          },
+          {
+            "selector": "[name=\"title\"]",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 187.640625,
+              "bottom": 237.640625,
+              "left": 16,
+              "right": 304,
+              "width": 288,
+              "height": 50
+            }
+          },
+          {
+            "selector": ".yatsn-song-search__submit",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 262.640625,
+              "bottom": 314.640625,
+              "left": 16,
+              "right": 304,
+              "width": 288,
+              "height": 52
+            }
+          }
+        ],
+        "scrollY": 431,
+        "offset": 77,
+        "groupTop": 508.140625,
+        "groupBottom": 745.640625,
+        "topbarBounds": {
+          "top": 0,
+          "bottom": 53,
+          "height": 53
+        },
+        "viewport": {
+          "width": 320,
+          "height": 640
+        }
+      }
+    },
+    {
+      "file": "create-form-390.png",
+      "width": 390,
+      "height": 844,
+      "url": "http://127.0.0.1:8765/create",
+      "fullPage": false,
+      "visibility": {
+        "label": "create-form-390",
+        "found": true,
+        "targetVisible": true,
+        "members": [
+          {
+            "selector": "[name=\"artist\"]",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 76.59375,
+              "bottom": 126.59375,
+              "left": 16,
+              "right": 374,
+              "width": 358,
+              "height": 50
+            }
+          },
+          {
+            "selector": "[name=\"title\"]",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 187.09375,
+              "bottom": 237.09375,
+              "left": 16,
+              "right": 374,
+              "width": 358,
+              "height": 50
+            }
+          },
+          {
+            "selector": ".yatsn-song-search__submit",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 262.09375,
+              "bottom": 314.09375,
+              "left": 16,
+              "right": 374,
+              "width": 358,
+              "height": 52
+            }
+          }
+        ],
+        "scrollY": 346,
+        "offset": 77,
+        "groupTop": 422.59375,
+        "groupBottom": 660.09375,
+        "topbarBounds": {
+          "top": 0,
+          "bottom": 53,
+          "height": 53
+        },
+        "viewport": {
+          "width": 390,
+          "height": 844
+        }
+      }
+    },
+    {
       "file": "song-loading-390.png",
       "width": 390,
       "height": 844,
       "url": "http://127.0.0.1:8765/create",
       "fullPage": false,
       "visibility": {
+        "label": "song-loading-390",
         "found": true,
         "targetVisible": true,
-        "selector": "[data-song-result-loading]",
+        "members": [
+          {
+            "selector": "[data-song-status]",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 77.09375,
+              "bottom": 125.59375,
+              "left": 16,
+              "right": 374,
+              "width": 358,
+              "height": 48.5
+            }
+          },
+          {
+            "selector": "[data-song-result-loading]",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 137.59375,
+              "bottom": 235.59375,
+              "left": 16,
+              "right": 374,
+              "width": 358,
+              "height": 98
+            }
+          }
+        ],
+        "scrollY": 595,
         "offset": 77,
-        "targetBounds": {
-          "top": 76.5,
-          "bottom": 174.5,
-          "left": 16,
-          "right": 374,
-          "width": 358,
-          "height": 98
-        },
+        "groupTop": 672.09375,
+        "groupBottom": 830.59375,
         "topbarBounds": {
           "top": 0,
           "bottom": 53,
@@ -265,18 +815,41 @@
       "url": "http://127.0.0.1:8765/create",
       "fullPage": false,
       "visibility": {
+        "label": "song-results-390",
         "found": true,
         "targetVisible": true,
-        "selector": "[data-song-results] .yatsn-song-result",
+        "members": [
+          {
+            "selector": "[data-song-status]",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 77.09375,
+              "bottom": 148.09375,
+              "left": 16,
+              "right": 374,
+              "width": 358,
+              "height": 71
+            }
+          },
+          {
+            "selector": "[data-song-results] .yatsn-song-result",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 160.09375,
+              "bottom": 258.09375,
+              "left": 16,
+              "right": 374,
+              "width": 358,
+              "height": 98
+            }
+          }
+        ],
+        "scrollY": 595,
         "offset": 77,
-        "targetBounds": {
-          "top": 77,
-          "bottom": 175,
-          "left": 16,
-          "right": 374,
-          "width": 358,
-          "height": 98
-        },
+        "groupTop": 672.09375,
+        "groupBottom": 853.09375,
         "topbarBounds": {
           "top": 0,
           "bottom": 53,
@@ -295,18 +868,41 @@
       "url": "http://127.0.0.1:8765/create",
       "fullPage": false,
       "visibility": {
+        "label": "song-results-768",
         "found": true,
         "targetVisible": true,
-        "selector": "[data-song-results] .yatsn-song-result",
+        "members": [
+          {
+            "selector": "[data-song-status]",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 76.84375,
+              "bottom": 125.34375,
+              "left": 16,
+              "right": 656,
+              "width": 640,
+              "height": 48.5
+            }
+          },
+          {
+            "selector": "[data-song-results] .yatsn-song-result",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 141.34375,
+              "bottom": 239.34375,
+              "left": 16,
+              "right": 656,
+              "width": 640,
+              "height": 98
+            }
+          }
+        ],
+        "scrollY": 583,
         "offset": 77,
-        "targetBounds": {
-          "top": 111.34375,
-          "bottom": 209.34375,
-          "left": 16,
-          "right": 656,
-          "width": 640,
-          "height": 98
-        },
+        "groupTop": 659.84375,
+        "groupBottom": 822.34375,
         "topbarBounds": {
           "top": 0,
           "bottom": 53,
@@ -325,18 +921,41 @@
       "url": "http://127.0.0.1:8765/create",
       "fullPage": false,
       "visibility": {
+        "label": "song-results-1440",
         "found": true,
         "targetVisible": true,
-        "selector": "[data-song-results] .yatsn-song-result",
+        "members": [
+          {
+            "selector": "[data-song-status]",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 380.390625,
+              "bottom": 428.890625,
+              "left": 236,
+              "right": 826.265625,
+              "width": 590.265625,
+              "height": 48.5
+            }
+          },
+          {
+            "selector": "[data-song-results] .yatsn-song-result",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 444.890625,
+              "bottom": 542.890625,
+              "left": 236,
+              "right": 826.265625,
+              "width": 590.265625,
+              "height": 98
+            }
+          }
+        ],
+        "scrollY": 306,
         "offset": 77,
-        "targetBounds": {
-          "top": 444.890625,
-          "bottom": 542.890625,
-          "left": 236,
-          "right": 826.265625,
-          "width": 590.265625,
-          "height": 98
-        },
+        "groupTop": 686.390625,
+        "groupBottom": 848.890625,
         "topbarBounds": {
           "top": 0,
           "bottom": 53,
@@ -355,18 +974,54 @@
       "url": "http://127.0.0.1:8765/create",
       "fullPage": false,
       "visibility": {
+        "label": "song-no-results-390",
         "found": true,
         "targetVisible": true,
-        "selector": "[data-song-status].is-error, [data-song-status].yatsn-status--error",
+        "members": [
+          {
+            "selector": "[data-song-status].yatsn-status--error",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 77.09375,
+              "bottom": 193.09375,
+              "left": 16,
+              "right": 374,
+              "width": 358,
+              "height": 116
+            }
+          },
+          {
+            "selector": "[data-song-results] .yatsn-song-result--unavailable",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 205.09375,
+              "bottom": 303.09375,
+              "left": 16,
+              "right": 374,
+              "width": 358,
+              "height": 98
+            }
+          },
+          {
+            "selector": "[data-song-retry]",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 315.09375,
+              "bottom": 363.59375,
+              "left": 16,
+              "right": 374,
+              "width": 358,
+              "height": 48.5
+            }
+          }
+        ],
+        "scrollY": 595,
         "offset": 77,
-        "targetBounds": {
-          "top": 77,
-          "bottom": 193,
-          "left": 16,
-          "right": 374,
-          "width": 358,
-          "height": 116
-        },
+        "groupTop": 672.09375,
+        "groupBottom": 958.59375,
         "topbarBounds": {
           "top": 0,
           "bottom": 53,
@@ -385,51 +1040,49 @@
       "url": "http://127.0.0.1:8765/create",
       "fullPage": false,
       "visibility": {
-        "status": {
-          "found": true,
-          "targetVisible": true,
-          "selector": "[data-song-status].is-error, [data-song-status].yatsn-status--error",
-          "offset": 77,
-          "targetBounds": {
-            "top": 77,
-            "bottom": 125.5,
-            "left": 16,
-            "right": 374,
-            "width": 358,
-            "height": 48.5
+        "label": "song-error-390",
+        "found": true,
+        "targetVisible": true,
+        "members": [
+          {
+            "selector": "[data-song-status].yatsn-status--error",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 77.09375,
+              "bottom": 125.59375,
+              "left": 16,
+              "right": 374,
+              "width": 358,
+              "height": 48.5
+            }
           },
-          "topbarBounds": {
-            "top": 0,
-            "bottom": 53,
-            "height": 53
-          },
-          "viewport": {
-            "width": 390,
-            "height": 844
+          {
+            "selector": "[data-song-retry]",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 137.59375,
+              "bottom": 186.09375,
+              "left": 16,
+              "right": 374,
+              "width": 358,
+              "height": 48.5
+            }
           }
+        ],
+        "scrollY": 595,
+        "offset": 77,
+        "groupTop": 672.09375,
+        "groupBottom": 781.09375,
+        "topbarBounds": {
+          "top": 0,
+          "bottom": 53,
+          "height": 53
         },
-        "retry": {
-          "found": true,
-          "targetVisible": true,
-          "selector": "[data-song-retry]",
-          "offset": 77,
-          "targetBounds": {
-            "top": 76.5,
-            "bottom": 125,
-            "left": 16,
-            "right": 374,
-            "width": 358,
-            "height": 48.5
-          },
-          "topbarBounds": {
-            "top": 0,
-            "bottom": 53,
-            "height": 53
-          },
-          "viewport": {
-            "width": 390,
-            "height": 844
-          }
+        "viewport": {
+          "width": 390,
+          "height": 844
         }
       }
     },
@@ -440,51 +1093,49 @@
       "url": "http://127.0.0.1:8765/create",
       "fullPage": false,
       "visibility": {
-        "selected": {
-          "found": true,
-          "targetVisible": true,
-          "selector": "[data-song-selected]",
-          "offset": 77,
-          "targetBounds": {
-            "top": 77,
-            "bottom": 237.703125,
-            "left": 16,
-            "right": 374,
-            "width": 358,
-            "height": 160.703125
+        "label": "song-selected-390",
+        "found": true,
+        "targetVisible": true,
+        "members": [
+          {
+            "selector": "[data-song-selected] .yatsn-song-selected__card",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 77.09375,
+              "bottom": 177.296875,
+              "left": 16,
+              "right": 374,
+              "width": 358,
+              "height": 100.203125
+            }
           },
-          "topbarBounds": {
-            "top": 0,
-            "bottom": 53,
-            "height": 53
-          },
-          "viewport": {
-            "width": 390,
-            "height": 844
+          {
+            "selector": "[data-song-change]",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 189.296875,
+              "bottom": 237.796875,
+              "left": 16,
+              "right": 132.484375,
+              "width": 116.484375,
+              "height": 48.5
+            }
           }
+        ],
+        "scrollY": 678,
+        "offset": 77,
+        "groupTop": 755.09375,
+        "groupBottom": 915.796875,
+        "topbarBounds": {
+          "top": 0,
+          "bottom": 53,
+          "height": 53
         },
-        "change": {
-          "found": true,
-          "targetVisible": true,
-          "selector": "[data-song-change]",
-          "offset": 77,
-          "targetBounds": {
-            "top": 77.203125,
-            "bottom": 125.703125,
-            "left": 16,
-            "right": 132.484375,
-            "width": 116.484375,
-            "height": 48.5
-          },
-          "topbarBounds": {
-            "top": 0,
-            "bottom": 53,
-            "height": 53
-          },
-          "viewport": {
-            "width": 390,
-            "height": 844
-          }
+        "viewport": {
+          "width": 390,
+          "height": 844
         }
       }
     },
@@ -495,18 +1146,41 @@
       "url": "http://127.0.0.1:8765/create",
       "fullPage": false,
       "visibility": {
+        "label": "song-selected-1440",
         "found": true,
         "targetVisible": true,
-        "selector": "[data-song-selected]",
+        "members": [
+          {
+            "selector": "[data-song-selected] .yatsn-song-selected__card",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 76.890625,
+              "bottom": 177.09375,
+              "left": 236,
+              "right": 826.265625,
+              "width": 590.265625,
+              "height": 100.203125
+            }
+          },
+          {
+            "selector": "[data-song-change]",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 189.09375,
+              "bottom": 237.59375,
+              "left": 236,
+              "right": 352.484375,
+              "width": 116.484375,
+              "height": 48.5
+            }
+          }
+        ],
+        "scrollY": 674,
         "offset": 77,
-        "targetBounds": {
-          "top": 76.890625,
-          "bottom": 237.59375,
-          "left": 236,
-          "right": 826.265625,
-          "width": 590.265625,
-          "height": 160.703125
-        },
+        "groupTop": 750.890625,
+        "groupBottom": 911.59375,
         "topbarBounds": {
           "top": 0,
           "bottom": 53,
@@ -525,18 +1199,19 @@
       "url": "http://127.0.0.1:8765/create",
       "fullPage": false,
       "visibility": {
+        "label": "song-focus-390",
         "selector": ".yatsn-song-search__submit:focus",
-        "tag": "BUTTON",
-        "className": "btn btn--primary yatsn-btn yatsn-btn--primary yatsn-song-search__submit",
+        "found": true,
         "targetVisible": true,
         "targetBounds": {
-          "top": 722,
-          "bottom": 774,
+          "top": 608.09375,
+          "bottom": 660.09375,
           "left": 16,
           "right": 374,
           "width": 358,
           "height": 52
         },
+        "scrollY": 0,
         "topbarBounds": {
           "bottom": 53,
           "height": 53
@@ -550,18 +1225,28 @@
       "url": "http://127.0.0.1:8765/create",
       "fullPage": false,
       "visibility": {
+        "label": "song-focus-result-390",
         "found": true,
         "targetVisible": true,
-        "selector": "[data-song-results] .yatsn-song-result",
+        "members": [
+          {
+            "selector": "[data-song-results] .yatsn-song-result",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 77.09375,
+              "bottom": 175.09375,
+              "left": 16,
+              "right": 374,
+              "width": 358,
+              "height": 98
+            }
+          }
+        ],
+        "scrollY": 678,
         "offset": 77,
-        "targetBounds": {
-          "top": 77,
-          "bottom": 175,
-          "left": 16,
-          "right": 374,
-          "width": 358,
-          "height": 98
-        },
+        "groupTop": 755.09375,
+        "groupBottom": 853.09375,
         "topbarBounds": {
           "top": 0,
           "bottom": 53,
@@ -581,18 +1266,41 @@
       "url": "http://127.0.0.1:8765/create",
       "fullPage": false,
       "visibility": {
+        "label": "song-reduced-motion-390",
         "found": true,
         "targetVisible": true,
-        "selector": "[data-song-result-loading]",
+        "members": [
+          {
+            "selector": "[data-song-status]",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 77.09375,
+              "bottom": 125.59375,
+              "left": 16,
+              "right": 374,
+              "width": 358,
+              "height": 48.5
+            }
+          },
+          {
+            "selector": "[data-song-result-loading]",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 137.59375,
+              "bottom": 235.59375,
+              "left": 16,
+              "right": 374,
+              "width": 358,
+              "height": 98
+            }
+          }
+        ],
+        "scrollY": 595,
         "offset": 77,
-        "targetBounds": {
-          "top": 76.5,
-          "bottom": 174.5,
-          "left": 16,
-          "right": 374,
-          "width": 358,
-          "height": 98
-        },
+        "groupTop": 672.09375,
+        "groupBottom": 830.59375,
         "topbarBounds": {
           "top": 0,
           "bottom": 53,
@@ -611,18 +1319,41 @@
       "url": "http://127.0.0.1:8765/create",
       "fullPage": false,
       "visibility": {
+        "label": "song-increased-contrast-390",
         "found": true,
         "targetVisible": true,
-        "selector": "[data-song-selected]",
+        "members": [
+          {
+            "selector": "[data-song-selected] .yatsn-song-selected__card",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 77.09375,
+              "bottom": 177.296875,
+              "left": 16,
+              "right": 374,
+              "width": 358,
+              "height": 100.203125
+            }
+          },
+          {
+            "selector": "[data-song-change]",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 189.296875,
+              "bottom": 237.796875,
+              "left": 16,
+              "right": 132.484375,
+              "width": 116.484375,
+              "height": 48.5
+            }
+          }
+        ],
+        "scrollY": 678,
         "offset": 77,
-        "targetBounds": {
-          "top": 77,
-          "bottom": 237.703125,
-          "left": 16,
-          "right": 374,
-          "width": 358,
-          "height": 160.703125
-        },
+        "groupTop": 755.09375,
+        "groupBottom": 915.796875,
         "topbarBounds": {
           "top": 0,
           "bottom": 53,
@@ -638,16 +1369,62 @@
   "visibilityChecks": [
     {
       "label": "create-entry-320",
-      "found": true,
-      "targetVisible": true,
-      "targets": [
+      "scrollY": 0,
+      "members": [
         {
+          "key": "h1",
+          "selector": ".session-header__title",
+          "found": true,
+          "targetVisible": true,
+          "partiallyVisible": true,
+          "targetBounds": {
+            "top": 111,
+            "bottom": 135.828125,
+            "left": 80,
+            "right": 304,
+            "width": 224,
+            "height": 24.828125
+          }
+        },
+        {
+          "key": "progress",
+          "selector": ".session-progress",
+          "found": true,
+          "targetVisible": true,
+          "partiallyVisible": true,
+          "targetBounds": {
+            "top": 216.46875,
+            "bottom": 296.46875,
+            "left": 16,
+            "right": 304,
+            "width": 288,
+            "height": 80
+          }
+        },
+        {
+          "key": "h2",
+          "selector": "#song-heading",
+          "found": true,
+          "targetVisible": true,
+          "partiallyVisible": true,
+          "targetBounds": {
+            "top": 367.46875,
+            "bottom": 391.640625,
+            "left": 16,
+            "right": 304,
+            "width": 288,
+            "height": 24.171875
+          }
+        },
+        {
+          "key": "artist",
           "selector": "[name=\"artist\"]",
           "found": true,
           "targetVisible": true,
+          "partiallyVisible": true,
           "targetBounds": {
-            "top": 137,
-            "bottom": 187,
+            "top": 508.140625,
+            "bottom": 558.140625,
             "left": 16,
             "right": 304,
             "width": 288,
@@ -655,12 +1432,14 @@
           }
         },
         {
+          "key": "title",
           "selector": "[name=\"title\"]",
           "found": true,
-          "targetVisible": true,
+          "targetVisible": false,
+          "partiallyVisible": true,
           "targetBounds": {
-            "top": 255.5,
-            "bottom": 305.5,
+            "top": 618.640625,
+            "bottom": 668.640625,
             "left": 16,
             "right": 304,
             "width": 288,
@@ -668,12 +1447,14 @@
           }
         },
         {
+          "key": "submit",
           "selector": ".yatsn-song-search__submit",
           "found": true,
-          "targetVisible": true,
+          "targetVisible": false,
+          "partiallyVisible": false,
           "targetBounds": {
-            "top": 346.5,
-            "bottom": 398.5,
+            "top": 693.640625,
+            "bottom": 745.640625,
             "left": 16,
             "right": 304,
             "width": 288,
@@ -681,14 +1462,20 @@
           }
         }
       ],
+      "required": [
+        "h1",
+        "progress",
+        "h2",
+        "artist"
+      ],
+      "targetVisible": true,
+      "artistBegins": true,
       "resumeHidden": true,
-      "offset": 77,
       "topbarBounds": {
         "top": 0,
         "bottom": 53,
         "height": 53
       },
-      "scrollY": 466,
       "viewport": {
         "width": 320,
         "height": 640
@@ -696,16 +1483,62 @@
     },
     {
       "label": "create-entry-390",
-      "found": true,
-      "targetVisible": true,
-      "targets": [
+      "scrollY": 0,
+      "members": [
         {
+          "key": "h1",
+          "selector": ".session-header__title",
+          "found": true,
+          "targetVisible": true,
+          "partiallyVisible": true,
+          "targetBounds": {
+            "top": 111,
+            "bottom": 135.828125,
+            "left": 80,
+            "right": 374,
+            "width": 294,
+            "height": 24.828125
+          }
+        },
+        {
+          "key": "progress",
+          "selector": ".session-progress",
+          "found": true,
+          "targetVisible": true,
+          "partiallyVisible": true,
+          "targetBounds": {
+            "top": 198.921875,
+            "bottom": 234.921875,
+            "left": 16,
+            "right": 374,
+            "width": 358,
+            "height": 36
+          }
+        },
+        {
+          "key": "h2",
+          "selector": "#song-heading",
+          "found": true,
+          "targetVisible": true,
+          "partiallyVisible": true,
+          "targetBounds": {
+            "top": 305.921875,
+            "bottom": 330.09375,
+            "left": 16,
+            "right": 374,
+            "width": 358,
+            "height": 24.171875
+          }
+        },
+        {
+          "key": "artist",
           "selector": "[name=\"artist\"]",
           "found": true,
           "targetVisible": true,
+          "partiallyVisible": true,
           "targetBounds": {
-            "top": 137.5,
-            "bottom": 187.5,
+            "top": 422.59375,
+            "bottom": 472.59375,
             "left": 16,
             "right": 374,
             "width": 358,
@@ -713,12 +1546,14 @@
           }
         },
         {
+          "key": "title",
           "selector": "[name=\"title\"]",
           "found": true,
           "targetVisible": true,
+          "partiallyVisible": true,
           "targetBounds": {
-            "top": 256,
-            "bottom": 306,
+            "top": 533.09375,
+            "bottom": 583.09375,
             "left": 16,
             "right": 374,
             "width": 358,
@@ -726,12 +1561,14 @@
           }
         },
         {
+          "key": "submit",
           "selector": ".yatsn-song-search__submit",
           "found": true,
           "targetVisible": true,
+          "partiallyVisible": true,
           "targetBounds": {
-            "top": 347,
-            "bottom": 399,
+            "top": 608.09375,
+            "bottom": 660.09375,
             "left": 16,
             "right": 374,
             "width": 358,
@@ -739,33 +1576,133 @@
           }
         }
       ],
+      "required": [
+        "h1",
+        "progress",
+        "h2",
+        "artist",
+        "title",
+        "submit"
+      ],
+      "targetVisible": true,
+      "artistBegins": true,
       "resumeHidden": true,
-      "offset": 77,
       "topbarBounds": {
         "top": 0,
         "bottom": 53,
         "height": 53
       },
-      "scrollY": 375,
       "viewport": {
         "width": 390,
         "height": 844
       }
     },
     {
-      "label": "create-entry-768 submit",
-      "found": true,
+      "label": "create-entry-768",
+      "scrollY": 0,
+      "members": [
+        {
+          "key": "h1",
+          "selector": ".session-header__title",
+          "found": true,
+          "targetVisible": true,
+          "partiallyVisible": true,
+          "targetBounds": {
+            "top": 111,
+            "bottom": 145.03125,
+            "left": 96,
+            "right": 752,
+            "width": 656,
+            "height": 34.03125
+          }
+        },
+        {
+          "key": "progress",
+          "selector": ".session-progress",
+          "found": true,
+          "targetVisible": true,
+          "partiallyVisible": true,
+          "targetBounds": {
+            "top": 207.53125,
+            "bottom": 243.53125,
+            "left": 16,
+            "right": 752,
+            "width": 736,
+            "height": 36
+          }
+        },
+        {
+          "key": "h2",
+          "selector": "#song-heading",
+          "found": true,
+          "targetVisible": true,
+          "partiallyVisible": true,
+          "targetBounds": {
+            "top": 366.53125,
+            "bottom": 392.34375,
+            "left": 16,
+            "right": 752,
+            "width": 736,
+            "height": 25.8125
+          }
+        },
+        {
+          "key": "artist",
+          "selector": "[name=\"artist\"]",
+          "found": true,
+          "targetVisible": true,
+          "partiallyVisible": true,
+          "targetBounds": {
+            "top": 500.84375,
+            "bottom": 550.84375,
+            "left": 16,
+            "right": 324,
+            "width": 308,
+            "height": 50
+          }
+        },
+        {
+          "key": "title",
+          "selector": "[name=\"title\"]",
+          "found": true,
+          "targetVisible": true,
+          "partiallyVisible": true,
+          "targetBounds": {
+            "top": 500.84375,
+            "bottom": 550.84375,
+            "left": 373,
+            "right": 656,
+            "width": 283,
+            "height": 50
+          }
+        },
+        {
+          "key": "submit",
+          "selector": ".yatsn-song-search__submit",
+          "found": true,
+          "targetVisible": true,
+          "partiallyVisible": true,
+          "targetBounds": {
+            "top": 591.84375,
+            "bottom": 643.84375,
+            "left": 16,
+            "right": 153.53125,
+            "width": 137.53125,
+            "height": 52
+          }
+        }
+      ],
+      "required": [
+        "h1",
+        "progress",
+        "h2",
+        "artist",
+        "title",
+        "submit"
+      ],
       "targetVisible": true,
-      "selector": ".yatsn-song-search__submit",
-      "offset": 77,
-      "targetBounds": {
-        "top": 157.84375,
-        "bottom": 209.84375,
-        "left": 16,
-        "right": 153.53125,
-        "width": 137.53125,
-        "height": 52
-      },
+      "artistBegins": true,
+      "resumeHidden": true,
       "topbarBounds": {
         "top": 0,
         "bottom": 53,
@@ -777,19 +1714,111 @@
       }
     },
     {
-      "label": "create-entry-900 submit",
-      "found": true,
+      "label": "create-entry-900",
+      "scrollY": 0,
+      "members": [
+        {
+          "key": "h1",
+          "selector": ".session-header__title",
+          "found": true,
+          "targetVisible": true,
+          "partiallyVisible": true,
+          "targetBounds": {
+            "top": 111,
+            "bottom": 145.03125,
+            "left": 200,
+            "right": 868,
+            "width": 668,
+            "height": 34.03125
+          }
+        },
+        {
+          "key": "progress",
+          "selector": ".session-progress",
+          "found": true,
+          "targetVisible": true,
+          "partiallyVisible": true,
+          "targetBounds": {
+            "top": 211.53125,
+            "bottom": 264.53125,
+            "left": 120,
+            "right": 868,
+            "width": 748,
+            "height": 53
+          }
+        },
+        {
+          "key": "h2",
+          "selector": "#song-heading",
+          "found": true,
+          "targetVisible": true,
+          "partiallyVisible": true,
+          "targetBounds": {
+            "top": 387.53125,
+            "bottom": 417.765625,
+            "left": 120,
+            "right": 515,
+            "width": 395,
+            "height": 30.234375
+          }
+        },
+        {
+          "key": "artist",
+          "selector": "[name=\"artist\"]",
+          "found": true,
+          "targetVisible": true,
+          "partiallyVisible": true,
+          "targetBounds": {
+            "top": 526.265625,
+            "bottom": 576.265625,
+            "left": 120,
+            "right": 305.5,
+            "width": 185.5,
+            "height": 50
+          }
+        },
+        {
+          "key": "title",
+          "selector": "[name=\"title\"]",
+          "found": true,
+          "targetVisible": true,
+          "partiallyVisible": true,
+          "targetBounds": {
+            "top": 526.265625,
+            "bottom": 576.265625,
+            "left": 354.5,
+            "right": 515,
+            "width": 160.5,
+            "height": 50
+          }
+        },
+        {
+          "key": "submit",
+          "selector": ".yatsn-song-search__submit",
+          "found": true,
+          "targetVisible": true,
+          "partiallyVisible": true,
+          "targetBounds": {
+            "top": 617.265625,
+            "bottom": 669.265625,
+            "left": 120,
+            "right": 515,
+            "width": 395,
+            "height": 52
+          }
+        }
+      ],
+      "required": [
+        "h1",
+        "progress",
+        "h2",
+        "artist",
+        "title",
+        "submit"
+      ],
       "targetVisible": true,
-      "selector": ".yatsn-song-search__submit",
-      "offset": 77,
-      "targetBounds": {
-        "top": 510.265625,
-        "bottom": 562.265625,
-        "left": 120,
-        "right": 515,
-        "width": 395,
-        "height": 52
-      },
+      "artistBegins": true,
+      "resumeHidden": true,
       "topbarBounds": {
         "top": 0,
         "bottom": 53,
@@ -801,19 +1830,111 @@
       }
     },
     {
-      "label": "create-entry-1440 submit",
-      "found": true,
+      "label": "create-entry-1440",
+      "scrollY": 0,
+      "members": [
+        {
+          "key": "h1",
+          "selector": ".session-header__title",
+          "found": true,
+          "targetVisible": true,
+          "partiallyVisible": true,
+          "targetBounds": {
+            "top": 111,
+            "bottom": 145.03125,
+            "left": 316,
+            "right": 1292,
+            "width": 976,
+            "height": 34.03125
+          }
+        },
+        {
+          "key": "progress",
+          "selector": ".session-progress",
+          "found": true,
+          "targetVisible": true,
+          "partiallyVisible": true,
+          "targetBounds": {
+            "top": 211.53125,
+            "bottom": 264.53125,
+            "left": 236,
+            "right": 1292,
+            "width": 1056,
+            "height": 53
+          }
+        },
+        {
+          "key": "h2",
+          "selector": "#song-heading",
+          "found": true,
+          "targetVisible": true,
+          "partiallyVisible": true,
+          "targetBounds": {
+            "top": 387.53125,
+            "bottom": 418.890625,
+            "left": 236,
+            "right": 826.265625,
+            "width": 590.265625,
+            "height": 31.359375
+          }
+        },
+        {
+          "key": "artist",
+          "selector": "[name=\"artist\"]",
+          "found": true,
+          "targetVisible": true,
+          "partiallyVisible": true,
+          "targetBounds": {
+            "top": 527.390625,
+            "bottom": 577.390625,
+            "left": 236,
+            "right": 519.125,
+            "width": 283.125,
+            "height": 50
+          }
+        },
+        {
+          "key": "title",
+          "selector": "[name=\"title\"]",
+          "found": true,
+          "targetVisible": true,
+          "partiallyVisible": true,
+          "targetBounds": {
+            "top": 527.390625,
+            "bottom": 577.390625,
+            "left": 568.125,
+            "right": 826.265625,
+            "width": 258.140625,
+            "height": 50
+          }
+        },
+        {
+          "key": "submit",
+          "selector": ".yatsn-song-search__submit",
+          "found": true,
+          "targetVisible": true,
+          "partiallyVisible": true,
+          "targetBounds": {
+            "top": 618.390625,
+            "bottom": 670.390625,
+            "left": 236,
+            "right": 373.53125,
+            "width": 137.53125,
+            "height": 52
+          }
+        }
+      ],
+      "required": [
+        "h1",
+        "progress",
+        "h2",
+        "artist",
+        "title",
+        "submit"
+      ],
       "targetVisible": true,
-      "selector": ".yatsn-song-search__submit",
-      "offset": 77,
-      "targetBounds": {
-        "top": 491.390625,
-        "bottom": 543.390625,
-        "left": 236,
-        "right": 373.53125,
-        "width": 137.53125,
-        "height": 52
-      },
+      "artistBegins": true,
+      "resumeHidden": true,
       "topbarBounds": {
         "top": 0,
         "bottom": 53,
@@ -825,19 +1946,159 @@
       }
     },
     {
+      "label": "create-form-320",
+      "found": true,
+      "targetVisible": true,
+      "members": [
+        {
+          "selector": "[name=\"artist\"]",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 77.140625,
+            "bottom": 127.140625,
+            "left": 16,
+            "right": 304,
+            "width": 288,
+            "height": 50
+          }
+        },
+        {
+          "selector": "[name=\"title\"]",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 187.640625,
+            "bottom": 237.640625,
+            "left": 16,
+            "right": 304,
+            "width": 288,
+            "height": 50
+          }
+        },
+        {
+          "selector": ".yatsn-song-search__submit",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 262.640625,
+            "bottom": 314.640625,
+            "left": 16,
+            "right": 304,
+            "width": 288,
+            "height": 52
+          }
+        }
+      ],
+      "scrollY": 431,
+      "offset": 77,
+      "groupTop": 508.140625,
+      "groupBottom": 745.640625,
+      "topbarBounds": {
+        "top": 0,
+        "bottom": 53,
+        "height": 53
+      },
+      "viewport": {
+        "width": 320,
+        "height": 640
+      }
+    },
+    {
+      "label": "create-form-390",
+      "found": true,
+      "targetVisible": true,
+      "members": [
+        {
+          "selector": "[name=\"artist\"]",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 76.59375,
+            "bottom": 126.59375,
+            "left": 16,
+            "right": 374,
+            "width": 358,
+            "height": 50
+          }
+        },
+        {
+          "selector": "[name=\"title\"]",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 187.09375,
+            "bottom": 237.09375,
+            "left": 16,
+            "right": 374,
+            "width": 358,
+            "height": 50
+          }
+        },
+        {
+          "selector": ".yatsn-song-search__submit",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 262.09375,
+            "bottom": 314.09375,
+            "left": 16,
+            "right": 374,
+            "width": 358,
+            "height": 52
+          }
+        }
+      ],
+      "scrollY": 346,
+      "offset": 77,
+      "groupTop": 422.59375,
+      "groupBottom": 660.09375,
+      "topbarBounds": {
+        "top": 0,
+        "bottom": 53,
+        "height": 53
+      },
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
       "label": "song-loading-390",
       "found": true,
       "targetVisible": true,
-      "selector": "[data-song-result-loading]",
+      "members": [
+        {
+          "selector": "[data-song-status]",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 77.09375,
+            "bottom": 125.59375,
+            "left": 16,
+            "right": 374,
+            "width": 358,
+            "height": 48.5
+          }
+        },
+        {
+          "selector": "[data-song-result-loading]",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 137.59375,
+            "bottom": 235.59375,
+            "left": 16,
+            "right": 374,
+            "width": 358,
+            "height": 98
+          }
+        }
+      ],
+      "scrollY": 595,
       "offset": 77,
-      "targetBounds": {
-        "top": 76.5,
-        "bottom": 174.5,
-        "left": 16,
-        "right": 374,
-        "width": 358,
-        "height": 98
-      },
+      "groupTop": 672.09375,
+      "groupBottom": 830.59375,
       "topbarBounds": {
         "top": 0,
         "bottom": 53,
@@ -852,16 +2113,38 @@
       "label": "song-results-390",
       "found": true,
       "targetVisible": true,
-      "selector": "[data-song-results] .yatsn-song-result",
+      "members": [
+        {
+          "selector": "[data-song-status]",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 77.09375,
+            "bottom": 148.09375,
+            "left": 16,
+            "right": 374,
+            "width": 358,
+            "height": 71
+          }
+        },
+        {
+          "selector": "[data-song-results] .yatsn-song-result",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 160.09375,
+            "bottom": 258.09375,
+            "left": 16,
+            "right": 374,
+            "width": 358,
+            "height": 98
+          }
+        }
+      ],
+      "scrollY": 595,
       "offset": 77,
-      "targetBounds": {
-        "top": 77,
-        "bottom": 175,
-        "left": 16,
-        "right": 374,
-        "width": 358,
-        "height": 98
-      },
+      "groupTop": 672.09375,
+      "groupBottom": 853.09375,
       "topbarBounds": {
         "top": 0,
         "bottom": 53,
@@ -876,16 +2159,38 @@
       "label": "song-results-768",
       "found": true,
       "targetVisible": true,
-      "selector": "[data-song-results] .yatsn-song-result",
+      "members": [
+        {
+          "selector": "[data-song-status]",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 76.84375,
+            "bottom": 125.34375,
+            "left": 16,
+            "right": 656,
+            "width": 640,
+            "height": 48.5
+          }
+        },
+        {
+          "selector": "[data-song-results] .yatsn-song-result",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 141.34375,
+            "bottom": 239.34375,
+            "left": 16,
+            "right": 656,
+            "width": 640,
+            "height": 98
+          }
+        }
+      ],
+      "scrollY": 583,
       "offset": 77,
-      "targetBounds": {
-        "top": 111.34375,
-        "bottom": 209.34375,
-        "left": 16,
-        "right": 656,
-        "width": 640,
-        "height": 98
-      },
+      "groupTop": 659.84375,
+      "groupBottom": 822.34375,
       "topbarBounds": {
         "top": 0,
         "bottom": 53,
@@ -900,16 +2205,38 @@
       "label": "song-results-1440",
       "found": true,
       "targetVisible": true,
-      "selector": "[data-song-results] .yatsn-song-result",
+      "members": [
+        {
+          "selector": "[data-song-status]",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 380.390625,
+            "bottom": 428.890625,
+            "left": 236,
+            "right": 826.265625,
+            "width": 590.265625,
+            "height": 48.5
+          }
+        },
+        {
+          "selector": "[data-song-results] .yatsn-song-result",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 444.890625,
+            "bottom": 542.890625,
+            "left": 236,
+            "right": 826.265625,
+            "width": 590.265625,
+            "height": 98
+          }
+        }
+      ],
+      "scrollY": 306,
       "offset": 77,
-      "targetBounds": {
-        "top": 444.890625,
-        "bottom": 542.890625,
-        "left": 236,
-        "right": 826.265625,
-        "width": 590.265625,
-        "height": 98
-      },
+      "groupTop": 686.390625,
+      "groupBottom": 848.890625,
       "topbarBounds": {
         "top": 0,
         "bottom": 53,
@@ -921,19 +2248,54 @@
       }
     },
     {
-      "label": "song-no-results-390 status",
+      "label": "song-no-results-390",
       "found": true,
       "targetVisible": true,
-      "selector": "[data-song-status].is-error, [data-song-status].yatsn-status--error",
+      "members": [
+        {
+          "selector": "[data-song-status].yatsn-status--error",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 77.09375,
+            "bottom": 193.09375,
+            "left": 16,
+            "right": 374,
+            "width": 358,
+            "height": 116
+          }
+        },
+        {
+          "selector": "[data-song-results] .yatsn-song-result--unavailable",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 205.09375,
+            "bottom": 303.09375,
+            "left": 16,
+            "right": 374,
+            "width": 358,
+            "height": 98
+          }
+        },
+        {
+          "selector": "[data-song-retry]",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 315.09375,
+            "bottom": 363.59375,
+            "left": 16,
+            "right": 374,
+            "width": 358,
+            "height": 48.5
+          }
+        }
+      ],
+      "scrollY": 595,
       "offset": 77,
-      "targetBounds": {
-        "top": 77,
-        "bottom": 193,
-        "left": 16,
-        "right": 374,
-        "width": 358,
-        "height": 116
-      },
+      "groupTop": 672.09375,
+      "groupBottom": 958.59375,
       "topbarBounds": {
         "top": 0,
         "bottom": 53,
@@ -945,19 +2307,41 @@
       }
     },
     {
-      "label": "song-error-390 status",
+      "label": "song-error-390",
       "found": true,
       "targetVisible": true,
-      "selector": "[data-song-status].is-error, [data-song-status].yatsn-status--error",
+      "members": [
+        {
+          "selector": "[data-song-status].yatsn-status--error",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 77.09375,
+            "bottom": 125.59375,
+            "left": 16,
+            "right": 374,
+            "width": 358,
+            "height": 48.5
+          }
+        },
+        {
+          "selector": "[data-song-retry]",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 137.59375,
+            "bottom": 186.09375,
+            "left": 16,
+            "right": 374,
+            "width": 358,
+            "height": 48.5
+          }
+        }
+      ],
+      "scrollY": 595,
       "offset": 77,
-      "targetBounds": {
-        "top": 77,
-        "bottom": 125.5,
-        "left": 16,
-        "right": 374,
-        "width": 358,
-        "height": 48.5
-      },
+      "groupTop": 672.09375,
+      "groupBottom": 781.09375,
       "topbarBounds": {
         "top": 0,
         "bottom": 53,
@@ -969,67 +2353,41 @@
       }
     },
     {
-      "label": "song-error-390 retry",
+      "label": "song-selected-390",
       "found": true,
       "targetVisible": true,
-      "selector": "[data-song-retry]",
+      "members": [
+        {
+          "selector": "[data-song-selected] .yatsn-song-selected__card",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 77.09375,
+            "bottom": 177.296875,
+            "left": 16,
+            "right": 374,
+            "width": 358,
+            "height": 100.203125
+          }
+        },
+        {
+          "selector": "[data-song-change]",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 189.296875,
+            "bottom": 237.796875,
+            "left": 16,
+            "right": 132.484375,
+            "width": 116.484375,
+            "height": 48.5
+          }
+        }
+      ],
+      "scrollY": 678,
       "offset": 77,
-      "targetBounds": {
-        "top": 76.5,
-        "bottom": 125,
-        "left": 16,
-        "right": 374,
-        "width": 358,
-        "height": 48.5
-      },
-      "topbarBounds": {
-        "top": 0,
-        "bottom": 53,
-        "height": 53
-      },
-      "viewport": {
-        "width": 390,
-        "height": 844
-      }
-    },
-    {
-      "label": "song-selected-390 card",
-      "found": true,
-      "targetVisible": true,
-      "selector": "[data-song-selected]",
-      "offset": 77,
-      "targetBounds": {
-        "top": 77,
-        "bottom": 237.703125,
-        "left": 16,
-        "right": 374,
-        "width": 358,
-        "height": 160.703125
-      },
-      "topbarBounds": {
-        "top": 0,
-        "bottom": 53,
-        "height": 53
-      },
-      "viewport": {
-        "width": 390,
-        "height": 844
-      }
-    },
-    {
-      "label": "song-selected-390 change",
-      "found": true,
-      "targetVisible": true,
-      "selector": "[data-song-change]",
-      "offset": 77,
-      "targetBounds": {
-        "top": 77.203125,
-        "bottom": 125.703125,
-        "left": 16,
-        "right": 132.484375,
-        "width": 116.484375,
-        "height": 48.5
-      },
+      "groupTop": 755.09375,
+      "groupBottom": 915.796875,
       "topbarBounds": {
         "top": 0,
         "bottom": 53,
@@ -1044,16 +2402,38 @@
       "label": "song-selected-1440",
       "found": true,
       "targetVisible": true,
-      "selector": "[data-song-selected]",
+      "members": [
+        {
+          "selector": "[data-song-selected] .yatsn-song-selected__card",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 76.890625,
+            "bottom": 177.09375,
+            "left": 236,
+            "right": 826.265625,
+            "width": 590.265625,
+            "height": 100.203125
+          }
+        },
+        {
+          "selector": "[data-song-change]",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 189.09375,
+            "bottom": 237.59375,
+            "left": 236,
+            "right": 352.484375,
+            "width": 116.484375,
+            "height": 48.5
+          }
+        }
+      ],
+      "scrollY": 674,
       "offset": 77,
-      "targetBounds": {
-        "top": 76.890625,
-        "bottom": 237.59375,
-        "left": 236,
-        "right": 826.265625,
-        "width": 590.265625,
-        "height": 160.703125
-      },
+      "groupTop": 750.890625,
+      "groupBottom": 911.59375,
       "topbarBounds": {
         "top": 0,
         "bottom": 53,
@@ -1067,37 +2447,78 @@
     {
       "label": "song-focus-390",
       "selector": ".yatsn-song-search__submit:focus",
-      "tag": "BUTTON",
-      "className": "btn btn--primary yatsn-btn yatsn-btn--primary yatsn-song-search__submit",
+      "found": true,
       "targetVisible": true,
       "targetBounds": {
-        "top": 722,
-        "bottom": 774,
+        "top": 608.09375,
+        "bottom": 660.09375,
         "left": 16,
         "right": 374,
         "width": 358,
         "height": 52
       },
+      "scrollY": 0,
       "topbarBounds": {
         "bottom": 53,
         "height": 53
-      },
-      "found": true
+      }
     },
     {
       "label": "song-focus-result-390",
       "found": true,
       "targetVisible": true,
-      "selector": "[data-song-results] .yatsn-song-result",
+      "members": [
+        {
+          "selector": "[data-song-results] .yatsn-song-result",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 77.09375,
+            "bottom": 175.09375,
+            "left": 16,
+            "right": 374,
+            "width": 358,
+            "height": 98
+          }
+        }
+      ],
+      "scrollY": 678,
       "offset": 77,
-      "targetBounds": {
-        "top": 77,
-        "bottom": 175,
-        "left": 16,
-        "right": 374,
-        "width": 358,
-        "height": 98
+      "groupTop": 755.09375,
+      "groupBottom": 853.09375,
+      "topbarBounds": {
+        "top": 0,
+        "bottom": 53,
+        "height": 53
       },
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "label": "song-focus-result-390",
+      "found": true,
+      "targetVisible": true,
+      "members": [
+        {
+          "selector": "[data-song-results] .yatsn-song-result",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 77.09375,
+            "bottom": 175.09375,
+            "left": 16,
+            "right": 374,
+            "width": 358,
+            "height": 98
+          }
+        }
+      ],
+      "scrollY": 678,
+      "offset": 77,
+      "groupTop": 755.09375,
+      "groupBottom": 853.09375,
       "topbarBounds": {
         "top": 0,
         "bottom": 53,
@@ -1113,16 +2534,38 @@
       "label": "song-reduced-motion-390",
       "found": true,
       "targetVisible": true,
-      "selector": "[data-song-result-loading]",
+      "members": [
+        {
+          "selector": "[data-song-status]",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 77.09375,
+            "bottom": 125.59375,
+            "left": 16,
+            "right": 374,
+            "width": 358,
+            "height": 48.5
+          }
+        },
+        {
+          "selector": "[data-song-result-loading]",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 137.59375,
+            "bottom": 235.59375,
+            "left": 16,
+            "right": 374,
+            "width": 358,
+            "height": 98
+          }
+        }
+      ],
+      "scrollY": 595,
       "offset": 77,
-      "targetBounds": {
-        "top": 76.5,
-        "bottom": 174.5,
-        "left": 16,
-        "right": 374,
-        "width": 358,
-        "height": 98
-      },
+      "groupTop": 672.09375,
+      "groupBottom": 830.59375,
       "topbarBounds": {
         "top": 0,
         "bottom": 53,
@@ -1137,16 +2580,38 @@
       "label": "song-increased-contrast-390",
       "found": true,
       "targetVisible": true,
-      "selector": "[data-song-selected]",
+      "members": [
+        {
+          "selector": "[data-song-selected] .yatsn-song-selected__card",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 77.09375,
+            "bottom": 177.296875,
+            "left": 16,
+            "right": 374,
+            "width": 358,
+            "height": 100.203125
+          }
+        },
+        {
+          "selector": "[data-song-change]",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 189.296875,
+            "bottom": 237.796875,
+            "left": 16,
+            "right": 132.484375,
+            "width": 116.484375,
+            "height": 48.5
+          }
+        }
+      ],
+      "scrollY": 678,
       "offset": 77,
-      "targetBounds": {
-        "top": 77,
-        "bottom": 237.703125,
-        "left": 16,
-        "right": 374,
-        "width": 358,
-        "height": 160.703125
-      },
+      "groupTop": 755.09375,
+      "groupBottom": 915.796875,
       "topbarBounds": {
         "top": 0,
         "bottom": 53,
@@ -1156,6 +2621,98 @@
         "width": 390,
         "height": 844
       }
+    },
+    {
+      "label": "zoom-song-results-390",
+      "found": true,
+      "targetVisible": true,
+      "members": [
+        {
+          "selector": "[data-song-status]",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 77.09375,
+            "bottom": 148.09375,
+            "left": 16,
+            "right": 374,
+            "width": 358,
+            "height": 71
+          }
+        },
+        {
+          "selector": "[data-song-results] .yatsn-song-result",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 160.09375,
+            "bottom": 258.09375,
+            "left": 16,
+            "right": 374,
+            "width": 358,
+            "height": 98
+          }
+        }
+      ],
+      "scrollY": 595,
+      "offset": 77,
+      "groupTop": 672.09375,
+      "groupBottom": 853.09375,
+      "topbarBounds": {
+        "top": 0,
+        "bottom": 53,
+        "height": 53
+      },
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "label": "zoom-song-selected-1440",
+      "found": true,
+      "targetVisible": true,
+      "members": [
+        {
+          "selector": "[data-song-selected] .yatsn-song-selected__card",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 76.890625,
+            "bottom": 177.09375,
+            "left": 236,
+            "right": 826.265625,
+            "width": 590.265625,
+            "height": 100.203125
+          }
+        },
+        {
+          "selector": "[data-song-change]",
+          "found": true,
+          "targetVisible": true,
+          "targetBounds": {
+            "top": 189.09375,
+            "bottom": 237.59375,
+            "left": 236,
+            "right": 352.484375,
+            "width": 116.484375,
+            "height": 48.5
+          }
+        }
+      ],
+      "scrollY": 674,
+      "offset": 77,
+      "groupTop": 750.890625,
+      "groupBottom": 911.59375,
+      "topbarBounds": {
+        "top": 0,
+        "bottom": 53,
+        "height": 53
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      }
     }
   ],
   "zoom200": [
@@ -1163,33 +2720,12 @@
       "name": "zoom-create-entry-320",
       "width": 320,
       "height": 640,
-      "target": ".yatsn-song-search__submit",
       "pageScaleFactor": 2,
       "scrollWidth": 320,
       "innerWidth": 320,
       "overflow": false,
       "visibility": {
-        "found": true,
-        "targetVisible": true,
-        "selector": ".yatsn-song-search__submit",
-        "offset": 77,
-        "targetBounds": {
-          "top": 76.5,
-          "bottom": 128.5,
-          "left": 16,
-          "right": 304,
-          "width": 288,
-          "height": 52
-        },
-        "topbarBounds": {
-          "top": 0,
-          "bottom": 53,
-          "height": 53
-        },
-        "viewport": {
-          "width": 320,
-          "height": 640
-        }
+        "scrollY": 0
       }
     },
     {
@@ -1197,24 +2733,50 @@
       "width": 390,
       "height": 844,
       "song": "showResult",
-      "target": "[data-song-results] .yatsn-song-result",
+      "selectors": [
+        "[data-song-status]",
+        "[data-song-results] .yatsn-song-result"
+      ],
       "pageScaleFactor": 2,
       "scrollWidth": 390,
       "innerWidth": 390,
       "overflow": false,
       "visibility": {
+        "label": "zoom-song-results-390",
         "found": true,
         "targetVisible": true,
-        "selector": "[data-song-results] .yatsn-song-result",
+        "members": [
+          {
+            "selector": "[data-song-status]",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 77.09375,
+              "bottom": 148.09375,
+              "left": 16,
+              "right": 374,
+              "width": 358,
+              "height": 71
+            }
+          },
+          {
+            "selector": "[data-song-results] .yatsn-song-result",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 160.09375,
+              "bottom": 258.09375,
+              "left": 16,
+              "right": 374,
+              "width": 358,
+              "height": 98
+            }
+          }
+        ],
+        "scrollY": 595,
         "offset": 77,
-        "targetBounds": {
-          "top": 77,
-          "bottom": 175,
-          "left": 16,
-          "right": 374,
-          "width": 358,
-          "height": 98
-        },
+        "groupTop": 672.09375,
+        "groupBottom": 853.09375,
         "topbarBounds": {
           "top": 0,
           "bottom": 53,
@@ -1231,24 +2793,50 @@
       "width": 1440,
       "height": 900,
       "song": "showSelected",
-      "target": "[data-song-selected]",
+      "selectors": [
+        "[data-song-selected] .yatsn-song-selected__card",
+        "[data-song-change]"
+      ],
       "pageScaleFactor": 2,
       "scrollWidth": 1440,
       "innerWidth": 1440,
       "overflow": false,
       "visibility": {
+        "label": "zoom-song-selected-1440",
         "found": true,
         "targetVisible": true,
-        "selector": "[data-song-selected]",
+        "members": [
+          {
+            "selector": "[data-song-selected] .yatsn-song-selected__card",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 76.890625,
+              "bottom": 177.09375,
+              "left": 236,
+              "right": 826.265625,
+              "width": 590.265625,
+              "height": 100.203125
+            }
+          },
+          {
+            "selector": "[data-song-change]",
+            "found": true,
+            "targetVisible": true,
+            "targetBounds": {
+              "top": 189.09375,
+              "bottom": 237.59375,
+              "left": 236,
+              "right": 352.484375,
+              "width": 116.484375,
+              "height": 48.5
+            }
+          }
+        ],
+        "scrollY": 674,
         "offset": 77,
-        "targetBounds": {
-          "top": 76.890625,
-          "bottom": 237.59375,
-          "left": 236,
-          "right": 826.265625,
-          "width": 590.265625,
-          "height": 160.703125
-        },
+        "groupTop": 750.890625,
+        "groupBottom": 911.59375,
         "topbarBounds": {
           "top": 0,
           "bottom": 53,

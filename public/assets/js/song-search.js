@@ -307,20 +307,23 @@
     const row = document.querySelector('[data-song-recent]');
     if (!row || !Array.isArray(images) || !images.length) return;
     row.hidden = false;
-    const items = images.slice(0, 4).map((img) => `
-      <a class="yatsn-recent-row__item" href="/images/${escapeHtml(img.id)}">
-        <span class="yatsn-recent-row__art">
-          <img src="${escapeHtml(img.thumbnailUrl)}" alt="" decoding="async" loading="lazy">
-        </span>
-        <span class="yatsn-recent-row__copy">
-          <strong>${escapeHtml(img.title)}</strong>
-          <span>${escapeHtml(img.artist)}</span>
-        </span>
-      </a>
-    `).join('');
     row.innerHTML = `
       <p class="yatsn-recent-row__heading">Recent creations</p>
-      <div class="yatsn-recent-row__list" role="list">${items}</div>
+      <ul class="yatsn-recent-row__list">
+        ${images.slice(0, 4).map((img) => `
+          <li class="yatsn-recent-row__item-wrap">
+            <a class="yatsn-recent-row__item" href="/images/${escapeHtml(img.id)}">
+              <span class="yatsn-recent-row__art">
+                <img src="${escapeHtml(img.thumbnailUrl)}" alt="" decoding="async" loading="lazy">
+              </span>
+              <span class="yatsn-recent-row__copy">
+                <strong>${escapeHtml(img.title)}</strong>
+                <span>${escapeHtml(img.artist)}</span>
+              </span>
+            </a>
+          </li>
+        `).join('')}
+      </ul>
     `;
   }
 

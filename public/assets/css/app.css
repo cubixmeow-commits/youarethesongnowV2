@@ -1843,6 +1843,14 @@ button.yatsn-song-result:focus-visible {
 .yatsn-recent-row__list {
   display: grid;
   gap: var(--space-3);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.yatsn-recent-row__item-wrap {
+  margin: 0;
+  padding: 0;
 }
 
 .yatsn-recent-row__art {
@@ -1910,6 +1918,61 @@ button.yatsn-song-result:focus-visible {
   .yatsn-resume-row__link,
   .yatsn-recent-row__item {
     border-color: #fff;
+  }
+}
+
+/* Compact Create entry: tighten vertical rhythm without shrinking touch targets */
+@media (max-width: 599px) {
+  .create .session-header {
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-4);
+  }
+
+  .create .session-header__art {
+    width: 48px;
+    height: 48px;
+  }
+
+  .create .session-header__mark {
+    width: 26px;
+    height: 26px;
+  }
+
+  .create .session-header__hint {
+    font-size: var(--type-caption);
+    line-height: 1.35;
+  }
+
+  .create .session-progress {
+    margin-top: var(--space-1);
+  }
+
+  .create .yatsn-create-entry.movement {
+    padding-top: var(--space-4);
+  }
+
+  .create .yatsn-create-entry .movement__num {
+    margin-bottom: var(--space-1);
+  }
+
+  .create .yatsn-create-entry .movement__lead,
+  .create .yatsn-create-entry__lead {
+    margin-bottom: var(--space-3);
+  }
+
+  .create .yatsn-song-search,
+  .create .yatsn-song-search__form {
+    gap: var(--space-3);
+  }
+
+  .create .track-source__fields {
+    gap: var(--space-3);
+    padding-block: var(--space-3);
+  }
+
+  .create .track-source__fields label + label {
+    padding-top: var(--space-3);
   }
 }
 
