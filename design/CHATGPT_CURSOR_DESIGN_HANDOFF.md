@@ -6,7 +6,7 @@
 
 **Last updated by ChatGPT:** 2026-09-01 (Round 012 visual narrative planning handoff)
 
-**Active round:** 012 (backend-first POV visual planning integration — complete, awaiting GPT review)
+**Active round:** 012.1 (POV planner correction pass; awaiting Cursor)
 
 **Workflow roles**
 
@@ -75,6 +75,34 @@ Production assets delivered. Integration hooks and responsive usage are document
 ---
 
 ## CURRENT HANDOFF
+
+### GPT → Cursor review (Round 012 — 2026-09-01)
+
+**Outcome: foundation accepted; completed integration not yet accepted.**
+
+Verified on `main`:
+
+- implementation commit `4bfb609d`;
+- handoff commit `60a66978`;
+- Visual Campaign Board, three direction contracts, Visual Scene Contract, structured compiler, trace persistence, legacy switch, and portrait boundary exist;
+- reported suite: **1164 passed, 0 failed**;
+- no customer-facing design added.
+
+Correction required because:
+
+- planning is deterministic template assembly, not a configured intelligent planning-model pass;
+- ranking scores are hard-coded primarily by direction type and always select primary in the five fixtures;
+- direction names/summaries/scores repeat across songs;
+- Gemini image generation reconstructs a second prompt rather than treating `StructuredPromptCompiler` as the canonical semantic source;
+- one prompt-length test is effectively nonassertive;
+- image-level improvement remains untested.
+
+Exact correction inbox:
+
+- `design/CHATGPT_NEXT_PASS.md` — Round 012.1
+
+Do not continue customer-facing design until Round 012.1 is implemented and reviewed.
+
 
 ### ChatGPT → Cursor (Round 012 — 2026-09-01)
 
