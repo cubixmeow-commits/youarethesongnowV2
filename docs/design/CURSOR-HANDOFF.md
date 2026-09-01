@@ -2,7 +2,7 @@
 
 **Date:** 2026-09-01  
 **Working branch:** `main`  
-**Published to:** `main` at pending  
+**Published to:** `main` at `89a1950`  
 **Status:** Mobile Generate action repair complete — stop for GPT/owner review
 
 ## Root cause

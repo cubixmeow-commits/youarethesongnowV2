@@ -79,7 +79,7 @@ Production assets delivered. Integration hooks and responsive usage are document
 ### Cursor → GPT (Round 013 report — 2026-09-01)
 
 - Status: blocking mobile Generate action repair complete — awaiting GPT/owner review
-- Commit: pending
+- Commit: `89a1950`
 - Suite: `php tests/run.php` → **1207 passed, 0 failed** (+20 assertions vs Round 012.2)
 - Evidence: `design/review/round-013/` (320 + 390 widths; disabled, pending, recoverable-error states)
 - No deploy; no broader design work
