@@ -1,3 +1,74 @@
+# NEXT DIRECTIVE — Round 013.1 Restore Direction Choice Hierarchy
+
+**Date:** 2026-09-01  
+**Working branch:** `main`  
+**Priority:** Immediate regression correction  
+**Scope:** Restore Generate for me / Explore options and gate the final Generate action correctly
+
+## Owner-observed regression
+
+After Round 013, **Generate for me** and **Explore options** appear to be gone while a disabled **Generate image** bar is forced onto the bottom of the mobile viewport. Screenshot state shows:
+
+- grounded Song DNA exists;
+- Overview shows the chosen song;
+- People: None selected;
+- Style: Not chosen yet;
+- bottom bar incorrectly says “Choose and confirm a song”;
+- final Generate action is visible before the creation is ready.
+
+## Confirmed implementation defect
+
+`.create__generate-bar { display: grid; }` overrides the native `hidden` attribute. Therefore `bar.hidden = true` does not reliably hide the bar. This repeats the hidden-state CSS class of bug previously fixed for song-search rows.
+
+Round 013 also ties bar visibility only to `#the-direction.hidden`. That is too early: entering the Direction stage is not the same as selecting/preparing a direction. The final CTA must not compete with or visually replace the two AI choice actions.
+
+## Canonical interaction sequence
+
+1. Song is confirmed.
+2. Required portrait/person selection is complete.
+3. Direction stage opens with the existing choice hierarchy:
+   - **Generate for me** — primary/default;
+   - **Explore options** — secondary;
+   - manual style path remains available according to the existing design.
+4. At this initial choice state, the sticky/final **Generate image** action is hidden.
+5. After **Generate for me** has successfully selected/applied the strongest AI direction, expose the final **Generate image** action.
+6. After Explore options → a direction is selected and applied, expose the final action.
+7. After a valid manual direction/style is prepared and reviewed, expose the final action.
+8. If the selected/prepared path later becomes invalid, keep the final action in that prepared context but disabled with the correct missing requirement. Do not show it globally before a direction path has been chosen.
+9. Backing out to the initial direction-choice state hides the final action and restores Generate for me / Explore options.
+10. Quick Generate remains the default, lowest-decision path. Do not remove, rename, demote, or bypass it.
+
+Do not automatically submit an image merely because **Generate for me** selected a direction unless that was the pre-Round-013 established behavior. Preserve the intended confirmation boundary: the user must have one clear final Generate action after the AI direction is prepared.
+
+## Required correction
+
+- Add an explicit hidden CSS guard, e.g. `.create__generate-bar[hidden] { display: none !important; }`.
+- Model bar visibility from an explicit prepared-direction/path state, not merely Direction-section visibility.
+- Restore/verify the AI direction panel and both choice buttons in the ordinary real runtime state—not only fixtures.
+- Fix readiness copy so an already confirmed/restored song never reports “Choose and confirm a song.”
+- Verify draft restoration correctly restores `songConfirmed`, portraits, chosen path/direction, and style before calculating the final action.
+- Ensure fixed positioning never covers the AI choice panel, portrait controls, Overview content, browser chrome, or bottom navigation.
+- Keep duplicate submission, pending state, recoverable errors, credits, queue, and endpoint behavior from Round 013.
+
+## Regression verification
+
+Add behavior-level tests and real-state mobile evidence for this full sequence:
+
+1. confirmed song, no portrait → People stage; no Generate bar;
+2. portrait selected, Direction opens → Generate for me + Explore options visible together; no final bar;
+3. Generate for me prepared → both intended context controls remain coherent and final Generate image becomes reachable;
+4. Explore options initial → three directions; no premature final bar;
+5. explored direction applied → final action reachable;
+6. manual path prepared → final action reachable;
+7. restored draft with confirmed song never reports song missing;
+8. hidden bar computed style is actually `display: none`;
+9. 320×640 and 390×844 evidence includes the bottom navigation and proves no overlap;
+10. 200% zoom, keyboard/textarea, safe area, reduced motion, and increased contrast.
+
+Do not rely only on string-presence assertions. Exercise state transitions in the browser harness or focused JS tests. Run the full suite. Commit implementation, evidence under `design/review/round-013-1/`, and updated handoffs to `main`; then stop for GPT/owner review. Do not deploy or start broader design work.
+
+---
+
 # NEXT DIRECTIVE — Round 013 complete, awaiting GPT review
 
 **Date:** 2026-09-01  
