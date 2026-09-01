@@ -6,7 +6,7 @@
 
 **Last updated by ChatGPT:** 2026-09-01 (Round 012 visual narrative planning handoff)
 
-**Active round:** 012 (contract-first Visual Narrative Planning Layer; awaiting Cursor)
+**Active round:** 012 (backend-first POV visual planning integration; awaiting Cursor)
 
 **Workflow roles**
 
@@ -17,7 +17,7 @@
 
 ## Current Objective
 
-Continue from the published Luminous Night Studio Phase 2 baseline with Round 012, Slice A of the Visual Narrative Planning Layer: audit the existing Song DNA boundaries and define the customer-safe Song DNA projection plus versioned contracts for selection, Visual Campaign Board, three scene directions, and Visual Scene Contract. This pass is contract-first only; preserve all runtime behavior and do not build UI or live model planning against unapproved fields.
+Continue from the published Luminous Night Studio Phase 2 baseline by implementing and validating the POV-derived Visual Narrative Planning Layer in the development backend before continuing customer-facing design. Reuse the richest existing internal Song DNA, generate and rank three directions, compile a Visual Scene Contract, integrate portrait roles afterward, and feed the structured result into the existing generation path with safe fallback and traceability. Do not add new customer-facing design in this round.
 
 ### Verified local baseline before implementation
 
@@ -94,18 +94,21 @@ POV reasoning reference:
 - https://github.com/cubixmeow-commits/POV-Campaign-Engine
 - Read `SKILL.md`, `references/board-components.md`, `references/campaign-design.md`, `references/scene-rules.md`, and the CrowdStrike campaign/scenes example.
 
-Implement **Slice A — Contract only** first:
+Implement the **backend-first POV visual planning integration** before further design:
 
-1. Audit existing Song DNA model, API, storage, privacy, draft, and queue boundaries.
-2. Propose and document a customer-safe Song DNA projection.
-3. Define versioned, validated contracts for Song DNA projection/selection, Visual Campaign Board, three candidate directions, and Visual Scene Contract.
-4. Define persistence, privacy, validation, fallback, prompt-versioning, and API boundaries.
-5. Add tests and five contrasting fixtures.
-6. Do not build UI against unapproved projection fields.
-7. Do not start planning-service model calls, Quick Generate wiring, Explore Options, Fine Tune, retry changes, or image generation changes in this slice.
-8. Preserve all existing routes, auth, privacy, credits, queue, providers, portraits, owner controls, storage, gallery, responsive behavior, and Flutter documentation contracts.
+1. Audit current internal Song DNA, prompt assembly, portrait, style, draft, queue, provider, credit, and persistence boundaries.
+2. Reuse the richest existing internal Song DNA; do not wait for or build the customer selector.
+3. Define and implement versioned, validated contracts for Visual Campaign Board, exactly three directions, ranking, and Visual Scene Contract.
+4. Implement planning-model calls through existing provider abstractions with strict JSON, bounded repair, deterministic fallback, template versions, and sanitized trace records.
+5. Automatically select the highest-ranked direction for the existing/default generation path.
+6. Keep portrait images out of board/direction planning; integrate portrait roles only after the Scene Contract is selected.
+7. Compile the final provider prompt through the approved structured compiler and wire it into the development generation path.
+8. Preserve a safe fallback or switch to the current compiler during evaluation.
+9. Add five contrasting fixtures, old-versus-new prompt comparisons, and controlled development generations where affordable.
+10. Do not implement new Song DNA selector, Explore Options, Fine Tune, or broader visual design until this backend is working and reviewed.
+11. Preserve routes, auth, privacy, credits, queue ownership, providers, portraits, owner controls, storage, gallery, responsive behavior, and Flutter contracts.
 
-After verified Slice A:
+After verified backend integration:
 
 - update this handoff and `docs/design/CURSOR-HANDOFF.md`;
 - update the implementation roadmap and relevant contract/component maps;
@@ -118,12 +121,17 @@ After verified Slice A:
 - Commit:
 - Existing Song DNA sources found:
 - Current API/storage/queue boundaries:
-- Proposed customer-safe projection:
+- Internal Song DNA source reused:
+- Planning services implemented:
 - Contracts added:
 - Versions:
 - Privacy decisions:
-- Persistence decisions:
-- Validation/fallback decisions:
+- Persistence/trace decisions:
+- Validation/repair/fallback decisions:
+- Existing generation path integration:
+- Current-compiler fallback/switch:
+- Portrait boundary verification:
+- Old/new prompt comparison:
 - Tests/checks:
 - Five-fixture results:
 - Files changed:
