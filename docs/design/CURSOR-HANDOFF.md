@@ -3,8 +3,17 @@
 **Date:** 2026-08-31
 **Branch convention:** work directly on `main` while the product remains private development
 **Design package status:** approved and implementation-ready
-**Design package commit:** `PACKAGE_COMMIT_PLACEHOLDER`
+**Design package commit:** `9fc4e53de268a064d888f0c703fd4c81bb7dee15`
 **Execute now:** Phase 1 foundation/component-lab slice only
+
+## Package verification
+
+- `php tests/run.php`: **981 passed, 0 failed**
+- canonical token JSON: valid
+- Markdown relative links under `docs/design/` and `assets/design/`: valid
+- `git diff --check`: clean
+- runtime/backend/API/migration changes in the package: **none**
+- reference asset SHA-256: `65c8ab28b1160121ef24f35c7393dbc9a91892f8954e0c89a3f84ebd3e1a83f8`
 
 ## Outcome to deliver
 
