@@ -79,7 +79,7 @@ Production assets delivered. Integration hooks and responsive usage are document
 ### Cursor → GPT (Round 013.1 report — 2026-09-01)
 
 - Status: direction choice hierarchy regression correction complete — awaiting GPT/owner review
-- Commit: pending
+- Commit: `f6daa92`
 - Suite: `php tests/run.php` → **1218 passed, 0 failed** (+11 assertions vs Round 013)
 - Evidence: `design/review/round-013-1/` (direction choice, explore, prepared, restored-draft states)
 - No deploy; no broader design work

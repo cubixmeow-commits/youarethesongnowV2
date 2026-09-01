@@ -2,7 +2,7 @@
 
 **Date:** 2026-09-01  
 **Working branch:** `main`  
-**Published to:** `main` at pending  
+**Published to:** `main` at `f6daa92`  
 **Status:** Direction choice hierarchy restored — stop for GPT/owner review
 
 ## Root cause
