@@ -17,7 +17,7 @@
 
 ## Current Objective
 
-Build the owner-approved V1 sample archive showcase in the current responsive web/mobile app. Copy all 77 V1 samples into V2, replace the old hardcoded Home imagery, add a lazy Home carousel and add `/showcase` with the V1-style falling/locking masonry wall. Preserve all application behavior, owner controls and portrait deletion. Flutter remains documentation-only.
+Continue from the published Luminous Night Studio Phase 2 baseline with Round 012, Slice A of the Visual Narrative Planning Layer: audit the existing Song DNA boundaries and define the customer-safe Song DNA projection plus versioned contracts for selection, Visual Campaign Board, three scene directions, and Visual Scene Contract. This pass is contract-first only; preserve all runtime behavior and do not build UI or live model planning against unapproved fields.
 
 ### Verified local baseline before implementation
 
