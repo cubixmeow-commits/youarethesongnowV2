@@ -93,7 +93,7 @@ Stored under `design/review/round-011/`. Index: `design/review/round-011/README.
 ## Final commit
 
 - **Branch:** `cursor/luminous-night-studio-phase2`
-- **Branch head:** `e29811ce8733716fc97e84a42a05917ae13f3f47`
+- **Branch head:** `d567188e3689ebecceeaaff20d237794dfcdea22`
 
 ## Recommended next slice
 
