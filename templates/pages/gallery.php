@@ -4,7 +4,7 @@
     <p class="lede">Your private collection.</p>
   </header>
   <div class="gallery-grid" data-gallery-grid></div>
-  <div class="gallery-empty" aria-hidden="true">
+  <div class="gallery-empty">
     <img
       class="gallery-empty__art"
       src="/assets/images/system/empty-collection-still.webp"

@@ -1,6 +1,7 @@
 <section class="owner" data-owner data-csrf="<?= e($csrf ?? '') ?>">
   <h1>Owner operations</h1>
   <p class="quiet">Private development controls. No impersonation.</p>
+  <p class="quiet"><a href="/owner/component-lab">Private component lab</a> for Luminous Night Studio fixtures. Owner and private-build only.</p>
 
   <section>
     <h2>Setup status</h2>

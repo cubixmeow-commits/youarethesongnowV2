@@ -12,6 +12,10 @@ $jsVersion = (string) (filemtime(YATSN_ROOT . '/public/assets/js/app.js') ?: '1'
 $exploreJsVersion = is_file(YATSN_ROOT . '/public/assets/js/explore.js')
     ? (string) (filemtime(YATSN_ROOT . '/public/assets/js/explore.js') ?: '1')
     : '1';
+$componentLab = !empty($componentLab);
+$componentLabJsVersion = is_file(YATSN_ROOT . '/public/assets/js/component-lab.js')
+    ? (string) (filemtime(YATSN_ROOT . '/public/assets/js/component-lab.js') ?: '1')
+    : '1';
 $showcaseScripts = $showcaseScripts ?? [];
 $showcaseJsVersion = (string) (filemtime(YATSN_ROOT . '/public/assets/js/showcase.js') ?: '1');
 $showcaseHero = $showcaseHero ?? null;
@@ -102,6 +106,9 @@ $bodyClass = trim(($layoutClass ?? '') . ($isHome ? ' is-home' : '') . ($authed 
   </footer>
   <?php if ($path === '/create'): ?>
   <script src="/assets/js/explore.js?v=<?= e($exploreJsVersion) ?>" defer></script>
+  <?php endif; ?>
+  <?php if ($componentLab): ?>
+  <script src="/assets/js/component-lab.js?v=<?= e($componentLabJsVersion) ?>" defer></script>
   <?php endif; ?>
   <script src="/assets/js/app.js?v=<?= e($jsVersion) ?>" defer></script>
   <?php if (in_array('imagesloaded', $showcaseScripts, true)): ?>

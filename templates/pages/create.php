@@ -2,7 +2,7 @@
   $build = \Yatsn\Support\BuildInfo::publicSummary();
   if (!empty($build['commit'])):
 ?> data-build-commit="<?= e((string) $build['commit']) ?>" data-build-source="<?= e((string) ($build['source'] ?? '')) ?>"<?php endif; ?>>
-  <header class="session-header" aria-label="Create">
+  <header class="session-header">
     <div class="session-header__art" aria-hidden="true">
       <img
         class="session-header__mark"
@@ -14,7 +14,7 @@
     </div>
     <div class="session-header__meta">
       <p class="session-header__eyebrow">Create</p>
-      <p class="session-header__title" data-session-song>Choose your song</p>
+      <h1 class="session-header__title" data-session-song>Choose your song</h1>
       <p class="session-header__hint quiet">Choose a song, add portraits, set the direction. Then create your world.</p>
     </div>
     <ol class="session-progress" aria-label="Session stages">

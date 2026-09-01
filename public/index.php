@@ -10,6 +10,7 @@ use Yatsn\Auth\SessionService;
 use Yatsn\Http\Request;
 use Yatsn\Http\Router;
 use Yatsn\Sharing\GalleryService;
+use Yatsn\Support\BuildInfo;
 use Yatsn\Support\Config;
 use Yatsn\Support\Database;
 use Yatsn\Support\JsonResponse;
@@ -149,6 +150,41 @@ $router->get('/owner', function () {
         'session' => $session,
         'csrf' => $session['csrf_token'],
         'layoutClass' => 'owner-layout',
+    ], 'layouts/main');
+    return true;
+});
+
+$router->get('/owner/component-lab', function () {
+    $session = SessionService::current();
+    if (!BuildInfo::isPrivateBuild()) {
+        http_response_code(404);
+        echo View::page('pages/legal', [
+            'title' => 'Not found',
+            'heading' => 'Page not found',
+            'body' => 'That page does not exist.',
+            'session' => $session,
+        ]);
+        return true;
+    }
+    if (!$session) {
+        redirect('/sign-in');
+    }
+    if (!BuildInfo::allowComponentLab($session)) {
+        http_response_code(404);
+        echo View::page('pages/legal', [
+            'title' => 'Not found',
+            'heading' => 'Page not found',
+            'body' => 'That page does not exist.',
+            'session' => $session,
+        ]);
+        return true;
+    }
+    echo View::page('owner/component-lab', [
+        'title' => 'Component lab',
+        'session' => $session,
+        'csrf' => $session['csrf_token'],
+        'layoutClass' => 'owner-layout',
+        'componentLab' => true,
     ], 'layouts/main');
     return true;
 });

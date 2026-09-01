@@ -52,6 +52,18 @@ final class BuildInfo
             || self::isPrivateBuild();
     }
 
+    /**
+     * Private-development component lab. Owner-only while external users remain gated.
+     * Unreachable once ALLOW_EXTERNAL_USERS is enabled.
+     */
+    public static function allowComponentLab(?array $session): bool
+    {
+        if (!self::isPrivateBuild()) {
+            return false;
+        }
+        return ($session['role'] ?? '') === 'owner';
+    }
+
     /** @return array{short:?string,full:?string,source:string} */
     private static function resolveCommit(): array
     {

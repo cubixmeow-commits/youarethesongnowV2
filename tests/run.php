@@ -986,9 +986,85 @@ Config::boot($root);
 
 $createTemplate = (string) file_get_contents($root . '/templates/pages/create.php');
 assert_true(str_contains($createTemplate, 'data-build-commit'), 'Create page can expose private build commit');
+assert_true(preg_match('/<h1[^>]*class="session-header__title"/', $createTemplate) === 1, 'Create page uses a real h1 for the session title');
+assert_true(!preg_match('/<p class="session-header__title"/', $createTemplate), 'Create session title is no longer a paragraph');
 assert_true(str_contains($exploreJs, 'data-ai-build'), 'Explore UI can show deployed build commit');
 assert_true(str_contains($exploreJs, 'fields?.build'), 'Explore UI surfaces build id from error fields');
 assert_true(is_file($root . '/app/build-stamp.php'), 'committed build stamp exists for non-git hosts');
+
+$appCss = (string) file_get_contents($root . '/public/assets/css/app.css');
+assert_true(str_contains($appCss, '--color-focus: oklch(0.72 0.14 268)'), 'runtime tokens split focus color from ring elevation');
+assert_true(str_contains($appCss, '--elevation-focus-ring:'), 'runtime tokens define focus-ring elevation');
+assert_true(str_contains($appCss, '--color-text-tertiary: oklch(0.62 0.01 256)'), 'tertiary content is raised for contrast');
+assert_true(str_contains($appCss, '--control-touch-min: 44px'), 'canonical 44px minimum target token exists');
+assert_true(str_contains($appCss, '--control-height: 48px'), 'canonical 48px control height token exists');
+assert_true(str_contains($appCss, '--control-primary-height: 52px'), 'canonical 52px primary action token exists');
+assert_true(str_contains($appCss, '--color-surface-selected:'), 'selected surface token exists');
+assert_true(str_contains($appCss, '--color-status-info:'), 'status color tokens exist');
+assert_true(!preg_match('/transition\s*:\s*all\b/', $appCss), 'CSS does not introduce transition all');
+assert_true(str_contains($appCss, '.yatsn-direction-card'), 'canonical CreativeDirectionCard styles exist');
+assert_true(str_contains($appCss, '.yatsn-btn--primary'), 'canonical primary button styles exist');
+
+assert_true(str_contains($exploreJs, '/api/v1/explore-directions'), 'Explore still posts to the existing directions endpoint');
+assert_true(str_contains($exploreJs, 'JSON.stringify({ songDna: latestSongDna })'), 'Explore still sends derived Song DNA only');
+assert_true(str_contains($exploreJs, 'exploreInFlight'), 'Explore protects repeated async activation');
+assert_true(str_contains($exploreJs, 'role="radiogroup"'), 'Explore options use radiogroup semantics');
+assert_true(str_contains($exploreJs, "setAttribute('role', 'radio')"), 'Explore direction cards expose radio semantics');
+assert_true(str_contains($exploreJs, 'aria-checked'), 'Explore selection is exposed programmatically');
+assert_true(str_contains($exploreJs, 'dataset.yatsnExploreState') || str_contains($exploreJs, 'data-yatsn-explore-state'), 'Explore exposes a platform-neutral state hook');
+assert_true(str_contains($exploreJs, 'is-loading'), 'Explore has a loading presentation');
+assert_true(str_contains($exploreJs, 'data-ai-retry'), 'Explore error state offers retry');
+assert_true(str_contains($exploreJs, 'yatsn-direction-card'), 'Explore cards use the canonical direction class');
+assert_true(str_contains($exploreJs, 'dataset.styleName'), 'Explore retains internal StyleMap data attributes');
+assert_true(!str_contains($exploreJs, 'Uses ') || !str_contains($exploreJs, 'internally'), 'Explore customer copy still omits internal StyleMap names');
+assert_true(str_contains($exploreJs, 'YatsnExploreFixtures'), 'Explore private fixtures exist for screenshot review');
+
+$galleryTemplate = (string) file_get_contents($root . '/templates/pages/gallery.php');
+assert_true(str_contains($galleryTemplate, 'class="gallery-empty"'), 'Gallery empty state remains in markup');
+assert_true(!str_contains($galleryTemplate, 'gallery-empty" aria-hidden="true"'), 'Gallery empty state is not hidden from assistive technology');
+
+$indexSource = (string) file_get_contents($root . '/public/index.php');
+assert_true(str_contains($indexSource, "/owner/component-lab"), 'component lab route is registered');
+assert_true(str_contains($indexSource, 'BuildInfo::allowComponentLab'), 'component lab route uses private-owner access helper');
+assert_true(str_contains($indexSource, 'BuildInfo::isPrivateBuild()'), 'component lab is unreachable when the private-build gate is off');
+
+assert_true(\Yatsn\Support\BuildInfo::allowComponentLab(['role' => 'owner']) === true, 'component lab allows owners during private development');
+assert_true(\Yatsn\Support\BuildInfo::allowComponentLab(['role' => 'member']) === false, 'component lab denies non-owner sessions');
+assert_true(\Yatsn\Support\BuildInfo::allowComponentLab(null) === false, 'component lab denies unauthenticated access');
+putenv('ALLOW_EXTERNAL_USERS=true');
+$_ENV['ALLOW_EXTERNAL_USERS'] = 'true';
+Config::boot($root);
+assert_true(\Yatsn\Support\BuildInfo::allowComponentLab(['role' => 'owner']) === false, 'component lab is closed once external users are enabled');
+putenv('ALLOW_EXTERNAL_USERS=false');
+$_ENV['ALLOW_EXTERNAL_USERS'] = 'false';
+Config::boot($root);
+
+$labTemplate = (string) file_get_contents($root . '/templates/owner/component-lab.php');
+assert_true(str_contains($labTemplate, 'yatsn-btn--primary'), 'component lab includes primary buttons');
+assert_true(str_contains($labTemplate, 'yatsn-btn--secondary'), 'component lab includes secondary buttons');
+assert_true(str_contains($labTemplate, 'yatsn-btn--quiet'), 'component lab includes quiet buttons');
+assert_true(str_contains($labTemplate, 'yatsn-btn--destructive'), 'component lab includes destructive buttons');
+assert_true(str_contains($labTemplate, 'is-loading'), 'component lab includes loading button state');
+assert_true(str_contains($labTemplate, 'yatsn-icon-btn'), 'component lab includes icon buttons');
+assert_true(str_contains($labTemplate, 'yatsn-status--info') && str_contains($labTemplate, 'yatsn-status--error'), 'component lab includes status banners');
+assert_true(str_contains($labTemplate, 'Try again'), 'component lab error banner includes retry');
+assert_true(str_contains($labTemplate, 'yatsn-dna-card'), 'component lab includes Song DNA cards');
+assert_true(str_contains($labTemplate, 'is-conflict'), 'component lab includes conflict-disabled DNA card');
+assert_true(str_contains($labTemplate, 'yatsn-direction-card'), 'component lab includes CreativeDirectionCard');
+assert_true(str_contains($labTemplate, 'data-lab-sheet') && str_contains($labTemplate, 'data-lab-confirm'), 'component lab includes sheet and confirmation');
+assert_true(str_contains($labTemplate, 'yatsn-artwork is-loading') && str_contains($labTemplate, 'is-unavailable'), 'component lab includes artwork loading and unavailable states');
+assert_true(!str_contains($labTemplate, 'luminous-night-studio-style-board'), 'component lab does not use the style-board image');
+assert_true(!str_contains(strtolower($labTemplate), 'lyric'), 'component lab fixtures contain no lyrics');
+
+$labHtml = \Yatsn\Support\View::page('owner/component-lab', [
+    'title' => 'Component lab',
+    'session' => ['role' => 'owner', 'csrf_token' => 'test-csrf'],
+    'csrf' => 'test-csrf',
+    'componentLab' => true,
+]);
+assert_true(str_contains($labHtml, 'data-component-lab'), 'component lab page renders fixture shell');
+assert_true(str_contains($labHtml, 'component-lab.js'), 'component lab page loads its fixture script');
+assert_true(is_file($root . '/public/assets/js/component-lab.js'), 'component lab script exists');
 
 $groqDecoded = \Yatsn\AI\GroqCreativeAdapter::decodeResponse([
     'choices' => [['message' => ['content' => json_encode($analysisFixture, JSON_THROW_ON_ERROR)]]],
