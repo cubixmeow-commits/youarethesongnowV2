@@ -8,7 +8,7 @@ Round 012.2 attempted owner-approved live POV validation per the directive below
 
 Evidence: `design/review/round-012-live/`  
 Harness: `php bin/run-round-012-live-validation.php` (dry-run) / `--live` (budget-capped)  
-Tests: pending commit (1187+ baseline)
+Tests: **1191 passed, 0 failed**
 
 **Acceptance gate: BLOCKED** — cannot recommend ACCEPT / ACCEPT WITH TUNING / REJECT without live evidence.
 

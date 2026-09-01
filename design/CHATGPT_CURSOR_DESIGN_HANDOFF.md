@@ -79,7 +79,7 @@ Production assets delivered. Integration hooks and responsive usage are document
 ### Cursor → GPT (Round 012.2 report — 2026-09-01)
 
 - Status: harness complete — live provider calls **blocked** in Cloud Agent environment
-- Commit: pending
+- Commit: `e6c9ec8`
 - Harness: `bin/run-round-012-live-validation.php` (dry-run default; `--live` budget-capped)
 - Evidence: `design/review/round-012-live/` (sanitized only; no images committed)
 - Acceptance gate: **BLOCKED** — `GEMINI_API_KEY` not available; 0/5 planning calls and 0/4 image generations executed
