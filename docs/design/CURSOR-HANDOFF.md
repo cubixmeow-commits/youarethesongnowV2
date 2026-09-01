@@ -88,7 +88,7 @@ Capture harness scrolls each named state target below the sticky top bar and fai
 ## Final commit
 
 - **Branch:** `cursor/luminous-night-studio-phase2`
-- **Branch head:** `1af4dbd950b12e49d167946d5810a1955cf83665`
+- **Branch head:** `90d94319f35267e128d8af1d7ab39d2f9b4e6ca9`
 
 ## Recommended next slice
 
