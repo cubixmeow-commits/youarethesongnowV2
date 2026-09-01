@@ -4,9 +4,9 @@
 
 **Branch:** `main`
 
-**Last updated by ChatGPT:** 2026-08-30 (Round 009 V1 sample showcase handoff)
+**Last updated by ChatGPT:** 2026-09-01 (Round 012 visual narrative planning handoff)
 
-**Active round:** 009 (implemented locally; awaiting ChatGPT visual review)
+**Active round:** 012 (contract-first Visual Narrative Planning Layer; awaiting Cursor)
 
 **Workflow roles**
 
@@ -72,6 +72,64 @@ Production assets delivered. Integration hooks and responsive usage are document
 ---
 
 ## CURRENT HANDOFF
+
+### ChatGPT → Cursor (Round 012 — 2026-09-01)
+
+The correct working repository is `cubixmeow-commits/youarethesongnowV2`. Work directly on `main` during active development so GPT and Cursor can coordinate through GitHub while the owner is mobile.
+
+Published Phase 2 baseline on `main`:
+
+- Create entry and song selection are complete.
+- `php tests/run.php`: **1092 passed, 0 failed**.
+- Song lookup remains `POST /api/v1/song-lookups`.
+- Song DNA API/persistence has not started.
+- Recommended next slice is contract-first customer-safe Song DNA.
+
+Approved plan:
+
+- `docs/design/process/VISUAL-NARRATIVE-PLANNING-LAYER.md`
+
+POV reasoning reference:
+
+- https://github.com/cubixmeow-commits/POV-Campaign-Engine
+- Read `SKILL.md`, `references/board-components.md`, `references/campaign-design.md`, `references/scene-rules.md`, and the CrowdStrike campaign/scenes example.
+
+Implement **Slice A — Contract only** first:
+
+1. Audit existing Song DNA model, API, storage, privacy, draft, and queue boundaries.
+2. Propose and document a customer-safe Song DNA projection.
+3. Define versioned, validated contracts for Song DNA projection/selection, Visual Campaign Board, three candidate directions, and Visual Scene Contract.
+4. Define persistence, privacy, validation, fallback, prompt-versioning, and API boundaries.
+5. Add tests and five contrasting fixtures.
+6. Do not build UI against unapproved projection fields.
+7. Do not start planning-service model calls, Quick Generate wiring, Explore Options, Fine Tune, retry changes, or image generation changes in this slice.
+8. Preserve all existing routes, auth, privacy, credits, queue, providers, portraits, owner controls, storage, gallery, responsive behavior, and Flutter documentation contracts.
+
+After verified Slice A:
+
+- update this handoff and `docs/design/CURSOR-HANDOFF.md`;
+- update the implementation roadmap and relevant contract/component maps;
+- commit and push `main`;
+- stop for GPT review before Slice B.
+
+#### Cursor → GPT (Round 012 report)
+
+- Status: awaiting Cursor
+- Commit:
+- Existing Song DNA sources found:
+- Current API/storage/queue boundaries:
+- Proposed customer-safe projection:
+- Contracts added:
+- Versions:
+- Privacy decisions:
+- Persistence decisions:
+- Validation/fallback decisions:
+- Tests/checks:
+- Five-fixture results:
+- Files changed:
+- Deferred work:
+- Questions for GPT:
+
 
 ### Cursor → ChatGPT (Round 009 — 2026-08-30)
 
@@ -454,7 +512,8 @@ Owner-approved handoff implemented locally. All 77 V1 samples copied/optimized, 
 3. Capture `design/review/round-XXX/` when possible  
 4. Update this canonical handoff  
 5. Mark inbox consumed  
-6. Commit locally; do not push or deploy without separate owner authorization
-7. Stop for ChatGPT review  
+6. During active development, pull latest `main`, commit verified work directly to `main`, and push so GPT can review from GitHub
+7. Do not deploy to Hostinger or production without separate owner authorization
+8. Stop for ChatGPT review  
 
 Keep human chat replies short; detailed reports live here.
