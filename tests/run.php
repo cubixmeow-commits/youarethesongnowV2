@@ -705,6 +705,14 @@ file_put_contents(
 );
 assert_true(is_file($round012Dir . '/prompt-comparison.json'), 'round-012.1 prompt comparison artifact written');
 
+$liveHarnessOut = [];
+exec('php -d opcache.enable_cli=0 ' . escapeshellarg($root . '/bin/run-round-012-live-validation.php') . ' 2>&1', $liveHarnessOut, $liveHarnessExit);
+assert_true(is_file($root . '/design/review/round-012-live/planning-results.json'), 'round 012.2 live harness writes planning-results.json');
+assert_true(is_file($root . '/design/review/round-012-live/image-ab-results.json'), 'round 012.2 live harness writes image-ab-results.json');
+$planningLiveArtifact = json_decode((string) file_get_contents($root . '/design/review/round-012-live/planning-results.json'), true);
+assert_true(is_array($planningLiveArtifact) && isset($planningLiveArtifact['status']), 'round 012.2 planning-results.json is valid JSON');
+assert_true(is_file($root . '/design/review/round-012-live/validation-run-summary.json'), 'round 012.2 live harness writes validation-run-summary.json');
+
 $planningDisabledPackage = (function () use ($root, $analysisFixture, $vnSnapshotBase): array {
     putenv('VISUAL_NARRATIVE_LEGACY_COMPILER=true');
     $_ENV['VISUAL_NARRATIVE_LEGACY_COMPILER'] = 'true';

@@ -1,0 +1,28 @@
+{
+    "version": "round-012.2",
+    "mode": "dry-run",
+    "timestampUtc": "2026-09-01T23:02:33+00:00",
+    "readiness": {
+        "planningModel": "gemini-3.6-flash",
+        "imageModel": "gemini-3.1-flash-image",
+        "planningTemplate": "visual-planning-prompt-v1",
+        "geminiKeyPresent": false
+    },
+    "blockers": [
+        "GEMINI_API_KEY is missing from the validation environment",
+        "GeminiVisualNarrativePlanner unavailable: config-gemini-api-key-missing",
+        "GeminiImageAdapter unavailable for live image generation"
+    ],
+    "acceptanceGate": {
+        "recommendation": "BLOCKED",
+        "reason": "Dry-run only. Re-run with --live after GEMINI_API_KEY and authorized portrait are available in the validation environment."
+    },
+    "environmentFlags": {
+        "AI_PROVIDERS_ENABLED": "true",
+        "GEMINI_LIVE_CALLS": "true",
+        "GEMINI_IMAGE_LIVE_CALLS": "true",
+        "VISUAL_NARRATIVE_PLANNING_ENABLED": "true",
+        "VISUAL_NARRATIVE_PLANNING_LIVE_CALLS": "true",
+        "VISUAL_NARRATIVE_LEGACY_COMPILER": "false"
+    }
+}

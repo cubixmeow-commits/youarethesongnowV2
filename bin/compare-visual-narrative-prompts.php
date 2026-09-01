@@ -5,7 +5,11 @@ declare(strict_types=1);
 
 /**
  * Compare legacy, deterministic-fallback, and canonical structured prompts.
- * Optional live image A/B when GEMINI_IMAGE_LIVE_CALLS=true and credentials exist.
+ * For Round 012.2 live validation (planning + image A/B), use:
+ *   php bin/run-round-012-live-validation.php            # dry-run
+ *   php bin/run-round-012-live-validation.php --live   # budget-capped live calls
+ *
+ * Optional legacy image A/B when GEMINI_IMAGE_LIVE_CALLS=true and credentials exist.
  *
  * Usage: php bin/compare-visual-narrative-prompts.php
  */

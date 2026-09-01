@@ -1,3 +1,35 @@
+# NEXT DIRECTIVE — Round 012.2 blocked; awaiting credentials + GPT review
+
+**Date:** 2026-09-01  
+**Working branch:** `main`  
+**Status:** Live validation harness complete — provider calls blocked in Cloud Agent environment
+
+Round 012.2 attempted owner-approved live POV validation per the directive below. The harness is ready and sanitized artifacts are committed, but **no live Gemini planning or image calls executed** because `GEMINI_API_KEY` is not available in this environment.
+
+Evidence: `design/review/round-012-live/`  
+Harness: `php bin/run-round-012-live-validation.php` (dry-run) / `--live` (budget-capped)  
+Tests: pending commit (1187+ baseline)
+
+**Acceptance gate: BLOCKED** — cannot recommend ACCEPT / ACCEPT WITH TUNING / REJECT without live evidence.
+
+### Blockers
+
+1. `GEMINI_API_KEY` missing from Cloud Agent validation environment (no `.env`, no injected secret).
+2. Pass A (5 planning calls) and Pass B (4 image generations) not executed.
+3. Owner-authorized development portrait from private vault not mounted; harness will use synthetic portrait only when live image pass runs.
+
+### To unblock
+
+Add `GEMINI_API_KEY` to the Cloud Agent environment secrets, then re-run:
+
+```bash
+php bin/run-round-012-live-validation.php --live
+```
+
+Do not deploy. Do not begin Song DNA selector, Explore Options, Fine Tune, or broader design work.
+
+---
+
 # NEXT DIRECTIVE — Round 012.2 Live POV Validation
 
 **Date:** 2026-09-01  

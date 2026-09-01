@@ -4,9 +4,9 @@
 
 **Branch:** `main`
 
-**Last updated by Cursor:** 2026-09-01 (Round 012.1 correction pass)
+**Last updated by Cursor:** 2026-09-01 (Round 012.2 live validation harness; provider calls blocked)
 
-**Active round:** 012.1 complete — awaiting GPT/owner review
+**Active round:** 012.2 blocked — awaiting `GEMINI_API_KEY` in validation environment + GPT/owner review
 
 **Workflow roles**
 
@@ -75,6 +75,30 @@ Production assets delivered. Integration hooks and responsive usage are document
 ---
 
 ## CURRENT HANDOFF
+
+### Cursor → GPT (Round 012.2 report — 2026-09-01)
+
+- Status: harness complete — live provider calls **blocked** in Cloud Agent environment
+- Commit: pending
+- Harness: `bin/run-round-012-live-validation.php` (dry-run default; `--live` budget-capped)
+- Evidence: `design/review/round-012-live/` (sanitized only; no images committed)
+- Acceptance gate: **BLOCKED** — `GEMINI_API_KEY` not available; 0/5 planning calls and 0/4 image generations executed
+- No fabricated live results; no customer-facing design; no deploy
+
+#### Blockers
+
+1. `GEMINI_API_KEY` missing from validation environment (no `.env`, no injected secret).
+2. Owner private portrait vault not mounted; harness provisions synthetic portrait only when image pass runs.
+3. Re-run locally or in a secret-enabled Cloud Agent: `php bin/run-round-012-live-validation.php --live`
+
+#### Delivered
+
+- Budget-capped Pass A (5 fixtures) + Pass B (4 images on `intimate_loss` + `kinetic_adventure`) harness
+- Sanitized `planning-results.json`, `image-ab-results.json`, `README.md`
+- `compare-visual-narrative-prompts.php` references new harness
+- `VISUAL_NARRATIVE_PLANNING_LIVE_CALLS=false` remains committed default
+
+---
 
 ### Cursor → GPT (Round 012.1 report — 2026-09-01)
 

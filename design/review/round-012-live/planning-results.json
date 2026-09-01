@@ -1,0 +1,26 @@
+{
+    "status": "dry-run",
+    "planningCallsUsed": 0,
+    "fixtures": {
+        "intimate_loss": {
+            "status": "dry-run",
+            "wouldCall": "GeminiVisualNarrativePlanner::plan"
+        },
+        "triumphant_transformation": {
+            "status": "dry-run",
+            "wouldCall": "GeminiVisualNarrativePlanner::plan"
+        },
+        "ambiguous_relationship": {
+            "status": "dry-run",
+            "wouldCall": "GeminiVisualNarrativePlanner::plan"
+        },
+        "kinetic_adventure": {
+            "status": "dry-run",
+            "wouldCall": "GeminiVisualNarrativePlanner::plan"
+        },
+        "quiet_introspection": {
+            "status": "dry-run",
+            "wouldCall": "GeminiVisualNarrativePlanner::plan"
+        }
+    }
+}

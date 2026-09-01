@@ -1,0 +1,30 @@
+{
+    "status": "dry-run",
+    "imageGenerationsUsed": 0,
+    "sharedSettings": {
+        "quality": "medium",
+        "orientation": "square",
+        "noTextInImage": true,
+        "portraitCount": 1,
+        "styleKey": "photoreal_cinema"
+    },
+    "comparisons": [
+        {
+            "fixture": "intimate_loss",
+            "status": "dry-run",
+            "variants": {
+                "A": "legacy compiler",
+                "B": "live POV + canonical prompt"
+            }
+        },
+        {
+            "fixture": "kinetic_adventure",
+            "status": "dry-run",
+            "variants": {
+                "A": "legacy compiler",
+                "B": "live POV + canonical prompt"
+            }
+        }
+    ],
+    "blindReveal": []
+}
