@@ -11,7 +11,7 @@ This note is the daily “what matters now” list for CuBiX Meow and Brut. Keep
 
 ## Active now
 
-1. **Codex review of Luminous Night Studio Phase 2 final correction pass:** honest entry evidence at scrollY=0, compound group-visibility harness, recent-creations list semantics, compact mobile spacing. Pack: `design/review/round-011/`. Do not start Phase 3 contract/API work until review lands.
+1. **Private deployment review of Luminous Night Studio Phase 2 on `main`:** Create entry and song selection published at reviewed commit `ab6f82a` (`design/review/round-011/`). Do not start Phase 3 contract/API implementation until the customer-safe Song DNA contract is approved.
 2. **Run controlled private image tests:** compare the same one- and two-person inputs on Flash Lite and full Flash; change one variable at a time and record identity, narrative fidelity, coherence, prohibited text, latency, cost and usability.
 3. **Resolve no-text and unusable-image detection:** one otherwise successful no-text image rendered `TICKET`. Prompt-only enforcement and human-only identity acceptance are not sufficient for the final 90-image gate.
 4. **Provisional routing only:** Flash Lite is the low-cost candidate at about $0.0336 per 1K output; full Flash is the quality anchor at about $0.067. Medium/default and high routing are not decided.
@@ -21,6 +21,8 @@ This note is the daily “what matters now” list for CuBiX Meow and Brut. Keep
 8. **Print/poster/T-shirt/upscaling remain post-Build-1.** Vault = workshop; `/docs` = Meow Control.
 
 ## Newly documented
+
+- **Luminous Night Studio Phase 2 published (2026-09-01):** Create entry and existing-contract song selection independently reviewed and fast-forward merged to `main` at `ab6f82a`. Review evidence: `design/review/round-011/`. **1092 passed, 0 failed**. Ready for private deployment review. Next slice: Phase 3 customer-safe Song DNA contract and selector (contract-first).
 
 - **Luminous Night Studio Phase 2 final correction pass (2026-09-01):** honest `create-entry-*` evidence at scrollY=0; optional `create-form-*` shots; compound screenshot harness with simultaneous group visibility; semantic recent-creations `<ul>`/`<li>`; compact mobile Create spacing only. **1092 passed, 0 failed**. Review pack: `design/review/round-011/`.
 
@@ -92,7 +94,7 @@ This note is the daily “what matters now” list for CuBiX Meow and Brut. Keep
 
 ## Next
 
-1. Codex second review of Phase 2 correction pass, then Phase 3 customer-safe Song DNA contract and selector (contract-first).
+1. Phase 3 customer-safe Song DNA contract and selector (contract-first; no UI against unapproved projection fields).
 2. Highest-leverage design follow-up: Song DNA selection interaction design (labels ↔ `song-dna-v2.0`, progressive multi-select, loading/unavailable, Quick Generate).
 3. Controlled same-input Flash Lite versus full Flash comparison for one and two people.
 4. Design no-text enforcement and unusable-image detection before the formal benchmark.

@@ -1,7 +1,8 @@
 # Round 011 review pack — Luminous Night Studio Phase 2
 
 **Date:** 2026-09-01
-**Branch:** `cursor/luminous-night-studio-phase2`
+**Branch:** `main` (published from `cursor/luminous-night-studio-phase2`)
+**Reviewed commit:** `ab6f82a`
 **Scope:** Create entry and existing-contract song selection (final focused correction pass)
 
 ## Fixture setup

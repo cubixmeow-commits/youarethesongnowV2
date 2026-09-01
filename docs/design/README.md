@@ -45,6 +45,6 @@ Working round history (ChatGPT ↔ Cursor): `/design/` (kept; not deleted)
 
 ## Current phase
 
-**Phase 1 runtime is implemented and awaiting screenshot review.**
+**Phase 1 and Phase 2 runtime are published to `main`.**
 
-Cursor should stop for Codex/GPT review of [CURSOR-HANDOFF.md](./CURSOR-HANDOFF.md) and `design/review/round-010/`. The next gated slice is Phase 2 Create entry. Song DNA API/database work remains contract-first.
+Phase 2 Create entry and song selection was independently reviewed and merged at `ab6f82a` (**1092 passed, 0 failed**). Review evidence: `design/review/round-010/` (Phase 1) and `design/review/round-011/` (Phase 2). Ready for private deployment review. The next gated slice is **Phase 3: customer-safe Song DNA contract and selector** (contract-first). Song DNA API/database work must not depend on unapproved projection fields.

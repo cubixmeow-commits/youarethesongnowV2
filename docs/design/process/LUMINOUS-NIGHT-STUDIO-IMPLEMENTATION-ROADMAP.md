@@ -201,4 +201,4 @@
 
 ## Next executable slice
 
-**Phase 2 is complete on `cursor/luminous-night-studio-phase2`** (`design/review/round-011/`). After Codex review, execute **Phase 3: customer-safe Song DNA contract and selector**. Contract-first only; no UI depending on unapproved projection fields.
+**Phase 2 is published to `main`** at reviewed commit `ab6f82a` (`design/review/round-011/`, **1092 passed, 0 failed**). Ready for private deployment review. Execute **Phase 3: customer-safe Song DNA contract and selector**. Contract-first only; no UI depending on unapproved projection fields.

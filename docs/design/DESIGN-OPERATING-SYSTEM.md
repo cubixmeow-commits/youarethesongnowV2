@@ -178,7 +178,8 @@ The permanent OS does **not** delete these. It absorbs and indexes them.
 - [x] Core component states and screen-by-screen specifications finalized
 - [x] Responsive and Flutter mappings finalized
 - [x] Phased build order and acceptance gates finalized
-- [x] Phase 1 runtime foundation/component slice (implemented; awaiting screenshot review)
+- [x] Phase 1 runtime foundation/component slice (published to `main`)
+- [x] Phase 2 Create entry and song selection (published to `main` at `ab6f82a`)
 - [ ] Song DNA API/persistence and full Create UX (contract-first future phases)
 
 ## 11. Create-flow architecture pointer
