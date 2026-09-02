@@ -1,3 +1,59 @@
+# NEXT DIRECTIVE — Round 013.2 Automatic Asset Cache Busting
+
+**Date:** 2026-09-02  
+**Working branch:** `main`  
+**Priority:** Blocking deployment reliability defect  
+**Scope:** Ensure each deployed frontend release loads one coherent CSS/JS version
+
+## Owner-observed failure
+
+The mobile site is loading a mixed/stale frontend after the Round 013/013.1 changes. The UI shows new preparation behavior (“Using Static Revolt. Preparing your creation…”) while other controls/layout do not consistently reflect the corresponding current CSS/JS. A normal mobile refresh is not sufficient.
+
+Do not ask users to clear their browser cache. Cache invalidation must be automatic.
+
+## Required implementation
+
+1. Find the canonical server-rendered layout/template that emits application asset URLs.
+2. Add deterministic versioning to every first-party frontend asset involved in Create and global navigation, including at minimum:
+   - `public/assets/css/app.css`;
+   - `public/assets/js/app.js`;
+   - `public/assets/js/explore.js`;
+   - `public/assets/js/song-search.js`;
+   - any other first-party CSS/JS loaded by the same layout.
+3. The version must change automatically when the deployed asset changes. Prefer a content hash, deployment commit/build identifier, or per-file content/file modification hash generated server-side. Do not use a manually edited date string as the permanent mechanism.
+4. Preserve script execution order and current defer/module behavior.
+5. Version all mutually dependent Create assets together so the browser cannot combine old `app.js` with new `explore.js` or old `app.css`.
+6. Confirm the chosen URL strategy is honored by the Hostinger/web-server/CDN path. Query strings are acceptable only if verified; otherwise use fingerprinted filenames or a rewrite-safe equivalent.
+7. HTML/PHP responses for authenticated Create must not be cached as immutable. Versioned static assets may use long-lived caching because their URL changes with content.
+8. Check for and update any service worker, manifest, preload, CSP, CDN, or rewrite rules that could continue serving stale asset URLs.
+9. Do not expose filesystem paths, secrets, or internal deployment data in page source. A short public build/hash identifier is acceptable.
+10. Keep all Round 013.1 interaction behavior unchanged.
+
+## Verification
+
+Add tests that prove:
+
+- rendered Create HTML includes versioned URLs for all relevant first-party CSS/JS;
+- changing an asset’s content or build identifier changes its rendered URL;
+- all coupled Create assets share the intended coherent release version;
+- no unversioned duplicate app/explore/song-search script is emitted;
+- script ordering remains correct;
+- `hidden` Generate bar behavior still passes;
+- Generate for me and Explore options remain present before final Generate;
+- production-like cache headers distinguish HTML from versioned static assets.
+
+Create a sanitized report under `design/review/round-013-2/` containing:
+
+- the versioning strategy;
+- example old/new asset URLs;
+- relevant response headers;
+- a mobile fresh-load verification at 390px;
+- confirmation that a normal reload receives the current release without clearing site data.
+
+Run the full suite and syntax/lint checks. Commit implementation, tests, report, and handoff updates to `main`, then stop for GPT/owner review. Do not deploy or begin broader design work.
+
+---
+
 # NEXT DIRECTIVE — Round 013.1 complete, awaiting GPT review
 
 **Date:** 2026-09-01  
