@@ -1,3 +1,61 @@
+# NEXT DIRECTIVE — Round 014 Synchronize Hostinger Deployment to Main
+
+**Date:** 2026-09-02  
+**Working branch:** `main`  
+**Priority:** Blocking deployment drift  
+**Scope:** Deploy and verify the already-reviewed frontend; do not redesign or rewrite it
+
+## Confirmed live evidence
+
+GPT inspected `https://youarethesongnow.com/sign-in` directly after Round 013.3. The deployed layout still emits legacy per-file query URLs:
+
+- `/assets/js/app.js?v=1788312527`
+- `/assets/css/app.css?v=1788312527`
+
+Current `main` must emit path-fingerprinted release bundle URLs:
+
+- `/assets/r/{releaseId}/css/app.css`
+- `/assets/r/{releaseId}/js/song-search.js`
+- `/assets/r/{releaseId}/js/explore.js`
+- `/assets/r/{releaseId}/js/app.js`
+
+Therefore the production-development host is not serving current `main`. The missing Generate image action cannot be evaluated against Round 013.3 until deployment drift is fixed.
+
+## Required work
+
+1. Audit the Hostinger Git/deployment configuration:
+   - repository: `cubixmeow-commits/youarethesongnowV2`;
+   - branch: `main`;
+   - deployed document root and release directory;
+   - pull/build/deploy command;
+   - whether deployment is automatic or requires an explicit trigger;
+   - whether an older checkout, branch, symlink, or document root is active.
+2. Resolve the exact deployed commit before changing anything.
+3. Deploy current `main` at or after handoff commit `10fe22c` (implementation `8ce6784` plus cache busting `2d1e1cc`).
+4. Preserve server-only secrets, uploads, SQLite/storage, permissions, and environment configuration. Do not replace or expose them.
+5. Ensure `public/.htaccess` is present in the actual web document root and Apache honors the fingerprint rewrite.
+6. Do not run destructive Git cleanup or overwrite user data.
+7. If deployment credentials or Hostinger access are unavailable, stop and report the exact blocker and the currently deployed commit/path if determinable.
+
+## Live acceptance checks
+
+After deployment, verify against the public host—not localhost:
+
+- `GET /sign-in` or authenticated `GET /create` emits `/assets/r/{12-hex-release-id}/...` URLs, not `?v=filemtime`;
+- each fingerprinted CSS/JS URL returns HTTP 200;
+- HTML returns `Cache-Control: no-store`;
+- fingerprinted assets return long-lived immutable cache headers where Hostinger modules permit;
+- live `explore.js` contains `directionLoadInFlight`, `preparationInFlight`, and the awaited Quick Generate continuation;
+- live Create shows Generate for me + Explore options before preparation;
+- tapping Generate for me leaves “Preparing…” and reveals an enabled Generate image action;
+- one Generate image tap creates one job.
+
+Record the deployed commit, document root/release identifier, asset release id, URLs, headers, and smoke-test result in `design/review/round-014/README.md`. Do not include secrets, cookies, portrait data, lyrics, or customer information.
+
+Only make a code change if a verified Hostinger-specific deployment defect requires it. Commit any necessary safe deployment correction and handoff update to `main`. Stop for GPT/owner review after live verification. Do not resume broader design work.
+
+---
+
 # NEXT DIRECTIVE — Round 013.3 complete, awaiting GPT review
 
 **Date:** 2026-09-02  
