@@ -1,0 +1,62 @@
+{
+  "version": "round-013.3",
+  "requestLog": {
+    "exploreDirections": [
+      1788320566595
+    ],
+    "summary": [
+      1788320565376
+    ],
+    "generationJobs": [
+      1788320564224
+    ]
+  },
+  "readyState": {
+    "barHidden": false,
+    "barDisplay": "grid",
+    "buttonDisabled": false,
+    "statusText": "“Static Revolt” is ready. Tap Generate image when you are set.",
+    "createState": {
+      "prepared": true,
+      "path": "ai-quick",
+      "hidden": false,
+      "display": "grid",
+      "hint": "",
+      "disabled": false,
+      "reviewed": true,
+      "pending": false
+    }
+  },
+  "failState": {
+    "barHidden": true,
+    "barDisplay": "none",
+    "buttonDisabled": true,
+    "statusText": "Choose a style.",
+    "createState": {
+      "prepared": false,
+      "path": null,
+      "hidden": true,
+      "display": "none",
+      "hint": "",
+      "disabled": true,
+      "reviewed": false,
+      "pending": false
+    }
+  },
+  "exploreState": {
+    "barHidden": true,
+    "barDisplay": "none",
+    "buttonDisabled": true,
+    "statusText": "Choose the direction that feels right.",
+    "createState": {
+      "prepared": false,
+      "path": null,
+      "hidden": true,
+      "display": "none",
+      "hint": "",
+      "disabled": true,
+      "reviewed": false,
+      "pending": false
+    }
+  }
+}

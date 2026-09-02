@@ -1331,7 +1331,8 @@ assert_true(!preg_match('/@media \(min-width: 700px\) \{\s*\.ai-direction-grid\s
 
 assert_true(str_contains($exploreJs, '/api/v1/explore-directions'), 'Explore still posts to the existing directions endpoint');
 assert_true(str_contains($exploreJs, 'JSON.stringify({ songDna: latestSongDna })'), 'Explore still sends derived Song DNA only');
-assert_true(str_contains($exploreJs, 'exploreInFlight'), 'Explore protects repeated async activation');
+assert_true(str_contains($exploreJs, 'directionLoadInFlight'), 'Explore tracks direction loading separately from preparation');
+assert_true(str_contains($exploreJs, 'preparationInFlight'), 'Explore tracks preparation separately from direction loading');
 assert_true(str_contains($exploreJs, 'role="radiogroup"'), 'Explore options use radiogroup semantics');
 assert_true(str_contains($exploreJs, "setAttribute('role', 'radio')"), 'Explore direction cards expose radio semantics');
 assert_true(str_contains($exploreJs, 'aria-checked'), 'Explore selection is exposed programmatically');
@@ -1598,6 +1599,60 @@ if ($assetVerifyExit === 0) {
     assert_true(true, 'Round 013.2 asset cache verification passed');
 } else {
     assert_true(false, 'Round 013.2 asset cache verification failed: ' . trim(implode("\n", $assetVerifyOut)));
+}
+
+assert_true(is_file($root . '/design/review/round-013-3/verify-quick-generate-chain.mjs'), 'Round 013.3 Quick Generate chain verification harness exists');
+assert_true(str_contains($exploreJs, 'setDirectionLoading(false)'), 'Quick Generate unlocks direction loading before preparation');
+assert_true(str_contains($exploreJs, 'await continueWithDirection'), 'Quick Generate awaits the real preparation transition');
+
+$quickChainVerifyOut = [];
+$quickChainVerifyExit = 1;
+if (is_file('/usr/bin/google-chrome-stable') || is_executable((string) getenv('CHROME'))) {
+    putenv('ALLOW_EXTERNAL_USERS=false');
+    $_ENV['ALLOW_EXTERNAL_USERS'] = 'false';
+    Config::boot($root);
+
+    $quickPort = 8768;
+    $quickBase = "http://127.0.0.1:{$quickPort}";
+    $portOpen = static function (int $port): bool {
+        $fp = @fsockopen('127.0.0.1', $port, $errno, $errstr, 1);
+        if ($fp) {
+            fclose($fp);
+            return true;
+        }
+        return false;
+    };
+    $quickServerProc = null;
+    if ($portOpen($quickPort)) {
+        exec('fuser -k ' . $quickPort . '/tcp 2>/dev/null');
+        usleep(200000);
+    }
+    $quickServerProc = proc_open(
+        'ALLOW_EXTERNAL_USERS=false php -S 127.0.0.1:' . $quickPort . ' -t public public/router.php',
+        [0 => ['pipe', 'r'], 1 => ['file', '/dev/null', 'w'], 2 => ['file', '/dev/null', 'w']],
+        $pipes,
+        $root,
+    );
+    for ($attempt = 0; $attempt < 24; $attempt++) {
+        if ($portOpen($quickPort)) {
+            break;
+        }
+        usleep(250000);
+    }
+    if ($portOpen($quickPort)) {
+        $quickChainVerifyCmd = 'cd ' . escapeshellarg($root . '/design/review/round-013-3')
+            . ' && YATSN_BASE=' . escapeshellarg($quickBase)
+            . ' node verify-quick-generate-chain.mjs 2>&1';
+        exec($quickChainVerifyCmd, $quickChainVerifyOut, $quickChainVerifyExit);
+    }
+    if (isset($quickServerProc) && is_resource($quickServerProc)) {
+        proc_terminate($quickServerProc);
+    }
+}
+if ($quickChainVerifyExit === 0) {
+    assert_true(true, 'Round 013.3 Quick Generate async chain verification passed');
+} else {
+    assert_true(false, 'Round 013.3 Quick Generate async chain verification failed: ' . trim(implode("\n", $quickChainVerifyOut)));
 }
 
 assert_true(str_contains($appCss, 'container-name: yatsn-create-entry'), 'Create entry uses a size container for adaptive controls');

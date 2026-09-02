@@ -6,7 +6,8 @@
   let selectedDirection = null;
   let currentDirections = [];
   let exploreActive = false;
-  let exploreInFlight = false;
+  let directionLoadInFlight = false;
+  let preparationInFlight = false;
   let lastQuickMode = false;
   const nativeFetch = window.fetch.bind(window);
 
@@ -82,26 +83,39 @@
     }
   }
 
-  function setBusy(busy) {
+  function isExploreLocked() {
+    return directionLoadInFlight || preparationInFlight;
+  }
+
+  function setDirectionLoading(busy) {
+    directionLoadInFlight = busy;
+    syncExploreBusyState();
+  }
+
+  function syncExploreBusyState() {
+    const locked = isExploreLocked();
     const panel = document.querySelector('[data-ai-direction-lab]');
     const options = document.querySelector('[data-ai-options]');
     const quick = document.querySelector('[data-ai-quick]');
     const explore = document.querySelector('[data-ai-explore]');
-    exploreInFlight = busy;
-    if (panel) panel.setAttribute('aria-busy', busy ? 'true' : 'false');
-    if (options) options.setAttribute('aria-busy', busy ? 'true' : 'false');
+    if (panel) panel.setAttribute('aria-busy', locked ? 'true' : 'false');
+    if (options) options.setAttribute('aria-busy', directionLoadInFlight ? 'true' : 'false');
     if (quick) {
-      quick.disabled = busy || !latestSongDna;
-      quick.classList.toggle('is-loading', busy && lastQuickMode);
-      if (busy && lastQuickMode) quick.setAttribute('aria-busy', 'true');
+      quick.disabled = locked || !latestSongDna;
+      quick.classList.toggle('is-loading', directionLoadInFlight && lastQuickMode);
+      if (directionLoadInFlight && lastQuickMode) quick.setAttribute('aria-busy', 'true');
       else quick.removeAttribute('aria-busy');
     }
     if (explore) {
-      explore.disabled = busy || !latestSongDna;
-      explore.classList.toggle('is-loading', busy && !lastQuickMode);
-      if (busy && !lastQuickMode) explore.setAttribute('aria-busy', 'true');
+      explore.disabled = locked || !latestSongDna;
+      explore.classList.toggle('is-loading', directionLoadInFlight && !lastQuickMode);
+      if (directionLoadInFlight && !lastQuickMode) explore.setAttribute('aria-busy', 'true');
       else explore.removeAttribute('aria-busy');
     }
+  }
+
+  function setBusy(busy) {
+    setDirectionLoading(busy);
   }
 
   function buildPanel() {
@@ -141,7 +155,7 @@
     panel.querySelector('[data-ai-quick]').addEventListener('click', () => loadDirections(true));
     panel.querySelector('[data-ai-retry]').addEventListener('click', () => loadDirections(lastQuickMode));
     panel.querySelector('[data-ai-create-direction]').addEventListener('click', () => {
-      if (!selectedDirection || exploreInFlight) return;
+      if (!selectedDirection || isExploreLocked()) return;
       continueWithDirection(selectedDirection);
     });
     panel.querySelector('[data-ai-manual]').addEventListener('click', restoreManualDirection);
@@ -159,7 +173,7 @@
     const panel = document.querySelector('[data-ai-direction-lab]');
     if (!panel) return;
     const ready = !!latestSongDna;
-    if (!exploreInFlight) {
+    if (!isExploreLocked()) {
       const quick = panel.querySelector('[data-ai-quick]');
       const explore = panel.querySelector('[data-ai-explore]');
       if (quick) quick.disabled = !ready;
@@ -189,7 +203,7 @@
 
   async function loadDirections(quickMode) {
     const panel = document.querySelector('[data-ai-direction-lab]');
-    if (!panel || !latestSongDna || exploreInFlight) return;
+    if (!panel || !latestSongDna || isExploreLocked()) return;
     lastQuickMode = quickMode;
     const status = panel.querySelector('[data-ai-status]');
     const options = panel.querySelector('[data-ai-options]');
@@ -231,11 +245,14 @@
       if (!directions.length) throw new Error('No visual directions were returned.');
 
       if (quickMode) {
+        const direction = directions[0];
         options.hidden = true;
         options.innerHTML = '';
-        status.textContent = `Using “${directions[0].name}”. Preparing your creation…`;
-        applyDirection(directions[0], { autoContinue: true, announce: false });
+        status.textContent = `Using “${direction.name}”. Preparing your creation…`;
         setExploreState('selected');
+        applyDirection(direction, { autoContinue: false, announce: false });
+        setDirectionLoading(false);
+        await continueWithDirection(direction);
         return;
       }
 
@@ -369,30 +386,37 @@
   }
 
   async function continueWithDirection(direction) {
-    if (exploreInFlight) return;
-    const status = document.querySelector('[data-ai-status]');
-    if (status) {
-      status.classList.remove('is-error', 'yatsn-status--error');
-      status.textContent = `Preparing “${direction.name}”…`;
-    }
-    if (window.YatsnCreate?.prepareAndReview) {
-      const result = await window.YatsnCreate.prepareAndReview();
-      if (result?.ready) {
-        window.YatsnCreate.setDirectionPrepared?.(lastQuickMode ? 'ai-quick' : 'ai-explore');
-        if (status) {
-          status.classList.remove('is-error', 'yatsn-status--error');
-          status.classList.add('yatsn-status--info');
-          status.textContent = lastQuickMode
-            ? `“${direction.name}” is ready. Tap Generate image when you are set.`
-            : `“${direction.name}” is prepared. Tap Generate image when you are set.`;
-        }
-      } else if (status && result?.issue) {
-        status.classList.add('is-error', 'yatsn-status--error');
-        status.textContent = result.issue;
+    if (preparationInFlight) return;
+    preparationInFlight = true;
+    syncExploreBusyState();
+    try {
+      const status = document.querySelector('[data-ai-status]');
+      if (status) {
+        status.classList.remove('is-error', 'yatsn-status--error');
+        status.textContent = `Preparing “${direction.name}”…`;
       }
-      return;
+      if (window.YatsnCreate?.prepareAndReview) {
+        const result = await window.YatsnCreate.prepareAndReview();
+        if (result?.ready) {
+          window.YatsnCreate.setDirectionPrepared?.(lastQuickMode ? 'ai-quick' : 'ai-explore');
+          if (status) {
+            status.classList.remove('is-error', 'yatsn-status--error');
+            status.classList.add('yatsn-status--info');
+            status.textContent = lastQuickMode
+              ? `“${direction.name}” is ready. Tap Generate image when you are set.`
+              : `“${direction.name}” is prepared. Tap Generate image when you are set.`;
+          }
+        } else if (status && result?.issue) {
+          status.classList.add('is-error', 'yatsn-status--error');
+          status.textContent = result.issue;
+        }
+        return;
+      }
+      document.querySelector('[data-review]')?.click();
+    } finally {
+      preparationInFlight = false;
+      syncExploreBusyState();
     }
-    document.querySelector('[data-review]')?.click();
   }
 
   function restoreManualDirection() {

@@ -1,3 +1,29 @@
+# NEXT DIRECTIVE — Round 013.3 complete, awaiting GPT review
+
+**Date:** 2026-09-02  
+**Working branch:** `main`  
+**Published to:** `main` (pending commit)  
+**Status:** Quick Generate async dead-end repaired — stop for GPT/owner review
+
+## Root cause
+
+`loadDirections(true)` set `exploreInFlight` before `continueWithDirection()`, whose guard returned immediately. Preparation/review never ran; status stuck on “Preparing your creation…”.
+
+## Repair
+
+- Split `directionLoadInFlight` and `preparationInFlight` locks
+- Quick Generate unlocks direction loading before `await continueWithDirection()`
+- `await` the real `prepareAndReview()` path — no timers or synthetic clicks
+
+## Verification
+
+- `php tests/run.php`: **1241 passed, 0 failed** (includes real `[data-ai-quick]` click chain test)
+- Evidence: `design/review/round-013-3/`
+
+Do not deploy. Do not resume broader design work.
+
+---
+
 # NEXT DIRECTIVE — Round 013.3 Fix Quick Generate Async Dead-End
 
 **Date:** 2026-09-02  
