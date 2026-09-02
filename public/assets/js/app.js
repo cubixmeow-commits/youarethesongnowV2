@@ -938,7 +938,7 @@
         if (window.YatsnSongSearch?.isInFlight?.()) return;
         const action = window.YatsnSongSearch?.getStickyAction?.();
         if (action?.intent === 'find') await window.YatsnSongSearch?.submitFind?.();
-        else if (action?.intent === 'use') window.YatsnSongSearch?.confirmPending?.();
+        else if (action?.intent === 'use') await window.YatsnSongSearch?.confirmPending?.();
         return;
       }
       if (flowStep === 'review') await submitGeneration();

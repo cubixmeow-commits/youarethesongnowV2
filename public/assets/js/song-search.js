@@ -23,12 +23,12 @@
     return { label: 'Find this song', disabled: false, loading: false, intent: 'find' };
   }
 
-  function confirmPending() {
+  async function confirmPending() {
     if (!pendingLookup || !['found', 'fallbackFound'].includes(pendingLookup.state)) {
       return submitFind();
     }
     if (confirmedLookup?.id === pendingLookup.id) return;
-    selectLookup(pendingLookup, { skipSelectedPanel: true });
+    await selectLookup(pendingLookup, { skipSelectedPanel: true });
   }
 
   function clearPendingResult() {
@@ -183,6 +183,14 @@
     `;
     if (isSelectable) {
       row.addEventListener('click', () => {
+        if (
+          row.classList.contains('is-selected')
+          && pendingLookup?.id === lookup.id
+          && confirmedLookup?.id !== lookup.id
+        ) {
+          confirmPending();
+          return;
+        }
         pendingLookup = lookup;
         confirmedLookup = null;
         row.classList.add('is-selected');
@@ -226,7 +234,7 @@
     });
   }
 
-  function selectLookup(lookup, options = {}) {
+  async function selectLookup(lookup, options = {}) {
     if (inFlight) return;
     pendingLookup = lookup;
     confirmedLookup = lookup;
@@ -238,7 +246,9 @@
       setStatus('', 'info', { hidden: true });
     }
     notifyStickyActionChange();
-    handlers.onConfirm?.(lookup);
+    if (handlers.onConfirm) {
+      await handlers.onConfirm(lookup);
+    }
   }
 
   function presentLookup(lookup) {

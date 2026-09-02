@@ -1717,7 +1717,10 @@ if ($round015VerifyExit === 0) {
 assert_true(str_contains($songSearchJs, 'formWired'), 'song search guards duplicate form wiring');
 assert_true(str_contains($songSearchJs, 'wireForm();'), 'song search wires the form at module load');
 assert_true(str_contains($songSearchJs, 'Search is still loading'), 'song search surfaces missing handler instead of silent failure');
+assert_true(str_contains($songSearchJs, 'async function confirmPending'), 'song search confirm awaits draft persistence');
+assert_true(str_contains($songSearchJs, 'confirmPending();'), 'selected song result can confirm on repeat activation');
 assert_true(is_file($root . '/design/review/round-015/verify-song-search-flow.mjs'), 'Song search browser verification harness exists');
+assert_true(is_file($root . '/design/review/round-015/verify-song-confirm-interaction.mjs'), 'Song confirm interaction verification harness exists');
 
 $songSearchVerifyExit = 1;
 $songSearchVerifyOut = ['Song search browser verification skipped'];
@@ -1753,6 +1756,41 @@ if ($songSearchVerifyExit === 0) {
     assert_true(true, 'Song search card flow verification passed');
 } else {
     assert_true(false, 'Song search card flow verification failed: ' . trim(implode("\n", $songSearchVerifyOut)));
+}
+
+$songConfirmVerifyExit = 1;
+$songConfirmVerifyOut = ['Song confirm interaction verification skipped'];
+$songConfirmPort = 8773;
+$songConfirmBase = 'http://127.0.0.1:' . $songConfirmPort;
+if ($portOpen($songConfirmPort)) {
+    exec('fuser -k ' . $songConfirmPort . '/tcp 2>/dev/null');
+    usleep(200000);
+}
+$songConfirmServerProc = proc_open(
+    'ALLOW_EXTERNAL_USERS=false php -S 127.0.0.1:' . $songConfirmPort . ' -t public public/router.php',
+    [0 => ['pipe', 'r'], 1 => ['file', '/dev/null', 'w'], 2 => ['file', '/dev/null', 'w']],
+    $pipes,
+    $root,
+);
+for ($attempt = 0; $attempt < 24; $attempt++) {
+    if ($portOpen($songConfirmPort)) {
+        break;
+    }
+    usleep(250000);
+}
+if ($portOpen($songConfirmPort)) {
+    $songConfirmVerifyCmd = 'cd ' . escapeshellarg($root . '/design/review/round-015')
+        . ' && YATSN_BASE=' . escapeshellarg($songConfirmBase)
+        . ' node verify-song-confirm-interaction.mjs 2>&1';
+    exec($songConfirmVerifyCmd, $songConfirmVerifyOut, $songConfirmVerifyExit);
+}
+if (isset($songConfirmServerProc) && is_resource($songConfirmServerProc)) {
+    proc_terminate($songConfirmServerProc);
+}
+if ($songConfirmVerifyExit === 0) {
+    assert_true(true, 'Song confirm mobile tap and desktop click verification passed');
+} else {
+    assert_true(false, 'Song confirm mobile tap and desktop click verification failed: ' . trim(implode("\n", $songConfirmVerifyOut)));
 }
 
 assert_true(is_file($root . '/design/review/round-015/verify-people-card-flow.mjs'), 'People card browser verification harness exists');
