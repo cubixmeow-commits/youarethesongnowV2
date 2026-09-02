@@ -3,14 +3,14 @@
 **Date:** 2026-09-02  
 **Repository:** `cubixmeow-commits/youarethesongnowV2`  
 **Target branch:** `main`  
-**Final `origin/main` SHA:** `3ab9dca`  
+**Final `origin/main` SHA:** `120e389`  
 **Status:** GitHub `main` synchronized — owner deploys manually; do not deploy from Cursor
 
 ## Synchronization result
 
 | Check | Result |
 | --- | --- |
-| `HEAD` equals `origin/main` | yes (`6ba81c4`) |
+| `HEAD` equals `origin/main` | yes (`3ab9dca`) |
 | Working tree | clean (test-run artifact churn restored) |
 | `f6daa92` direction hierarchy | ancestor of `origin/main` |
 | `2d1e1cc` asset cache busting | ancestor of `origin/main` |
