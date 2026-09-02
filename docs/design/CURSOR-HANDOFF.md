@@ -2,7 +2,7 @@
 
 **Date:** 2026-09-02  
 **Working branch:** `main`  
-**Published to:** `main` (pending commit)  
+**Published to:** `main` at `8ce6784`  
 **Status:** Quick Generate async dead-end repaired — stop for GPT/owner review
 
 ## Root cause
