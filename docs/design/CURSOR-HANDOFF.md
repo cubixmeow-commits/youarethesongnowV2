@@ -1,3 +1,28 @@
+# OVERRIDING NEXT DIRECTIVE — Round 014 GitHub sync complete
+
+**Date:** 2026-09-02  
+**Repository:** `cubixmeow-commits/youarethesongnowV2`  
+**Target branch:** `main`  
+**Final `origin/main` SHA:** `5034c03`  
+**Status:** GitHub `main` synchronized — owner deploys manually; do not deploy from Cursor
+
+## Synchronization result
+
+| Check | Result |
+| --- | --- |
+| `HEAD` equals `origin/main` | yes (`5034c03`) |
+| Working tree | clean (test-run artifact churn restored) |
+| `f6daa92` direction hierarchy | ancestor of `origin/main` |
+| `2d1e1cc` asset cache busting | ancestor of `origin/main` |
+| `8ce6784` Quick Generate async fix | ancestor of `origin/main` |
+| `AssetRelease` + `/assets/r/{releaseId}/...` layout | present on `origin/main` |
+| `directionLoadInFlight` / `preparationInFlight` / `await continueWithDirection` | present on `origin/main` |
+| `php tests/run.php` | **1241 passed, 0 failed** |
+
+No additional implementation commits were required. Hostinger was not accessed.
+
+---
+
 # OVERRIDING NEXT DIRECTIVE — Round 014 GitHub Main Synchronization Only
 
 **Date:** 2026-09-02  
