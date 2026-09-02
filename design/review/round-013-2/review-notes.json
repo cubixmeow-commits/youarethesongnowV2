@@ -1,0 +1,42 @@
+{
+  "version": "round-013.2",
+  "strategy": "path-fingerprinted release bundle (/assets/r/{releaseId}/...)",
+  "oldUrlExample": "/assets/css/app.css?v=1735689600",
+  "newUrlExample": "/assets/r/e3cfd91562df/css/app.css",
+  "releaseId": "e3cfd91562df",
+  "assetUrls": {
+    "css/app.css": "/assets/r/e3cfd91562df/css/app.css",
+    "js/song-search.js": "/assets/r/e3cfd91562df/js/song-search.js",
+    "js/explore.js": "/assets/r/e3cfd91562df/js/explore.js",
+    "js/app.js": "/assets/r/e3cfd91562df/js/app.js"
+  },
+  "headers": {
+    "createHtml": {
+      "status": 200,
+      "cacheControl": "no-store"
+    },
+    "css/app.css": {
+      "status": 200,
+      "cacheControl": "public, max-age=31536000, immutable"
+    },
+    "js/song-search.js": {
+      "status": 200,
+      "cacheControl": "public, max-age=31536000, immutable"
+    },
+    "js/explore.js": {
+      "status": 200,
+      "cacheControl": "public, max-age=31536000, immutable"
+    },
+    "js/app.js": {
+      "status": 200,
+      "cacheControl": "public, max-age=31536000, immutable"
+    }
+  },
+  "reloadConfirmed": true,
+  "round0131Preserved": {
+    "barHidden": true,
+    "barDisplay": "none",
+    "quickPresent": true,
+    "explorePresent": true
+  }
+}

@@ -21,6 +21,7 @@ final class View
 
     public static function page(string $template, array $data = [], string $layout = 'layouts/main'): string
     {
+        AssetRelease::sendHtmlNoStoreHeaders();
         $content = self::render($template, $data);
         return self::render($layout, array_merge($data, ['content' => $content]));
     }

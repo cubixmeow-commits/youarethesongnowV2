@@ -1,0 +1,12 @@
+# Hostinger / Apache: rewrite fingerprinted asset URLs to on-disk files and
+# apply long-lived caching only to versioned first-party CSS/JS.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^assets/r/[a-f0-9]{12}/(css|js)/(.+)$ assets/$1/$2 [L]
+</IfModule>
+
+<IfModule mod_headers.c>
+  <If "%{REQUEST_URI} =~ m#^/assets/r/[a-f0-9]{12}/(?:css|js)/#">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </If>
+</IfModule>

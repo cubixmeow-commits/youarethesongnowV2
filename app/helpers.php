@@ -58,3 +58,8 @@ function app_url(string $path = ''): string
     }
     return $base . '/' . ltrim($path, '/');
 }
+
+function asset_url(string $relativePath, string $bundle = 'core'): string
+{
+    return \Yatsn\Support\AssetRelease::url($relativePath, $bundle);
+}

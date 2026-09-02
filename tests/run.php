@@ -1238,6 +1238,66 @@ $createPagePrivate = \Yatsn\Support\View::page('pages/create', [
 ]);
 assert_true(str_contains($createPagePrivate, 'data-private-build="1"'), 'private Create page exposes the fixture signal');
 
+// Round 013.2 — deterministic versioned asset URLs share one create release id.
+use Yatsn\Support\AssetRelease;
+
+$_SERVER['REQUEST_URI'] = '/create';
+$createLayoutHtml = \Yatsn\Support\View::page('pages/create', [
+    'title' => 'Create',
+    'session' => ['role' => 'owner', 'csrf_token' => 'test-csrf'],
+    'csrf' => 'test-csrf',
+]);
+$createReleaseId = AssetRelease::releaseId('create');
+$createCssUrl = AssetRelease::url('css/app.css', 'create');
+$createAppJsUrl = AssetRelease::url('js/app.js', 'create');
+$createExploreJsUrl = AssetRelease::url('js/explore.js', 'create');
+$createSongSearchJsUrl = AssetRelease::url('js/song-search.js', 'create');
+assert_true(str_contains($createLayoutHtml, $createCssUrl), 'Create HTML includes versioned app.css');
+assert_true(str_contains($createLayoutHtml, $createAppJsUrl), 'Create HTML includes versioned app.js');
+assert_true(str_contains($createLayoutHtml, $createExploreJsUrl), 'Create HTML includes versioned explore.js');
+assert_true(str_contains($createLayoutHtml, $createSongSearchJsUrl), 'Create HTML includes versioned song-search.js');
+assert_true(
+    preg_match_all('#/assets/r/' . preg_quote($createReleaseId, '#') . '/(?:css|js)/#', $createLayoutHtml) === 4,
+    'all coupled Create assets share one release id',
+);
+assert_true(
+  !preg_match('#/assets/(?:css/app\.css|js/(?:app|explore|song-search)\.js)(?:\?|")#', $createLayoutHtml),
+  'Create HTML does not emit unversioned first-party CSS/JS',
+);
+assert_true(
+  substr_count($createLayoutHtml, 'js/app.js') === 1
+    && substr_count($createLayoutHtml, 'js/explore.js') === 1
+    && substr_count($createLayoutHtml, 'js/song-search.js') === 1,
+  'Create HTML emits one versioned copy of each coupled script',
+);
+$songSearchPos = strpos($createLayoutHtml, $createSongSearchJsUrl);
+$explorePos = strpos($createLayoutHtml, $createExploreJsUrl);
+$appJsPos = strpos($createLayoutHtml, $createAppJsUrl);
+assert_true(
+  $songSearchPos !== false && $explorePos !== false && $appJsPos !== false
+    && $songSearchPos < $explorePos && $explorePos < $appJsPos,
+  'Create script execution order remains song-search, explore, app',
+);
+$releaseBefore = AssetRelease::releaseId('create');
+$appJsPath = $root . '/public/assets/js/app.js';
+$appJsOriginal = (string) file_get_contents($appJsPath);
+file_put_contents($appJsPath, $appJsOriginal . "\n");
+clearstatcache(true, $appJsPath);
+$releaseAfterTouch = AssetRelease::releaseId('create');
+file_put_contents($appJsPath, $appJsOriginal);
+clearstatcache(true, $appJsPath);
+assert_true($releaseAfterTouch !== $releaseBefore, 'changing coupled asset content changes the create release id');
+assert_true(
+  preg_match('#^/assets/r/[a-f0-9]{12}/(?:css|js)/#', $createCssUrl) === 1,
+  'versioned asset URLs use path fingerprinting instead of query strings',
+);
+assert_true(AssetRelease::isVersionedAssetRequest($createCssUrl), 'versioned asset request matcher accepts create css url');
+assert_true(
+  AssetRelease::resolveVersionedPath($createCssUrl) === '/assets/css/app.css',
+  'versioned asset path resolves to on-disk css file',
+);
+unset($_SERVER['REQUEST_URI']);
+
 putenv('ALLOW_EXTERNAL_USERS=true');
 $_ENV['ALLOW_EXTERNAL_USERS'] = 'true';
 Config::boot($root);
@@ -1482,7 +1542,63 @@ assert_true(!preg_match('/addEventListener\(\s*[\'"]keydown[\'"]/', $songSearchJ
 assert_true(!str_contains($appJs, 'Your draft is saved as you go'), 'Create entry does not render a fresh-draft self-link resume row');
 
 $mainLayout = (string) file_get_contents($root . '/templates/layouts/main.php');
+assert_true(str_contains($mainLayout, 'AssetRelease::url'), 'main layout emits versioned first-party assets');
 assert_true(str_contains($mainLayout, 'song-search.js'), 'Create page loads song-search.js');
+assert_true(is_file($root . '/public/.htaccess'), 'Hostinger rewrite rules exist for versioned asset paths');
+$htaccess = (string) file_get_contents($root . '/public/.htaccess');
+assert_true(str_contains($htaccess, 'assets/r/[a-f0-9]{12}/'), 'htaccess rewrites fingerprinted asset URLs');
+assert_true(str_contains($htaccess, 'max-age=31536000, immutable'), 'htaccess applies immutable caching to versioned assets');
+assert_true(is_file($root . '/design/review/round-013-2/verify-asset-versioning.mjs'), 'Round 013.2 asset verification harness exists');
+
+$assetVerifyOut = [];
+$assetVerifyExit = 1;
+if (is_file('/usr/bin/google-chrome-stable') || is_executable((string) getenv('CHROME'))) {
+    putenv('ALLOW_EXTERNAL_USERS=false');
+    $_ENV['ALLOW_EXTERNAL_USERS'] = 'false';
+    Config::boot($root);
+
+    $assetPort = 8767;
+    $assetBase = "http://127.0.0.1:{$assetPort}";
+    $portOpen = static function (int $port): bool {
+        $fp = @fsockopen('127.0.0.1', $port, $errno, $errstr, 1);
+        if ($fp) {
+            fclose($fp);
+            return true;
+        }
+        return false;
+    };
+    $assetServerProc = null;
+    if ($portOpen($assetPort)) {
+        exec('fuser -k ' . $assetPort . '/tcp 2>/dev/null');
+        usleep(200000);
+    }
+    $assetServerProc = proc_open(
+        'ALLOW_EXTERNAL_USERS=false php -S 127.0.0.1:' . $assetPort . ' -t public public/router.php',
+        [0 => ['pipe', 'r'], 1 => ['file', '/dev/null', 'w'], 2 => ['file', '/dev/null', 'w']],
+        $pipes,
+        $root,
+    );
+    for ($attempt = 0; $attempt < 24; $attempt++) {
+        if ($portOpen($assetPort)) {
+            break;
+        }
+        usleep(250000);
+    }
+    if ($portOpen($assetPort)) {
+        $assetVerifyCmd = 'cd ' . escapeshellarg($root . '/design/review/round-013-2')
+            . ' && YATSN_BASE=' . escapeshellarg($assetBase)
+            . ' node verify-asset-versioning.mjs 2>&1';
+        exec($assetVerifyCmd, $assetVerifyOut, $assetVerifyExit);
+    }
+    if (isset($assetServerProc) && is_resource($assetServerProc)) {
+        proc_terminate($assetServerProc);
+    }
+}
+if ($assetVerifyExit === 0) {
+    assert_true(true, 'Round 013.2 asset cache verification passed');
+} else {
+    assert_true(false, 'Round 013.2 asset cache verification failed: ' . trim(implode("\n", $assetVerifyOut)));
+}
 
 assert_true(str_contains($appCss, 'container-name: yatsn-create-entry'), 'Create entry uses a size container for adaptive controls');
 assert_true(str_contains($appCss, '.yatsn-song-result__title'), 'song result title hierarchy styles exist');

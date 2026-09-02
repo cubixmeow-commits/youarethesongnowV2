@@ -3,22 +3,24 @@
 /** @var string $title */
 /** @var array|null $session */
 /** @var bool $isHome */
+use Yatsn\Support\AssetRelease;
+
 $isHome = !empty($isHome);
 $authed = !empty($session);
 $isOwner = $authed && (($session['role'] ?? '') === 'owner');
 $path = (string) (parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/');
-$cssVersion = (string) (filemtime(YATSN_ROOT . '/public/assets/css/app.css') ?: '1');
-$jsVersion = (string) (filemtime(YATSN_ROOT . '/public/assets/js/app.js') ?: '1');
-$exploreJsVersion = is_file(YATSN_ROOT . '/public/assets/js/explore.js')
-    ? (string) (filemtime(YATSN_ROOT . '/public/assets/js/explore.js') ?: '1')
-    : '1';
 $componentLab = !empty($componentLab);
-$componentLabJsVersion = is_file(YATSN_ROOT . '/public/assets/js/component-lab.js')
-    ? (string) (filemtime(YATSN_ROOT . '/public/assets/js/component-lab.js') ?: '1')
-    : '1';
 $showcaseScripts = $showcaseScripts ?? [];
-$showcaseJsVersion = (string) (filemtime(YATSN_ROOT . '/public/assets/js/showcase.js') ?: '1');
 $showcaseHero = $showcaseHero ?? null;
+
+$assetBundle = 'core';
+if ($path === '/create') {
+    $assetBundle = 'create';
+} elseif ($componentLab) {
+    $assetBundle = 'component-lab';
+} elseif (in_array('showcase', $showcaseScripts, true)) {
+    $assetBundle = 'showcase';
+}
 
 $navItems = [];
 if ($authed) {
@@ -46,7 +48,7 @@ $bodyClass = trim(($layoutClass ?? '') . ($isHome ? ' is-home' : '') . ($authed 
   <?php if ($isHome && !empty($showcaseHero['display'])): ?>
   <link rel="preload" as="image" href="<?= e($showcaseHero['display']) ?>" fetchpriority="high">
   <?php endif; ?>
-  <link rel="stylesheet" href="/assets/css/app.css?v=<?= e($cssVersion) ?>">
+  <link rel="stylesheet" href="<?= e(AssetRelease::url('css/app.css', $assetBundle)) ?>">
   <meta name="theme-color" content="#080A10">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -105,18 +107,13 @@ $bodyClass = trim(($layoutClass ?? '') . ($isHome ? ' is-home' : '') . ($authed 
     <a href="/privacy">Privacy</a>
   </footer>
   <?php if ($path === '/create'): ?>
-  <?php
-    $songSearchJsVersion = is_file(YATSN_ROOT . '/public/assets/js/song-search.js')
-        ? (string) (filemtime(YATSN_ROOT . '/public/assets/js/song-search.js') ?: '1')
-        : '1';
-  ?>
-  <script src="/assets/js/song-search.js?v=<?= e($songSearchJsVersion) ?>" defer></script>
-  <script src="/assets/js/explore.js?v=<?= e($exploreJsVersion) ?>" defer></script>
+  <script src="<?= e(AssetRelease::url('js/song-search.js', $assetBundle)) ?>" defer></script>
+  <script src="<?= e(AssetRelease::url('js/explore.js', $assetBundle)) ?>" defer></script>
   <?php endif; ?>
   <?php if ($componentLab): ?>
-  <script src="/assets/js/component-lab.js?v=<?= e($componentLabJsVersion) ?>" defer></script>
+  <script src="<?= e(AssetRelease::url('js/component-lab.js', $assetBundle)) ?>" defer></script>
   <?php endif; ?>
-  <script src="/assets/js/app.js?v=<?= e($jsVersion) ?>" defer></script>
+  <script src="<?= e(AssetRelease::url('js/app.js', $assetBundle)) ?>" defer></script>
   <?php if (in_array('imagesloaded', $showcaseScripts, true)): ?>
   <script src="/assets/vendor/imagesloaded.pkgd.min.js" defer></script>
   <?php endif; ?>
@@ -124,7 +121,7 @@ $bodyClass = trim(($layoutClass ?? '') . ($isHome ? ' is-home' : '') . ($authed 
   <script src="/assets/vendor/masonry.pkgd.min.js" defer></script>
   <?php endif; ?>
   <?php if (in_array('showcase', $showcaseScripts, true)): ?>
-  <script src="/assets/js/showcase.js?v=<?= e($showcaseJsVersion) ?>" defer></script>
+  <script src="<?= e(AssetRelease::url('js/showcase.js', $assetBundle)) ?>" defer></script>
   <?php endif; ?>
 </body>
 </html>

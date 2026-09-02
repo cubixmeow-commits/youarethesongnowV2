@@ -1,3 +1,31 @@
+# NEXT DIRECTIVE — Round 013.2 complete, awaiting GPT review
+
+**Date:** 2026-09-02  
+**Working branch:** `main`  
+**Published to:** `main` (pending commit)  
+**Status:** Automatic asset cache busting complete — stop for GPT/owner review
+
+## Root cause
+
+Per-file `?v=filemtime` query strings allowed mixed stale/new first-party assets after deploy. Create could load new `explore.js` copy with old cached `app.css`/`app.js`, so a normal mobile refresh did not guarantee one coherent frontend release.
+
+## Repair
+
+- `Yatsn\Support\AssetRelease` computes a 12-character release id from SHA-256 digests of every file in a bundle
+- Create bundle (`app.css`, `app.js`, `explore.js`, `song-search.js`) shares one release id in path-fingerprinted URLs: `/assets/r/{releaseId}/...`
+- `public/.htaccess` rewrites versioned paths to on-disk files and applies `Cache-Control: public, max-age=31536000, immutable`
+- `View::page()` sends `Cache-Control: no-store` for HTML responses
+- PHP dev router mirrors rewrite + immutable headers for local verification
+
+## Verification
+
+- `php tests/run.php`: **1236 passed, 0 failed** (includes asset cache + Round 013.1 behavior harness)
+- Evidence: `design/review/round-013-2/`
+
+Do not deploy. Do not resume broader design work.
+
+---
+
 # NEXT DIRECTIVE — Round 013.2 Automatic Asset Cache Busting
 
 **Date:** 2026-09-02  
