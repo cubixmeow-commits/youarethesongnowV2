@@ -294,9 +294,10 @@ await page.waitForFunction(() => {
 await page.screenshot({ path: join(__dirname, 'mobile-390-preparation-pending.png') });
 
 await page.waitForFunction(() => {
+  const review = document.querySelector('[data-create-card="review"]');
   const bar = document.querySelector('[data-generate-bar]');
   const button = document.querySelector('[data-create-image]');
-  return bar && !bar.hidden && button && !button.disabled;
+  return review && !review.hidden && bar && !bar.hidden && button && !button.disabled;
 }, { timeout: 15000 });
 
 const readyState = await readBarState();

@@ -1,3 +1,37 @@
+# OVERRIDING NEXT DIRECTIVE — Round 015 Card-by-Card Create Flow complete
+
+**Date:** 2026-09-02  
+**Repository:** `cubixmeow-commits/youarethesongnowV2`  
+**Target branch:** `main`  
+**Status:** Implemented, tested, pushed — stop for GPT/owner review (no Hostinger deploy)
+
+## Result
+
+| Check | Result |
+| --- | --- |
+| Card flow | Song → People → Direction → Review → Generating (`flowStep` + `data-create-card`) |
+| Mobile focus shell | Back/Exit, 4-step progress, single active card |
+| Mobile tab bar | Hidden on Create via `body.is-create-focus` |
+| Quick / Explore | Real POV chain → `advanceToReview()` |
+| Fine Tune | Collapsed on Review; quality/format/no-text/special |
+| Generate image | Always on Review card action region |
+| AssetRelease | `/assets/r/{releaseId}/...` unchanged |
+| `php tests/run.php` | **1249 passed, 0 failed** (includes Round 015 browser harness) |
+| Evidence | `design/review/round-015/` |
+
+## Files changed
+
+- `templates/pages/create.php` — card shells, focus header, Review Fine Tune, Generating card
+- `templates/layouts/main.php` — `is-create-focus` body class
+- `public/assets/js/app.js` — `setFlowStep`, `advanceToReview`, draft restore, people Continue
+- `public/assets/js/explore.js` — Review advance, Explore 3 directions, manual tertiary
+- `public/assets/css/app.css` — card flow + mobile nav hide
+- `design/review/round-015/` — verify harness, screenshots, README
+- `tests/run.php` — Round 015 assertions + browser runner
+- `design/CHATGPT_NEXT_PASS.md` — marked consumed
+
+---
+
 # OVERRIDING NEXT DIRECTIVE — Round 015 Card-by-Card Create Flow
 
 **Date:** 2026-09-02  

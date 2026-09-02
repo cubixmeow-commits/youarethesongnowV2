@@ -34,7 +34,7 @@ if ($authed) {
     $navItems[] = ['href' => '/sign-in', 'label' => 'Sign in', 'icon' => 'signin'];
 }
 
-$bodyClass = trim(($layoutClass ?? '') . ($isHome ? ' is-home' : '') . ($authed ? ' is-authed' : ' is-guest'));
+$bodyClass = trim(($layoutClass ?? '') . ($isHome ? ' is-home' : '') . ($authed ? ' is-authed' : ' is-guest') . ($path === '/create' ? ' is-create-focus' : ''));
 ?>
 <!DOCTYPE html>
 <html lang="en">

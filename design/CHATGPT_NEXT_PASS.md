@@ -3,11 +3,13 @@
 **Round:** 015  
 **Written by:** GPT design director / UX review  
 **Date:** 2026-09-02  
-**Status:** Ready for Cursor implementation  
+**Status:** **Consumed by Cursor on 2026-09-02** — see `docs/design/CURSOR-HANDOFF.md` Round 015 complete entry  
 **Repository:** `cubixmeow-commits/youarethesongnowV2`  
 **Working branch:** `main`  
 **Priority:** Replace the scrolling Create form with the approved mobile card flow  
 **Deployment:** Do not deploy; commit and push verified work to `main`, then stop for GPT/owner review
+
+> This inbox directive has been implemented. Do not re-run unless the owner reopens Round 015.
 
 ## Product decision
 
@@ -34,7 +36,7 @@ AI removes decisions by default and offers intelligent choices when the user ask
 ### Focus shell
 
 - On mobile, active Create uses a focused task shell: compact brand header, Back/Exit controls, four-segment progress indicator, one active card, and one contextual action region.
-- Hide the global mobile bottom tab bar during the active Create flow. It must not compete with the card action or consume the final action’s viewport space. Restore normal global navigation on other pages.
+- Hide the global mobile bottom tab bar during the active Create flow. It must not compete with the card action or consume the final action's viewport space. Restore normal global navigation on other pages.
 - Desktop retains the premium app shell/rail, but the same single-card state machine is canonical. Center the active card in the work area; do not restore the long-form layout on desktop.
 - At 390 × 844, the active card heading, primary content, and primary action should normally fit without page scrolling.
 - At 320px width or short viewports, the contextual action remains visible and safe-area aware; content may scroll, but the user must never hunt for the next action.
@@ -102,7 +104,7 @@ Do not show quality, format, no-text, special instructions, the full style grid,
 - Replace the prior dead-end presentation with compact in-card progress.
 - Await the real async chain. Preserve separate direction-loading, preparation, and generation submission locks.
 - On success, advance to Review and focus/announce its heading.
-- On recoverable failure, remain on Direction, show the real concise error, preserve state, and expose Retry. Never leave the user on “Preparing…” indefinitely.
+- On recoverable failure, remain on Direction, show the real concise error, preserve state, and expose Retry. Never leave the user on "Preparing…" indefinitely.
 - Do not auto-submit a paid generation from this button.
 
 ### Explore path

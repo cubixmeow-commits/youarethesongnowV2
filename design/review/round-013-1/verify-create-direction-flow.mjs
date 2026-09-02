@@ -53,9 +53,15 @@ async function readUiState() {
     const nav = document.querySelector('.app-nav');
     const barRect = bar?.getBoundingClientRect();
     const navRect = nav?.getBoundingClientRect();
+    const directionCard = document.querySelector('[data-create-card="direction"]');
+    const peopleCard = document.querySelector('[data-create-card="people"]');
+    const reviewCard = document.querySelector('[data-create-card="review"]');
     const createState = window.YatsnCreate?.getGenerateBarState?.() || {};
+    const flowStep = window.YatsnCreate?.getFlowStep?.() || '';
+    const navStyle = nav ? getComputedStyle(nav) : null;
     return {
       createState,
+      flowStep,
       barHidden: bar?.hidden ?? true,
       barDisplay: bar ? getComputedStyle(bar).display : 'none',
       hint: document.querySelector('[data-generate-hint]')?.textContent || '',
@@ -65,9 +71,11 @@ async function readUiState() {
       exploreDisabled: explore?.disabled ?? true,
       optionsHidden: options?.hidden ?? true,
       optionCount: options ? options.querySelectorAll('.ai-direction-card:not(.is-loading)').length : 0,
-      directionHidden: direction?.hidden ?? true,
-      peopleHidden: people?.hidden ?? true,
+      directionHidden: directionCard?.hidden ?? true,
+      peopleHidden: peopleCard?.hidden ?? true,
+      reviewHidden: reviewCard?.hidden ?? true,
       navPresent: !!nav,
+      navVisible: navStyle ? navStyle.display !== 'none' : false,
       barAboveNav: !!(barRect && navRect && barRect.bottom <= navRect.top + 1),
     };
   });
@@ -77,8 +85,8 @@ async function readUiState() {
 await gotoCreate();
 await page.evaluate(() => window.YatsnCreateFixtures.showPeopleStage());
 let ui = await readUiState();
-assert(ui.peopleHidden === false, 'people stage is visible');
-assert(ui.directionHidden === true, 'direction stage stays hidden without portraits');
+assert(ui.flowStep === 'people', 'people flow step is active');
+assert(ui.directionHidden === true, 'direction card stays hidden on people stage');
 assert(ui.barHidden === true, 'generate bar hidden on people stage');
 assert(ui.barDisplay === 'none', 'generate bar computed display is none on people stage');
 
@@ -88,7 +96,8 @@ await page.evaluate(() => {
   window.YatsnExploreFixtures.showInitialChoice();
 });
 ui = await readUiState();
-assert(ui.directionHidden === false, 'direction stage opens after portrait');
+assert(ui.flowStep === 'direction', 'direction flow step is active');
+assert(ui.directionHidden === false, 'direction card opens after portrait');
 assert(ui.quickPresent && ui.explorePresent, 'Generate for me and Explore options are present');
 assert(!ui.quickDisabled && !ui.exploreDisabled, 'AI choice actions are enabled with Song DNA');
 assert(ui.barHidden === true && ui.barDisplay === 'none', 'final bar hidden at initial direction choice');
@@ -105,10 +114,11 @@ await page.evaluate(() => {
   window.YatsnExploreFixtures.showSelected();
   window.YatsnCreate.setDirectionPrepared('ai-explore');
   window.YatsnCreate.setGenerationFixtureState({ reviewed: true, pending: false, issue: null });
+  window.YatsnCreate.setFlowStep('review', { focus: false });
 });
 ui = await readUiState();
-assert(ui.createState.prepared === true, 'explore path marks direction prepared');
-assert(ui.barHidden === false && ui.barDisplay !== 'none', 'final bar visible after explored direction is prepared');
+assert(ui.flowStep === 'review', 'review flow step after explore prepare');
+assert(ui.reviewHidden === false, 'review card visible after explore prepare');
 assert(ui.hint !== 'Choose and confirm a song.', 'restored song never reports missing song at prepared state');
 
 // 3. Generate for me prepared → final Generate image reachable without auto-submit
@@ -118,6 +128,7 @@ await page.evaluate(() => {
   window.YatsnExploreFixtures.showInitialChoice();
   window.YatsnCreate.setDirectionPrepared('ai-quick');
   window.YatsnCreate.setGenerationFixtureState({ reviewed: true, pending: false, issue: null });
+  window.YatsnCreate.setFlowStep('review', { focus: false });
 });
 ui = await readUiState();
 assert(ui.createState.path === 'ai-quick', 'quick generate records ai-quick path');
@@ -148,12 +159,13 @@ assert(ui.barDisplay === 'none', 'hidden generate bar uses display:none despite 
 await page.setViewport({ width: 390, height: 844, deviceScaleFactor: 1 });
 await page.evaluate(() => window.YatsnCreateFixtures.showPreparedReady());
 ui = await readUiState();
-assert(ui.navPresent === true, 'bottom navigation present at 390 width');
-assert(ui.barAboveNav === true, 'generate bar sits above bottom navigation at 390 width');
+assert(ui.navVisible === false, 'mobile create focus hides bottom navigation at 390 width');
+assert(ui.barHidden === false && ui.createState.disabled === false, 'generate action enabled on review at 390 width');
 
 await page.setViewport({ width: 320, height: 640, deviceScaleFactor: 1 });
 ui = await readUiState();
-assert(ui.barAboveNav === true, 'generate bar sits above bottom navigation at 320 width');
+assert(ui.navVisible === false, 'mobile create focus hides bottom navigation at 320 width');
+assert(ui.barHidden === false, 'generate bar remains visible on review at 320 width');
 
 await browser.close();
 console.log('Round 013.1 create-direction flow verification passed.');

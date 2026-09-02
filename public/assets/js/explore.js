@@ -136,14 +136,16 @@
         </div>
         <div class="ai-direction-lab__actions">
           <button class="btn btn--primary yatsn-btn yatsn-btn--primary" type="button" data-ai-quick disabled>Generate for me</button>
-          <button class="btn btn--secondary yatsn-btn yatsn-btn--secondary" type="button" data-ai-explore disabled>Explore options</button>
+          <button class="btn btn--secondary yatsn-btn yatsn-btn--secondary" type="button" data-ai-explore disabled>Explore 3 directions</button>
+          <button class="ai-direction-lab__manual yatsn-btn yatsn-btn--quiet" type="button" data-ai-manual-tertiary>Build a direction manually</button>
         </div>
       </div>
       <div class="yatsn-status yatsn-status--info" data-ai-status role="status" aria-live="polite">Discover a song to prepare Song DNA.</div>
       <div class="ai-direction-grid" data-ai-options hidden role="radiogroup" aria-label="AI visual directions"></div>
       <div class="ai-direction-lab__continue" data-ai-continue hidden>
-        <button class="btn btn--primary yatsn-btn yatsn-btn--primary" type="button" data-ai-create-direction>Create this direction</button>
-        <button class="ai-direction-lab__manual yatsn-btn yatsn-btn--quiet" type="button" data-ai-manual>Choose a style manually</button>
+        <button class="btn btn--primary yatsn-btn yatsn-btn--primary" type="button" data-ai-create-direction>Use selected direction</button>
+        <button class="ai-direction-lab__manual yatsn-btn yatsn-btn--quiet" type="button" data-ai-let-ai>Let AI choose instead</button>
+        <button class="ai-direction-lab__manual yatsn-btn yatsn-btn--quiet" type="button" data-ai-manual>Build a direction manually</button>
       </div>
       <div class="yatsn-status__actions" data-ai-retry-wrap hidden>
         <button class="btn btn--secondary yatsn-btn yatsn-btn--secondary" type="button" data-ai-retry>Try again</button>
@@ -159,6 +161,27 @@
       continueWithDirection(selectedDirection);
     });
     panel.querySelector('[data-ai-manual]').addEventListener('click', restoreManualDirection);
+    panel.querySelector('[data-ai-manual-tertiary]')?.addEventListener('click', restoreManualDirection);
+    panel.querySelector('[data-ai-let-ai]')?.addEventListener('click', () => {
+      if (isExploreLocked()) return;
+      selectedDirection = null;
+      const options = document.querySelector('[data-ai-options]');
+      if (options) {
+        options.hidden = true;
+        options.innerHTML = '';
+      }
+      setExploreChrome(false);
+      setExploreCopy('default');
+      const continueRow = document.querySelector('[data-ai-continue]');
+      if (continueRow) continueRow.hidden = true;
+      const status = document.querySelector('[data-ai-status]');
+      if (status) {
+        status.classList.remove('is-error', 'yatsn-status--error');
+        status.classList.add('yatsn-status--info');
+        status.textContent = latestLookupLabel ? `Song DNA ready for ${latestLookupLabel}.` : 'Song DNA ready.';
+      }
+      setExploreState('ready');
+    });
 
     const buildCommit = document.querySelector('[data-create]')?.dataset.buildCommit;
     const buildLabel = panel.querySelector('[data-ai-build]');
@@ -347,6 +370,7 @@
     applyDirection(direction, { autoContinue: false, announce: true });
     const continueRow = document.querySelector('[data-ai-continue]');
     if (continueRow) continueRow.hidden = false;
+    updateContinueDirectionLabel();
     setExploreState('selected');
   }
 
@@ -403,9 +427,10 @@
             status.classList.remove('is-error', 'yatsn-status--error');
             status.classList.add('yatsn-status--info');
             status.textContent = lastQuickMode
-              ? `“${direction.name}” is ready. Tap Generate image when you are set.`
-              : `“${direction.name}” is prepared. Tap Generate image when you are set.`;
+              ? `“${direction.name}” is ready for review.`
+              : `“${direction.name}” is prepared for review.`;
           }
+          window.YatsnCreate.advanceToReview?.('Review your creation');
         } else if (status && result?.issue) {
           status.classList.add('is-error', 'yatsn-status--error');
           status.textContent = result.issue;
@@ -424,6 +449,7 @@
     window.YatsnCreate?.clearDirectionPrepared?.();
     setExploreChrome(false);
     setExploreCopy('default');
+    window.YatsnCreate?.showManualDirectionControls?.();
     const options = document.querySelector('[data-ai-options]');
     if (options) {
       options.querySelectorAll('.ai-direction-card').forEach((card) => {
@@ -442,6 +468,12 @@
     }
     setExploreState('manual');
     document.querySelector('[data-style-grid] .style-option')?.focus?.();
+  }
+
+  function updateContinueDirectionLabel() {
+    const btn = document.querySelector('[data-ai-create-direction]');
+    if (!btn || !selectedDirection) return;
+    btn.textContent = `Use ${selectedDirection.name}`;
   }
 
   function showError(message) {
@@ -504,8 +536,7 @@
       showInitialChoice() {
         buildPanel();
         unlockFixtureActions();
-        const direction = document.querySelector('#the-direction');
-        if (direction) direction.hidden = false;
+        window.YatsnCreate?.setFlowStep?.('direction', { focus: false });
         window.YatsnCreate?.clearDirectionPrepared?.();
         selectedDirection = null;
         setExploreCopy('default');
@@ -530,8 +561,7 @@
       showLoading() {
         buildPanel();
         unlockFixtureActions();
-        const direction = document.querySelector('#the-direction');
-        if (direction) direction.hidden = false;
+        window.YatsnCreate?.setFlowStep?.('direction', { focus: false });
         lastQuickMode = false;
         setExploreCopy('explore');
         renderLoading();
@@ -544,8 +574,7 @@
       showReady() {
         buildPanel();
         unlockFixtureActions();
-        const direction = document.querySelector('#the-direction');
-        if (direction) direction.hidden = false;
+        window.YatsnCreate?.setFlowStep?.('direction', { focus: false });
         selectedDirection = null;
         setExploreCopy('explore');
         renderDirections(FIXTURE_DIRECTIONS);
@@ -570,15 +599,13 @@
       showError() {
         buildPanel();
         unlockFixtureActions();
-        const direction = document.querySelector('#the-direction');
-        if (direction) direction.hidden = false;
+        window.YatsnCreate?.setFlowStep?.('direction', { focus: false });
         showError('Could not create visual directions. (explore_unavailable)');
       },
       showManual() {
         this.showSelected();
         restoreManualDirection();
-        const direction = document.querySelector('#the-direction');
-        if (direction) direction.hidden = false;
+        window.YatsnCreate?.setFlowStep?.('direction', { focus: false });
       },
       focusFirstCard() {
         this.showReady();

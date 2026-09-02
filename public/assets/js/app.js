@@ -25,6 +25,30 @@
   };
   let reviewTimer = null;
   let generationSubmitLock = false;
+  let flowStep = 'song';
+
+  const FLOW_STEPS = ['song', 'people', 'direction', 'review', 'generating'];
+  const FLOW_HEADINGS = {
+    song: '#song-heading',
+    people: '#people-heading',
+    direction: '#direction-heading',
+    review: '#review-heading',
+    generating: '#generating-heading',
+  };
+  const FLOW_TITLES = {
+    song: 'Choose your song',
+    people: 'Choose your people',
+    direction: 'Choose your direction',
+    review: 'Review your creation',
+    generating: 'Creating your image',
+  };
+  const FLOW_STEP_LABELS = {
+    song: 'Step 1 of 4',
+    people: 'Step 2 of 4',
+    direction: 'Step 3 of 4',
+    review: 'Step 4 of 4',
+    generating: 'Creating',
+  };
 
   function $(sel, root = document) {
     return root.querySelector(sel);
@@ -112,12 +136,139 @@
   }
 
   function shouldShowGenerateBar() {
-    const direction = $('#the-direction');
     const paywall = $('[data-paywall]');
     return generation.directionPrepared
-      && !!direction
-      && !direction.hidden
+      && flowStep === 'review'
       && (!paywall || paywall.hidden);
+  }
+
+  function setFlowStep(step, options = {}) {
+    if (!FLOW_STEPS.includes(step)) return;
+    flowStep = step;
+    const root = $('[data-create]');
+    root?.classList.toggle('is-generating', step === 'generating');
+    document.body.classList.toggle('is-create-generating', step === 'generating');
+
+    $all('[data-create-card]').forEach((card) => {
+      const name = card.getAttribute('data-create-card');
+      card.hidden = name !== step;
+    });
+
+    const back = $('[data-create-back]');
+    if (back) back.hidden = step === 'song' || step === 'generating';
+
+    const titleEl = $('[data-create-focus-title]');
+    if (titleEl) titleEl.textContent = FLOW_TITLES[step] || FLOW_TITLES.song;
+
+    const stepLabel = $('[data-create-step-label]');
+    if (stepLabel) stepLabel.textContent = FLOW_STEP_LABELS[step] || FLOW_STEP_LABELS.song;
+
+    const progressSteps = $all('.session-progress__step[data-progress-step]');
+    const progressIndex = { song: 0, people: 1, direction: 2, review: 3, generating: 3 };
+    const current = progressIndex[step] ?? 0;
+    progressSteps.forEach((el, index) => {
+      el.classList.toggle('is-current', index === current);
+      el.classList.toggle('is-complete', index < current);
+    });
+
+    if (options.announce) {
+      const announcer = $('[data-create-announcer]');
+      if (announcer) announcer.textContent = options.announce;
+    }
+
+    updatePeopleContinue();
+    updateReviewPanel();
+    updateSummary();
+    updateGenerateAction();
+
+    if (options.focus !== false) {
+      const heading = $(FLOW_HEADINGS[step]);
+      if (heading && !options.skipFocus) {
+        if (!heading.hasAttribute('tabindex')) heading.setAttribute('tabindex', '-1');
+        requestAnimationFrame(() => {
+          try {
+            heading.focus({ preventScroll: true });
+          } catch (_) {
+            heading.focus();
+          }
+        });
+      }
+    }
+  }
+
+  function resolveFlowStepFromState() {
+    if (flowStep === 'generating') return 'generating';
+    if (!state.songLookup || !state.songConfirmed || !['found', 'fallbackFound'].includes(state.songLookup.state)) {
+      return 'song';
+    }
+    if (state.selectedPortraitIds.length < 1) return 'people';
+    if (!generation.directionPrepared) return 'direction';
+    return 'review';
+  }
+
+  function advanceToReview(announce = 'Review your creation') {
+    setFlowStep('review', { announce, focus: true });
+    scheduleGenerationReview();
+  }
+
+  function updatePeopleContinue() {
+    const btn = $('[data-people-continue]');
+    if (!btn) return;
+    const count = state.selectedPortraitIds.length;
+    btn.disabled = count < 1;
+    btn.textContent = count === 1 ? 'Continue with 1 person' : count >= 2 ? 'Continue with 2 people' : 'Continue';
+  }
+
+  function updateReviewPanel() {
+    const styleObj = state.styles.find((s) => s.id === state.selectedStyleId);
+    const directionName = $('[data-review-direction-name]');
+    if (directionName) {
+      directionName.textContent = styleObj ? styleObj.name : 'Not chosen yet';
+    }
+    const output = $('[data-review-output]');
+    if (output) {
+      const q = state.quality ? state.quality[0].toUpperCase() + state.quality.slice(1) : 'Medium';
+      const o = state.orientation ? state.orientation[0].toUpperCase() + state.orientation.slice(1) : 'Square';
+      output.textContent = `${q} · ${o}`;
+    }
+    const fineStyle = $('[data-fine-tune-style]');
+    const allowManualStyle = generation.directionPath === 'manual' || !generation.directionPath;
+    if (fineStyle) fineStyle.hidden = !allowManualStyle;
+
+    const reviewPortraits = $('[data-review-portraits]');
+    if (reviewPortraits) {
+      reviewPortraits.innerHTML = '';
+      const selected = state.portraits.filter((p) => state.selectedPortraitIds.includes(p.id));
+      if (selected.length && flowStep === 'review') {
+        reviewPortraits.hidden = false;
+        reviewPortraits.removeAttribute('aria-hidden');
+        selected.forEach((p) => {
+          const img = document.createElement('img');
+          img.src = p.thumbnailUrl;
+          img.alt = '';
+          img.className = 'create-review__portrait-thumb';
+          reviewPortraits.appendChild(img);
+        });
+      } else {
+        reviewPortraits.hidden = true;
+        reviewPortraits.setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+
+  function goBackOneStep() {
+    if (flowStep === 'people') {
+      setFlowStep('song', { announce: 'Song step' });
+      return;
+    }
+    if (flowStep === 'direction') {
+      setFlowStep('people', { announce: 'People step' });
+      return;
+    }
+    if (flowStep === 'review') {
+      setFlowStep('direction', { announce: 'Direction step', skipFocus: false });
+      updateGenerateAction();
+    }
   }
 
   async function syncDraftFromForm() {
@@ -190,8 +341,7 @@
   }
 
   async function refreshGenerationReadiness() {
-    const direction = $('#the-direction');
-    if (!direction || direction.hidden) return { ready: false };
+    if (flowStep !== 'review' && flowStep !== 'direction') return { ready: false };
     const issues = getReadinessIssues();
     if (issues.length) {
       generation.reviewed = false;
@@ -228,6 +378,7 @@
       setDirectionPrepared('manual');
       setStatus(status, '');
       $('[data-paywall]').hidden = true;
+      advanceToReview('Review your creation');
     } else if (status) {
       setStatus(status, result.issue || 'Finish your creation before continuing.', true);
     }
@@ -272,7 +423,7 @@
     generation.pending = false;
     generation.reviewed = true;
     generation.issue = message || null;
-    $('[data-progress]').hidden = true;
+    setFlowStep('review', { announce: 'Review your creation', focus: false });
     updateGenerateAction();
   }
 
@@ -319,23 +470,12 @@
     const price = state.options?.qualities?.find((q) => q.id === state.quality)?.credits;
     if (credits) credits.textContent = price != null ? String(price) : '—';
 
-    // Presentation-only session progress emphasis (no field behavior change).
-    const peopleSection = $('#the-people');
-    const directionSection = $('#the-direction');
-    const steps = $all('.session-progress__step');
-    if (steps.length === 3) {
-      let current = 0;
-      if (peopleSection && !peopleSection.hidden) current = 1;
-      if (directionSection && !directionSection.hidden) current = 2;
-      steps.forEach((step, index) => {
-        step.classList.toggle('is-current', index === current);
-        step.classList.toggle('is-complete', index < current);
-      });
-    }
     const createRoot = $('[data-create]');
     if (createRoot) {
       createRoot.classList.toggle('has-song', Boolean(state.songConfirmed && state.songLookup));
     }
+    updatePeopleContinue();
+    updateReviewPanel();
     updateGenerateAction();
   }
 
@@ -363,11 +503,12 @@
           state.selectedPortraitIds = [state.selectedPortraitIds[1], p.id];
         }
         await patchDraft({ portraitIds: state.selectedPortraitIds });
+        if (generation.directionPrepared) {
+          clearDirectionPrepared();
+        }
         renderPortraits();
         updateSummary();
-        maybeShowDirection();
         invalidateGenerationReview();
-        scheduleGenerationReview();
       });
 
       const deleteBtn = document.createElement('button');
@@ -412,34 +553,50 @@
       }
       renderPortraits();
       updateSummary();
-      maybeShowDirection();
-      setStatus(status, 'Portrait deleted.');
+      invalidateGenerationReview();
+      if (generation.directionPrepared) scheduleGenerationReview();
     } catch (err) {
       setStatus(status, err.message || 'Could not delete this portrait.', true);
     }
   }
 
+  function showManualDirectionControls() {
+    const manual = $('[data-direction-manual]');
+    if (manual) manual.hidden = false;
+    const controls = $('#the-direction .direction-controls');
+    if (controls) controls.classList.add('is-manual-active');
+  }
+
+  function hideManualDirectionControls() {
+    const manual = $('[data-direction-manual]');
+    if (manual) manual.hidden = true;
+    const controls = $('#the-direction .direction-controls');
+    if (controls) controls.classList.remove('is-manual-active');
+  }
+
   function renderStyles() {
-    const grid = $('[data-style-grid]');
-    if (!grid) return;
-    grid.innerHTML = '';
-    state.styles.forEach((s) => {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'style-option' + (state.selectedStyleId === s.id ? ' is-selected' : '');
-      btn.setAttribute('role', 'option');
-      btn.setAttribute('aria-selected', state.selectedStyleId === s.id ? 'true' : 'false');
-      btn.dataset.styleId = String(s.id);
-      btn.innerHTML = `<strong>${s.name}</strong><span class="quiet">${s.description}</span>`;
-      btn.addEventListener('click', async () => {
-        state.selectedStyleId = s.id;
-        await patchDraft({ styleId: s.id });
-        renderStyles();
-        updateSummary();
-        invalidateGenerationReview();
-        scheduleGenerationReview();
+    const grids = [$('[data-style-grid]'), $('[data-style-grid-fine]')].filter(Boolean);
+    if (!grids.length) return;
+    grids.forEach((grid) => {
+      grid.innerHTML = '';
+      state.styles.forEach((s) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'style-option' + (state.selectedStyleId === s.id ? ' is-selected' : '');
+        btn.setAttribute('role', 'option');
+        btn.setAttribute('aria-selected', state.selectedStyleId === s.id ? 'true' : 'false');
+        btn.dataset.styleId = String(s.id);
+        btn.innerHTML = `<strong>${s.name}</strong><span class="quiet">${s.description}</span>`;
+        btn.addEventListener('click', async () => {
+          state.selectedStyleId = s.id;
+          await patchDraft({ styleId: s.id });
+          renderStyles();
+          updateSummary();
+          invalidateGenerationReview();
+          scheduleGenerationReview();
+        });
+        grid.appendChild(btn);
       });
-      grid.appendChild(btn);
     });
   }
 
@@ -475,25 +632,9 @@
     });
   }
 
-  function maybeShowDirection() {
-    const people = $('#the-people');
-    const direction = $('#the-direction');
-    if (state.songLookup && state.songConfirmed && ['found', 'fallbackFound'].includes(state.songLookup.state)) {
-      if (people) people.hidden = false;
-    }
-    if (direction) {
-      const showDirection = state.selectedPortraitIds.length > 0;
-      direction.hidden = !showDirection;
-      if (!showDirection) {
-        clearDirectionPrepared();
-      }
-    }
-    updateSummary();
-    if (!direction?.hidden) {
-      scheduleGenerationReview();
-    } else {
-      updateGenerateAction();
-    }
+  function clearDownstreamFromSong() {
+    clearDirectionPrepared();
+    hideManualDirectionControls();
   }
 
   function renderDevelopmentAnalysis(lookup) {
@@ -606,25 +747,23 @@
         });
         state.songLookup = res.data;
         state.songConfirmed = false;
+        clearDownstreamFromSong();
         renderDevelopmentAnalysis(res.data);
         await patchDraft({ songLookupId: res.data.id });
         updateSummary();
         return res.data;
       },
-      onConfirm: (lookup) => {
+      onConfirm: async (lookup) => {
         state.songLookup = lookup;
         state.songConfirmed = true;
-        maybeShowDirection();
+        await patchDraft({ songLookupId: lookup.id });
         updateSummary();
+        setFlowStep('people', { announce: 'Choose your people' });
       },
       onClear: () => {
         state.songConfirmed = false;
-        clearDirectionPrepared();
-        const people = $('#the-people');
-        const direction = $('#the-direction');
-        if (people) people.hidden = true;
-        if (direction) direction.hidden = true;
-        updateSummary();
+        clearDownstreamFromSong();
+        setFlowStep('song', { announce: 'Song step' });
       },
     });
   }
@@ -675,13 +814,33 @@
     if (state.selectedStyleId && state.selectedPortraitIds.length > 0 && state.songConfirmed) {
       generation.directionPrepared = true;
       generation.directionPath = 'manual';
+      generation.reviewed = false;
     }
-    maybeShowDirection();
-    await loadCreateEntryContext();
+    const initialStep = resolveFlowStepFromState();
+    setFlowStep(initialStep, { focus: false });
+    if (initialStep === 'review') {
+      scheduleGenerationReview();
+    }
 
     updateSummary();
     updateGenerateAction();
-    scheduleGenerationReview();
+
+    $('[data-create-back]')?.addEventListener('click', () => goBackOneStep());
+
+    $('[data-people-continue]')?.addEventListener('click', () => {
+      if (state.selectedPortraitIds.length < 1) return;
+      hideManualDirectionControls();
+      setFlowStep('direction', { announce: 'Choose your direction' });
+    });
+
+    $('[data-portrait-upload-toggle]')?.addEventListener('click', () => {
+      const panel = $('[data-portrait-upload-panel]');
+      const toggle = $('[data-portrait-upload-toggle]');
+      if (!panel) return;
+      const show = panel.hidden;
+      panel.hidden = !show;
+      if (toggle) toggle.setAttribute('aria-expanded', show ? 'true' : 'false');
+    });
 
     $('#portrait-form')?.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -699,9 +858,8 @@
         setStatus(status, 'Portrait uploaded.');
         renderPortraits();
         updateSummary();
-        maybeShowDirection();
         invalidateGenerationReview();
-        scheduleGenerationReview();
+        if (generation.directionPrepared) clearDirectionPrepared();
       } catch (err) {
         setStatus(status, 'We could not upload this photo. Choose another photo or try again.', true);
       }
@@ -718,13 +876,15 @@
       deleteDialog.returnValue = 'confirm';
     });
 
-    $('[data-special-toggle]')?.addEventListener('change', (e) => {
+    $('[data-special-toggle]')?.addEventListener('change', async (e) => {
       const wrap = $('[data-special-wrap]');
       if (wrap) wrap.hidden = !e.target.checked;
+      await syncDraftFromForm();
       invalidateGenerationReview();
       scheduleGenerationReview();
     });
-    $('[data-special]')?.addEventListener('input', () => {
+    $('[data-special]')?.addEventListener('input', async () => {
+      await syncDraftFromForm();
       invalidateGenerationReview();
       scheduleGenerationReview();
     });
@@ -733,7 +893,8 @@
         $('[data-generate-bar]')?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
       }, 250);
     });
-    $('[data-no-text]')?.addEventListener('change', () => {
+    $('[data-no-text]')?.addEventListener('change', async () => {
+      await syncDraftFromForm();
       invalidateGenerationReview();
       scheduleGenerationReview();
     });
@@ -781,8 +942,9 @@
   }
 
   async function startGeneration() {
-    $('[data-generate-bar]').hidden = true;
-    $('[data-progress]').hidden = false;
+    setFlowStep('generating', { announce: 'Creating your image', focus: true });
+    const progress = $('[data-progress]');
+    if (progress) progress.hidden = false;
     const progressNote = $('[data-progress-note]');
     if (progressNote) progressNote.hidden = false;
     const copy = $('[data-progress-copy]');
@@ -796,7 +958,7 @@
     } catch (err) {
       generation.pending = false;
       if (err.code === 'membership_required') {
-        $('[data-progress]').hidden = true;
+        setFlowStep('review', { focus: false });
         $('[data-paywall]').hidden = false;
         updateGenerateAction();
         return;
@@ -1242,6 +1404,11 @@
     submitGeneration,
     setDirectionPrepared,
     clearDirectionPrepared,
+    advanceToReview,
+    setFlowStep,
+    getFlowStep: () => flowStep,
+    showManualDirectionControls,
+    hideManualDirectionControls,
     shouldShowGenerateBar,
     isGenerateReady: () => shouldShowGenerateBar() && getReadinessIssues().length === 0 && generation.reviewed && !generation.pending,
     getGenerateBarState: () => {
@@ -1277,12 +1444,8 @@
         state.selectedPortraitIds = [];
         state.selectedStyleId = null;
         clearDirectionPrepared();
-        const people = $('#the-people');
-        const direction = $('#the-direction');
-        if (people) people.hidden = false;
-        if (direction) direction.hidden = true;
-        updateSummary();
-        updateGenerateAction();
+        hideManualDirectionControls();
+        setFlowStep('people', { focus: false });
       },
       showDirectionChoice() {
         state.songConfirmed = true;
@@ -1290,12 +1453,8 @@
         state.selectedPortraitIds = state.selectedPortraitIds.length ? state.selectedPortraitIds : ['fixture-portrait'];
         state.selectedStyleId = null;
         clearDirectionPrepared();
-        const people = $('#the-people');
-        const direction = $('#the-direction');
-        if (people) people.hidden = false;
-        if (direction) direction.hidden = false;
-        updateSummary();
-        updateGenerateAction();
+        hideManualDirectionControls();
+        setFlowStep('direction', { focus: false });
       },
       showPreparedReady() {
         this.showDirectionChoice();
@@ -1305,8 +1464,7 @@
         generation.reviewed = true;
         generation.pending = false;
         generation.issue = null;
-        updateSummary();
-        updateGenerateAction();
+        setFlowStep('review', { focus: false });
       },
       showPreparedMissingStyle() {
         this.showDirectionChoice();
@@ -1316,8 +1474,7 @@
         generation.reviewed = false;
         generation.pending = false;
         generation.issue = null;
-        updateSummary();
-        updateGenerateAction();
+        setFlowStep('review', { focus: false });
       },
       showPending() {
         this.showPreparedReady();
@@ -1341,12 +1498,14 @@
         generation.reviewed = true;
         generation.pending = false;
         generation.issue = null;
-        const people = $('#the-people');
-        const direction = $('#the-direction');
-        if (people) people.hidden = false;
-        if (direction) direction.hidden = false;
-        updateSummary();
-        updateGenerateAction();
+        setFlowStep('review', { focus: false });
+      },
+      showSongStage() {
+        state.songConfirmed = false;
+        state.songLookup = null;
+        state.selectedPortraitIds = [];
+        clearDirectionPrepared();
+        setFlowStep('song', { focus: false });
       },
     };
   }

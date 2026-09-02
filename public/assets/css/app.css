@@ -3509,6 +3509,223 @@ button.yatsn-song-result:focus-visible {
   }
 }
 
+/* =============================================================================
+   Round 015 — card-by-card Create flow
+   ============================================================================= */
+
+[data-create-card][hidden] {
+  display: none !important;
+}
+
+body.is-create-focus .app-nav {
+  display: none !important;
+}
+
+@media (min-width: 900px) {
+  body.is-create-focus .app-nav {
+    display: flex !important;
+  }
+}
+
+.create--card-flow {
+  margin: calc(var(--space-4) * -1) calc(var(--space-4) * -1) 0;
+  padding: var(--space-4) var(--space-4) calc(var(--space-6) + env(safe-area-inset-bottom));
+  max-width: 28rem;
+  margin-inline: auto;
+}
+
+.create__cards {
+  display: grid;
+}
+
+.create-card .movement {
+  border-bottom: 0;
+  padding: 0;
+  opacity: 1;
+}
+
+.create-card__heading {
+  font-size: var(--type-headline);
+  margin: 0 0 var(--space-3);
+}
+
+.create-focus-shell__header {
+  margin-bottom: var(--space-5);
+}
+
+.create-focus-shell__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.create-focus-shell__back {
+  min-height: var(--touch-min);
+  min-width: var(--touch-min);
+}
+
+.create-focus-shell__brand {
+  font-size: var(--type-meta);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  min-height: var(--touch-min);
+  display: inline-flex;
+  align-items: center;
+}
+
+.create-focus-shell__brand-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.create-focus-shell__wordmark {
+  font-size: var(--type-meta);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--color-platinum) 70%, var(--color-text-secondary));
+}
+
+.create-focus-shell__title {
+  font-size: var(--type-large-title);
+  margin: 0 0 var(--space-3);
+}
+
+.create-focus-shell__step-label {
+  margin: 0 0 var(--space-2);
+}
+
+.session-progress--four {
+  margin-top: var(--space-3);
+}
+
+.create-card__action-region {
+  margin-top: var(--space-5);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.create-card__action-region .btn {
+  width: 100%;
+  min-height: var(--control-primary-height);
+}
+
+.create-card__secondary {
+  margin-top: var(--space-4);
+}
+
+.create-card__collapsible[hidden] {
+  display: none !important;
+}
+
+.create-review__direction {
+  margin-bottom: var(--space-4);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border-hairline);
+  border-radius: var(--radius-md);
+  background: color-mix(in oklab, var(--color-surface-elevated) 40%, transparent);
+}
+
+.create-review__direction-name {
+  font-size: var(--type-headline);
+  margin: 0;
+}
+
+.create-review__summary {
+  margin: 0 0 var(--space-4);
+}
+
+.create-review__portrait-thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+}
+
+.portrait-tray--compact {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.create-fine-tune {
+  margin-bottom: var(--space-4);
+}
+
+.create-fine-tune summary {
+  min-height: var(--touch-min);
+  cursor: pointer;
+}
+
+.create-dev-panel {
+  margin-top: var(--space-6);
+  opacity: 0.65;
+}
+
+.direction-manual-controls[hidden] {
+  display: none !important;
+}
+
+.direction-controls.is-manual-active .ai-direction-lab {
+  display: none;
+}
+
+.direction-controls.is-ai-direction-active .ai-direction-lab__top .ai-direction-lab__actions {
+  display: none;
+}
+
+.ai-direction-lab__actions {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.ai-direction-grid .ai-direction-card {
+  min-height: auto;
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+}
+
+.ai-direction-grid .ai-direction-card span:not(.ai-direction-card__recommend):not(.yatsn-selected-mark) {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+body.is-create-generating .create-focus-shell {
+  opacity: 0.85;
+}
+
+@media (min-width: 900px) {
+  .create--card-flow {
+    max-width: 36rem;
+    margin-inline: auto;
+    padding-inline: 0;
+    padding-bottom: var(--space-8);
+  }
+
+  .app-main:has(.create--card-flow) {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 899px) {
+  .create.has-generate-bar {
+    padding-bottom: calc(var(--space-6) + env(safe-area-inset-bottom));
+  }
+
+  .create__generate-bar {
+    position: static;
+    box-shadow: none;
+    border: 0;
+    padding: 0;
+    background: transparent;
+  }
+}
+
 @media (max-width: 699px) {
   .ai-direction-lab__actions {
     width: 100%;

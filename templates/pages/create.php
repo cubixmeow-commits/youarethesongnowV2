@@ -1,37 +1,42 @@
-<section class="create" data-create data-csrf="<?= e($csrf ?? '') ?>"<?php
+<section class="create create--card-flow" data-create data-csrf="<?= e($csrf ?? '') ?>"<?php
   $build = \Yatsn\Support\BuildInfo::publicSummary();
   if (!empty($build['privateBuild'])):
 ?> data-private-build="1"<?php
   endif;
   if (!empty($build['commit'])):
 ?> data-build-commit="<?= e((string) $build['commit']) ?>" data-build-source="<?= e((string) ($build['source'] ?? '')) ?>"<?php endif; ?>>
-  <header class="session-header">
-    <div class="session-header__art" aria-hidden="true">
-      <img
-        class="session-header__mark"
-        src="/assets/images/brand/ys-monogram-flat-platinum.svg"
-        width="32"
-        height="32"
-        alt=""
-        decoding="async">
-    </div>
-    <div class="session-header__meta">
-      <p class="session-header__eyebrow">Create</p>
-      <h1 class="session-header__title">Choose your song</h1>
-      <p class="session-header__hint quiet">Start with a meaningful song, then turn it into artwork with the people you love.</p>
-    </div>
-    <ol class="session-progress" aria-label="Session stages">
-      <li class="session-progress__step is-current"><span>01</span> Song</li>
-      <li class="session-progress__step"><span>02</span> People</li>
-      <li class="session-progress__step"><span>03</span> Direction</li>
-    </ol>
-  </header>
+  <div class="create-focus-shell" data-create-focus-shell>
+    <header class="create-focus-shell__header">
+      <div class="create-focus-shell__row">
+        <button class="create-focus-shell__back btn btn--ghost" type="button" data-create-back hidden aria-label="Go back">Back</button>
+        <a class="create-focus-shell__brand" href="/gallery" aria-label="Exit to Gallery">Exit</a>
+      </div>
+      <div class="create-focus-shell__brand-row" aria-hidden="true">
+        <img
+          class="create-focus-shell__mark"
+          src="/assets/images/brand/ys-monogram-flat-platinum.svg"
+          width="28"
+          height="28"
+          alt=""
+          decoding="async">
+        <span class="create-focus-shell__wordmark">You Are The Song Now</span>
+      </div>
+      <p class="create-focus-shell__step-label quiet" data-create-step-label>Step 1 of 4</p>
+      <h1 class="create-focus-shell__title session-header__title" data-create-focus-title>Choose your song</h1>
+      <ol class="session-progress session-progress--four" aria-label="Create progress">
+        <li class="session-progress__step is-current" data-progress-step="song"><span>01</span> Song</li>
+        <li class="session-progress__step" data-progress-step="people"><span>02</span> People</li>
+        <li class="session-progress__step" data-progress-step="direction"><span>03</span> Direction</li>
+        <li class="session-progress__step" data-progress-step="review"><span>04</span> Review</li>
+      </ol>
+    </header>
+    <p class="visually-hidden" data-create-announcer role="status" aria-live="polite"></p>
+  </div>
 
-  <div class="create__layout">
-    <div class="create__main">
+  <div class="create__cards" data-create-cards>
+    <article class="create-card create-card--song" data-create-card="song" id="create-card-song">
       <section class="movement movement--primary yatsn-create-entry" id="the-song" aria-labelledby="song-heading">
-        <p class="movement__num">01</p>
-        <h2 id="song-heading">The song</h2>
+        <h2 id="song-heading" class="create-card__heading">The song</h2>
         <p class="movement__lead yatsn-create-entry__lead">Search for the song that will lead your artwork.</p>
 
         <div class="yatsn-resume-row" data-song-resume hidden></div>
@@ -75,104 +80,149 @@
           </div>
         </section>
 
-        <div class="yatsn-recent-row" data-song-recent hidden></div>
-        <div class="development-source" data-development-analysis-panel hidden>
-          <h3>Development Song DNA inspection</h3>
-          <p><strong data-development-analysis-song></strong></p>
-          <p class="quiet" data-development-analysis-status></p>
-          <p data-development-analysis-excerpt hidden></p>
-          <details data-development-analysis-wrap hidden>
-            <summary>Show grounded Song DNA</summary>
-            <div data-development-analysis-preview></div>
-          </details>
-          <div data-development-analysis-sources hidden>
-            <p class="quiet"><strong>Google Search grounding sources</strong></p>
-            <ul data-development-analysis-source-list></ul>
-          </div>
-          <p class="quiet">Private development aid. Gemini searches and analyzes the lyrics within the request. Lyrics and verification excerpts are not saved by You Are The Song Now.</p>
+        <div class="yatsn-recent-row" data-song-recent hidden aria-hidden="true"></div>
+      </section>
+    </article>
+
+    <article class="create-card create-card--people" data-create-card="people" id="create-card-people" hidden>
+      <section class="movement" id="the-people" aria-labelledby="people-heading">
+        <h2 id="people-heading" class="create-card__heading">The people</h2>
+        <p class="movement__lead">Select portraits to include in your composition.</p>
+
+        <div class="portrait-tray" data-portrait-grid role="list" aria-label="Portrait selection"></div>
+
+        <div class="create-card__action-region">
+          <button class="btn btn--primary" type="button" data-people-continue disabled>Continue</button>
+        </div>
+
+        <div class="create-card__secondary">
+          <button class="btn btn--secondary create-card__expand" type="button" data-portrait-upload-toggle aria-expanded="false">Add another portrait</button>
+          <form id="portrait-form" class="stack create-card__collapsible" data-portrait-upload-panel hidden>
+            <label class="file">
+              <span>Upload a portrait</span>
+              <input type="file" name="file" accept="image/jpeg,image/png,image/webp" required>
+            </label>
+            <button class="btn btn--secondary" type="submit">Upload a portrait</button>
+            <p class="quiet">Only upload photos you have permission to use. Your photos remain private. See <a href="/privacy">Privacy</a>.</p>
+            <p class="status" data-portrait-status role="status" aria-live="polite"></p>
+          </form>
         </div>
       </section>
+    </article>
 
-      <section class="movement" id="the-people" aria-labelledby="people-heading" hidden>
-        <p class="movement__num">02</p>
-        <h2 id="people-heading">The people</h2>
-        <p class="movement__lead">Select portraits to include in your composition.</p>
-        <p class="quiet">Add one or two clear portraits. We will use their faces to place them naturally inside your cinematic world.</p>
-        <form id="portrait-form" class="stack">
-          <label class="file">
-            <span>Upload a portrait</span>
-            <input type="file" name="file" accept="image/jpeg,image/png,image/webp" required>
-          </label>
-          <button class="btn btn--secondary" type="submit">Upload a portrait</button>
-          <p class="quiet">Only upload photos you have permission to use. Your photos remain private and are processed only to create your artwork. See <a href="/privacy">Privacy</a>.</p>
-          <p class="status" data-portrait-status role="status" aria-live="polite"></p>
-        </form>
-        <div class="portrait-tray" data-portrait-grid role="list" aria-label="Portrait selection"></div>
-      </section>
-
-      <section class="movement" id="the-direction" aria-labelledby="direction-heading" hidden>
-        <p class="movement__num">03</p>
-        <h2 id="direction-heading">The direction</h2>
+    <article class="create-card create-card--direction" data-create-card="direction" id="create-card-direction" hidden>
+      <section class="movement" id="the-direction" aria-labelledby="direction-heading">
+        <h2 id="direction-heading" class="create-card__heading">The direction</h2>
 
         <div class="stack direction-controls">
-          <div data-style-world>
-            <h3>Choose your world</h3>
-            <p class="quiet">Select the visual treatment that will lead your image.</p>
-            <div class="style-grid" data-style-grid role="listbox" aria-label="Styles"></div>
+          <div class="direction-manual-controls" data-direction-manual hidden>
+            <div data-style-world>
+              <h3>Choose your world</h3>
+              <p class="quiet">Select the visual treatment that will lead your image.</p>
+              <div class="style-grid" data-style-grid role="listbox" aria-label="Styles"></div>
+            </div>
+
+            <button class="btn btn--secondary" type="button" data-review>Review my creation</button>
           </div>
 
-          <fieldset class="direction-fieldset">
-            <legend>Choose image quality</legend>
-            <div class="choice-row" data-quality-row></div>
-          </fieldset>
-
-          <fieldset class="direction-fieldset">
-            <legend>Choose a format</legend>
-            <div class="choice-row" data-orientation-row></div>
-          </fieldset>
-
-          <label class="check">
-            <input type="checkbox" data-no-text>
-            <span>No text in image</span>
-          </label>
-          <p class="quiet">Choose this if you want the finished artwork to contain no words or lettering.</p>
-
-          <label class="check">
-            <input type="checkbox" data-special-toggle>
-            <span>I have something specific in mind</span>
-          </label>
-          <label data-special-wrap hidden>
-            <span>Special instructions</span>
-            <textarea data-special maxlength="500" rows="3" placeholder="Describe a setting, mood, colors, clothing, or another detail you would like us to consider."></textarea>
-          </label>
-
-          <button class="btn btn--primary" type="button" data-review>Review my creation</button>
           <p class="status" data-direction-status role="status" aria-live="polite"></p>
         </div>
       </section>
-    </div>
+    </article>
 
-    <aside class="create__summary session-board" aria-live="polite">
-      <p class="session-board__label">Overview</p>
-      <h2>Your creation</h2>
-      <dl class="summary-list" data-summary>
-        <div><dt>Song</dt><dd data-sum-song>Not chosen yet</dd></div>
-        <div><dt>People</dt><dd data-sum-people>None selected</dd></div>
-        <div><dt>Style</dt><dd data-sum-style>Not chosen yet</dd></div>
-        <div><dt>Quality</dt><dd data-sum-quality>Medium</dd></div>
-        <div><dt>Format</dt><dd data-sum-orientation>Square</dd></div>
-        <div><dt>Credits</dt><dd data-sum-credits>—</dd></div>
-      </dl>
-      <div class="create__generate-bar" data-generate-bar hidden>
-        <p class="create__generate-hint quiet" data-generate-hint role="status" aria-live="polite"></p>
-        <button class="btn btn--primary btn--generate" type="button" data-create-image disabled>Generate image</button>
+    <article class="create-card create-card--review" data-create-card="review" id="create-card-review" hidden>
+      <section class="movement create-review" aria-labelledby="review-heading">
+        <h2 id="review-heading" class="create-card__heading">Review</h2>
+
+        <div class="create-review__direction" data-review-direction>
+          <p class="create-review__label quiet">Direction</p>
+          <p class="create-review__direction-name" data-review-direction-name>Not chosen yet</p>
+        </div>
+
+        <dl class="summary-list create-review__summary" data-summary>
+          <div><dt>Song</dt><dd data-sum-song>Not chosen yet</dd></div>
+          <div><dt>People</dt><dd data-sum-people>None selected</dd></div>
+          <div class="create-review__output-row"><dt>Output</dt><dd data-review-output>Medium · Square</dd></div>
+          <div><dt>Credits</dt><dd data-sum-credits>—</dd></div>
+        </dl>
+
+        <div class="portrait-tray portrait-tray--compact" data-review-portraits hidden aria-hidden="true"></div>
+
+        <details class="create-fine-tune" data-fine-tune>
+          <summary>Fine-tune image settings</summary>
+          <div class="create-fine-tune__body stack">
+            <fieldset class="direction-fieldset">
+              <legend>Choose image quality</legend>
+              <div class="choice-row" data-quality-row></div>
+            </fieldset>
+
+            <fieldset class="direction-fieldset">
+              <legend>Choose a format</legend>
+              <div class="choice-row" data-orientation-row></div>
+            </fieldset>
+
+            <label class="check">
+              <input type="checkbox" data-no-text>
+              <span>No text in image</span>
+            </label>
+
+            <label class="check">
+              <input type="checkbox" data-special-toggle>
+              <span>I have something specific in mind</span>
+            </label>
+            <label data-special-wrap hidden>
+              <span>Special instructions</span>
+              <textarea data-special maxlength="500" rows="3" placeholder="Describe a setting, mood, colors, clothing, or another detail you would like us to consider."></textarea>
+            </label>
+
+            <div class="create-fine-tune__style" data-fine-tune-style hidden>
+              <h3>Style</h3>
+              <div class="style-grid style-grid--compact" data-style-grid-fine role="listbox" aria-label="Styles"></div>
+            </div>
+          </div>
+        </details>
+
+        <div class="create-card__action-region create__generate-bar" data-generate-bar hidden>
+          <p class="create__generate-hint quiet" data-generate-hint role="status" aria-live="polite"></p>
+          <button class="btn btn--primary btn--generate" type="button" data-create-image disabled>Generate image</button>
+        </div>
+      </section>
+    </article>
+
+    <article class="create-card create-card--generating" data-create-card="generating" id="create-card-generating" hidden>
+      <section class="movement create-generating" aria-labelledby="generating-heading">
+        <h2 id="generating-heading" class="create-card__heading">Creating your image</h2>
+        <p class="movement__lead">Your artwork is being created in the background.</p>
+
+        <div data-progress>
+          <div class="venue-progress" aria-hidden="true"><span data-playhead></span></div>
+          <p data-progress-copy>Finding the heart of your song</p>
+          <p class="quiet" data-progress-note>You can continue to Gallery while generation finishes.</p>
+        </div>
+
+        <div class="create-card__action-region">
+          <a class="btn btn--secondary" href="/gallery">Continue to Gallery</a>
+        </div>
+      </section>
+    </article>
+  </div>
+
+  <div class="development-source create-dev-panel" data-development-analysis-panel hidden>
+    <details>
+      <summary>Development Song DNA inspection</summary>
+      <p><strong data-development-analysis-song></strong></p>
+      <p class="quiet" data-development-analysis-status></p>
+      <p data-development-analysis-excerpt hidden></p>
+      <details data-development-analysis-wrap hidden>
+        <summary>Show grounded Song DNA</summary>
+        <div data-development-analysis-preview></div>
+      </details>
+      <div data-development-analysis-sources hidden>
+        <p class="quiet"><strong>Google Search grounding sources</strong></p>
+        <ul data-development-analysis-source-list></ul>
       </div>
-      <div data-progress hidden>
-        <div class="venue-progress" aria-hidden="true"><span data-playhead></span></div>
-        <p data-progress-copy>Finding the heart of your song</p>
-        <p class="quiet" data-progress-note>Your image is still being created. You can leave this page and find it in your gallery when it is ready.</p>
-      </div>
-    </aside>
+      <p class="quiet">Private development aid. Lyrics and verification excerpts are not saved.</p>
+    </details>
   </div>
 
   <div class="paywall-panel" data-paywall hidden>

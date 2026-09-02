@@ -4,14 +4,44 @@
 
 **Branch:** `main`
 
-**Last updated by Cursor:** 2026-09-01 (Round 013.1 direction choice hierarchy correction)
+**Last updated by Cursor:** 2026-09-02 (Round 015 card-by-card Create flow)
 
-**Active round:** 013.1 complete — awaiting GPT/owner review
+**Active round:** 015 complete — awaiting GPT/owner review
 
 **Workflow roles**
 
 - `design/CHATGPT_CURSOR_DESIGN_HANDOFF.md` = canonical history (this file)
-- `design/CHATGPT_NEXT_PASS.md` = ChatGPT inbox for the next pass
+- `design/CHATGPT_NEXT_PASS.md` = ChatGPT inbox (Round 015 consumed)
+
+---
+
+## Round 015 — Card-by-card Create flow (complete)
+
+**Date:** 2026-09-02  
+**Tests:** `php tests/run.php` → **1249 passed, 0 failed**  
+**Evidence:** `design/review/round-015/`
+
+### State model
+
+Client `flowStep`: `song` | `people` | `direction` | `review` | `generating`. One `data-create-card` visible at a time via native `hidden`. Mobile bottom tabs hidden with `body.is-create-focus` on `/create`.
+
+### Key files
+
+| Area | Files |
+| --- | --- |
+| Template | `templates/pages/create.php`, `templates/layouts/main.php` |
+| JS | `public/assets/js/app.js` (`setFlowStep`, `advanceToReview`), `public/assets/js/explore.js` |
+| CSS | `public/assets/css/app.css` |
+| Tests | `design/review/round-015/verify-create-card-flow.mjs`, `tests/run.php` |
+
+### Preserved
+
+POV planner, prompt compiler, `AssetRelease` `/assets/r/{releaseId}/...`, credits, drafts, portraits, Gallery, Round 013.3 async Quick Generate chain.
+
+### Deviations / notes
+
+- Desktop side rail navigation remains visible at ≥900px (mobile bottom tab bar hidden on Create only).
+- Development Song DNA panel collapsed in `details` outside card flow.
 
 ---
 

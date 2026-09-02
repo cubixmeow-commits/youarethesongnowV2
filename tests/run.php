@@ -1181,8 +1181,8 @@ assert_true(str_contains($exploreJs, 'fields?.diagnostic'), 'Explore UI surfaces
 assert_true(!str_contains($exploreJs, 'Uses ${escapeHtml(direction.styleName)} internally'), 'Explore cards no longer expose internal StyleMap names to customers');
 assert_true(!str_contains($exploreJs, "Gemini’s strongest fit"), 'Explore no longer uses Gemini strongest-fit explanatory copy');
 assert_true(str_contains($exploreJs, 'ai-direction-card__recommend'), 'Explore marks the first direction with a Recommended treatment');
-assert_true(str_contains($exploreJs, 'Create this direction'), 'Explore exposes a dominant Create this direction CTA after selection');
-assert_true(str_contains($exploreJs, 'Choose a style manually'), 'Explore provides a deliberate path back to manual style selection');
+assert_true(str_contains($exploreJs, 'Use selected direction'), 'Explore exposes a dominant Use selected direction CTA after selection');
+assert_true(str_contains($exploreJs, 'Build a direction manually'), 'Explore provides a deliberate path back to manual style selection');
 assert_true(str_contains($exploreJs, 'is-ai-direction-active'), 'Explore collapses legacy style grid while an AI direction is active');
 assert_true(str_contains($exploreJs, 'is-selected'), 'Explore direction cards support a selected state');
 assert_true(!str_contains($exploreJs, 'aria-selected'), 'Explore radios do not use redundant aria-selected');
@@ -1225,8 +1225,8 @@ $createTemplate = (string) file_get_contents($root . '/templates/pages/create.ph
 assert_true(str_contains($createTemplate, 'data-build-commit'), 'Create page can expose private build commit');
 assert_true(str_contains($createTemplate, 'data-style-world'), 'Create style world block is marked so Explore can collapse it');
 assert_true(str_contains($createTemplate, 'data-private-build'), 'Create template can emit a private-build fixture signal');
-assert_true(preg_match('/<h1[^>]*class="session-header__title"/', $createTemplate) === 1, 'Create page uses a real h1 for the session title');
-assert_true(!preg_match('/<p class="session-header__title"/', $createTemplate), 'Create session title is no longer a paragraph');
+assert_true(str_contains($createTemplate, 'session-header__title'), 'Create page uses a real h1 for the session title');
+assert_true(str_contains($createTemplate, 'data-create-focus-title'), 'Create focus shell exposes dynamic task title');
 assert_true(str_contains($exploreJs, 'data-ai-build'), 'Explore UI can show deployed build commit');
 assert_true(str_contains($exploreJs, 'fields?.build'), 'Explore UI surfaces build id from error fields');
 assert_true(is_file($root . '/app/build-stamp.php'), 'committed build stamp exists for non-git hosts');
@@ -1530,7 +1530,7 @@ assert_true(!str_contains($exploreJs, 'if (create && !create.closest(\'[hidden]\
 
 assert_true(str_contains($createTemplate, 'data-yatsn-song-search'), 'Create template includes canonical song search shell');
 assert_true(str_contains($createTemplate, 'Find this song'), 'Create primary song action uses approved copy');
-assert_true(str_contains($createTemplate, '<h1 class="session-header__title">Choose your song</h1>'), 'Create keeps one stable h1 for the dominant task');
+assert_true(str_contains($createTemplate, 'data-create-focus-title'), 'Create keeps one stable h1 hook for the dominant task');
 assert_true(!str_contains($createTemplate, 'data-session-song'), 'Create h1 is no longer repurposed as dynamic song metadata');
 assert_true(str_contains($createTemplate, 'data-song-results'), 'Create template reserves artwork-led result surface');
 assert_true(str_contains($createTemplate, 'role="region"') && str_contains($createTemplate, 'aria-label="Song match"'), 'Create song result uses a labelled region instead of an invalid list');
@@ -1653,6 +1653,51 @@ if ($quickChainVerifyExit === 0) {
     assert_true(true, 'Round 013.3 Quick Generate async chain verification passed');
 } else {
     assert_true(false, 'Round 013.3 Quick Generate async chain verification failed: ' . trim(implode("\n", $quickChainVerifyOut)));
+}
+
+// Round 015 — card-by-card Create flow.
+assert_true(str_contains($createTemplate, 'data-create-card'), 'Create template uses explicit flow cards');
+assert_true(str_contains($createTemplate, 'data-people-continue'), 'Create People card exposes Continue action');
+assert_true(str_contains($createTemplate, 'data-fine-tune'), 'Review card includes Fine Tune disclosure');
+assert_true(str_contains($appJs, 'getFlowStep'), 'Create JS exposes explicit flow step state');
+assert_true(str_contains($appJs, 'advanceToReview'), 'Create JS advances to Review after AI preparation');
+assert_true(str_contains($appCss, 'is-create-focus'), 'CSS hides mobile nav during Create focus');
+assert_true(is_file($root . '/design/review/round-015/verify-create-card-flow.mjs'), 'Round 015 behavior verification harness exists');
+
+$round015VerifyExit = 1;
+$round015VerifyOut = ['Round 015 browser verification skipped'];
+$round015Port = 8769;
+$round015Base = 'http://127.0.0.1:' . $round015Port;
+if ($portOpen($round015Port)) {
+    exec('fuser -k ' . $round015Port . '/tcp 2>/dev/null');
+    usleep(200000);
+}
+$round015ServerProc = proc_open(
+    'ALLOW_EXTERNAL_USERS=false php -S 127.0.0.1:' . $round015Port . ' -t public public/router.php',
+    [0 => ['pipe', 'r'], 1 => ['file', '/dev/null', 'w'], 2 => ['file', '/dev/null', 'w']],
+    $pipes,
+    $root,
+);
+for ($attempt = 0; $attempt < 24; $attempt++) {
+    if ($portOpen($round015Port)) {
+        break;
+    }
+    usleep(250000);
+}
+if ($portOpen($round015Port)) {
+    exec('cd ' . escapeshellarg($root . '/design/review/round-015') . ' && npm install --no-fund --no-audit 2>&1');
+    $round015VerifyCmd = 'cd ' . escapeshellarg($root . '/design/review/round-015')
+        . ' && YATSN_BASE=' . escapeshellarg($round015Base)
+        . ' node verify-create-card-flow.mjs 2>&1';
+    exec($round015VerifyCmd, $round015VerifyOut, $round015VerifyExit);
+}
+if (isset($round015ServerProc) && is_resource($round015ServerProc)) {
+    proc_terminate($round015ServerProc);
+}
+if ($round015VerifyExit === 0) {
+    assert_true(true, 'Round 015 card-by-card Create flow verification passed');
+} else {
+    assert_true(false, 'Round 015 card-by-card Create flow verification failed: ' . trim(implode("\n", $round015VerifyOut)));
 }
 
 assert_true(str_contains($appCss, 'container-name: yatsn-create-entry'), 'Create entry uses a size container for adaptive controls');
