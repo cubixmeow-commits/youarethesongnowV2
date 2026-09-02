@@ -30,13 +30,18 @@
       <span class="create-wizard__segment" data-progress-segment="review"></span>
     </div>
 
-    <div class="create-wizard__scroll" data-create-scroll>
-      <p class="create-wizard__eyebrow" data-create-eyebrow>01 · SONG</p>
-      <h1 class="create-wizard__title" data-create-focus-title>What are we listening to?</h1>
-      <p class="create-wizard__lead" data-create-focus-lead>Start with the song. We’ll create its visual DNA.</p>
+    <div class="create-wizard__main" data-create-main>
+      <div class="create-wizard__scroll" data-create-scroll>
+        <div class="create-wizard__stage">
+          <div class="create-wizard__intro">
+            <p class="create-wizard__eyebrow" data-create-eyebrow>01 · SONG</p>
+            <h1 class="create-wizard__title" data-create-focus-title>What are we listening to?</h1>
+            <p class="create-wizard__lead" data-create-focus-lead>Start with the song. We’ll create its visual DNA.</p>
+          </div>
 
-      <div class="create-wizard__panel">
-        <div class="create__cards" data-create-cards>
+          <div class="create-wizard__task">
+            <div class="create-wizard__panel">
+              <div class="create__cards" data-create-cards>
           <article class="create-card create-card--song" data-create-card="song" id="create-card-song">
             <section class="yatsn-create-entry" id="the-song" aria-labelledby="song-heading">
               <h2 id="song-heading" class="visually-hidden">Song</h2>
@@ -201,10 +206,12 @@
             </section>
           </article>
         </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <footer class="create-wizard__actions" data-create-sticky-actions>
+      <footer class="create-wizard__actions" data-create-sticky-actions>
       <div class="create-wizard__actions-primary" data-create-sticky-primary-wrap>
         <button class="btn btn--primary btn--wizard-primary" type="button" data-create-sticky-primary data-label-generate="Generate image">Find this song</button>
       </div>
@@ -213,7 +220,8 @@
         <button class="btn btn--secondary" type="button" data-people-continue-without>Continue without people</button>
       </div>
       <p class="create-wizard__footnote quiet" data-create-footnote>Recent creations live in Gallery—not inside this flow.</p>
-    </footer>
+      </footer>
+    </div>
 
     <p class="visually-hidden" data-create-announcer role="status" aria-live="polite"></p>
   </div>

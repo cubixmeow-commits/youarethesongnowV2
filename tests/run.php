@@ -1472,6 +1472,13 @@ assert_true(str_contains($appJs, 'restoreGenerateActionAfterFailure'), 'Create r
 assert_true(str_contains($appJs, 'scheduleGenerationReview'), 'Create auto-validates readiness when direction inputs change');
 assert_true(str_contains($appJs, 'YatsnCreateFixtures'), 'private Create fixtures exist for mobile generate evidence');
 assert_true(str_contains($appCss, '.create-wizard__actions'), 'mobile wizard sticky action region styles exist');
+assert_true(str_contains($appCss, 'max-width: 1100px'), 'desktop wizard uses premium workspace width');
+assert_true(str_contains($appCss, '.create-wizard__intro'), 'desktop wizard styles introduction column');
+assert_true(str_contains($appCss, '.create-wizard__task'), 'desktop wizard styles task column');
+assert_true(!str_contains($appCss, 'body.is-create-focus .app-topbar {
+    display: block !important'), 'desktop create flow does not restore site topbar');
+assert_true(!preg_match('/\.create-wizard[\s\S]{0,80}max-width:\s*28rem/s', $appCss), 'desktop wizard no longer uses 28rem mobile column');
+assert_true(str_contains($appCss, 'color: #f4faff'), 'wizard primary CTA uses light text');
 assert_true(str_contains($appCss, '.create--wizard'), 'Create uses compact wizard shell');
 assert_true(str_contains($appCss, '100dvh'), 'Create wizard uses dynamic viewport height');
 assert_true(str_contains($appCss, '.btn--wizard-primary'), 'wizard primary CTA gradient styles exist');
@@ -1541,6 +1548,9 @@ assert_true(!str_contains($exploreJs, 'if (create && !create.closest(\'[hidden]\
 assert_true(str_contains($createTemplate, 'data-yatsn-song-search'), 'Create template includes canonical song search shell');
 assert_true(str_contains($createTemplate, 'Find this song'), 'Create primary song action uses approved copy');
 assert_true(str_contains($createTemplate, 'data-create-wizard'), 'Create uses single wizard shell');
+assert_true(str_contains($createTemplate, 'create-wizard__main'), 'Create wizard uses main workspace shell');
+assert_true(str_contains($createTemplate, 'create-wizard__intro'), 'Create wizard exposes introduction column');
+assert_true(str_contains($createTemplate, 'create-wizard__task'), 'Create wizard exposes task column');
 assert_true(str_contains($createTemplate, 'data-create-focus-title'), 'Create keeps one stable h1 hook for the dominant task');
 assert_true(!str_contains($createTemplate, 'data-session-song'), 'Create h1 is no longer repurposed as dynamic song metadata');
 assert_true(str_contains($createTemplate, 'data-song-results'), 'Create template reserves artwork-led result surface');
@@ -1867,6 +1877,44 @@ if ($round016VerifyExit === 0) {
     assert_true(true, 'Round 016 compact mobile wizard verification passed');
 } else {
     assert_true(false, 'Round 016 compact mobile wizard verification failed: ' . trim(implode("\n", $round016VerifyOut)));
+}
+
+assert_true(is_file($root . '/design/review/round-016/verify-round-016-2-desktop-workspace.mjs'), 'Round 016.2 desktop workspace verification harness exists');
+
+$round0162VerifyExit = 1;
+$round0162VerifyOut = ['Round 016.2 desktop workspace verification skipped'];
+$round0162Port = 8781;
+$round0162Base = 'http://127.0.0.1:' . $round0162Port;
+if ($portOpen($round0162Port)) {
+    exec('fuser -k ' . $round0162Port . '/tcp 2>/dev/null');
+    usleep(200000);
+}
+$round0162ServerProc = proc_open(
+    'ALLOW_EXTERNAL_USERS=false php -S 127.0.0.1:' . $round0162Port . ' -t public public/router.php',
+    [0 => ['pipe', 'r'], 1 => ['file', '/dev/null', 'w'], 2 => ['file', '/dev/null', 'w']],
+    $pipes,
+    $root,
+);
+for ($attempt = 0; $attempt < 24; $attempt++) {
+    if ($portOpen($round0162Port)) {
+        break;
+    }
+    usleep(250000);
+}
+if ($portOpen($round0162Port)) {
+    exec('cd ' . escapeshellarg($root . '/design/review/round-016') . ' && npm install --no-fund --no-audit 2>&1');
+    $round0162VerifyCmd = 'cd ' . escapeshellarg($root . '/design/review/round-016')
+        . ' && YATSN_BASE=' . escapeshellarg($round0162Base)
+        . ' node verify-round-016-2-desktop-workspace.mjs 2>&1';
+    exec($round0162VerifyCmd, $round0162VerifyOut, $round0162VerifyExit);
+}
+if (isset($round0162ServerProc) && is_resource($round0162ServerProc)) {
+    proc_terminate($round0162ServerProc);
+}
+if ($round0162VerifyExit === 0) {
+    assert_true(true, 'Round 016.2 premium desktop workspace verification passed');
+} else {
+    assert_true(false, 'Round 016.2 premium desktop workspace verification failed: ' . trim(implode("\n", $round0162VerifyOut)));
 }
 
 assert_true(str_contains($appCss, 'container-name: yatsn-create-entry'), 'Create entry uses a size container for adaptive controls');

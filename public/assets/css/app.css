@@ -3514,7 +3514,7 @@ button.yatsn-song-result:focus-visible {
 }
 
 /* =============================================================================
-   Round 016 — compact mobile creation wizard
+   Round 016 / 016.2 — focused creation wizard (mobile + premium desktop)
    ============================================================================= */
 
 body.is-create-focus .app-topbar,
@@ -3632,6 +3632,13 @@ body.is-create-focus .app-main {
   background: color-mix(in oklab, var(--color-accent-sapphire) 55%, transparent);
 }
 
+.create-wizard__main {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
 .create-wizard__scroll {
   flex: 1 1 auto;
   min-height: 0;
@@ -3645,6 +3652,24 @@ body.is-create-focus .app-main {
   -webkit-overflow-scrolling: touch;
 }
 
+.create-wizard__stage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-height: 0;
+}
+
+.create-wizard__intro {
+  flex-shrink: 0;
+}
+
+.create-wizard__task {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
 .create-wizard__eyebrow {
   margin: 0 0 var(--space-2);
   font-size: 0.68rem;
@@ -3655,23 +3680,24 @@ body.is-create-focus .app-main {
 }
 
 .create-wizard__title {
-  margin: 0 0 var(--space-1);
+  margin: 0 0 var(--space-2);
   font-family: var(--font-serif);
   font-size: clamp(1.45rem, 4.8vw, 1.9rem);
-  line-height: 1.1;
+  line-height: 1.08;
   font-weight: 400;
+  letter-spacing: -0.01em;
 }
 
 .create-wizard__lead {
-  margin: 0 0 var(--space-3);
-  color: var(--color-text-secondary);
+  margin: 0;
+  color: color-mix(in oklab, var(--color-text-secondary) 92%, white);
   font-size: 0.92rem;
-  line-height: 1.4;
+  line-height: 1.45;
 }
 
 .create-wizard__panel {
   background: color-mix(in oklab, var(--color-surface-elevated) 72%, #0a1424);
-  border: 1px solid color-mix(in oklab, var(--color-accent-sapphire) 22%, var(--color-border-hairline));
+  border: 1px solid color-mix(in oklab, var(--color-accent-sapphire) 24%, var(--color-border-hairline));
   border-radius: var(--radius-lg);
   padding: var(--space-3);
 }
@@ -3732,8 +3758,8 @@ body.is-create-focus .app-main {
   border: 0;
   border-radius: 999px;
   font-weight: 600;
-  color: #081018;
-  background: linear-gradient(180deg, color-mix(in oklab, #8fd4ff 92%, white), color-mix(in oklab, var(--color-accent-sapphire) 88%, #4aa8ff));
+  color: #f4faff;
+  background: linear-gradient(180deg, color-mix(in oklab, #9ad8ff 94%, white), color-mix(in oklab, var(--color-accent-sapphire) 86%, #3d96eb));
   box-shadow: 0 10px 28px color-mix(in oklab, var(--color-accent-sapphire) 28%, transparent);
 }
 
@@ -3796,7 +3822,7 @@ body.is-create-focus .app-main {
   border-color: color-mix(in oklab, var(--color-accent-sapphire) 18%, var(--color-border));
 }
 
-.yatsn-song-result {
+.create-wizard .yatsn-song-result {
   display: grid;
   grid-template-columns: 56px 1fr auto;
   gap: var(--space-3);
@@ -3810,40 +3836,45 @@ body.is-create-focus .app-main {
   text-align: left;
 }
 
-.yatsn-song-result.is-selected {
+.create-wizard .yatsn-song-result.is-selected {
   border-color: color-mix(in oklab, var(--color-accent-sapphire) 55%, transparent);
   box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--color-accent-sapphire) 35%, transparent);
 }
 
-.yatsn-song-result__affordance {
-  width: 28px;
-  height: 28px;
+.create-wizard .yatsn-song-result__affordance {
+  width: 26px;
+  height: 26px;
   border-radius: 999px;
-  border: 1px solid color-mix(in oklab, var(--color-accent-sapphire) 35%, transparent);
+  border: 2px solid color-mix(in oklab, var(--color-accent-sapphire) 35%, transparent);
   position: relative;
+  flex-shrink: 0;
 }
 
-.yatsn-song-result.is-selected .yatsn-song-result__affordance {
-  background: color-mix(in oklab, var(--color-accent-sapphire) 18%, transparent);
+.create-wizard .yatsn-song-result.is-selected .yatsn-song-result__affordance {
+  background: var(--color-accent-sapphire);
   border-color: var(--color-accent-sapphire);
 }
 
-.yatsn-song-result.is-selected .yatsn-song-result__affordance::after {
+.create-wizard .yatsn-song-result.is-selected .yatsn-song-result__affordance::after {
   content: "";
   position: absolute;
-  inset: 6px;
-  border-bottom: 2px solid var(--color-accent-sapphire);
-  border-right: 2px solid var(--color-accent-sapphire);
-  transform: rotate(45deg) scale(0.9);
+  left: 50%;
+  top: 46%;
+  width: 5px;
+  height: 9px;
+  border: none;
+  border-right: 2px solid #f4faff;
+  border-bottom: 2px solid #f4faff;
+  transform: translate(-50%, -50%) rotate(45deg);
 }
 
-.yatsn-song-result__meta {
+.create-wizard .yatsn-song-result__meta {
   display: block;
   color: var(--color-text-secondary);
   font-size: var(--type-meta);
 }
 
-.yatsn-song-result__qualifier {
+.create-wizard .yatsn-song-result__qualifier {
   display: none;
 }
 
@@ -3906,25 +3937,161 @@ body.is-create-generating .create-wizard__scroll {
 }
 
 @media (min-width: 900px) {
-  body.is-create-focus .app-topbar {
-    display: block !important;
-  }
-
-  .create--wizard {
-    height: auto;
-    max-height: none;
-  }
-
-  .create-wizard {
-    max-height: none;
-    max-width: 28rem;
-    margin-inline: auto;
+  body.is-create-focus {
+    overflow: hidden;
   }
 
   .app-main:has(.create--wizard) {
     display: flex;
     justify-content: center;
-    padding: var(--space-6) var(--space-4);
+    align-items: stretch;
+    min-height: 100dvh;
+    padding: var(--space-4) var(--space-5);
+  }
+
+  .create--wizard {
+    width: 100%;
+    height: 100dvh;
+    max-height: 100dvh;
+  }
+
+  .create-wizard {
+    width: min(100%, 1100px);
+    max-width: 1100px;
+    margin-inline: auto;
+    height: 100%;
+    max-height: 100dvh;
+    border: 1px solid color-mix(in oklab, var(--color-border-hairline) 65%, transparent);
+    border-radius: calc(var(--radius-lg) + 4px);
+    box-shadow: 0 24px 80px color-mix(in oklab, black 32%, transparent);
+  }
+
+  .create-wizard__topbar,
+  .create-wizard__progress {
+    padding-inline: var(--space-6);
+  }
+
+  .create-wizard__main {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 0.35fr) minmax(520px, 0.65fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: var(--space-5) var(--space-7);
+    align-items: center;
+    padding: 0 var(--space-6) var(--space-5);
+  }
+
+  .create-wizard__scroll {
+    display: contents;
+    padding: 0;
+  }
+
+  .create-wizard__stage {
+    display: contents;
+  }
+
+  .create-wizard__intro {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: center;
+    padding-right: var(--space-2);
+  }
+
+  .create-wizard__task {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: start;
+    width: 100%;
+    max-width: 640px;
+    justify-self: stretch;
+  }
+
+  .create-wizard__title {
+    font-size: clamp(2rem, 2.4vw, 2.35rem);
+    margin-bottom: var(--space-3);
+  }
+
+  .create-wizard__lead {
+    font-size: 1.02rem;
+    max-width: 22rem;
+    line-height: 1.5;
+  }
+
+  .create-wizard__panel {
+    padding: var(--space-4);
+  }
+
+  .create-wizard__actions {
+    grid-column: 2;
+    grid-row: 2;
+    align-self: start;
+    width: 100%;
+    max-width: 640px;
+    justify-self: stretch;
+    margin-top: 0;
+    padding: 0;
+    border-top: 0;
+    background: none;
+  }
+
+  .create-wizard__footnote {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    margin-top: calc(-1 * var(--space-2));
+    text-align: center;
+  }
+
+  .portrait-tray--wizard {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+    gap: var(--space-3);
+    overflow: visible;
+    flex-wrap: wrap;
+    padding-bottom: 0;
+  }
+
+  .portrait-tray--wizard .portrait-chip {
+    flex: none;
+    width: auto;
+  }
+
+  .create-wizard .yatsn-song-search__fields {
+    gap: var(--space-4);
+  }
+}
+
+@media (min-width: 1100px) {
+  .create-wizard__main {
+    gap: var(--space-6) var(--space-8);
+    padding-inline: var(--space-7);
+  }
+
+  .create-wizard__topbar,
+  .create-wizard__progress {
+    padding-inline: var(--space-7);
+  }
+}
+
+@media (min-width: 900px) and (max-width: 1099px) {
+  .create-wizard {
+    width: min(100%, 980px);
+    max-width: 980px;
+  }
+
+  .create-wizard__main {
+    grid-template-columns: minmax(0, 0.38fr) minmax(480px, 0.62fr);
+    gap: var(--space-4) var(--space-5);
+    padding-inline: var(--space-4);
+  }
+
+  .create-wizard__task,
+  .create-wizard__actions {
+    max-width: 580px;
+  }
+
+  .create-wizard__title {
+    font-size: clamp(1.75rem, 2.2vw, 2rem);
   }
 }
 
