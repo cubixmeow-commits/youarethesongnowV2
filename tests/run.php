@@ -1700,6 +1700,47 @@ if ($round015VerifyExit === 0) {
     assert_true(false, 'Round 015 card-by-card Create flow verification failed: ' . trim(implode("\n", $round015VerifyOut)));
 }
 
+assert_true(str_contains($songSearchJs, 'formWired'), 'song search guards duplicate form wiring');
+assert_true(str_contains($songSearchJs, 'wireForm();'), 'song search wires the form at module load');
+assert_true(str_contains($songSearchJs, 'Search is still loading'), 'song search surfaces missing handler instead of silent failure');
+assert_true(is_file($root . '/design/review/round-015/verify-song-search-flow.mjs'), 'Song search browser verification harness exists');
+
+$songSearchVerifyExit = 1;
+$songSearchVerifyOut = ['Song search browser verification skipped'];
+$songSearchPort = 8772;
+$songSearchBase = 'http://127.0.0.1:' . $songSearchPort;
+if ($portOpen($songSearchPort)) {
+    exec('fuser -k ' . $songSearchPort . '/tcp 2>/dev/null');
+    usleep(200000);
+}
+$songSearchServerProc = proc_open(
+    'ALLOW_EXTERNAL_USERS=false php -S 127.0.0.1:' . $songSearchPort . ' -t public public/router.php',
+    [0 => ['pipe', 'r'], 1 => ['file', '/dev/null', 'w'], 2 => ['file', '/dev/null', 'w']],
+    $pipes,
+    $root,
+);
+for ($attempt = 0; $attempt < 24; $attempt++) {
+    if ($portOpen($songSearchPort)) {
+        break;
+    }
+    usleep(250000);
+}
+if ($portOpen($songSearchPort)) {
+    exec('cd ' . escapeshellarg($root . '/design/review/round-015') . ' && npm install --no-fund --no-audit 2>&1');
+    $songSearchVerifyCmd = 'cd ' . escapeshellarg($root . '/design/review/round-015')
+        . ' && YATSN_BASE=' . escapeshellarg($songSearchBase)
+        . ' node verify-song-search-flow.mjs 2>&1';
+    exec($songSearchVerifyCmd, $songSearchVerifyOut, $songSearchVerifyExit);
+}
+if (isset($songSearchServerProc) && is_resource($songSearchServerProc)) {
+    proc_terminate($songSearchServerProc);
+}
+if ($songSearchVerifyExit === 0) {
+    assert_true(true, 'Song search card flow verification passed');
+} else {
+    assert_true(false, 'Song search card flow verification failed: ' . trim(implode("\n", $songSearchVerifyOut)));
+}
+
 assert_true(str_contains($appCss, 'container-name: yatsn-create-entry'), 'Create entry uses a size container for adaptive controls');
 assert_true(str_contains($appCss, '.yatsn-song-result__title'), 'song result title hierarchy styles exist');
 assert_true(str_contains($appCss, '[data-song-result-loading][hidden]'), 'hidden song-search state rows are not overridden by grid display');

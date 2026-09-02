@@ -6,6 +6,7 @@
   let inFlight = false;
   let pendingLookup = null;
   let confirmedLookup = null;
+  let formWired = false;
 
   function privateBuildAllowsFixtures() {
     return document.querySelector('[data-create]')?.dataset.privateBuild === '1';
@@ -261,22 +262,38 @@
       setState('typing');
       return;
     }
+    if (!handlers.onFind) {
+      setStatus('Search is still loading. Wait a moment and try again.', 'error');
+      setState('idle');
+      return;
+    }
     inFlight = true;
     confirmedLookup = null;
     showLoading();
     try {
-      const lookup = await handlers.onFind?.({ artist, title });
+      const lookup = await handlers.onFind({ artist, title });
+      if (!lookup) {
+        presentError('Could not find your song. Try again.');
+        return;
+      }
       presentLookup(lookup);
     } catch (error) {
       presentError(error?.message || 'Could not find your song. Try again.');
     } finally {
       inFlight = false;
+      setFormDisabled(false);
+      const submit = $('.yatsn-song-search__submit');
+      if (submit) submit.classList.remove('is-loading');
+      panel.removeAttribute('aria-busy');
     }
   }
 
   function wireForm() {
+    if (formWired) return;
     const form = $('#song-form');
-    form?.addEventListener('submit', (event) => {
+    if (!form) return;
+    formWired = true;
+    form.addEventListener('submit', (event) => {
       event.preventDefault();
       submitFind();
     });
@@ -327,10 +344,11 @@
     `;
   }
 
+  wireForm();
+
   window.YatsnSongSearch = {
     init(nextHandlers = {}) {
       handlers = nextHandlers;
-      wireForm();
       setState('idle');
       setStatus('', 'info', { hidden: true });
     },

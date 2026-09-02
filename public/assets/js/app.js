@@ -772,6 +772,7 @@
     const root = $('[data-create]');
     if (!root) return;
     state.csrf = root.dataset.csrf;
+    initSongSearch();
 
     const me = await api('/api/v1/me');
     state.csrf = me.data.csrfToken || state.csrf;
@@ -806,7 +807,6 @@
     renderStyles();
     renderChoices();
     renderPortraits();
-    initSongSearch();
     if (state.songLookup && ['found', 'fallbackFound'].includes(state.songLookup.state)) {
       state.songConfirmed = true;
       window.YatsnSongSearch?.restoreConfirmed?.(state.songLookup);
