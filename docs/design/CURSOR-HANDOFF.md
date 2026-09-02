@@ -1,3 +1,74 @@
+# NEXT DIRECTIVE — Round 013.3 Fix Quick Generate Async Dead-End
+
+**Date:** 2026-09-02  
+**Working branch:** `main`  
+**Priority:** Blocking confirmed runtime defect  
+**Scope:** Repair the real Generate-for-me async transition and test the actual click path
+
+## Exact root cause confirmed by GPT review
+
+In `public/assets/js/explore.js`:
+
+1. `loadDirections(true)` calls `setBusy(true)`, which sets `exploreInFlight = true`.
+2. The successful Quick Generate branch calls `applyDirection(..., { autoContinue: true })`.
+3. `applyDirection()` invokes `continueWithDirection(direction)`.
+4. The first line of `continueWithDirection()` is `if (exploreInFlight) return;`.
+5. Therefore preparation/review never runs.
+6. `finally` later calls `setBusy(false)`, but nothing retries `continueWithDirection()`.
+
+The visible result exactly matches the owner’s live screenshot: status remains **“Using ‘Static Revolt’. Preparing your creation…”** and **Generate image** never appears.
+
+## Required repair
+
+- Restructure the Quick Generate success path so direction loading finishes/unlocks before the preparation transition executes.
+- Do not “fix” this by broadly removing duplicate-action protection. Preserve an explicit state/lock model for direction loading, preparation, and generation submission.
+- Await the real preparation operation. Do not fire it through `void`, fixed timers, synthetic clicks, or an unobserved promise.
+- On success:
+  - selected AI direction and style are applied;
+  - draft synchronization finishes;
+  - summary review returns ready;
+  - prepared-direction state is set to `ai-quick`;
+  - status changes to ready;
+  - final **Generate image** action becomes visible and enabled.
+- On preparation/review failure:
+  - status shows the actual recoverable error;
+  - Generate for me / retry remains usable;
+  - no final enabled action is shown;
+  - user selections remain intact.
+- Explore options and manual paths must continue working.
+- Keep Round 013.2 cache-busted asset URLs.
+
+## Real behavior verification — fixtures alone are insufficient
+
+Add a browser test that exercises the actual production event chain:
+
+1. Load authenticated `/create`.
+2. Establish a valid confirmed song, portrait, and Song DNA state.
+3. Intercept/mock only the external/API responses as necessary.
+4. Click the actual `[data-ai-quick]` button.
+5. Allow the real `loadDirections(true) → apply direction → prepare/review` code to execute.
+6. Assert the explore-directions request occurs exactly once.
+7. Assert the summary/review request occurs exactly once and only after direction loading unlocks.
+8. Assert the final bar changes from computed `display:none` to visible.
+9. Assert **Generate image** is enabled.
+10. Assert status no longer contains “Preparing your creation”.
+11. Click Generate image and assert exactly one generation request.
+12. Repeat failure response: confirm recoverable error and retry path.
+13. Verify Explore options still renders three directions without premature final bar.
+
+Do not use `YatsnCreateFixtures.showPreparedReady()`, direct `setDirectionPrepared()`, or equivalent state injection as proof of this bug. Those may remain for visual captures, but acceptance requires the real click/async chain.
+
+Capture sanitized 390px evidence under `design/review/round-013-3/` for:
+
+- before Generate for me;
+- preparation pending;
+- preparation completed with Generate image visible;
+- recoverable preparation failure.
+
+Run the full suite and syntax checks. Commit implementation, behavior test, evidence, and handoff update to `main`, then stop for GPT/owner review. Do not deploy or resume broader design work.
+
+---
+
 # NEXT DIRECTIVE — Round 013.2 complete, awaiting GPT review
 
 **Date:** 2026-09-02  
