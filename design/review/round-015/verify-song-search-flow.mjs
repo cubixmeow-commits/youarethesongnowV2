@@ -123,7 +123,7 @@ async function gotoCreate() {
 async function readSongUi() {
   return page.evaluate(() => {
     const form = document.querySelector('#song-form');
-    const submit = document.querySelector('.yatsn-song-search__submit');
+    const submit = document.querySelector('[data-create-sticky-primary]');
     const panel = document.querySelector('[data-yatsn-song-search]');
     return {
       flowStep: window.YatsnCreate?.getFlowStep?.() || '',
@@ -150,7 +150,7 @@ assert(ui.hasYatsnSongSearch && ui.hasYatsnCreate, 'Create and song-search modul
 assert(ui.flowStep === 'song', 'wizard starts on Song card');
 
 // Missing fields — click
-await page.click('.yatsn-song-search__submit');
+await page.click('[data-create-sticky-primary]');
 ui = await readSongUi();
 assert(ui.status.includes('Enter both'), 'click with missing fields shows validation error');
 assert(lookupCalls === 0, 'missing fields do not call song-lookups API');
@@ -166,7 +166,7 @@ lookupMockMode = 'found';
 await page.type('#song-form [name=artist]', 'Sabaton');
 await page.type('#song-form [name=title]', 'Seven Pillars of Wisdom');
 lookupCalls = 0;
-await page.click('.yatsn-song-search__submit');
+await page.click('[data-create-sticky-primary]');
 await page.waitForFunction(() => {
   const panel = document.querySelector('[data-yatsn-song-search]');
   return panel?.dataset.yatsnSongState === 'result' || panel?.dataset.yatsnSongState === 'loading';
@@ -181,11 +181,15 @@ assert(!ui.submitLoading && !ui.submitDisabled, 'submit re-enabled after success
 lookupMockMode = 'found';
 lookupCalls = 0;
 await page.evaluate(() => {
-  document.querySelector('#song-form [name=artist]').value = 'Sabaton';
-  document.querySelector('#song-form [name=title]').value = 'Double Tap Test';
+  const artist = document.querySelector('#song-form [name=artist]');
+  const title = document.querySelector('#song-form [name=title]');
+  artist.value = 'Sabaton';
+  title.value = 'Double Tap Test';
+  artist.dispatchEvent(new Event('input', { bubbles: true }));
+  title.dispatchEvent(new Event('input', { bubbles: true }));
 });
 await page.evaluate(() => {
-  const btn = document.querySelector('.yatsn-song-search__submit');
+  const btn = document.querySelector('[data-create-sticky-primary]');
   btn?.click();
   btn?.click();
 });
@@ -197,10 +201,10 @@ await gotoCreate();
 lookupMockMode = 'fail';
 await page.type('#song-form [name=artist]', 'Sabaton');
 await page.type('#song-form [name=title]', 'Server Fail');
-await page.click('.yatsn-song-search__submit');
+await page.click('[data-create-sticky-primary]');
 await page.waitForFunction(() => {
   const status = document.querySelector('[data-song-status]');
-  const submit = document.querySelector('.yatsn-song-search__submit');
+  const submit = document.querySelector('[data-create-sticky-primary]');
   return status && !status.hidden && status.textContent.length > 0
     && submit && !submit.classList.contains('is-loading');
 }, { timeout: 10000 });
@@ -213,7 +217,7 @@ await gotoCreate();
 lookupMockMode = 'notFound';
 await page.type('#song-form [name=artist]', 'Unknown');
 await page.type('#song-form [name=title]', 'Missing Track');
-await page.click('.yatsn-song-search__submit');
+await page.click('[data-create-sticky-primary]');
 await page.waitForFunction(() => document.querySelector('[data-song-retry-wrap]') && !document.querySelector('[data-song-retry-wrap]').hidden, { timeout: 10000 });
 ui = await readSongUi();
 assert(ui.status.includes('could not find'), 'not-found shows actionable message');
@@ -223,9 +227,10 @@ await gotoCreate();
 lookupMockMode = 'found';
 await page.type('#song-form [name=artist]', 'Sabaton');
 await page.type('#song-form [name=title]', 'Seven Pillars of Wisdom');
-await page.click('.yatsn-song-search__submit');
+await page.click('[data-create-sticky-primary]');
 await page.waitForSelector('[data-song-results] [data-song-result]', { timeout: 15000 });
-await page.evaluate(() => document.querySelector('[data-song-results] [data-song-result]')?.click());
+await page.waitForFunction(() => document.querySelector('[data-create-sticky-primary]')?.textContent === 'Use this song', { timeout: 10000 });
+await page.click('[data-create-sticky-primary]');
 await page.waitForFunction(() => window.YatsnSongSearch?.isConfirmed?.(), { timeout: 10000 });
 await page.waitForFunction(() => window.YatsnCreate?.getFlowStep?.() === 'people', { timeout: 15000 });
 ui = await readSongUi();

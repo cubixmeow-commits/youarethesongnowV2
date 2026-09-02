@@ -1235,7 +1235,7 @@ $createTemplate = (string) file_get_contents($root . '/templates/pages/create.ph
 assert_true(str_contains($createTemplate, 'data-build-commit'), 'Create page can expose private build commit');
 assert_true(str_contains($createTemplate, 'data-style-world'), 'Create style world block is marked so Explore can collapse it');
 assert_true(str_contains($createTemplate, 'data-private-build'), 'Create template can emit a private-build fixture signal');
-assert_true(str_contains($createTemplate, 'session-header__title'), 'Create page uses a real h1 for the session title');
+assert_true(str_contains($createTemplate, 'create-wizard__title'), 'Create page uses a real h1 for the session title');
 assert_true(str_contains($createTemplate, 'data-create-focus-title'), 'Create focus shell exposes dynamic task title');
 assert_true(str_contains($exploreJs, 'data-ai-build'), 'Explore UI can show deployed build commit');
 assert_true(str_contains($exploreJs, 'fields?.build'), 'Explore UI surfaces build id from error fields');
@@ -1460,9 +1460,9 @@ $appJs = (string) file_get_contents($root . '/public/assets/js/app.js');
 assert_true(str_contains($appJs, 'YatsnSongSearch.init'), 'Create wires the song search module');
 assert_true(str_contains($appJs, "body: { artist, title }"), 'Create still posts artist and title to song-lookups');
 assert_true(str_contains($appJs, 'songConfirmed'), 'Create requires explicit song confirmation before People');
-assert_true(str_contains($createTemplate, 'data-generate-bar'), 'Create overview exposes a dedicated generate action bar');
-assert_true(str_contains($createTemplate, 'data-generate-hint'), 'Create generate bar includes a missing-requirement hint');
-assert_true(str_contains($createTemplate, 'Generate image'), 'Create primary action uses approved Generate image label');
+assert_true(str_contains($createTemplate, 'data-create-sticky-primary'), 'Create wizard exposes sticky primary action');
+assert_true(str_contains($createTemplate, 'data-generate-hint'), 'Create review includes a missing-requirement hint');
+assert_true(str_contains($createTemplate, 'data-label-generate="Generate image"'), 'Create primary action uses approved Generate image label');
 assert_true(!str_contains($createTemplate, 'data-summary-actions'), 'legacy hidden summary-actions container removed');
 assert_true(str_contains($appJs, 'updateGenerateAction'), 'Create keeps generate action visibility in one updater');
 assert_true(str_contains($appJs, 'getReadinessIssues'), 'Create derives missing-requirement reasons client-side');
@@ -1471,10 +1471,10 @@ assert_true(str_contains($appJs, 'generationSubmitLock'), 'Create blocks duplica
 assert_true(str_contains($appJs, 'restoreGenerateActionAfterFailure'), 'Create restores actionable generate state after recoverable failure');
 assert_true(str_contains($appJs, 'scheduleGenerationReview'), 'Create auto-validates readiness when direction inputs change');
 assert_true(str_contains($appJs, 'YatsnCreateFixtures'), 'private Create fixtures exist for mobile generate evidence');
-assert_true(str_contains($appCss, '.create__generate-bar'), 'mobile generate bar styles exist');
-assert_true(str_contains($appCss, '.create.has-generate-bar'), 'Create page reserves space above bottom navigation for generate bar');
-assert_true(str_contains($appCss, 'bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom))'), 'generate bar sits above tab bar and safe area');
-assert_true(str_contains($appCss, '.create__generate-bar[hidden]'), 'hidden generate bar cannot be overridden by grid display');
+assert_true(str_contains($appCss, '.create-wizard__actions'), 'mobile wizard sticky action region styles exist');
+assert_true(str_contains($appCss, '.create--wizard'), 'Create uses compact wizard shell');
+assert_true(str_contains($appCss, '100dvh'), 'Create wizard uses dynamic viewport height');
+assert_true(str_contains($appCss, '.btn--wizard-primary'), 'wizard primary CTA gradient styles exist');
 assert_true(str_contains($appJs, 'directionPrepared'), 'Create gates final action on explicit prepared-direction state');
 assert_true(str_contains($appJs, 'shouldShowGenerateBar'), 'Create centralizes generate bar visibility');
 assert_true(str_contains($appJs, 'setDirectionPrepared'), 'Create exposes prepared-direction setter for Explore bridge');
@@ -1540,6 +1540,7 @@ assert_true(!str_contains($exploreJs, 'if (create && !create.closest(\'[hidden]\
 
 assert_true(str_contains($createTemplate, 'data-yatsn-song-search'), 'Create template includes canonical song search shell');
 assert_true(str_contains($createTemplate, 'Find this song'), 'Create primary song action uses approved copy');
+assert_true(str_contains($createTemplate, 'data-create-wizard'), 'Create uses single wizard shell');
 assert_true(str_contains($createTemplate, 'data-create-focus-title'), 'Create keeps one stable h1 hook for the dominant task');
 assert_true(!str_contains($createTemplate, 'data-session-song'), 'Create h1 is no longer repurposed as dynamic song metadata');
 assert_true(str_contains($createTemplate, 'data-song-results'), 'Create template reserves artwork-led result surface');
@@ -1790,6 +1791,44 @@ if ($peopleCardVerifyExit === 0) {
     assert_true(true, 'People card flow verification passed');
 } else {
     assert_true(false, 'People card flow verification failed: ' . trim(implode("\n", $peopleCardVerifyOut)));
+}
+
+assert_true(is_file($root . '/design/review/round-015/verify-round-016-mobile-wizard-flow.mjs'), 'Round 016 mobile wizard verification harness exists');
+
+$round016VerifyExit = 1;
+$round016VerifyOut = ['Round 016 mobile wizard verification skipped'];
+$round016Port = 8780;
+$round016Base = 'http://127.0.0.1:' . $round016Port;
+if ($portOpen($round016Port)) {
+    exec('fuser -k ' . $round016Port . '/tcp 2>/dev/null');
+    usleep(200000);
+}
+$round016ServerProc = proc_open(
+    'ALLOW_EXTERNAL_USERS=false php -S 127.0.0.1:' . $round016Port . ' -t public public/router.php',
+    [0 => ['pipe', 'r'], 1 => ['file', '/dev/null', 'w'], 2 => ['file', '/dev/null', 'w']],
+    $pipes,
+    $root,
+);
+for ($attempt = 0; $attempt < 24; $attempt++) {
+    if ($portOpen($round016Port)) {
+        break;
+    }
+    usleep(250000);
+}
+if ($portOpen($round016Port)) {
+    exec('cd ' . escapeshellarg($root . '/design/review/round-015') . ' && npm install --no-fund --no-audit 2>&1');
+    $round016VerifyCmd = 'cd ' . escapeshellarg($root . '/design/review/round-015')
+        . ' && YATSN_BASE=' . escapeshellarg($round016Base)
+        . ' node verify-round-016-mobile-wizard-flow.mjs 2>&1';
+    exec($round016VerifyCmd, $round016VerifyOut, $round016VerifyExit);
+}
+if (isset($round016ServerProc) && is_resource($round016ServerProc)) {
+    proc_terminate($round016ServerProc);
+}
+if ($round016VerifyExit === 0) {
+    assert_true(true, 'Round 016 compact mobile wizard verification passed');
+} else {
+    assert_true(false, 'Round 016 compact mobile wizard verification failed: ' . trim(implode("\n", $round016VerifyOut)));
 }
 
 assert_true(str_contains($appCss, 'container-name: yatsn-create-entry'), 'Create entry uses a size container for adaptive controls');

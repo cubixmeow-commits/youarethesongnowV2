@@ -254,12 +254,12 @@ async function establishCreateBaseline() {
 
 async function readBarState() {
   return page.evaluate(() => {
-    const bar = document.querySelector('[data-generate-bar]');
-    const button = document.querySelector('[data-create-image]');
+    const wrap = document.querySelector('[data-create-sticky-primary-wrap]');
+    const button = document.querySelector('[data-create-sticky-primary]');
     const status = document.querySelector('[data-ai-status]');
     return {
-      barHidden: bar?.hidden ?? true,
-      barDisplay: bar ? getComputedStyle(bar).display : 'none',
+      barHidden: wrap?.hidden ?? true,
+      barDisplay: wrap ? getComputedStyle(wrap).display : 'none',
       buttonDisabled: button?.disabled ?? true,
       statusText: status?.textContent || '',
       createState: window.YatsnCreate?.getGenerateBarState?.() || {},
@@ -295,9 +295,9 @@ await page.screenshot({ path: join(__dirname, 'mobile-390-preparation-pending.pn
 
 await page.waitForFunction(() => {
   const review = document.querySelector('[data-create-card="review"]');
-  const bar = document.querySelector('[data-generate-bar]');
-  const button = document.querySelector('[data-create-image]');
-  return review && !review.hidden && bar && !bar.hidden && button && !button.disabled;
+  const wrap = document.querySelector('[data-create-sticky-primary-wrap]');
+  const button = document.querySelector('[data-create-sticky-primary]');
+  return review && !review.hidden && wrap && !wrap.hidden && button && !button.disabled;
 }, { timeout: 15000 });
 
 const readyState = await readBarState();
@@ -311,7 +311,7 @@ assert(readyState.createState.path === 'ai-quick', 'prepared-direction state is 
 
 await page.screenshot({ path: join(__dirname, 'mobile-390-ready-generate-image.png') });
 
-await page.click('[data-create-image]');
+await page.click('[data-create-sticky-primary]');
 const generationDeadline = Date.now() + 10000;
 while (requestLog.generationJobs.length < 1 && Date.now() < generationDeadline) {
   await new Promise((resolve) => setTimeout(resolve, 100));

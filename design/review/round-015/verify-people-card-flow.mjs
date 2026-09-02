@@ -116,9 +116,9 @@ async function gotoCreate() {
 async function confirmSongToPeople() {
   await page.type('#song-form [name=artist]', 'Sabaton');
   await page.type('#song-form [name=title]', 'Seven Pillars of Wisdom');
-  await page.click('.yatsn-song-search__submit');
-  await page.waitForSelector('[data-song-results] [data-song-result]', { timeout: 15000 });
-  await page.click('[data-song-results] [data-song-result]');
+  await page.click('[data-create-sticky-primary]');
+  await page.waitForSelector('[data-song-results] [data-song-result].is-selected', { timeout: 15000 });
+  await page.click('[data-create-sticky-primary]');
   await page.waitForFunction(() => window.YatsnCreate?.getFlowStep?.() === 'people', { timeout: 15000 });
 }
 

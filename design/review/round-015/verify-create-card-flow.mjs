@@ -197,9 +197,11 @@ async function readFlow() {
       manualTertiaryPresent: !!document.querySelector('[data-ai-manual-tertiary]'),
       manualControlsHidden: document.querySelector('[data-direction-manual]')?.hidden ?? true,
       fineTuneOpen: document.querySelector('[data-fine-tune]')?.open ?? false,
-      barHidden: document.querySelector('[data-generate-bar]')?.hidden ?? true,
-      generateDisabled: document.querySelector('[data-create-image]')?.disabled ?? true,
+      barHidden: document.querySelector('[data-create-sticky-primary-wrap]')?.hidden ?? true,
+      generateDisabled: document.querySelector('[data-create-sticky-primary]')?.disabled ?? true,
+      wizardHeaders: document.querySelectorAll('.create-wizard__topbar').length,
       navVisible: navStyle ? navStyle.display !== 'none' : false,
+      topbarVisible: document.querySelector('.app-topbar') ? getComputedStyle(document.querySelector('.app-topbar')).display !== 'none' : false,
       bodyCreateFocus: document.body.classList.contains('is-create-focus'),
       overflowX: document.documentElement.scrollWidth <= window.innerWidth + 1,
     };
@@ -211,7 +213,7 @@ await gotoCreate();
 let flow = await readFlow();
 assert(flow.visibleCards.length === 1 && flow.visibleCards[0] === 'song', 'initial view is Song card only');
 assert(flow.recentHidden, 'Recent Creations not shown in Create flow');
-assert(flow.barHidden, 'Generate bar hidden on Song');
+assert(!flow.barHidden, 'Song step shows sticky Find CTA');
 
 // 2. Confirm song advances to People
 await page.evaluate(async () => {
@@ -221,12 +223,13 @@ await page.evaluate(async () => {
   await window.YatsnSongSearch.submitFind();
 });
 await page.waitForFunction(() => document.querySelector('[data-song-results] [data-song-result]'), { timeout: 15000 });
-await page.click('[data-song-results] [data-song-result]');
+await page.waitForFunction(() => document.querySelector('[data-create-sticky-primary]')?.textContent === 'Use this song', { timeout: 10000 });
+await page.click('[data-create-sticky-primary]');
 await page.waitForFunction(() => window.YatsnCreate?.getFlowStep?.() === 'people', { timeout: 10000 });
 flow = await readFlow();
 assert(flow.flowStep === 'people', 'confirmed song advances to People');
-const peopleFocused = await page.evaluate(() => document.activeElement?.id === 'people-heading');
-assert(peopleFocused, 'People heading receives focus after song confirm');
+const peopleFocused = await page.evaluate(() => document.activeElement?.getAttribute('data-create-focus-title') !== null || document.activeElement?.id === 'people-heading');
+assert(peopleFocused, 'People step receives focus after song confirm');
 
 // 3–4. People portraits first; upload collapsed; continue labels
 flow = await readFlow();
@@ -397,7 +400,7 @@ await page.evaluate(() => {
   window.YatsnCreate.setFlowStep('review', { focus: false });
 });
 requestLog.generation.length = 0;
-await page.click('[data-create-image]');
+await page.click('[data-create-sticky-primary]');
 await page.waitForFunction(() => window.YatsnCreate?.getFlowStep?.() === 'generating', { timeout: 15000 });
 assert(requestLog.generation.length === 1, 'generate creates exactly one job');
 

@@ -22,6 +22,7 @@
     issue: null,
     directionPrepared: false,
     directionPath: null,
+    directionLabel: null,
   };
   let reviewTimer = null;
   let generationSubmitLock = false;
@@ -29,6 +30,7 @@
   let portraitsLoadState = 'idle';
   let portraitsLoadError = '';
   let peopleCardWired = false;
+  let stickyActionsWired = false;
 
   const FLOW_STEPS = ['song', 'people', 'direction', 'review', 'generating'];
   const FLOW_HEADINGS = {
@@ -38,19 +40,26 @@
     review: '#review-heading',
     generating: '#generating-heading',
   };
+  const FLOW_EYEBROWS = {
+    song: '01 · SONG',
+    people: '02 · PEOPLE',
+    direction: '03 · DIRECTION',
+    review: '04 · REVIEW',
+    generating: 'CREATING',
+  };
   const FLOW_TITLES = {
-    song: 'Choose your song',
-    people: 'Choose your people',
-    direction: 'Choose your direction',
-    review: 'Review your creation',
+    song: 'What are we listening to?',
+    people: 'Who belongs in this world?',
+    direction: 'How should it feel?',
+    review: 'Ready to generate',
     generating: 'Creating your image',
   };
-  const FLOW_STEP_LABELS = {
-    song: 'Step 1 of 4',
-    people: 'Step 2 of 4',
-    direction: 'Step 3 of 4',
-    review: 'Step 4 of 4',
-    generating: 'Creating',
+  const FLOW_LEADS = {
+    song: 'Start with the song. We’ll create its visual DNA.',
+    people: 'Choose up to two portraits—or continue without people.',
+    direction: 'Let AI lead, or build the scene yourself.',
+    review: 'Confirm your creation before generating.',
+    generating: 'Your artwork is being created in the background.',
   };
 
   function $(sel, root = document) {
@@ -121,18 +130,60 @@
     return issues;
   }
 
-  function setDirectionPrepared(path) {
+  function setDirectionPrepared(path, label) {
     generation.directionPrepared = true;
     generation.directionPath = path || generation.directionPath || 'manual';
+    if (label) {
+      generation.directionLabel = label;
+    } else if (path === 'manual' || !generation.directionLabel) {
+      const styleObj = state.styles.find((s) => s.id === state.selectedStyleId);
+      if (styleObj) generation.directionLabel = styleObj.name;
+    }
+    updateReviewPanel();
     updateGenerateAction();
   }
 
   function clearDirectionPrepared() {
     generation.directionPrepared = false;
     generation.directionPath = null;
+    generation.directionLabel = null;
     generation.reviewed = false;
     generation.issue = null;
     updateGenerateAction();
+  }
+
+  function getWizardPrimaryButton() {
+    return $('[data-create-sticky-primary]');
+  }
+
+  function syncSongStickyPrimary() {
+    const primary = getWizardPrimaryButton();
+    const action = window.YatsnSongSearch?.getStickyAction?.();
+    if (!primary || !action) return;
+    primary.textContent = action.label;
+    primary.disabled = action.disabled;
+    primary.classList.toggle('is-loading', action.loading);
+    if (action.loading) primary.setAttribute('aria-busy', 'true');
+    else primary.removeAttribute('aria-busy');
+  }
+
+  function updateStickyActions() {
+    const primaryWrap = $('[data-create-sticky-primary-wrap]');
+    const peopleWrap = $('[data-create-sticky-people]');
+    const footnote = $('[data-create-footnote]');
+    const scroll = $('[data-create-scroll]');
+
+    if (primaryWrap) primaryWrap.hidden = flowStep !== 'song' && flowStep !== 'review';
+    if (peopleWrap) peopleWrap.hidden = flowStep !== 'people';
+    if (footnote) footnote.hidden = flowStep !== 'song';
+
+    if (flowStep === 'song') {
+      syncSongStickyPrimary();
+    }
+
+    if (scroll) {
+      scroll.classList.toggle('is-scrollable', flowStep === 'direction' || flowStep === 'review');
+    }
   }
 
   function shouldShowGenerateBar() {
@@ -160,15 +211,20 @@
     const titleEl = $('[data-create-focus-title]');
     if (titleEl) titleEl.textContent = FLOW_TITLES[step] || FLOW_TITLES.song;
 
-    const stepLabel = $('[data-create-step-label]');
-    if (stepLabel) stepLabel.textContent = FLOW_STEP_LABELS[step] || FLOW_STEP_LABELS.song;
+    const eyebrow = $('[data-create-eyebrow]');
+    if (eyebrow) eyebrow.textContent = FLOW_EYEBROWS[step] || FLOW_EYEBROWS.song;
 
-    const progressSteps = $all('.session-progress__step[data-progress-step]');
-    const progressIndex = { song: 0, people: 1, direction: 2, review: 3, generating: 3 };
-    const current = progressIndex[step] ?? 0;
-    progressSteps.forEach((el, index) => {
-      el.classList.toggle('is-current', index === current);
-      el.classList.toggle('is-complete', index < current);
+    const leadEl = $('[data-create-focus-lead]');
+    if (leadEl) leadEl.textContent = FLOW_LEADS[step] || '';
+
+    const segmentOrder = ['song', 'people', 'direction', 'review'];
+    const progressSegments = $all('[data-progress-segment]');
+    const currentIndex = segmentOrder.indexOf(step === 'generating' ? 'review' : step);
+    progressSegments.forEach((el) => {
+      const name = el.getAttribute('data-progress-segment');
+      const segIndex = segmentOrder.indexOf(name);
+      el.classList.toggle('is-current', segIndex === currentIndex);
+      el.classList.toggle('is-complete', segIndex >= 0 && segIndex < currentIndex);
     });
 
     if (options.announce) {
@@ -186,10 +242,11 @@
     updatePeopleContinue();
     updateReviewPanel();
     updateSummary();
+    updateStickyActions();
     updateGenerateAction();
 
     if (options.focus !== false) {
-      const heading = $(FLOW_HEADINGS[step]);
+      const heading = titleEl || $(FLOW_HEADINGS[step]);
       if (heading && !options.skipFocus) {
         if (!heading.hasAttribute('tabindex')) heading.setAttribute('tabindex', '-1');
         requestAnimationFrame(() => {
@@ -315,7 +372,8 @@
     const styleObj = state.styles.find((s) => s.id === state.selectedStyleId);
     const directionName = $('[data-review-direction-name]');
     if (directionName) {
-      directionName.textContent = styleObj ? styleObj.name : 'Not chosen yet';
+      directionName.textContent = generation.directionLabel
+        || (styleObj ? styleObj.name : 'Not chosen yet');
     }
     const output = $('[data-review-output]');
     if (output) {
@@ -393,35 +451,31 @@
 
   function updateGenerateAction() {
     const root = $('[data-create]');
-    const bar = $('[data-generate-bar]');
     const hint = $('[data-generate-hint]');
-    const button = $('[data-create-image]');
-    if (!bar) return;
+    const button = getWizardPrimaryButton();
+    const showReview = shouldShowGenerateBar();
 
-    const showBar = shouldShowGenerateBar();
-    bar.hidden = !showBar;
-    root?.classList.toggle('has-generate-bar', showBar);
+    root?.classList.toggle('has-generate-bar', showReview);
+    updateStickyActions();
 
-    const issues = getReadinessIssues();
-    const ready = showBar && issues.length === 0 && generation.reviewed && !generation.pending;
-    if (button) {
+    if (flowStep === 'review' && button) {
+      button.textContent = 'Generate image';
+      const issues = getReadinessIssues();
+      const ready = showReview && issues.length === 0 && generation.reviewed && !generation.pending;
       button.disabled = !ready;
       button.setAttribute('aria-disabled', ready ? 'false' : 'true');
       button.classList.toggle('is-loading', generation.pending);
-      if (generation.pending) {
-        button.setAttribute('aria-busy', 'true');
-      } else {
-        button.removeAttribute('aria-busy');
-      }
+      if (generation.pending) button.setAttribute('aria-busy', 'true');
+      else button.removeAttribute('aria-busy');
     }
 
     let hintText = '';
-    if (!showBar) {
+    if (!showReview) {
       hintText = '';
     } else if (generation.pending) {
       hintText = 'Starting generation…';
-    } else if (issues.length) {
-      hintText = issues[0];
+    } else if (getReadinessIssues().length) {
+      hintText = getReadinessIssues()[0];
     } else if (generation.issue) {
       hintText = generation.issue;
     } else if (!generation.reviewed) {
@@ -467,7 +521,8 @@
     const status = $('[data-direction-status]');
     const result = await refreshGenerationReadiness();
     if (result.ready) {
-      setDirectionPrepared('manual');
+      const styleObj = state.styles.find((s) => s.id === state.selectedStyleId);
+      setDirectionPrepared('manual', styleObj?.name);
       setStatus(status, '');
       $('[data-paywall]').hidden = true;
       advanceToReview('Review your creation');
@@ -478,8 +533,8 @@
   }
 
   async function submitGeneration() {
-    const button = $('[data-create-image]');
-    if (!button || button.disabled || generation.pending || generationSubmitLock) {
+    const button = getWizardPrimaryButton();
+    if (!button || button.disabled || generation.pending || generationSubmitLock || flowStep !== 'review') {
       return { started: false };
     }
     generationSubmitLock = true;
@@ -692,6 +747,7 @@
         btn.innerHTML = `<strong>${s.name}</strong><span class="quiet">${s.description}</span>`;
         btn.addEventListener('click', async () => {
           state.selectedStyleId = s.id;
+          generation.directionLabel = s.name;
           await patchDraft({ styleId: s.id });
           renderStyles();
           updateSummary();
@@ -868,6 +924,24 @@
         clearDownstreamFromSong();
         setFlowStep('song', { announce: 'Song step' });
       },
+      onStickyActionChange: () => {
+        if (flowStep === 'song') syncSongStickyPrimary();
+      },
+    });
+  }
+
+  function wireStickyActions() {
+    if (stickyActionsWired) return;
+    stickyActionsWired = true;
+    getWizardPrimaryButton()?.addEventListener('click', async () => {
+      if (flowStep === 'song') {
+        if (window.YatsnSongSearch?.isInFlight?.()) return;
+        const action = window.YatsnSongSearch?.getStickyAction?.();
+        if (action?.intent === 'find') await window.YatsnSongSearch?.submitFind?.();
+        else if (action?.intent === 'use') window.YatsnSongSearch?.confirmPending?.();
+        return;
+      }
+      if (flowStep === 'review') await submitGeneration();
     });
   }
 
@@ -946,6 +1020,7 @@
     if (!root) return;
     state.csrf = root.dataset.csrf;
     initSongSearch();
+    wireStickyActions();
     wirePeopleCard();
 
     const me = await api('/api/v1/me');
@@ -1000,6 +1075,7 @@
 
     updateSummary();
     updateGenerateAction();
+    syncSongStickyPrimary();
     loadCreateEntryContext().catch(() => {
       // Recent work is optional presentation.
     });
@@ -1018,7 +1094,7 @@
     });
     $('[data-special]')?.addEventListener('focus', () => {
       window.setTimeout(() => {
-        $('[data-generate-bar]')?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        $('[data-create-sticky-actions]')?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
       }, 250);
     });
     $('[data-no-text]')?.addEventListener('change', async () => {
@@ -1029,10 +1105,6 @@
 
     $('[data-review]')?.addEventListener('click', async () => {
       await runReview();
-    });
-
-    $('[data-create-image]')?.addEventListener('click', async () => {
-      await submitGeneration();
     });
 
     $('[data-dev-activate]')?.addEventListener('click', async () => {
@@ -1540,14 +1612,14 @@
     shouldShowGenerateBar,
     isGenerateReady: () => shouldShowGenerateBar() && getReadinessIssues().length === 0 && generation.reviewed && !generation.pending,
     getGenerateBarState: () => {
-      const bar = $('[data-generate-bar]');
-      const button = $('[data-create-image]');
+      const button = getWizardPrimaryButton();
       const hint = $('[data-generate-hint]');
+      const showReview = shouldShowGenerateBar();
       return {
         prepared: generation.directionPrepared,
         path: generation.directionPath,
-        hidden: bar?.hidden ?? true,
-        display: bar ? getComputedStyle(bar).display : 'none',
+        hidden: !showReview,
+        display: showReview ? 'block' : 'none',
         hint: hint?.textContent || '',
         disabled: button?.disabled ?? true,
         reviewed: generation.reviewed,
@@ -1589,6 +1661,7 @@
         state.selectedStyleId = state.selectedStyleId || state.styles[0]?.id || null;
         generation.directionPrepared = true;
         generation.directionPath = 'ai-quick';
+        generation.directionLabel = 'Static Revolt';
         generation.reviewed = true;
         generation.pending = false;
         generation.issue = null;

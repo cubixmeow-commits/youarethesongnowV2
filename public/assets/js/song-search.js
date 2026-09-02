@@ -8,6 +8,51 @@
   let confirmedLookup = null;
   let formWired = false;
 
+  function notifyStickyActionChange() {
+    handlers.onStickyActionChange?.();
+  }
+
+  function getStickyAction() {
+    const state = panel.dataset.yatsnSongState;
+    if (inFlight) {
+      return { label: 'Finding your song…', disabled: true, loading: true, intent: 'find' };
+    }
+    if (state === 'selected' || (state === 'result' && pendingLookup)) {
+      return { label: 'Use this song', disabled: false, loading: false, intent: 'use' };
+    }
+    return { label: 'Find this song', disabled: false, loading: false, intent: 'find' };
+  }
+
+  function confirmPending() {
+    if (!pendingLookup || !['found', 'fallbackFound'].includes(pendingLookup.state)) {
+      return submitFind();
+    }
+    if (confirmedLookup?.id === pendingLookup.id) return;
+    selectLookup(pendingLookup, { skipSelectedPanel: true });
+  }
+
+  function clearPendingResult() {
+    pendingLookup = null;
+    if (panel.dataset.yatsnSongState === 'selected') {
+      confirmedLookup = null;
+      handlers.onClear?.();
+    }
+    const results = $('[data-song-results]');
+    const selected = $('[data-song-selected]');
+    const retry = $('[data-song-retry-wrap]');
+    if (results) {
+      results.hidden = true;
+      results.innerHTML = '';
+    }
+    if (selected) {
+      selected.hidden = true;
+      selected.innerHTML = '';
+    }
+    if (retry) retry.hidden = true;
+    setStatus('', 'info', { hidden: true });
+    notifyStickyActionChange();
+  }
+
   function privateBuildAllowsFixtures() {
     return document.querySelector('[data-create]')?.dataset.privateBuild === '1';
   }
@@ -87,6 +132,7 @@
     const submit = $('.yatsn-song-search__submit');
     if (submit) submit.classList.add('is-loading');
     setStatus('Finding your song…', 'info');
+    notifyStickyActionChange();
     const loading = $('[data-song-result-loading]');
     const results = $('[data-song-results]');
     const selected = $('[data-song-selected]');
@@ -131,13 +177,19 @@
       <span class="yatsn-song-result__art yatsn-artwork__stage">${artworkMarkup(lookup)}</span>
       <span class="yatsn-song-result__copy">
         <strong class="yatsn-song-result__title">${escapeHtml(lookup.title)}</strong>
-        <span class="yatsn-song-result__artist">${escapeHtml(lookup.artist)}</span>
-        <span class="yatsn-song-result__qualifier">${escapeHtml(matchQualifier(lookup.state))}</span>
+        <span class="yatsn-song-result__meta">${escapeHtml(lookup.artist)}</span>
       </span>
       ${isSelectable ? '<span class="yatsn-song-result__affordance" aria-hidden="true"></span>' : ''}
     `;
     if (isSelectable) {
-      row.addEventListener('click', () => selectLookup(lookup));
+      row.addEventListener('click', () => {
+        pendingLookup = lookup;
+        confirmedLookup = null;
+        row.classList.add('is-selected');
+        setState('result');
+        setStatus('', 'info', { hidden: true });
+        notifyStickyActionChange();
+      });
     }
     results.appendChild(row);
     results.hidden = false;
@@ -174,13 +226,18 @@
     });
   }
 
-  function selectLookup(lookup) {
+  function selectLookup(lookup, options = {}) {
     if (inFlight) return;
     pendingLookup = lookup;
     confirmedLookup = lookup;
     setState('selected');
-    setStatus(matchMessage(lookup.state), lookup.state === 'notFound' ? 'error' : 'success');
-    renderSelected(lookup);
+    if (!options.skipSelectedPanel) {
+      renderSelected(lookup);
+      setStatus(matchMessage(lookup.state), lookup.state === 'notFound' ? 'error' : 'success');
+    } else {
+      setStatus('', 'info', { hidden: true });
+    }
+    notifyStickyActionChange();
     handlers.onConfirm?.(lookup);
   }
 
@@ -207,8 +264,13 @@
     }
 
     setState('result');
-    renderResultCard(lookup);
-    setStatus(matchMessage(lookup.state), 'success');
+    const row = renderResultCard(lookup);
+    if (row) {
+      row.classList.add('is-selected');
+      pendingLookup = lookup;
+    }
+    setStatus('', 'info', { hidden: true });
+    notifyStickyActionChange();
   }
 
   function presentError(message, { retryable = true } = {}) {
@@ -256,18 +318,22 @@
 
   async function submitFind() {
     if (inFlight) return;
+    inFlight = true;
     const { artist, title } = getFormValues();
     if (!artist || !title) {
+      inFlight = false;
       setStatus('Enter both the artist and song title.', 'error');
       setState('typing');
+      notifyStickyActionChange();
       return;
     }
     if (!handlers.onFind) {
+      inFlight = false;
       setStatus('Search is still loading. Wait a moment and try again.', 'error');
       setState('idle');
+      notifyStickyActionChange();
       return;
     }
-    inFlight = true;
     confirmedLookup = null;
     showLoading();
     try {
@@ -285,6 +351,7 @@
       const submit = $('.yatsn-song-search__submit');
       if (submit) submit.classList.remove('is-loading');
       panel.removeAttribute('aria-busy');
+      notifyStickyActionChange();
     }
   }
 
@@ -299,7 +366,18 @@
     });
     form?.querySelectorAll('input').forEach((input) => {
       input.addEventListener('input', () => {
-        if (!inFlight) setState('typing');
+        if (!inFlight) {
+          if (
+            pendingLookup
+            || confirmedLookup
+            || panel.dataset.yatsnSongState === 'result'
+            || panel.dataset.yatsnSongState === 'selected'
+          ) {
+            clearPendingResult();
+          }
+          setState('typing');
+          notifyStickyActionChange();
+        }
       });
     });
     $('[data-song-retry]')?.addEventListener('click', () => {
@@ -368,6 +446,8 @@
     renderRecent,
     setState,
     submitFind,
+    getStickyAction,
+    confirmPending,
     resetSelection() {
       confirmedLookup = null;
       pendingLookup = null;

@@ -422,7 +422,7 @@
       if (window.YatsnCreate?.prepareAndReview) {
         const result = await window.YatsnCreate.prepareAndReview();
         if (result?.ready) {
-          window.YatsnCreate.setDirectionPrepared?.(lastQuickMode ? 'ai-quick' : 'ai-explore');
+          window.YatsnCreate.setDirectionPrepared?.(lastQuickMode ? 'ai-quick' : 'ai-explore', direction.name);
           if (status) {
             status.classList.remove('is-error', 'yatsn-status--error');
             status.classList.add('yatsn-status--info');

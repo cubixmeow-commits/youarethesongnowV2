@@ -2,25 +2,25 @@
   "version": "round-013.3",
   "requestLog": {
     "exploreDirections": [
-      1788320566595
+      1788329051593
     ],
     "summary": [
-      1788320565376
+      1788329050377
     ],
     "generationJobs": [
-      1788320564224
+      1788329049223
     ]
   },
   "readyState": {
     "barHidden": false,
-    "barDisplay": "grid",
+    "barDisplay": "flex",
     "buttonDisabled": false,
-    "statusText": "“Static Revolt” is ready. Tap Generate image when you are set.",
+    "statusText": "“Static Revolt” is ready for review.",
     "createState": {
       "prepared": true,
       "path": "ai-quick",
       "hidden": false,
-      "display": "grid",
+      "display": "block",
       "hint": "",
       "disabled": false,
       "reviewed": true,
@@ -30,7 +30,7 @@
   "failState": {
     "barHidden": true,
     "barDisplay": "none",
-    "buttonDisabled": true,
+    "buttonDisabled": false,
     "statusText": "Choose a style.",
     "createState": {
       "prepared": false,
@@ -38,7 +38,7 @@
       "hidden": true,
       "display": "none",
       "hint": "",
-      "disabled": true,
+      "disabled": false,
       "reviewed": false,
       "pending": false
     }
@@ -46,7 +46,7 @@
   "exploreState": {
     "barHidden": true,
     "barDisplay": "none",
-    "buttonDisabled": true,
+    "buttonDisabled": false,
     "statusText": "Choose the direction that feels right.",
     "createState": {
       "prepared": false,
@@ -54,7 +54,7 @@
       "hidden": true,
       "display": "none",
       "hint": "",
-      "disabled": true,
+      "disabled": false,
       "reviewed": false,
       "pending": false
     }

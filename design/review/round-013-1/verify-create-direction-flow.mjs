@@ -44,14 +44,14 @@ async function gotoCreate() {
 
 async function readUiState() {
   return page.evaluate(() => {
-    const bar = document.querySelector('[data-generate-bar]');
+    const wrap = document.querySelector('[data-create-sticky-primary-wrap]');
     const quick = document.querySelector('[data-ai-quick]');
     const explore = document.querySelector('[data-ai-explore]');
     const options = document.querySelector('[data-ai-options]');
     const direction = document.querySelector('#the-direction');
     const people = document.querySelector('#the-people');
     const nav = document.querySelector('.app-nav');
-    const barRect = bar?.getBoundingClientRect();
+    const wrapRect = wrap?.getBoundingClientRect();
     const navRect = nav?.getBoundingClientRect();
     const directionCard = document.querySelector('[data-create-card="direction"]');
     const peopleCard = document.querySelector('[data-create-card="people"]');
@@ -62,8 +62,8 @@ async function readUiState() {
     return {
       createState,
       flowStep,
-      barHidden: bar?.hidden ?? true,
-      barDisplay: bar ? getComputedStyle(bar).display : 'none',
+      barHidden: wrap?.hidden ?? true,
+      barDisplay: wrap ? getComputedStyle(wrap).display : 'none',
       hint: document.querySelector('[data-generate-hint]')?.textContent || '',
       quickPresent: !!quick,
       explorePresent: !!explore,
@@ -76,7 +76,7 @@ async function readUiState() {
       reviewHidden: reviewCard?.hidden ?? true,
       navPresent: !!nav,
       navVisible: navStyle ? navStyle.display !== 'none' : false,
-      barAboveNav: !!(barRect && navRect && barRect.bottom <= navRect.top + 1),
+      barAboveNav: !!(wrapRect && navRect && wrapRect.bottom <= navRect.top + 1),
     };
   });
 }
