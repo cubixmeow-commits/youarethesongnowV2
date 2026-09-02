@@ -2,7 +2,7 @@
 
 **Date:** 2026-09-02  
 **Working branch:** `main`  
-**Published to:** `main` (pending commit)  
+**Published to:** `main` at `9042ceb`  
 **Status:** Automatic asset cache busting complete — stop for GPT/owner review
 
 ## Root cause
