@@ -1,3 +1,30 @@
+# OVERRIDING NEXT DIRECTIVE — Round 015 Card-by-Card Create Flow
+
+**Date:** 2026-09-02  
+**Repository:** `cubixmeow-commits/youarethesongnowV2`  
+**Target branch:** `main`  
+**Status:** Owner-approved design; ready for Cursor implementation  
+**Canonical instructions:** `design/CHATGPT_NEXT_PASS.md`
+
+Replace the scrolling Create form with a mobile-canonical, single-card state flow: **Song → People → Direction → Review → Generating**.
+
+Non-negotiable outcomes:
+
+- only one decision group visible at a time;
+- Generate for me remains primary and reaches Review through the real POV preparation chain;
+- Explore remains secondary and shows three compact direction rows;
+- saved portraits precede collapsed upload controls;
+- quality, format, no-text, and special instructions move behind collapsed Fine Tune on Review;
+- final Generate image is always visible/reachable on Review;
+- global mobile tabs do not compete with the active Create flow;
+- the existing POV planner, prompt compiler, APIs, credits, draft behavior, portraits, Gallery, and asset cache busting remain intact;
+- implementation, browser tests, sanitized Round 015 evidence, handoff updates, commit, and push go to `main`;
+- no Hostinger deployment.
+
+Read and follow the complete Round 015 contract in `design/CHATGPT_NEXT_PASS.md`. This directive supersedes all older “stop/no broader design work” instructions below.
+
+---
+
 # OVERRIDING NEXT DIRECTIVE — Round 014 GitHub sync complete
 
 **Date:** 2026-09-02  
