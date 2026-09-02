@@ -258,6 +258,16 @@ $summary = DraftService::summary((int) $user['id'], $draft['id']);
 assert_true($summary['ready'] === true, 'draft summary ready');
 assert_true($summary['requiresMembership'] === false, 'complimentary reviewer skips paywall');
 
+$draftNoPortraits = DraftService::create((int) $user['id'], [
+    'songLookupId' => $lookup['id'],
+    'portraitIds' => [],
+    'styleId' => StyleService::activeForClient()[0]['id'],
+    'quality' => 'medium',
+    'orientation' => 'square',
+]);
+$summaryNoPortraits = DraftService::summary((int) $user['id'], $draftNoPortraits['id']);
+assert_true($summaryNoPortraits['ready'] === true, 'draft summary ready without portraits');
+
 $before = CreditService::balance((int) $user['id']);
 $job = GenerationJobService::submit((int) $user['id'], $draft['id'], 'idem-job-1');
 assert_true($job['status'] === 'queued', 'job submitted as queued');
@@ -1657,7 +1667,10 @@ if ($quickChainVerifyExit === 0) {
 
 // Round 015 — card-by-card Create flow.
 assert_true(str_contains($createTemplate, 'data-create-card'), 'Create template uses explicit flow cards');
+assert_true(str_contains($createTemplate, 'data-people-continue-without'), 'Create People card exposes continue without people');
 assert_true(str_contains($createTemplate, 'data-people-continue'), 'Create People card exposes Continue action');
+assert_true(str_contains($createTemplate, 'data-portrait-loading'), 'People card exposes portrait loading state');
+assert_true(str_contains($appJs, 'loadPortraits'), 'Create JS loads portraits when People card activates');
 assert_true(str_contains($createTemplate, 'data-fine-tune'), 'Review card includes Fine Tune disclosure');
 assert_true(str_contains($appJs, 'getFlowStep'), 'Create JS exposes explicit flow step state');
 assert_true(str_contains($appJs, 'advanceToReview'), 'Create JS advances to Review after AI preparation');
@@ -1739,6 +1752,44 @@ if ($songSearchVerifyExit === 0) {
     assert_true(true, 'Song search card flow verification passed');
 } else {
     assert_true(false, 'Song search card flow verification failed: ' . trim(implode("\n", $songSearchVerifyOut)));
+}
+
+assert_true(is_file($root . '/design/review/round-015/verify-people-card-flow.mjs'), 'People card browser verification harness exists');
+
+$peopleCardVerifyExit = 1;
+$peopleCardVerifyOut = ['People card browser verification skipped'];
+$peopleCardPort = 8773;
+$peopleCardBase = 'http://127.0.0.1:' . $peopleCardPort;
+if ($portOpen($peopleCardPort)) {
+    exec('fuser -k ' . $peopleCardPort . '/tcp 2>/dev/null');
+    usleep(200000);
+}
+$peopleCardServerProc = proc_open(
+    'ALLOW_EXTERNAL_USERS=false php -S 127.0.0.1:' . $peopleCardPort . ' -t public public/router.php',
+    [0 => ['pipe', 'r'], 1 => ['file', '/dev/null', 'w'], 2 => ['file', '/dev/null', 'w']],
+    $pipes,
+    $root,
+);
+for ($attempt = 0; $attempt < 24; $attempt++) {
+    if ($portOpen($peopleCardPort)) {
+        break;
+    }
+    usleep(250000);
+}
+if ($portOpen($peopleCardPort)) {
+    exec('cd ' . escapeshellarg($root . '/design/review/round-015') . ' && npm install --no-fund --no-audit 2>&1');
+    $peopleCardVerifyCmd = 'cd ' . escapeshellarg($root . '/design/review/round-015')
+        . ' && YATSN_BASE=' . escapeshellarg($peopleCardBase)
+        . ' node verify-people-card-flow.mjs 2>&1';
+    exec($peopleCardVerifyCmd, $peopleCardVerifyOut, $peopleCardVerifyExit);
+}
+if (isset($peopleCardServerProc) && is_resource($peopleCardServerProc)) {
+    proc_terminate($peopleCardServerProc);
+}
+if ($peopleCardVerifyExit === 0) {
+    assert_true(true, 'People card flow verification passed');
+} else {
+    assert_true(false, 'People card flow verification failed: ' . trim(implode("\n", $peopleCardVerifyOut)));
 }
 
 assert_true(str_contains($appCss, 'container-name: yatsn-create-entry'), 'Create entry uses a size container for adaptive controls');

@@ -89,10 +89,20 @@
         <h2 id="people-heading" class="create-card__heading">The people</h2>
         <p class="movement__lead">Select portraits to include in your composition.</p>
 
-        <div class="portrait-tray" data-portrait-grid role="list" aria-label="Portrait selection"></div>
+        <div class="portrait-region" data-portrait-region>
+          <p class="status portrait-region__loading" data-portrait-loading hidden role="status" aria-live="polite">Loading your portraits…</p>
+          <div class="portrait-region__error" data-portrait-load-error hidden role="alert">
+            <p class="status is-error" data-portrait-load-error-text>We could not load your saved portraits.</p>
+            <button class="btn btn--secondary" type="button" data-portrait-retry>Try again</button>
+          </div>
+          <p class="quiet portrait-region__empty" data-portrait-empty hidden>No saved portraits yet. Add one below or continue without people.</p>
+          <div class="portrait-tray" data-portrait-grid role="list" aria-label="Portrait selection" hidden></div>
+          <p class="quiet portrait-region__hint" data-people-hint role="status" aria-live="polite">Select up to two portraits, or continue without people.</p>
+        </div>
 
-        <div class="create-card__action-region">
+        <div class="create-card__action-region create-card__action-region--people">
           <button class="btn btn--primary" type="button" data-people-continue disabled>Continue</button>
+          <button class="btn btn--secondary" type="button" data-people-continue-without>Continue without people</button>
         </div>
 
         <div class="create-card__secondary">

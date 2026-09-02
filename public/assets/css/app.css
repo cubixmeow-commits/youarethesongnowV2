@@ -1538,6 +1538,10 @@ textarea {
   background: color-mix(in oklab, var(--color-accent-sapphire) 6%, transparent);
 }
 
+.portrait-chip.is-image-error img {
+  opacity: 0.35;
+}
+
 .portrait-chip__delete {
   position: absolute;
   top: -6px;

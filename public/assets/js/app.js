@@ -26,6 +26,9 @@
   let reviewTimer = null;
   let generationSubmitLock = false;
   let flowStep = 'song';
+  let portraitsLoadState = 'idle';
+  let portraitsLoadError = '';
+  let peopleCardWired = false;
 
   const FLOW_STEPS = ['song', 'people', 'direction', 'review', 'generating'];
   const FLOW_HEADINGS = {
@@ -112,9 +115,6 @@
     } else if (!state.songConfirmed) {
       issues.push('Confirm your song match before generating.');
     }
-    if (state.selectedPortraitIds.length < 1) {
-      issues.push('Add at least one portrait.');
-    }
     if (!state.selectedStyleId) {
       issues.push('Choose a style.');
     }
@@ -176,6 +176,13 @@
       if (announcer) announcer.textContent = options.announce;
     }
 
+    if (step === 'people') {
+      loadPortraits({ refresh: portraitsLoadState === 'error' || portraitsLoadState === 'idle' }).catch(() => {
+        // loadPortraits updates visible error state.
+      });
+    }
+
+    updatePeoplePortraitRegions();
     updatePeopleContinue();
     updateReviewPanel();
     updateSummary();
@@ -201,7 +208,6 @@
     if (!state.songLookup || !state.songConfirmed || !['found', 'fallbackFound'].includes(state.songLookup.state)) {
       return 'song';
     }
-    if (state.selectedPortraitIds.length < 1) return 'people';
     if (!generation.directionPrepared) return 'direction';
     return 'review';
   }
@@ -211,12 +217,98 @@
     scheduleGenerationReview();
   }
 
+  function updatePeoplePortraitRegions() {
+    const loading = $('[data-portrait-loading]');
+    const errorWrap = $('[data-portrait-load-error]');
+    const errorText = $('[data-portrait-load-error-text]');
+    const empty = $('[data-portrait-empty]');
+    const grid = $('[data-portrait-grid]');
+    const hint = $('[data-people-hint]');
+    const onPeople = flowStep === 'people';
+    const hasTiles = state.portraits.length > 0;
+
+    if (loading) loading.hidden = !onPeople || portraitsLoadState !== 'loading';
+    if (errorWrap) errorWrap.hidden = !onPeople || portraitsLoadState !== 'error';
+    if (errorText && portraitsLoadError) errorText.textContent = portraitsLoadError;
+    if (empty) {
+      empty.hidden = !onPeople || portraitsLoadState !== 'empty' || hasTiles;
+    }
+    if (grid) {
+      grid.hidden = !hasTiles;
+      if (hasTiles) grid.removeAttribute('aria-hidden');
+      else grid.setAttribute('aria-hidden', 'true');
+    }
+    if (hint) {
+      if (!onPeople) {
+        hint.hidden = true;
+      } else if (state.selectedPortraitIds.length >= 1) {
+        hint.hidden = true;
+      } else if (portraitsLoadState === 'loading') {
+        hint.hidden = false;
+        hint.textContent = 'Loading your portraits…';
+      } else if (portraitsLoadState === 'error') {
+        hint.hidden = false;
+        hint.textContent = 'We could not load your saved portraits. Try again or continue without people.';
+      } else if (portraitsLoadState === 'empty') {
+        hint.hidden = false;
+        hint.textContent = 'Add a portrait below or continue without people.';
+      } else {
+        hint.hidden = false;
+        hint.textContent = 'Select up to two portraits, or continue without people.';
+      }
+    }
+  }
+
   function updatePeopleContinue() {
     const btn = $('[data-people-continue]');
-    if (!btn) return;
+    const withoutBtn = $('[data-people-continue-without]');
     const count = state.selectedPortraitIds.length;
-    btn.disabled = count < 1;
-    btn.textContent = count === 1 ? 'Continue with 1 person' : count >= 2 ? 'Continue with 2 people' : 'Continue';
+    if (btn) {
+      btn.disabled = count < 1;
+      btn.textContent = count === 1 ? 'Continue with 1 person' : count >= 2 ? 'Continue with 2 people' : 'Continue with selected people';
+    }
+    if (withoutBtn) {
+      withoutBtn.disabled = portraitsLoadState === 'loading';
+    }
+    updatePeoplePortraitRegions();
+  }
+
+  let portraitsLoadPromise = null;
+
+  async function loadPortraits(options = {}) {
+    if (!options.refresh && (portraitsLoadState === 'loaded' || portraitsLoadState === 'empty')) {
+      renderPortraits();
+      updatePeoplePortraitRegions();
+      updatePeopleContinue();
+      return;
+    }
+    if (portraitsLoadPromise && !options.refresh) {
+      return portraitsLoadPromise;
+    }
+    portraitsLoadState = 'loading';
+    portraitsLoadError = '';
+    updatePeoplePortraitRegions();
+    portraitsLoadPromise = (async () => {
+      try {
+        const res = await api('/api/v1/portraits');
+        state.portraits = Array.isArray(res.data) ? res.data : [];
+        portraitsLoadState = state.portraits.length ? 'loaded' : 'empty';
+        portraitsLoadError = '';
+        renderPortraits();
+        updateSummary();
+      } catch (err) {
+        portraitsLoadState = 'error';
+        portraitsLoadError = err.message || 'We could not load your saved portraits.';
+        renderPortraits();
+      } finally {
+        updatePeopleContinue();
+      }
+    })();
+    try {
+      await portraitsLoadPromise;
+    } finally {
+      portraitsLoadPromise = null;
+    }
   }
 
   function updateReviewPanel() {
@@ -483,6 +575,7 @@
     const grid = $('[data-portrait-grid]');
     if (!grid) return;
     grid.innerHTML = '';
+    if (!Array.isArray(state.portraits)) state.portraits = [];
     state.portraits.forEach((p) => {
       const tile = document.createElement('div');
       tile.className = 'portrait-chip' + (state.selectedPortraitIds.includes(p.id) ? ' is-selected' : '');
@@ -493,7 +586,14 @@
       selectBtn.className = 'portrait-chip__select';
       selectBtn.setAttribute('aria-pressed', state.selectedPortraitIds.includes(p.id) ? 'true' : 'false');
       selectBtn.setAttribute('aria-label', state.selectedPortraitIds.includes(p.id) ? 'Deselect portrait' : 'Include portrait in session');
-      selectBtn.innerHTML = `<img src="${p.thumbnailUrl}" alt="">`;
+      const img = document.createElement('img');
+      img.src = p.thumbnailUrl || '';
+      img.alt = '';
+      img.addEventListener('error', () => {
+        tile.classList.add('is-image-error');
+        selectBtn.setAttribute('aria-label', 'Portrait image could not load');
+      });
+      selectBtn.appendChild(img);
       selectBtn.addEventListener('click', async () => {
         if (state.selectedPortraitIds.includes(p.id)) {
           state.selectedPortraitIds = state.selectedPortraitIds.filter((id) => id !== p.id);
@@ -508,6 +608,7 @@
         }
         renderPortraits();
         updateSummary();
+        updatePeopleContinue();
         invalidateGenerationReview();
       });
 
@@ -546,6 +647,7 @@
     try {
       await api(`/api/v1/portraits/${encodeURIComponent(portraitId)}`, { method: 'DELETE' });
       state.portraits = state.portraits.filter((p) => p.id !== portraitId);
+      portraitsLoadState = state.portraits.length ? 'loaded' : 'empty';
       const wasSelected = state.selectedPortraitIds.includes(portraitId);
       state.selectedPortraitIds = state.selectedPortraitIds.filter((id) => id !== portraitId);
       if (wasSelected) {
@@ -553,6 +655,7 @@
       }
       renderPortraits();
       updateSummary();
+      updatePeopleContinue();
       invalidateGenerationReview();
       if (generation.directionPrepared) scheduleGenerationReview();
     } catch (err) {
@@ -768,11 +871,82 @@
     });
   }
 
+  function wirePeopleCard() {
+    if (peopleCardWired) return;
+    peopleCardWired = true;
+
+    $('[data-create-back]')?.addEventListener('click', () => goBackOneStep());
+
+    $('[data-people-continue]')?.addEventListener('click', () => {
+      if (state.selectedPortraitIds.length < 1) return;
+      hideManualDirectionControls();
+      setFlowStep('direction', { announce: 'Choose your direction' });
+    });
+
+    $('[data-people-continue-without]')?.addEventListener('click', () => {
+      hideManualDirectionControls();
+      setFlowStep('direction', { announce: 'Choose your direction' });
+    });
+
+    $('[data-portrait-retry]')?.addEventListener('click', () => {
+      loadPortraits({ refresh: true }).catch(() => {
+        // loadPortraits updates visible error state.
+      });
+    });
+
+    $('[data-portrait-upload-toggle]')?.addEventListener('click', () => {
+      const panel = $('[data-portrait-upload-panel]');
+      const toggle = $('[data-portrait-upload-toggle]');
+      if (!panel) return;
+      const show = panel.hidden;
+      panel.hidden = !show;
+      if (toggle) toggle.setAttribute('aria-expanded', show ? 'true' : 'false');
+    });
+
+    $('#portrait-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const status = $('[data-portrait-status]');
+      setStatus(status, 'Uploading...');
+      try {
+        const fd = new FormData(e.target);
+        const res = await api('/api/v1/portraits', { method: 'POST', body: fd });
+        state.portraits = [res.data, ...state.portraits];
+        portraitsLoadState = state.portraits.length ? 'loaded' : 'empty';
+        portraitsLoadError = '';
+        if (state.selectedPortraitIds.length < 2) {
+          state.selectedPortraitIds.push(res.data.id);
+          await patchDraft({ portraitIds: state.selectedPortraitIds });
+        }
+        e.target.reset();
+        setStatus(status, 'Portrait uploaded.');
+        renderPortraits();
+        updateSummary();
+        updatePeopleContinue();
+        invalidateGenerationReview();
+        if (generation.directionPrepared) clearDirectionPrepared();
+      } catch (err) {
+        setStatus(status, 'We could not upload this photo. Choose another photo or try again.', true);
+      }
+    });
+
+    const deleteDialog = $('[data-portrait-delete-dialog]');
+    deleteDialog?.addEventListener('close', async () => {
+      const portraitId = pendingPortraitDeleteId;
+      pendingPortraitDeleteId = null;
+      if (!portraitId || deleteDialog.returnValue !== 'confirm') return;
+      await deletePortrait(portraitId);
+    });
+    deleteDialog?.querySelector('[data-portrait-delete-confirm]')?.addEventListener('click', () => {
+      deleteDialog.returnValue = 'confirm';
+    });
+  }
+
   async function initCreate() {
     const root = $('[data-create]');
     if (!root) return;
     state.csrf = root.dataset.csrf;
     initSongSearch();
+    wirePeopleCard();
 
     const me = await api('/api/v1/me');
     state.csrf = me.data.csrfToken || state.csrf;
@@ -780,8 +954,6 @@
     state.styles = styles.data;
     const options = await api('/api/v1/product-options');
     state.options = options.data;
-    const portraits = await api('/api/v1/portraits');
-    state.portraits = portraits.data;
     const params = new URLSearchParams(window.location.search);
     const existingDraft = params.get('draft');
     if (existingDraft) {
@@ -806,12 +978,16 @@
     }
     renderStyles();
     renderChoices();
-    renderPortraits();
+    try {
+      await loadPortraits({ refresh: true });
+    } catch (_) {
+      // loadPortraits records error state for the People card.
+    }
     if (state.songLookup && ['found', 'fallbackFound'].includes(state.songLookup.state)) {
       state.songConfirmed = true;
       window.YatsnSongSearch?.restoreConfirmed?.(state.songLookup);
     }
-    if (state.selectedStyleId && state.selectedPortraitIds.length > 0 && state.songConfirmed) {
+    if (state.selectedStyleId && state.songConfirmed) {
       generation.directionPrepared = true;
       generation.directionPath = 'manual';
       generation.reviewed = false;
@@ -824,56 +1000,8 @@
 
     updateSummary();
     updateGenerateAction();
-
-    $('[data-create-back]')?.addEventListener('click', () => goBackOneStep());
-
-    $('[data-people-continue]')?.addEventListener('click', () => {
-      if (state.selectedPortraitIds.length < 1) return;
-      hideManualDirectionControls();
-      setFlowStep('direction', { announce: 'Choose your direction' });
-    });
-
-    $('[data-portrait-upload-toggle]')?.addEventListener('click', () => {
-      const panel = $('[data-portrait-upload-panel]');
-      const toggle = $('[data-portrait-upload-toggle]');
-      if (!panel) return;
-      const show = panel.hidden;
-      panel.hidden = !show;
-      if (toggle) toggle.setAttribute('aria-expanded', show ? 'true' : 'false');
-    });
-
-    $('#portrait-form')?.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const status = $('[data-portrait-status]');
-      setStatus(status, 'Uploading...');
-      try {
-        const fd = new FormData(e.target);
-        const res = await api('/api/v1/portraits', { method: 'POST', body: fd });
-        state.portraits = [res.data, ...state.portraits];
-        if (state.selectedPortraitIds.length < 2) {
-          state.selectedPortraitIds.push(res.data.id);
-          await patchDraft({ portraitIds: state.selectedPortraitIds });
-        }
-        e.target.reset();
-        setStatus(status, 'Portrait uploaded.');
-        renderPortraits();
-        updateSummary();
-        invalidateGenerationReview();
-        if (generation.directionPrepared) clearDirectionPrepared();
-      } catch (err) {
-        setStatus(status, 'We could not upload this photo. Choose another photo or try again.', true);
-      }
-    });
-
-    const deleteDialog = $('[data-portrait-delete-dialog]');
-    deleteDialog?.addEventListener('close', async () => {
-      const portraitId = pendingPortraitDeleteId;
-      pendingPortraitDeleteId = null;
-      if (!portraitId || deleteDialog.returnValue !== 'confirm') return;
-      await deletePortrait(portraitId);
-    });
-    deleteDialog?.querySelector('[data-portrait-delete-confirm]')?.addEventListener('click', () => {
-      deleteDialog.returnValue = 'confirm';
+    loadCreateEntryContext().catch(() => {
+      // Recent work is optional presentation.
     });
 
     $('[data-special-toggle]')?.addEventListener('change', async (e) => {

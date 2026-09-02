@@ -190,9 +190,6 @@ final class DraftService
         }
 
         $portraitIds = json_decode((string) $draft['portrait_ids_json'], true) ?: [];
-        if (count($portraitIds) < 1) {
-            $issues['portraitIds'] = 'Add one or two portraits.';
-        }
         foreach ($portraitIds as $pid) {
             if (PortraitService::findOwned($userId, (string) $pid) === null) {
                 $issues['portraitIds'] = 'One of the selected portraits is unavailable.';
