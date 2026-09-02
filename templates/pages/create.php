@@ -7,7 +7,7 @@
 ?> data-build-commit="<?= e((string) $build['commit']) ?>" data-build-source="<?= e((string) ($build['source'] ?? '')) ?>"<?php endif; ?>>
   <div class="create-wizard" data-create-wizard>
     <header class="create-wizard__topbar">
-      <button class="create-wizard__back btn btn--ghost" type="button" data-create-back hidden aria-label="Go back">
+      <button class="create-wizard__back btn btn--ghost is-invisible" type="button" data-create-back aria-label="Go back" aria-hidden="true" tabindex="-1">
         <span aria-hidden="true">←</span>
       </button>
       <a class="create-wizard__brand" href="/gallery" aria-label="You Are The Song Now">

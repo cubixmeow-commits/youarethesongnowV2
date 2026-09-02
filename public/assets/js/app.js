@@ -167,6 +167,18 @@
     else primary.removeAttribute('aria-busy');
   }
 
+  function resetWizardScroll() {
+    const scroll = $('[data-create-scroll]');
+    if (scroll) scroll.scrollTop = 0;
+    if (typeof window.scrollTo === 'function') {
+      try {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      } catch (_) {
+        window.scrollTo(0, 0);
+      }
+    }
+  }
+
   function updateStickyActions() {
     const primaryWrap = $('[data-create-sticky-primary-wrap]');
     const peopleWrap = $('[data-create-sticky-people]');
@@ -206,7 +218,13 @@
     });
 
     const back = $('[data-create-back]');
-    if (back) back.hidden = step === 'song' || step === 'generating';
+    if (back) {
+      const hideBack = step === 'song' || step === 'generating';
+      back.classList.toggle('is-invisible', hideBack);
+      back.setAttribute('aria-hidden', hideBack ? 'true' : 'false');
+      if (hideBack) back.setAttribute('tabindex', '-1');
+      else back.removeAttribute('tabindex');
+    }
 
     const titleEl = $('[data-create-focus-title]');
     if (titleEl) titleEl.textContent = FLOW_TITLES[step] || FLOW_TITLES.song;
@@ -244,6 +262,7 @@
     updateSummary();
     updateStickyActions();
     updateGenerateAction();
+    resetWizardScroll();
 
     if (options.focus !== false) {
       const heading = titleEl || $(FLOW_HEADINGS[step]);

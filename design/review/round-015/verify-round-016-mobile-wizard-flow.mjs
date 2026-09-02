@@ -139,7 +139,7 @@ const chrome = await page390.evaluate(() => ({
   topbar: getComputedStyle(document.querySelector('.app-topbar')).display,
   stickyLabel: document.querySelector('[data-create-sticky-primary]')?.textContent || '',
 }));
-assert(chrome.nav === 'none', 'bottom nav hidden during wizard');
+assert(chrome.nav === 'flex' || chrome.nav === 'block', 'bottom nav visible during wizard');
 assert(chrome.topbar === 'none', 'site topbar hidden during wizard');
 assert(chrome.stickyLabel === 'Find this song', 'song idle CTA is Find this song');
 await page390.screenshot({ path: join(OUT, 'mobile-390-song-idle.png') });

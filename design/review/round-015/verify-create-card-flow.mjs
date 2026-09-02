@@ -417,9 +417,9 @@ await page.evaluate(() => window.YatsnCreateFixtures.showRestoredDraft());
 flow = await readFlow();
 assert(flow.flowStep === 'review', 'restored draft lands on furthest valid card');
 
-// 16. Nav hidden on Create mobile, visible on Gallery
+// 16. Nav visible on Create mobile, visible on Gallery
 flow = await readFlow();
-assert(flow.bodyCreateFocus && !flow.navVisible, 'mobile tabs hidden during Create focus');
+assert(flow.bodyCreateFocus && flow.navVisible, 'mobile tabs remain visible during Create focus');
 await page.goto(`${BASE}/gallery`, { waitUntil: 'networkidle0' });
 const galleryNav = await page.evaluate(() => {
   const nav = document.querySelector('.app-nav');

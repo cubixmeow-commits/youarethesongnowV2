@@ -159,12 +159,12 @@ assert(ui.barDisplay === 'none', 'hidden generate bar uses display:none despite 
 await page.setViewport({ width: 390, height: 844, deviceScaleFactor: 1 });
 await page.evaluate(() => window.YatsnCreateFixtures.showPreparedReady());
 ui = await readUiState();
-assert(ui.navVisible === false, 'mobile create focus hides bottom navigation at 390 width');
+assert(ui.navVisible === true, 'mobile create focus keeps bottom navigation visible at 390 width');
 assert(ui.barHidden === false && ui.createState.disabled === false, 'generate action enabled on review at 390 width');
 
 await page.setViewport({ width: 320, height: 640, deviceScaleFactor: 1 });
 ui = await readUiState();
-assert(ui.navVisible === false, 'mobile create focus hides bottom navigation at 320 width');
+assert(ui.navVisible === true, 'mobile create focus keeps bottom navigation visible at 320 width');
 assert(ui.barHidden === false, 'generate bar remains visible on review at 320 width');
 
 await browser.close();

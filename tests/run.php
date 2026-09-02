@@ -1685,7 +1685,10 @@ assert_true(str_contains($appJs, 'loadPortraits'), 'Create JS loads portraits wh
 assert_true(str_contains($createTemplate, 'data-fine-tune'), 'Review card includes Fine Tune disclosure');
 assert_true(str_contains($appJs, 'getFlowStep'), 'Create JS exposes explicit flow step state');
 assert_true(str_contains($appJs, 'advanceToReview'), 'Create JS advances to Review after AI preparation');
-assert_true(str_contains($appCss, 'is-create-focus'), 'CSS hides mobile nav during Create focus');
+assert_true(str_contains($appCss, 'is-create-focus'), 'CSS scopes create focus layout');
+assert_true(str_contains($appCss, 'body.is-create-focus .app-nav') && str_contains($appCss, '@media (min-width: 900px)'), 'CSS hides bottom nav during Create focus on desktop only');
+assert_true(str_contains($appCss, 'create-wizard__back.is-invisible'), 'mobile wizard back uses visibility hidden column');
+assert_true(str_contains($createTemplate, 'is-invisible') && !str_contains($createTemplate, 'data-create-back hidden'), 'Create wizard back retains layout slot on step 1');
 assert_true(is_file($root . '/design/review/round-015/verify-create-card-flow.mjs'), 'Round 015 behavior verification harness exists');
 
 $round015VerifyExit = 1;
@@ -1839,6 +1842,44 @@ if ($peopleCardVerifyExit === 0) {
     assert_true(true, 'People card flow verification passed');
 } else {
     assert_true(false, 'People card flow verification failed: ' . trim(implode("\n", $peopleCardVerifyOut)));
+}
+
+assert_true(is_file($root . '/design/review/round-016/verify-round-016-3-mobile-shell.mjs'), 'Round 016.3 mobile shell verification harness exists');
+
+$round0163VerifyExit = 1;
+$round0163VerifyOut = ['Round 016.3 mobile shell verification skipped'];
+$round0163Port = 8782;
+$round0163Base = 'http://127.0.0.1:' . $round0163Port;
+if ($portOpen($round0163Port)) {
+    exec('fuser -k ' . $round0163Port . '/tcp 2>/dev/null');
+    usleep(200000);
+}
+$round0163ServerProc = proc_open(
+    'ALLOW_EXTERNAL_USERS=false php -S 127.0.0.1:' . $round0163Port . ' -t public public/router.php',
+    [0 => ['pipe', 'r'], 1 => ['file', '/dev/null', 'w'], 2 => ['file', '/dev/null', 'w']],
+    $pipes,
+    $root,
+);
+for ($attempt = 0; $attempt < 24; $attempt++) {
+    if ($portOpen($round0163Port)) {
+        break;
+    }
+    usleep(250000);
+}
+if ($portOpen($round0163Port)) {
+    exec('cd ' . escapeshellarg($root . '/design/review/round-016') . ' && npm install --no-fund --no-audit 2>&1');
+    $round0163VerifyCmd = 'cd ' . escapeshellarg($root . '/design/review/round-016')
+        . ' && YATSN_BASE=' . escapeshellarg($round0163Base)
+        . ' node verify-round-016-3-mobile-shell.mjs 2>&1';
+    exec($round0163VerifyCmd, $round0163VerifyOut, $round0163VerifyExit);
+}
+if (isset($round0163ServerProc) && is_resource($round0163ServerProc)) {
+    proc_terminate($round0163ServerProc);
+}
+if ($round0163VerifyExit === 0) {
+    assert_true(true, 'Round 016.3 mobile shell verification passed');
+} else {
+    assert_true(false, 'Round 016.3 mobile shell verification failed: ' . trim(implode("\n", $round0163VerifyOut)));
 }
 
 assert_true(is_file($root . '/design/review/round-015/verify-round-016-mobile-wizard-flow.mjs'), 'Round 016 mobile wizard verification harness exists');

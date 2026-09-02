@@ -241,17 +241,21 @@ await enableMocks(mobile);
 await mobile.goto(`${BASE}/create`, { waitUntil: 'networkidle0' });
 const mobileLayout = await mobile.evaluate(() => ({
   wizardOverflow: document.querySelector('[data-create-wizard]')?.offsetHeight <= window.innerHeight + 2,
-  appNavHidden: getComputedStyle(document.querySelector('.app-nav')).display === 'none',
+  appNavVisible: getComputedStyle(document.querySelector('.app-nav')).display !== 'none',
+  createActive: document.querySelector('.app-nav__item[href="/create"]')?.classList.contains('is-active') ?? false,
   stacked: (() => {
     const intro = document.querySelector('.create-wizard__intro');
     const task = document.querySelector('.create-wizard__task');
     if (!intro || !task) return false;
     return intro.getBoundingClientRect().top <= task.getBoundingClientRect().top;
   })(),
+  scrollY: window.scrollY,
 }));
 assert(mobileLayout.wizardOverflow, 'mobile regression: wizard fits viewport');
-assert(mobileLayout.appNavHidden, 'mobile regression: nav hidden');
+assert(mobileLayout.appNavVisible, 'mobile regression: bottom nav visible');
+assert(mobileLayout.createActive, 'mobile regression: Create tab active');
 assert(mobileLayout.stacked, 'mobile regression: intro stacks above task');
+assert(mobileLayout.scrollY === 0, 'mobile regression: window.scrollY is 0');
 await mobile.close();
 
 writeFileSync(join(OUT, 'verify-results.json'), JSON.stringify({ passed: true }, null, 2));

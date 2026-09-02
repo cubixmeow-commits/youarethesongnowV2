@@ -3518,9 +3518,14 @@ button.yatsn-song-result:focus-visible {
    ============================================================================= */
 
 body.is-create-focus .app-topbar,
-body.is-create-focus .app-nav,
 body.is-create-focus .app-legal {
   display: none !important;
+}
+
+@media (min-width: 900px) {
+  body.is-create-focus .app-nav {
+    display: none !important;
+  }
 }
 
 body.is-create-focus {
@@ -3560,16 +3565,17 @@ body.is-create-focus .app-main {
 
 .create-wizard__topbar {
   display: grid;
-  grid-template-columns: var(--touch-min) 1fr auto;
+  grid-template-columns: minmax(var(--control-icon-button), 1fr) auto minmax(var(--control-icon-button), 1fr);
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-1);
   padding: calc(env(safe-area-inset-top) + var(--space-1)) var(--space-4) var(--space-1);
   flex-shrink: 0;
 }
 
 .create-wizard__back {
-  min-height: var(--touch-min);
-  min-width: var(--touch-min);
+  justify-self: start;
+  min-height: var(--control-icon-button);
+  min-width: var(--control-icon-button);
   padding: 0;
   border-radius: 999px;
   border: 1px solid var(--color-border-hairline);
@@ -3577,37 +3583,47 @@ body.is-create-focus .app-main {
   font-size: var(--type-body);
 }
 
-.create-wizard__back[hidden] {
-  display: none !important;
+.create-wizard__back.is-invisible {
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .create-wizard__brand {
+  justify-self: center;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  min-height: var(--touch-min);
+  min-height: var(--control-icon-button);
+  max-width: 100%;
+  min-width: 0;
   text-decoration: none;
   color: var(--color-text-primary);
 }
 
 .create-wizard__wordmark {
   font-family: var(--font-serif);
-  font-size: 0.95rem;
+  font-size: clamp(0.78rem, 3.4vw, 0.92rem);
   letter-spacing: 0.01em;
   white-space: nowrap;
 }
 
 .create-wizard__exit {
-  min-height: var(--touch-min);
-  padding: 0 var(--space-4);
+  justify-self: end;
+  min-height: var(--control-icon-button);
+  min-width: var(--control-icon-button);
+  padding: 0 var(--space-3);
   border-radius: 999px;
   border: 1px solid color-mix(in oklab, var(--color-accent-sapphire) 45%, var(--color-border));
   color: var(--color-text-secondary);
   text-decoration: none;
-  font-size: var(--type-meta);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  white-space: nowrap;
 }
 
 .create-wizard__progress {
@@ -3934,6 +3950,106 @@ body.is-create-focus .app-main {
 
 body.is-create-generating .create-wizard__scroll {
   opacity: 0.85;
+}
+
+@media (max-width: 899px) {
+  body.is-create-focus {
+    overflow: hidden;
+    height: 100dvh;
+    max-height: 100dvh;
+    padding-bottom: 0;
+  }
+
+  body.is-create-focus .app-nav {
+    display: flex !important;
+  }
+
+  body.is-create-focus .app-main {
+    height: calc(100dvh - var(--tabbar-h) - env(safe-area-inset-bottom));
+    min-height: 0;
+  }
+
+  .create--wizard {
+    height: 100%;
+    max-height: 100%;
+  }
+
+  .create-wizard {
+    height: 100%;
+    max-height: 100%;
+    display: grid;
+    grid-template-rows: auto auto auto auto;
+  }
+
+  .create-wizard:has(.create-wizard__scroll.is-scrollable) {
+    grid-template-rows: auto auto minmax(0, 1fr) auto;
+  }
+
+  .create-wizard__main {
+    display: contents;
+  }
+
+  .create-wizard__scroll {
+    grid-row: 3;
+    flex: 0 1 auto;
+    min-height: 0;
+    padding: 0 var(--space-4) var(--space-1);
+    overflow: hidden;
+  }
+
+  .create-wizard__scroll.is-scrollable {
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .create-wizard__actions {
+    grid-row: 4;
+  }
+
+  .create-wizard__stage {
+    gap: var(--space-2);
+  }
+
+  .create-wizard__intro {
+    margin-bottom: 0;
+  }
+
+  .create-wizard__title {
+    margin-bottom: var(--space-1);
+    font-size: clamp(1.35rem, 5.2vw, 1.65rem);
+  }
+
+  .create-wizard__lead {
+    font-size: 0.86rem;
+    line-height: 1.4;
+  }
+
+  .create-wizard__task {
+    flex: 0 1 auto;
+  }
+
+  .create-wizard__panel {
+    padding: var(--space-3);
+  }
+
+  .create-wizard__actions {
+    padding: var(--space-2) var(--space-4);
+    background: linear-gradient(180deg, transparent, color-mix(in oklab, var(--color-bg) 92%, black) 18%);
+  }
+
+  .create-wizard__footnote {
+    display: none !important;
+  }
+
+  .create-wizard .yatsn-song-search__fields {
+    gap: var(--space-2);
+  }
+
+  .create-wizard .yatsn-song-result {
+    margin-top: var(--space-2);
+    padding: var(--space-2);
+  }
 }
 
 @media (min-width: 900px) {
