@@ -1,3 +1,36 @@
+# OVERRIDING NEXT DIRECTIVE — Round 014 GitHub Main Synchronization Only
+
+**Date:** 2026-09-02  
+**Repository:** `cubixmeow-commits/youarethesongnowV2`  
+**Target branch:** `main`  
+**Scope:** GitHub synchronization only — owner will deploy manually
+
+This directive supersedes the Hostinger deployment instructions immediately below. Do **not** access, inspect, configure, or deploy Hostinger.
+
+## Required work
+
+1. Fetch the GitHub remote and inspect local/remote branch state.
+2. Confirm all intended implementation commits are ancestors of `origin/main`, including:
+   - `f6daa92` — direction hierarchy / Generate bar gating;
+   - `2d1e1cc` — path-fingerprinted asset cache busting;
+   - `8ce6784` — Quick Generate async dead-end correction;
+   - latest handoff commits.
+3. Inspect the working tree for uncommitted or untracked project changes created by Cursor. Preserve unrelated user work.
+4. Commit any intended missing Round 013 implementation, tests, evidence, or handoff changes.
+5. Push the resulting branch directly to GitHub `main`.
+6. Verify:
+   - local `HEAD` equals `origin/main`;
+   - `git status` is clean except deliberately excluded local-only files;
+   - `origin/main` contains the current `AssetRelease` implementation;
+   - `origin/main` contains `directionLoadInFlight`, `preparationInFlight`, and `await continueWithDirection(direction)`;
+   - rendered-layout source uses `/assets/r/{releaseId}/...` through `AssetRelease::url`;
+   - full suite remains passing.
+7. Do not rewrite history, force-push, reset destructively, merge unrelated branches, deploy, or alter server data.
+
+Update the handoff with the final full `origin/main` commit SHA, test count, and clean-status result. Push that update to `main`, then stop. The owner will deploy the resulting GitHub main branch manually.
+
+---
+
 # NEXT DIRECTIVE — Round 014 Synchronize Hostinger Deployment to Main
 
 **Date:** 2026-09-02  
