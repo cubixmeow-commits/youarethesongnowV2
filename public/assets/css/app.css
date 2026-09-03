@@ -4238,3 +4238,407 @@ body.is-create-generating .create-wizard__scroll {
     width: 100%;
   }
 }
+
+/* =============================================================================
+   V1-inspired complete homepage
+   ============================================================================= */
+
+.is-home .app-main {
+  max-width: none;
+  padding: 0;
+}
+
+.is-home .app-topbar__inner {
+  max-width: 1280px;
+  justify-content: space-between;
+}
+
+.home-nav {
+  display: none;
+  align-items: center;
+  gap: var(--space-5);
+  margin-left: auto;
+}
+
+.home-nav > a:not(.btn) {
+  color: var(--color-text-secondary);
+  font-size: var(--type-callout);
+  text-decoration: none;
+}
+
+.home-nav > a:not(.btn):hover {
+  color: var(--color-text);
+}
+
+.home-nav .btn {
+  min-height: 40px;
+  padding: 0.55rem 1rem;
+}
+
+.hero__subhead {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 5vw, 2rem);
+  line-height: 1.08;
+  color: var(--color-platinum);
+}
+
+.home-section {
+  width: min(100%, var(--app-max));
+  margin: 0 auto;
+  padding: clamp(4.5rem, 10vw, 8rem) max(var(--space-4), env(safe-area-inset-left));
+}
+
+.home-section__intro {
+  max-width: 40rem;
+  margin-bottom: clamp(2rem, 5vw, 3.5rem);
+}
+
+.home-section__intro h2,
+.home-story h2,
+.home-feature h2,
+.home-pricing h2,
+.home-invite h2 {
+  margin: 0 0 var(--space-4);
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 7vw, 3.6rem);
+  font-weight: 400;
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+}
+
+.world-carousel.home-section {
+  padding-top: clamp(4.5rem, 10vw, 8rem);
+  padding-bottom: clamp(4.5rem, 10vw, 8rem);
+}
+
+.world-carousel.home-section .world-carousel__intro {
+  max-width: 40rem;
+}
+
+.text-link {
+  display: inline-flex;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  color: var(--color-platinum);
+  font-weight: 600;
+  text-underline-offset: 0.25em;
+}
+
+.home-story,
+.home-feature {
+  display: grid;
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: center;
+}
+
+.home-story__art,
+.home-feature__art {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-stone);
+  box-shadow: var(--shadow-3);
+}
+
+.home-story__art::after,
+.home-feature__art::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px var(--color-border-hairline);
+  border-radius: inherit;
+}
+
+.home-story__art img {
+  width: 100%;
+  max-height: 42rem;
+  object-fit: cover;
+}
+
+.home-feature__art img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+
+.home-story__copy,
+.home-feature__copy {
+  max-width: 34rem;
+}
+
+.home-story__copy > p:not(.eyebrow),
+.home-feature__copy > p:not(.eyebrow),
+.home-pricing__intro > p:not(.eyebrow) {
+  color: var(--color-text-secondary);
+  font-size: clamp(1rem, 2vw, 1.125rem);
+}
+
+.home-process__grid {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--color-border);
+}
+
+.home-process__step {
+  padding: var(--space-6) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.home-process__number {
+  display: block;
+  margin-bottom: var(--space-5);
+  color: var(--color-accent-cobalt);
+  font-size: var(--type-caption);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.home-process__step h3,
+.home-values h3 {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-display);
+  font-size: clamp(1.45rem, 3vw, 2rem);
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.home-process__step p,
+.home-values p {
+  max-width: 31rem;
+  margin: 0;
+  color: var(--color-text-secondary);
+}
+
+.home-feature {
+  width: 100%;
+  max-width: none;
+  grid-template-areas: "art" "copy";
+  padding-left: max(var(--space-4), env(safe-area-inset-left));
+  padding-right: max(var(--space-4), env(safe-area-inset-right));
+  background: linear-gradient(160deg, var(--color-surface-stone), var(--color-bg));
+}
+
+.home-feature__copy {
+  grid-area: copy;
+}
+
+.home-feature__art {
+  grid-area: art;
+}
+
+.home-feature__copy .btn {
+  margin-top: var(--space-5);
+}
+
+.home-values {
+  display: grid;
+  gap: 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.home-values article {
+  min-width: 0;
+  padding: var(--space-6) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.home-pricing {
+  display: grid;
+  gap: clamp(2.5rem, 7vw, 6rem);
+  align-items: start;
+}
+
+.home-pricing__intro {
+  max-width: 34rem;
+}
+
+.price-card {
+  padding: clamp(1.5rem, 5vw, 3rem);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-xl);
+  background: linear-gradient(160deg, var(--color-surface-elevated), var(--color-surface-stone));
+  box-shadow: var(--shadow-3);
+}
+
+.price-card__name {
+  margin: 0 0 var(--space-3);
+  font-size: var(--type-caption);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-platinum);
+}
+
+.price-card__amount {
+  margin: 0 0 var(--space-2);
+  color: var(--color-text-secondary);
+}
+
+.price-card__amount span {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 10vw, 5rem);
+  line-height: 1;
+  color: var(--color-text);
+}
+
+.price-card__features {
+  display: grid;
+  gap: var(--space-3);
+  margin: var(--space-6) 0;
+  padding: 0;
+  list-style: none;
+}
+
+.price-card__features li {
+  position: relative;
+  padding-left: 1.6rem;
+  color: var(--color-text-secondary);
+}
+
+.price-card__features li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--color-accent-cobalt);
+}
+
+.price-card .btn {
+  width: 100%;
+}
+
+.price-card__note {
+  margin: var(--space-4) 0 0;
+  color: var(--color-text-tertiary);
+  font-size: var(--type-caption);
+}
+
+.home-faq__list {
+  border-top: 1px solid var(--color-border);
+}
+
+.home-faq details {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.home-faq summary {
+  min-height: 68px;
+  padding: var(--space-5) 2.5rem var(--space-5) 0;
+  position: relative;
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 3vw, 1.55rem);
+}
+
+.home-faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.home-faq summary::after {
+  content: "+";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-platinum);
+  font-family: var(--font-ui);
+  font-size: 1.5rem;
+}
+
+.home-faq details[open] summary::after {
+  content: "−";
+}
+
+.home-faq details p {
+  max-width: 42rem;
+  margin: 0;
+  padding: 0 2.5rem var(--space-5) 0;
+  color: var(--color-text-secondary);
+}
+
+.is-home .home-invite {
+  width: min(100%, var(--app-max));
+  padding: clamp(4rem, 10vw, 8rem) max(var(--space-4), env(safe-area-inset-left)) clamp(6rem, 12vw, 10rem);
+}
+
+@media (min-width: 700px) {
+  .home-nav {
+    display: flex;
+  }
+
+  .home-story,
+  .home-feature {
+    grid-template-columns: minmax(0, 1.12fr) minmax(18rem, 0.88fr);
+  }
+
+  .home-feature {
+    grid-template-areas: "copy art";
+    padding-left: max(calc((100vw - var(--app-max)) / 2), var(--space-6));
+    padding-right: max(calc((100vw - var(--app-max)) / 2), var(--space-6));
+  }
+
+  .home-process__grid,
+  .home-values {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .home-process__step,
+  .home-values article {
+    padding: var(--space-6);
+    border-right: 1px solid var(--color-border);
+  }
+
+  .home-process__step:first-child,
+  .home-values article:nth-child(3n + 1) {
+    padding-left: 0;
+  }
+
+  .home-process__step:last-child,
+  .home-values article:nth-child(3n) {
+    padding-right: 0;
+    border-right: 0;
+  }
+
+  .home-values article:nth-child(-n + 3) {
+    border-top: 0;
+  }
+
+  .home-pricing {
+    grid-template-columns: minmax(0, 0.82fr) minmax(25rem, 1.18fr);
+  }
+}
+
+@media (min-width: 900px) {
+  .is-home .hero {
+    min-height: calc(100svh - var(--topbar-h));
+  }
+
+  .is-home .hero__copy {
+    max-width: 42rem;
+    margin-left: max(calc((100vw - 1280px) / 2), var(--space-6));
+    padding-bottom: clamp(4rem, 9vh, 7rem);
+  }
+
+  .world-carousel__track {
+    grid-auto-columns: minmax(28%, 280px);
+  }
+}
+
+@media (max-width: 699px) {
+  .home-story__art {
+    max-height: 32rem;
+  }
+
+  .home-story__art img {
+    min-height: 28rem;
+  }
+}

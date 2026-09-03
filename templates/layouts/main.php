@@ -77,6 +77,14 @@ $bodyClass = trim(($layoutClass ?? '') . ($isHome ? ' is-home' : '') . ($authed 
           decoding="async">
         <span class="visually-hidden">You Are The Song Now</span>
       </a>
+      <?php if ($isHome && !$authed): ?>
+      <nav class="home-nav" aria-label="Homepage">
+        <a href="#examples">Examples</a>
+        <a href="#how-it-works">How it works</a>
+        <a href="#pricing">Pricing</a>
+        <a class="btn btn--primary" href="/sign-in">Sign in</a>
+      </nav>
+      <?php endif; ?>
     </div>
   </header>
 
