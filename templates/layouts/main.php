@@ -42,6 +42,26 @@ $bodyClass = trim(($layoutClass ?? '') . ($isHome ? ' is-home' : '') . ($authed 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title><?= e($title ?? 'You Are The Song Now') ?></title>
+  <?php if ($isHome): ?>
+  <meta name="description" content="Turn a meaningful song into original cinematic art starring you and the people you love.">
+  <link rel="canonical" href="https://youarethesongnow.com/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="You Are The Song Now">
+  <meta property="og:title" content="You Are The Song Now | Step Inside the Music">
+  <meta property="og:description" content="Choose a meaningful song. Add yourself or someone you love. Reveal an original cinematic world inspired by the music.">
+  <meta property="og:url" content="https://youarethesongnow.com/">
+  <meta property="og:image" content="https://youarethesongnow.com/assets/images/system/paywall-world-preview-desktop.webp">
+  <meta property="og:image:width" content="1600">
+  <meta property="og:image:height" content="1000">
+  <meta property="og:image:alt" content="A dark cinematic landscape opening into a luminous blue world">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@youarethesongnow">
+  <meta name="twitter:creator" content="@youarethesongnow">
+  <meta name="twitter:title" content="You Are The Song Now | Step Inside the Music">
+  <meta name="twitter:description" content="Turn a meaningful song into an original cinematic world starring you and the people you love.">
+  <meta name="twitter:image" content="https://youarethesongnow.com/assets/images/system/paywall-world-preview-desktop.webp">
+  <meta name="twitter:image:alt" content="A dark cinematic landscape opening into a luminous blue world">
+  <?php endif; ?>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
