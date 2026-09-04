@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>STOPPR Onboarding Walkthrough</title>
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <img src="assets/images/logo/180.png" alt="STOPPR" />
+      <div>
+        <h1>STOPPR onboarding walkthrough</h1>
+        <p>Local recreation of the discontinued STOPPR iOS onboarding. Open this file in Safari or Chrome — no server needed.</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="ghost-btn active" id="path-main" type="button">First-launch path</button>
+      <button class="ghost-btn" id="path-all" type="button">Include legacy screens</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="panel">
+      <div class="panel-head"><h2>What this screen is doing</h2></div>
+      <div class="panel-body">
+        <div class="phase-pill" id="phase-pill">Welcome</div>
+        <h2 class="explain-title" id="explain-title">Welcome video</h2>
+        <div class="explain-body" id="explain-body"></div>
+        <div class="kv" id="explain-kv"></div>
+        <div class="meta" id="explain-meta"></div>
+      </div>
+    </aside>
+
+    <section class="stage-wrap">
+      <div class="phone" aria-label="iPhone recreation of STOPPR">
+        <div class="screen" id="phone-screen">
+          <div class="status-bar" id="status-bar">
+            <span id="status-time">9:41</span>
+            <span class="status-icons">●●●● LTE 🔋</span>
+          </div>
+          <div class="screen-body" id="screen-root"></div>
+          <div class="home-bar" id="home-bar"></div>
+        </div>
+      </div>
+      <div class="stage-nav">
+        <button class="nav-btn secondary" id="prev-btn" type="button">← Back</button>
+        <div class="progress-label" id="progress-label">1 / 1</div>
+        <button class="nav-btn" id="next-btn" type="button">Next →</button>
+      </div>
+    </section>
+
+    <aside class="panel toc">
+      <div class="panel-head"><h2>Jump to a screen</h2></div>
+      <div class="panel-body" id="toc"></div>
+    </aside>
+  </main>
+
+  <script src="js/screens.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
