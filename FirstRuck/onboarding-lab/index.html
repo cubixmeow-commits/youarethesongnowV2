@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light" />
+  <title>First Ruck · Beginner onboarding lab</title>
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+  <a class="skip-link" href="#phone-root">Skip to walkthrough</a>
+
+  <div class="app">
+    <header class="review-banner">
+      <div class="review-brand">
+        <img src="assets/brand/logo/firstruck-mark.svg" width="40" height="40" alt="" />
+        <div>
+          <p class="review-kicker">First Ruck</p>
+          <p class="review-title">Beginner onboarding lab</p>
+        </div>
+      </div>
+      <p class="proto-badge">Research prototype · No live route data</p>
+      <div class="review-toolbar">
+        <button type="button" class="ghost-btn" id="reset-btn">Reset walkthrough</button>
+        <button type="button" class="ghost-btn" id="state-btn">View local state</button>
+      </div>
+    </header>
+
+    <div class="review-layout">
+      <aside class="review-panel" id="explain-panel" aria-label="Why this screen exists">
+        <p class="panel-kicker">Why this screen exists</p>
+        <h2 id="explain-title">Welcome</h2>
+        <p id="explain-purpose"></p>
+        <div class="explain-block">
+          <h3>What it uses</h3>
+          <p id="explain-uses"></p>
+        </div>
+        <div class="explain-block">
+          <h3>What it changes</h3>
+          <p id="explain-changes"></p>
+        </div>
+      </aside>
+
+      <section class="stage" aria-label="Phone walkthrough">
+        <div class="phone" id="phone">
+          <div class="phone-bezel">
+            <div class="phone-notch" aria-hidden="true"></div>
+            <div class="status-bar" id="status-bar">
+              <span>9:41</span>
+              <span class="status-icons" aria-hidden="true">LTE ████ 100%</span>
+            </div>
+            <div class="phone-screen">
+              <div id="phone-root" class="phone-root" tabindex="-1"></div>
+            </div>
+            <div class="home-bar" id="home-bar" aria-hidden="true"></div>
+          </div>
+        </div>
+        <div class="stage-nav" aria-label="Review navigation">
+          <button type="button" class="nav-btn" id="review-back">Back</button>
+          <p id="progress-label">1 / 25</p>
+          <button type="button" class="nav-btn nav-btn-next" id="review-next">Next</button>
+        </div>
+      </section>
+
+      <aside class="review-panel toc-panel" aria-label="Screen index">
+        <p class="panel-kicker">Jump to a screen</p>
+        <nav id="toc" class="toc"></nav>
+      </aside>
+    </div>
+  </div>
+
+  <div class="sr-live" id="live-region" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="js/model.js"></script>
+  <script src="js/screens.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+Options -Indexes
+DirectoryIndex index.html
+
+<IfModule mod_headers.c>
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; font-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'; object-src 'none'"
+    Header always set Permissions-Policy "geolocation=(), camera=(), microphone=()"
+    Header always set Referrer-Policy "no-referrer"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "DENY"
+    Header always set X-Robots-Tag "noindex, nofollow, noarchive"
+</IfModule>
