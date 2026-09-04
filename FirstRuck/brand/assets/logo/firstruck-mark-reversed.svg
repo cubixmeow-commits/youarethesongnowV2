@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">First Ruck trail mark reversed</title>
+  <desc id="desc">A forest trail loop and orange rising route on a warm white field.</desc>
+  <rect width="512" height="512" rx="124" fill="#F9F3E6"/>
+  <path d="M105 295c29-92 78-154 150-154 94 0 149 71 149 165 0 55-19 93-52 114" fill="none" stroke="#14331D" stroke-width="28" stroke-linecap="round"/>
+  <path d="M107 356c45 0 76-12 101-38 26-27 37-69 66-95 30-27 67-32 129-32" fill="none" stroke="#F45707" stroke-width="34" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="107" cy="356" r="26" fill="#14331D"/>
+  <circle cx="403" cy="191" r="27" fill="#F45707" stroke="#14331D" stroke-width="13"/>
+</svg>

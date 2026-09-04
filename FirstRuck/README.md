@@ -49,3 +49,9 @@ For a later dedicated deployment, point `firstruck.youarethesongnow.com` directl
 Flutter work starts from [`CURSOR-FLUTTER.md`](./CURSOR-FLUTTER.md). The supporting product, design, architecture, API, build, and iOS testing contracts live in [`docs/flutter/`](./docs/flutter/README.md).
 
 The first mobile milestone is intentionally narrow: create the native Flutter shell in `FirstRuck/mobile`, reproduce the welcome screen and first onboarding interaction, and run it in the iOS Simulator. The existing web prototype remains the visual and behavioral reference while the Flutter interface is implemented with native widgets.
+
+## Researched onboarding lab
+
+The implementation-ready brief for the next web-first onboarding experiment is [`CURSOR-ONBOARDING-WEB.md`](./CURSOR-ONBOARDING-WEB.md). It combines beginner rucking evidence, an audit of the 54-screen STOPPR reference walkthrough, an original 25-screen First Ruck sequence, deterministic prototype rules, and the review/acceptance contract. Cursor must build it as an isolated self-contained lab before any full Flutter port.
+
+The original First Ruck identity, logo exports, six premium onboarding photographs, usage rules, alt text, and generation prompts are in [`brand/`](./brand/). These assets are approved for the isolated onboarding lab and must not be confused with STOPPR reference assets.
