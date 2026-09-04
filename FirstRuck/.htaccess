@@ -1,0 +1,17 @@
+Options -Indexes
+RewriteEngine On
+
+# This repository is synchronized beneath Hostinger's public_html directory.
+# Keep application internals unreachable even though the repository itself is web-addressable.
+RewriteRule ^(?:bin|database|src|tests|var)(?:/|$) - [F,L,NC]
+
+<FilesMatch "^(?:\.env|\.gitignore|README\.md)$|\.(?:sqlite|sqlite-shm|sqlite-wal|log|sql)$">
+    Require all denied
+</FilesMatch>
+
+# Serve the public application from the clean /FirstRuck/ path.
+RewriteRule ^$ public/index.php [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.+)$ public/$1 [L]
+

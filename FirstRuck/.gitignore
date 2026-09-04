@@ -1,0 +1,6 @@
+/var/*.sqlite
+/var/*.sqlite-*
+/var/*.log
+/.env
+.DS_Store
+
