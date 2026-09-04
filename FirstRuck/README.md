@@ -4,7 +4,7 @@ First Ruck is a web-first prototype for a personalized beginner rucking coach. T
 
 ## First prototype
 
-- 10-step beginner onboarding
+- 12-step beginner onboarding
 - Deterministic readiness profile and starter-session recommendation
 - Ranked demonstration routes with transparent match reasons
 - Responsive mobile-app shell for browser review
@@ -43,3 +43,9 @@ For a later dedicated deployment, point `firstruck.youarethesongnow.com` directl
 - **Visual thesis:** a calm field guide brought to life with topographic lines, warm trail-paper surfaces, forest ink, and one safety-orange action color.
 - **Content plan:** focused onboarding, personal profile reveal, Today route, supporting alternatives, route detail.
 - **Interaction thesis:** the route draws itself during analysis, onboarding advances with directional restraint, and recommendation details expand in place without losing context.
+
+## Flutter / iOS handoff
+
+Flutter work starts from [`CURSOR-FLUTTER.md`](./CURSOR-FLUTTER.md). The supporting product, design, architecture, API, build, and iOS testing contracts live in [`docs/flutter/`](./docs/flutter/README.md).
+
+The first mobile milestone is intentionally narrow: create the native Flutter shell in `FirstRuck/mobile`, reproduce the welcome screen and first onboarding interaction, and run it in the iOS Simulator. The existing web prototype remains the visual and behavioral reference while the Flutter interface is implemented with native widgets.
