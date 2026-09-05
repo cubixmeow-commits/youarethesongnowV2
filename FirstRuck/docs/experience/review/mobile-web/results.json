@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "checks": [
+    "main PHP entry",
+    "asset routing and CSP",
+    "complete onboarding",
+    "required answer validation",
+    "unconfigured map state",
+    "interrupted demo recovery",
+    "pause/resume",
+    "durable photo and journal across reload",
+    "postcard download",
+    "safety answer not persisted",
+    "responsive overflow"
+  ],
+  "errors": [],
+  "failed": []
+}

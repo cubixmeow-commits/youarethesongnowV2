@@ -1,0 +1,45 @@
+{
+  "passed": true,
+  "visited": [
+    "What would make your first month worthwhile?",
+    "How long can you walk comfortably today?",
+    "How often have you been active lately?",
+    "The first win?\nWanting to go again.",
+    "Have you walked for exercise with weight before?",
+    "How much time can you comfortably protect for a session?",
+    "Which rhythm could you actually keep?",
+    "Give your walk\na place in your week.",
+    "Before we add weight",
+    "What could you carry on your first ruck?",
+    "What safe, secure load do you already have?",
+    "Less bounce.\nMore birdsong.",
+    "What will be underfoot?",
+    "Which surface already feels comfortable?",
+    "How should the first route handle hills?",
+    "Turning back\nis a route feature.",
+    "Which first-route shape feels easiest to control?",
+    "What would make you more likely to go?",
+    "Where should we look when live routes arrive?",
+    "Not every highlight\nis a number.",
+    "Your first ruck.\nRoom to grow.",
+    "A path you can\nmake your own.",
+    "Pack ready.\nPath chosen.",
+    "Make this the\nfirst of many."
+  ],
+  "widths": [
+    320,
+    390,
+    740,
+    1024
+  ],
+  "checks": [
+    "required answer validation",
+    "complete onboarding to paywall",
+    "demo pause/resume",
+    "journal persistence",
+    "postcard export",
+    "responsive overflow",
+    "no page errors"
+  ],
+  "errors": []
+}

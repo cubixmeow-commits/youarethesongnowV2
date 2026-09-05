@@ -55,3 +55,7 @@ The first mobile milestone is intentionally narrow: create the native Flutter sh
 The implementation-ready brief for the next web-first onboarding experiment is [`CURSOR-ONBOARDING-WEB.md`](./CURSOR-ONBOARDING-WEB.md). It combines beginner rucking evidence, an audit of the 54-screen STOPPR reference walkthrough, an original 25-screen First Ruck sequence, deterministic prototype rules, and the review/acceptance contract. Cursor must build it as an isolated self-contained lab before any full Flutter port.
 
 The original First Ruck identity, logo exports, six premium onboarding photographs, usage rules, alt text, and generation prompts are in [`brand/`](./brand/). These assets are approved for the isolated onboarding lab and must not be confused with STOPPR reference assets.
+
+## Expanded experience review (2026-09-04)
+
+`experience-lab/index.html` contains the new onboarding-to-journal design candidate, including Kip the wombat, teaching breaks, membership preview, recording and postcard export. See `docs/experience/PRODUCT-DIRECTION.md` and `docs/experience/BUILD-ARCHITECTURE.md` for the design and implementation boundaries. This experience now also powers the main mobile web app. The original onboarding lab and Flutter remain unchanged. See `docs/experience/WEB-SETUP.md` for local launch, optional mapping configuration and remaining integration boundaries.

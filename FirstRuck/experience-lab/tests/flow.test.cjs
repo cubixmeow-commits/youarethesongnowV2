@@ -1,0 +1,6 @@
+const {test}=require('node:test');const assert=require('node:assert/strict');const E=require('../flow.js');
+test('never more than three question screens without a reward',()=>{let run=0;for(const s of E.flow){run=s.kind==='question'?run+1:0;assert.ok(run<=3,s.id);}});
+test('plan and chosen route precede membership',()=>{const ids=E.flow.map(s=>s.id);assert.ok(ids.indexOf('plan')<ids.indexOf('routes'));assert.ok(ids.indexOf('routes')<ids.indexOf('paywall'));});
+test('recording excludes pause time',()=>{assert.equal(E.elapsed({accumulated:5000,running:false,started:0},20000),5000);assert.equal(E.elapsed({accumulated:5000,running:true,started:20000},23000),8000);});
+test('GPS drops poor accuracy and impossible movement',()=>{const a={latitude:45,longitude:-122,accuracy:5,timestamp:1000};assert.ok(E.acceptPoint(null,a));assert.equal(E.acceptPoint(a,{...a,latitude:46,timestamp:2000}),false);assert.equal(E.acceptPoint(a,{...a,accuracy:100,timestamp:2000}),false);assert.equal(E.acceptPoint(a,{...a,timestamp:0}),false);assert.equal(E.acceptPoint(a,{...a,latitude:91,timestamp:2000}),false);});
+test('GPS accepts plausible walking and computes distance',()=>{const a={latitude:45,longitude:-122,accuracy:5,timestamp:1000};const b={...a,latitude:45.00001,timestamp:2000};assert.ok(E.acceptPoint(a,b));assert.ok(E.distance(a,b)>1&&E.distance(a,b)<1.2);});

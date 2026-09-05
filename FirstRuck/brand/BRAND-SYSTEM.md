@@ -4,7 +4,7 @@
 
 **Quiet capability.** First Ruck makes a loaded walk feel understandable, attainable, and worth repeating. It is an outdoor field guide with the finish of a premium fitness product, without military posturing or transformation hype.
 
-> Start where you are. Carry forward.
+> A little weight goes a long way.
 
 Secondary product line: **Your first month of rucking, built around you.**
 
