@@ -41,7 +41,9 @@ An LLM must never create geometry or assert safety facts. It receives only eligi
 
 `src/Coaching/RouteCoach.php` supports Gemini first and Groq second, with at most two provider calls per instance and deterministic rules fallback. It accepts only candidates whose source facts passed structural validation and are comparison-eligible, checked within 24 hours, with approved reason codes. That validation does not mean a route is safe or suitable. Structured output must return every supplied ID once and only supplied reason codes. Hallucinated IDs or codes invalidate the response.
 
-The existing mapping route endpoint now invokes the selector. AI remains disabled until protected server configuration supplies an enable flag, model names, and credentials. Do not describe AI route coaching as live until a configured deployment and provider test confirm it.
+The existing mapping route endpoint now invokes the selector. When deployed inside YouAreTheSongNow, FirstRuck reuses the protected root `GEMINI_API_KEY` and `GEMINI_MODEL`; it does not copy those values into FirstRuck. The separate `route_ai_enabled` flag and daily call allowance still control FirstRuck. Do not describe AI route coaching as live until a configured deployment and provider test confirm it.
+
+The current AI step ranks already-generated candidates; it does not discover or invent geography. The next route-quality slice must use geographic place and route evidence to generate meaningful park, greenway, or trail candidates before Gemini ranks them.
 
 ## Evidence still needed
 

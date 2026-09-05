@@ -6,6 +6,15 @@ use FirstRuck\Database;
 
 define('FIRST_RUCK_ROOT', dirname(__DIR__));
 
+// When FirstRuck is deployed inside YouAreTheSongNow, reuse its protected
+// environment loader so shared provider credentials stay in the root .env.
+// The integration is optional and FirstRuck remains independently deployable.
+$sharedEnvLoader = dirname(FIRST_RUCK_ROOT) . '/src/Support/Env.php';
+if (is_file($sharedEnvLoader)) {
+    require_once $sharedEnvLoader;
+    \Yatsn\Support\Env::load(dirname(FIRST_RUCK_ROOT) . '/.env');
+}
+
 require_once FIRST_RUCK_ROOT . '/src/Database.php';
 require_once FIRST_RUCK_ROOT . '/src/RecommendationEngine.php';
 
@@ -32,4 +41,3 @@ function first_ruck_database(): PDO
 
     return $database;
 }
-

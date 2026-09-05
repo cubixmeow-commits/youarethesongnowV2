@@ -5,6 +5,7 @@ Record changes that alter current product behavior, architecture, contracts, dec
 ## 2026-09-05
 
 - Corrected Geoapify short-loop candidate sizing after the first live Goleta search returned no routes; circuit waypoints now account for their three-leg geometry and the provider prefilter matches the selector's 15% duration tolerance.
+- Added a foreground GPS location puck and breadcrumb over selected live routes, made GPS the primary action for a map-derived route, and reused YouAreTheSongNow's protected Gemini environment configuration behind FirstRuck's separate enable flag and allowance.
 
 ## 2026-09-04
 

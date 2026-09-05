@@ -15,7 +15,7 @@ The repository-level `public/FirstRuck/index.php`, `asset.php`, `api.php`, and `
 - `flow.js`: ordered 26-screen flow, teaching content, GPS-point validation, distance, and elapsed-time helpers.
 - `app.js`: rendering, navigation, plan reveal, route selection, recording, reflections, journal, postcards, and accessibility announcements.
 - `storage.js`: IndexedDB `firstruck-local`, object store `items`.
-- `mapping.js`: mapping bootstrap, place search, route requests, and MapLibre rendering.
+- `mapping.js`: mapping bootstrap, place search, route requests, MapLibre rendering, and a foreground-only current-location/recorded-track overlay during a GPS walk.
 - `onboarding-lab/js/model.js`: deterministic plan construction and example-route ranking.
 - `onboarding-lab/js/screens.js`: question catalog and stable values.
 

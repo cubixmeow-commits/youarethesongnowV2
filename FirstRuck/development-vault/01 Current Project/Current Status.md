@@ -13,7 +13,7 @@ FirstRuck is an actively developed beginner rucking product. The team has chosen
 - Kip, a friendly wombat with an orange backpack, appears as the trail companion.
 - Main app sections exist for Today, Routes, Journal, and Journey.
 - Users can choose labelled example routes or use optional Geoapify-backed place search and pedestrian route candidates.
-- Foreground browser GPS recording validates fixes, calculates distance, supports pause/resume, and recovers an interrupted session.
+- Foreground browser GPS recording validates fixes, calculates distance, overlays current position and the recorded breadcrumb on a selected live route, supports pause/resume, and recovers an interrupted session.
 - A labelled demo walk lets the experience be reviewed without location access.
 - Post-walk reflection, resized local photos, journal entries, postcard PNG export, and native sharing where supported are implemented.
 - Non-sensitive onboarding answers and journal summaries persist locally. Photos and interrupted recording state use IndexedDB. The safety response is memory-only.

@@ -14,8 +14,8 @@ $config=is_file(FIRST_RUCK_ROOT.'/var/config.php')?require FIRST_RUCK_ROOT.'/var
 $key=(string)($config['geoapify_key']??getenv('FIRST_RUCK_GEOAPIFY_KEY')?:'');
 $enabled=$key!==''&&($config['maps_enabled']??false)===true;
 $aiEnabled=($config['route_ai_enabled']??false)===true;
-$geminiKey=(string)($config['gemini_key']??getenv('FIRST_RUCK_GEMINI_KEY')?:'');
-$geminiModel=(string)($config['gemini_model']??getenv('FIRST_RUCK_GEMINI_MODEL')?:'');
+$geminiKey=(string)($config['gemini_key']??(getenv('FIRST_RUCK_GEMINI_KEY')?:getenv('GEMINI_API_KEY')?:''));
+$geminiModel=(string)($config['gemini_model']??(getenv('FIRST_RUCK_GEMINI_MODEL')?:getenv('GEMINI_MODEL')?:'gemini-3.6-flash'));
 $groqKey=(string)($config['groq_key']??getenv('FIRST_RUCK_GROQ_KEY')?:'');
 $groqModel=(string)($config['groq_model']??getenv('FIRST_RUCK_GROQ_MODEL')?:'');
 $aiConfigured=($geminiKey!==''&&$geminiModel!=='')||($groqKey!==''&&$groqModel!=='');
