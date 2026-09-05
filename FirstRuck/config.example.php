@@ -4,4 +4,12 @@
 return [
     'maps_enabled' => false,
     'geoapify_key' => '',
+    // Route AI may reorder structurally validated map candidates using only
+    // approved reason codes. It never receives coordinates or private answers.
+    'route_ai_enabled' => false,
+    'route_ai_daily_call_limit' => 50,
+    'gemini_key' => '',
+    'gemini_model' => '',
+    'groq_key' => '',
+    'groq_model' => '',
 ];

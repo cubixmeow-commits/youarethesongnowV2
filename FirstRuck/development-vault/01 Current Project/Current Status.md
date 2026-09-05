@@ -18,7 +18,7 @@ FirstRuck is an actively developed beginner rucking product. The team has chosen
 - Post-walk reflection, resized local photos, journal entries, postcard PNG export, and native sharing where supported are implemented.
 - Non-sensitive onboarding answers and journal summaries persist locally. Photos and interrupted recording state use IndexedDB. The safety response is memory-only.
 - The PHP recommendation engine and seeded demonstration route data still exist.
-- A bounded, server-side Gemini/Groq route-ranking adapter exists and is tested in isolation.
+- A server-side route-selection pipeline validates and scores map-derived candidates, then optionally uses the bounded Gemini/Groq adapter to reorder eligible IDs. Rules remain the fallback and suitability unknowns remain visible.
 - The complete mobile web experience is published to GitHub `main` and prepared for Hostinger deployment.
 
 ## Not connected yet
@@ -27,7 +27,7 @@ FirstRuck is an actively developed beginner rucking product. The team has chosen
 - User accounts, cross-device sync, server journal storage, or production analytics
 - A public or friends-only community feed
 - Live AI advice during a walk
-- Production wiring between validated live routes and the route-coach adapter
+- Configured live-provider validation and production evidence for the route-selection pipeline
 - Verified route surface, hill suitability, access, closures, crossings, weather, or trail authority data
 - Background GPS, offline maps, turn-by-turn navigation, HealthKit, Apple Watch, or notifications
 - A production-complete Flutter app

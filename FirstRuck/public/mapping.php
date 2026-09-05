@@ -2,13 +2,23 @@
 declare(strict_types=1);
 require_once dirname(__DIR__).'/src/bootstrap.php';
 require_once FIRST_RUCK_ROOT.'/src/Mapping/Geoapify.php';
+require_once FIRST_RUCK_ROOT.'/src/Coaching/RouteCoach.php';
+require_once FIRST_RUCK_ROOT.'/src/Coaching/RouteSelectionEngine.php';
 use FirstRuck\Mapping\Geoapify;
+use FirstRuck\Coaching\RouteCoach;
+use FirstRuck\Coaching\RouteSelectionEngine;
 header('Cache-Control: no-store');
 header('Content-Type: application/json; charset=utf-8');
 header('X-Content-Type-Options: nosniff');
 $config=is_file(FIRST_RUCK_ROOT.'/var/config.php')?require FIRST_RUCK_ROOT.'/var/config.php':[];
 $key=(string)($config['geoapify_key']??getenv('FIRST_RUCK_GEOAPIFY_KEY')?:'');
 $enabled=$key!==''&&($config['maps_enabled']??false)===true;
+$aiEnabled=($config['route_ai_enabled']??false)===true;
+$geminiKey=(string)($config['gemini_key']??getenv('FIRST_RUCK_GEMINI_KEY')?:'');
+$geminiModel=(string)($config['gemini_model']??getenv('FIRST_RUCK_GEMINI_MODEL')?:'');
+$groqKey=(string)($config['groq_key']??getenv('FIRST_RUCK_GROQ_KEY')?:'');
+$groqModel=(string)($config['groq_model']??getenv('FIRST_RUCK_GROQ_MODEL')?:'');
+$aiConfigured=($geminiKey!==''&&$geminiModel!=='')||($groqKey!==''&&$groqModel!=='');
 $_SESSION['map_csrf']??=bin2hex(random_bytes(24));
 function reply(array $body,int $status=200): never {http_response_code($status);echo json_encode($body,JSON_THROW_ON_ERROR|JSON_UNESCAPED_SLASHES);exit;}
 function reserve(int $units): void {
@@ -20,9 +30,25 @@ function reserve(int $units): void {
         if($q->rowCount()!==1){$db->rollBack();reply(['ok'=>false,'error'=>'Map allowance reached for today. Your journal and recording still work.'],429);}$db->commit();
     }catch(Throwable $e){if($db->inTransaction())$db->rollBack();throw $e;}
 }
+function reserve_ai_calls(int $requested, int $dailyLimit): bool {
+    if ($requested < 1 || $dailyLimit < 1) return false;
+    $db=first_ruck_database();
+    $db->exec('CREATE TABLE IF NOT EXISTS route_ai_budget (day TEXT PRIMARY KEY, calls INTEGER NOT NULL)');
+    $db->beginTransaction();
+    try {
+        $q=$db->prepare('INSERT OR IGNORE INTO route_ai_budget(day,calls) VALUES (?,0)');$q->execute([gmdate('Y-m-d')]);
+        $q=$db->prepare('UPDATE route_ai_budget SET calls=calls+? WHERE day=? AND calls+?<=?');
+        $q->execute([$requested,gmdate('Y-m-d'),$requested,$dailyLimit]);
+        if($q->rowCount()!==1){$db->rollBack();return false;}
+        $db->commit();return true;
+    } catch(Throwable) {
+        if($db->inTransaction())$db->rollBack();
+        return false;
+    }
+}
 try{
     $action=(string)($_GET['action']??'bootstrap');
-    if($action==='bootstrap')reply(['ok'=>true,'enabled'=>$enabled,'csrf'=>$_SESSION['map_csrf'],'provider'=>'Geoapify','message'=>$enabled?'Ready to search.':'Live maps are not connected yet. You can explore example routes.']);
+    if($action==='bootstrap')reply(['ok'=>true,'enabled'=>$enabled,'csrf'=>$_SESSION['map_csrf'],'provider'=>'Geoapify','routeSelection'=>$aiEnabled?'ai-assisted-with-rules-fallback':'rules','message'=>$enabled?'Ready to search.':'Live maps are not connected yet. You can explore example routes.']);
     if(!$enabled)reply(['ok'=>false,'error'=>'Live maps are not connected yet.'],503);
     if($action==='tile'){
         $z=filter_var($_GET['z']??null,FILTER_VALIDATE_INT);$x=filter_var($_GET['x']??null,FILTER_VALIDATE_INT);$y=filter_var($_GET['y']??null,FILTER_VALIDATE_INT);
@@ -51,7 +77,24 @@ try{
     if($action==='routes'){
         [$lat,$lon]=Geoapify::coordinate($input['latitude']??null,$input['longitude']??null);
         $minutes=max(10,min(30,(int)($input['minutes']??15)));$shape=in_array($input['shape']??'', ['short-loop','out-back'],true)?$input['shape']:'out-back';
-        reserve(36);session_write_close();reply(['ok'=>true,'routes'=>$client->routes($lat,$lon,$minutes,$shape),'message'=>'Map-derived candidates. Check access, surface, hills and conditions before choosing.']);
+        reserve(36);
+        $candidates=$client->routes($lat,$lon,$minutes,$shape);
+        $aiConfig=[
+            'enabled'=>$aiEnabled && $aiConfigured && reserve_ai_calls(2,max(1,(int)($config['route_ai_daily_call_limit']??50))),
+            'geminiKey'=>$geminiKey,
+            'geminiModel'=>$geminiModel,
+            'groqKey'=>$groqKey,
+            'groqModel'=>$groqModel,
+        ];
+        session_write_close();
+        $selection=(new RouteSelectionEngine(new RouteCoach($aiConfig)))->select($candidates,[
+            'minutes'=>$minutes,
+            'shape'=>$shape,
+            'surface'=>mb_substr(trim((string)($input['surface']??'either')),0,40),
+            'hillComfort'=>mb_substr(trim((string)($input['hillComfort']??'gentle')),0,40),
+            'priority'=>mb_substr(trim((string)($input['priority']??'repeatability')),0,40),
+        ]);
+        reply(['ok'=>true,'routes'=>$selection['routes'],'selectionMode'=>$selection['mode'],'message'=>$selection['message']]);
     }
     reply(['ok'=>false,'error'=>'Unknown map action.'],404);
 }catch(InvalidArgumentException $e){reply(['ok'=>false,'error'=>$e->getMessage()],422);}catch(Throwable){reply(['ok'=>false,'error'=>'Map search could not finish. Try again later.'],502);}

@@ -20,7 +20,7 @@ Exit condition: the owner approves the complete onboarding-to-first-walk experie
 2. Measure route quality, quota cost, latency, duplicate rate, and failure modes.
 3. Add independent evidence for elevation, surface, crossings, access, closures, and freshness where available.
 4. Create deterministic eligibility and safety rules with explicit unknowns.
-5. Wire `RouteCoach` only after candidates are eligible and reason codes are validated.
+5. Validate the connected `RouteSelectionEngine` and `RouteCoach` pipeline against configured live providers; measure rules fallback and rejected-output behavior.
 6. Add a versioned mobile-safe API contract.
 
 Exit condition: no route is described as suitable unless required evidence passes; unknowns remain visible; provider failure falls back safely.

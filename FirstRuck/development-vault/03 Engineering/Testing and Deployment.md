@@ -8,6 +8,7 @@ From the repository root:
 node --test FirstRuck/experience-lab/tests/flow.test.cjs FirstRuck/onboarding-lab/tests/onboarding.test.js
 php FirstRuck/tests/run.php
 php FirstRuck/tests/route-coach.php
+php FirstRuck/tests/route-selection.php
 php FirstRuck/tests/mapping.php
 node --check FirstRuck/experience-lab/app.js
 php -l FirstRuck/public/index.php

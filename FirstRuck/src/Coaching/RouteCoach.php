@@ -13,6 +13,8 @@ final class RouteCoach
         'duration_match' => 'Fits your prepared walking time.',
         'easy_return' => 'The source identifies an early return option.',
         'hill_match' => 'Fits the elevation limit in your plan.',
+        'shape_match' => 'Matches your preferred route shape.',
+        'pedestrian_network' => 'Calculated on the mapping provider’s pedestrian network.',
     ];
 
     public function __construct(private array $config = [], private ?\Closure $transport = null) {}
@@ -24,7 +26,9 @@ final class RouteCoach
     {
         $safe = [];
         foreach (array_slice($candidates, 0, 3) as $route) {
-            if (($route['verified'] ?? false) !== true || ($route['eligible'] ?? false) !== true
+            $factsVerified = ($route['factsVerified'] ?? $route['verified'] ?? false) === true;
+            $comparisonEligible = ($route['comparisonEligible'] ?? $route['eligible'] ?? false) === true;
+            if (!$factsVerified || !$comparisonEligible
                 || !is_string($route['id'] ?? null) || !preg_match('/^[a-zA-Z0-9_-]{1,80}$/', $route['id'])
                 || !is_string($route['source'] ?? null) || !str_starts_with($route['source'], 'https://')
                 || !is_int($route['checkedAt'] ?? null) || $route['checkedAt'] > time()
@@ -32,7 +36,11 @@ final class RouteCoach
                 continue;
             }
             $reasons = array_values(array_intersect(array_keys(self::REASONS), $route['reasonCodes'] ?? []));
-            if ($reasons !== []) $safe[$route['id']] = ['id' => $route['id'], 'reasonCodes' => $reasons];
+            if ($reasons !== []) $safe[$route['id']] = [
+                'id' => $route['id'],
+                'baselineScore' => max(0, min(100, (int) ($route['baselineScore'] ?? 0))),
+                'reasonCodes' => $reasons,
+            ];
         }
         $fallback = ['mode' => 'rules', 'routes' => array_values($safe)];
         if ($safe === [] || !($this->config['enabled'] ?? false) || $this->calls >= 2) return $fallback;
@@ -73,8 +81,9 @@ final class RouteCoach
 
     private function payload(string $provider, string $model, array $routes): array
     {
-        $prompt = 'Order the supplied eligible walking route IDs by the strength of their supplied fit reasons. '
-            . 'Return every ID exactly once. Keep only supplied reasonCodes for each ID. No other facts or text. '
+        $prompt = 'Order the supplied map-derived walking route IDs using only baselineScore and supplied fit reasonCodes. '
+            . 'These are candidates, not verified-safe routes. Return every ID exactly once. '
+            . 'Keep only supplied reasonCodes for each ID. No other facts, claims, advice, coordinates, or text. '
             . json_encode($routes, JSON_THROW_ON_ERROR);
         $schema = ['type' => 'object', 'properties' => ['routes' => ['type' => 'array', 'items' => [
             'type' => 'object', 'properties' => ['id' => ['type' => 'string'], 'reasonCodes' => ['type' => 'array', 'items' => ['type' => 'string']]],

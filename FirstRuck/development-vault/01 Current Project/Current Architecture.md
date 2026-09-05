@@ -39,7 +39,8 @@ Flutter
 - `public/api.php` persists a session profile and recommendation event to SQLite.
 - `src/Mapping/Geoapify.php` searches places and produces bounded pedestrian route candidates.
 - `public/mapping.php` keeps the map key server-side, applies CSRF and rate/budget limits, and proxies tiles.
-- `src/Coaching/RouteCoach.php` can reorder eligible route IDs using validated reason codes. It is not publicly wired.
+- `src/Coaching/RouteSelectionEngine.php` validates and deterministically scores current map-derived candidates, preserves suitability unknowns, and invokes `RouteCoach` through the mapping route endpoint.
+- `src/Coaching/RouteCoach.php` can reorder eligible route IDs using baseline scores and validated reason codes. Gemini, then Groq, is optional and protected by configuration and a daily call allowance; rules remain the fallback.
 
 ## Target direction
 

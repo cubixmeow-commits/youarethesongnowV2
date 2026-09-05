@@ -21,25 +21,27 @@ It uses session CSRF for writes, a six-request-per-minute search/route limit, a 
 
 `Geoapify::routes()` generates at most three pedestrian candidates around the chosen point and filters them to the requested 10–30 minute target. It supports out-and-back or short-loop geometry. Output is always `verified: false` and lists unknown access, closures, sidewalks/crossings, surface, hills, and weather.
 
-## Required production pipeline
+## Current selection pipeline
 
 ```text
 User constraints and chosen area
   -> geographic candidate generation
-  -> source and freshness normalization
+  -> source, geometry, duration, distance, and freshness normalization
   -> deterministic hard eligibility filters
   -> deterministic scoring baseline
   -> optional bounded LLM ordering/explanation
   -> UI with sources, unknowns, and fallback
 ```
 
-An LLM must never create geometry or assert safety facts. It receives only eligible internal route IDs and approved reason codes.
+`src/Coaching/RouteSelectionEngine.php` now implements this pipeline for the web prototype. It accepts up to six provider candidates, rejects stale or malformed records and large duration mismatches, assigns approved source-bound reason codes, ranks with rules, and sends at most three candidates to `RouteCoach`. The response distinguishes structurally verified provider facts from unverified suitability. Access, closures, crossings, surface, hills, and weather remain explicit unknowns.
+
+An LLM must never create geometry or assert safety facts. It receives only eligible internal route IDs, deterministic baseline scores, and approved reason codes. Gemini is attempted first and Groq second. Invalid output, missing configuration, exhausted daily call allowance, or provider failure preserves the rules-based order. Coordinates, health answers, journal content, and user prose are never sent to the LLM.
 
 ## RouteCoach
 
-`src/Coaching/RouteCoach.php` supports Gemini first and Groq second, with at most two provider calls per instance and deterministic rules fallback. It accepts only candidates marked verified and eligible, checked within 24 hours, with approved reason codes. Structured output must return every supplied ID once and only supplied reason codes. Hallucinated IDs or codes invalidate the response.
+`src/Coaching/RouteCoach.php` supports Gemini first and Groq second, with at most two provider calls per instance and deterministic rules fallback. It accepts only candidates whose source facts passed structural validation and are comparison-eligible, checked within 24 hours, with approved reason codes. That validation does not mean a route is safe or suitable. Structured output must return every supplied ID once and only supplied reason codes. Hallucinated IDs or codes invalidate the response.
 
-It currently has no public endpoint, production credential wiring, live-provider benchmark, or UI connection. Do not describe AI route coaching as live.
+The existing mapping route endpoint now invokes the selector. AI remains disabled until protected server configuration supplies an enable flag, model names, and credentials. Do not describe AI route coaching as live until a configured deployment and provider test confirm it.
 
 ## Evidence still needed
 

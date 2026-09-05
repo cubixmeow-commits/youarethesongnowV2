@@ -71,3 +71,10 @@ This file records accepted FirstRuck decisions. Add a dated entry when a choice 
 - **Date:** 2026-09-04
 - **Decision:** Headline: “A little weight goes a long way.” Supporting caption: “A first ruck built around you. A little companion along the way.”
 - **Reason:** It is concise, specific to rucking, and supports the gentle companion-led tone.
+
+## D-011 — Provider-neutral route selection pipeline
+
+- **Status:** Accepted development direction
+- **Date:** 2026-09-05
+- **Decision:** Normalize and hard-filter map-derived candidates, deterministically score only known facts, and optionally allow Gemini then Groq to reorder eligible internal IDs using approved reason codes. Preserve a rules fallback and explicit suitability unknowns.
+- **Reason:** FirstRuck can evaluate mapping and LLM providers now without allowing a model to invent geography, coordinates, conditions, access, or safety claims.

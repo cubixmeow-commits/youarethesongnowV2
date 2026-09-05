@@ -47,7 +47,7 @@ final class Geoapify
                 $id='geo-'.substr(hash('sha256',json_encode($geometry)),0,16);if(isset($seen[$id]))continue;$seen[$id]=true;
                 $routes[]=['id'=>$id,'name'=>($shape==='short-loop'?'Custom walking circuit':'Custom out-and-back').' '.($index+1),
                     'geometry'=>$geometry,'distanceMeters'=>$distance,'durationSeconds'=>$duration,'distanceLabel'=>number_format($distance/1000,2).' km',
-                    'terrain'=>'Surface and hill suitability not verified','shape'=>$shape==='short-loop'?'Circuit candidate':'Out and back',
+                    'terrain'=>'Surface and hill suitability not verified','shape'=>$shape==='short-loop'?'Circuit candidate':'Out and back','shapeKey'=>$shape,
                     'reasons'=>['Calculated on the pedestrian network.','Within the preview’s estimated time filter.'],
                     'unknowns'=>['current access','closures','sidewalks and crossings','surface','hill suitability','weather'],
                     'source'=>'https://www.geoapify.com/routing-api/','checkedAt'=>time(),'isDemo'=>false,'verified'=>false];

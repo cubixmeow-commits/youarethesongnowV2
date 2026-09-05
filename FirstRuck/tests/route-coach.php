@@ -14,6 +14,7 @@ $coach->rank([$route]);$coach->rank([$route]);check($calls===2,'two-call lifetim
 $bad=fn()=>['candidates'=>[['content'=>['parts'=>[['text'=>'{"routes":[{"id":"invented","reasonCodes":["safe"]}]}']]]]]];
 check((new RouteCoach($config,$bad))->rank([$route])['mode']==='rules','rejects invented route and safety reason');
 check((new RouteCoach($config,$transport))->rank([array_merge($route,['verified'=>false])])['routes']===[],'demo route cannot reach provider');
+check((new RouteCoach($config,$transport))->rank([array_merge($route,['verified'=>false,'factsVerified'=>true,'comparisonEligible'=>true])])['mode']==='gemini','structurally verified candidate can be ranked without a suitability claim');
 check((new RouteCoach($config,$transport))->rank([array_merge($route,['checkedAt'=>time()-90000])])['routes']===[],'stale candidate excluded');
 $groq=new RouteCoach(['enabled'=>true,'groqKey'=>'test-only','groqModel'=>'test-model'],fn()=>['choices'=>[['message'=>['content'=>json_encode($good)]]]]);
 check($groq->rank([$route])['mode']==='groq','accepts validated Groq output');
