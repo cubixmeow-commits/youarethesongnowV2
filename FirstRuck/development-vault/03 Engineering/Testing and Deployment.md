@@ -10,6 +10,7 @@ php FirstRuck/tests/run.php
 php FirstRuck/tests/route-coach.php
 php FirstRuck/tests/route-selection.php
 php FirstRuck/tests/mapping.php
+php FirstRuck/tests/walk-discovery.php
 node --check FirstRuck/experience-lab/app.js
 php -l FirstRuck/public/index.php
 php -l FirstRuck/public/asset.php

@@ -16,6 +16,21 @@ final class Geoapify
         return $places;
     }
 
+    /** Returns a city-level label so exact device coordinates never need to reach an LLM. */
+    public function reverseArea(float $lat, float $lon): string
+    {
+        [$lat,$lon]=self::coordinate($lat,$lon);
+        $json=$this->get('api.geoapify.com','/v1/geocode/reverse',['lat'=>$lat,'lon'=>$lon,'limit'=>1,'format'=>'json']);
+        $place=$json['results'][0]??[];
+        $parts=array_values(array_unique(array_filter([
+            (string)($place['city']??$place['town']??$place['village']??$place['county']??''),
+            (string)($place['state_code']??$place['state']??''),
+            (string)($place['postcode']??''),
+            (string)($place['country']??''),
+        ],static fn(string $value):bool=>$value!=='')));
+        return implode(', ',array_slice($parts,0,4));
+    }
+
     public static function coordinate(mixed $lat, mixed $lon): array
     {
         if (!is_numeric($lat)||!is_numeric($lon)||!is_finite((float)$lat)||!is_finite((float)$lon)||abs((float)$lat)>85||abs((float)$lon)>180) throw new \InvalidArgumentException('Choose a valid map location.');
@@ -23,7 +38,7 @@ final class Geoapify
     }
 
     /** Bounded out-and-back candidates. Source-derived geometry; suitability remains unknown. */
-    public function routes(float $lat,float $lon,int $minutes,string $shape): array
+    public function routes(float $lat,float $lon,int $minutes,string $shape,array $bearings=[25,145,265]): array
     {
         [$lat,$lon]=self::coordinate($lat,$lon);
         $target=max(10,min(30,$minutes))*60;
@@ -32,7 +47,9 @@ final class Geoapify
         // covers about 3.64 radii (r + the 110-degree chord + r).
         $radius=$targetDistance/($shape==='short-loop'?3.64:2);
         $routes=[]; $seen=[];
-        foreach ([25,145,265] as $index=>$bearing) {
+        foreach (array_slice($bearings,0,3) as $index=>$bearing) {
+            if(!is_numeric($bearing))continue;
+            $bearing=(float)$bearing;
             $a=deg2rad($bearing);
             $endLat=$lat+cos($a)*$radius/111320;
             $endLon=$lon+sin($a)*$radius/(111320*max(.1,cos(deg2rad($lat))));
@@ -59,6 +76,64 @@ final class Geoapify
             } catch (\Throwable) { /* One unroutable bearing does not discard other candidates. */ }
         }
         return $routes;
+    }
+
+    /**
+     * Resolves grounded named-place leads, then calculates one pedestrian
+     * candidate near each place. This does not claim to reproduce an official
+     * trail alignment.
+     */
+    public function namedRoutes(array $walks,float $areaLat,float $areaLon,int $minutes,string $shape,array $sources=[]): array
+    {
+        [$areaLat,$areaLon]=self::coordinate($areaLat,$areaLon);
+        $routes=[];
+        foreach(array_slice($walks,0,3) as $index=>$walk){
+            if(!is_array($walk))continue;
+            $name=trim((string)($walk['name']??''));
+            $locality=trim((string)($walk['locality']??''));
+            if($name===''||strlen($name)>120||strlen($locality)>120)continue;
+            try{
+                $json=$this->get('api.geoapify.com','/v1/geocode/search',[
+                    'text'=>trim($name.' '.$locality),'limit'=>1,'format'=>'json','bias'=>'proximity:'.$areaLon.','.$areaLat,
+                ]);
+                $place=$json['results'][0]??null;
+                if(!is_array($place)||!isset($place['lat'],$place['lon']))continue;
+                $resolvedLabel=(string)($place['formatted']??$place['name']??'');
+                if(!self::nameMatches($name,$resolvedLabel))continue;
+                [$lat,$lon]=self::coordinate($place['lat'],$place['lon']);
+                $fromSearch=(int)round(self::distanceMeters($areaLat,$areaLon,$lat,$lon));
+                if($fromSearch>25000)continue;
+                $candidate=$this->routes($lat,$lon,$minutes,$shape,[25+($index*120)])[0]??null;
+                if(!is_array($candidate))continue;
+                $candidate['name']='Walking candidate near '.$name;
+                $candidate['startLabel']=$resolvedLabel!==''?$resolvedLabel:$name;
+                $candidate['discoveryMode']='gemini-search';
+                $candidate['discoveryRank']=max(1,(int)($walk['discoveryRank']??$index+1));
+                $candidate['discoveryKind']=(string)($walk['kind']??'walking-area');
+                $candidate['distanceFromSearchMeters']=$fromSearch;
+                $candidate['discoverySources']=array_values(array_slice($sources,0,5));
+                $routes[]=$candidate;
+            }catch(\Throwable){/* A failed lead must not block the remaining places. */}
+        }
+        return $routes;
+    }
+
+    private static function distanceMeters(float $lat1,float $lon1,float $lat2,float $lon2): float
+    {
+        $earth=6371000;
+        $dLat=deg2rad($lat2-$lat1);$dLon=deg2rad($lon2-$lon1);
+        $a=sin($dLat/2)**2+cos(deg2rad($lat1))*cos(deg2rad($lat2))*sin($dLon/2)**2;
+        return $earth*2*atan2(sqrt($a),sqrt(max(0,1-$a)));
+    }
+
+    private static function nameMatches(string $requested,string $resolved): bool
+    {
+        $normalize=static fn(string $value):array=>array_values(array_filter(
+            preg_split('/[^\pL\pN]+/u',mb_strtolower($value))?:[],
+            static fn(string $token):bool=>mb_strlen($token)>=4&&!in_array($token,['park','trail','walk','lake','loop','path'],true)
+        ));
+        $tokens=$normalize($requested);
+        return $tokens!==[]&&array_intersect($tokens,$normalize($resolved))!==[];
     }
 
     private function get(string $host,string $path,array $query): array

@@ -78,3 +78,10 @@ This file records accepted FirstRuck decisions. Add a dated entry when a choice 
 - **Date:** 2026-09-05
 - **Decision:** Normalize and hard-filter map-derived candidates, deterministically score only known facts, and optionally allow Gemini then Groq to reorder eligible internal IDs using approved reason codes. Preserve a rules fallback and explicit suitability unknowns.
 - **Reason:** FirstRuck can evaluate mapping and LLM providers now without allowing a model to invent geography, coordinates, conditions, access, or safety claims.
+
+## D-012 — Grounded named-walk discovery before routing
+
+- **Status:** Accepted development direction, pending live validation
+- **Date:** 2026-09-05
+- **Decision:** Let Gemini Google Search grounding suggest cited named public walking areas from a generalized location, then require Geoapify to resolve each lead nearby and calculate pedestrian geometry. Keep exact GPS out of the LLM, label geometry as a nearby candidate rather than an official trail, cache generalized searches, and fall back to generic map candidates.
+- **Reason:** Named parks, greenways, and documented walks are more useful than arbitrary street loops, while geographic validation and explicit truth labels keep the LLM from becoming the source of route geometry or safety claims.

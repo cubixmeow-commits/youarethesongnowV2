@@ -17,12 +17,14 @@ FirstRuck provides general beginner fitness guidance and is not medical care. Co
 | Original photo/EXIF | Not stored | Continue avoiding unless clearly required |
 | Postcard | Generated locally | Excludes route, start point, coordinates, and trace |
 | Provider keys | Protected server config | Secrets manager or protected hosting variables |
+| Grounded walk search | Generalized area and route preferences only; cached server-side | Review provider retention, cache expiry, and deletion policy |
 
 ## Non-negotiable rules
 
 - Never expose provider secrets in client code, Git, logs, error bodies, screenshots, or prompts.
 - Never make an exact route, start location, GPS trace, or photo public by default.
 - Never send health answers, photos, exact coordinates, or track data to an LLM for route copy.
+- Named-walk discovery may send a generalized city/region/postcode label, but never device coordinates, a route trace, journal data, photos, or health answers.
 - Never present route geometry as proof of safety or legal access.
 - Never generate medical advice during a walk.
 - Preserve a non-loaded option and do not reward heavier loads.

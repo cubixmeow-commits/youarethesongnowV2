@@ -149,12 +149,29 @@ final class RouteSelectionEngine
             $reasonCodes[] = 'easy_return';
         }
 
-        $score = 100 - min(55, (int) round($durationDifference * 100));
+        $discovered = ($candidate['discoveryMode'] ?? '') === 'gemini-search';
+        $distanceFromSearch = is_numeric($candidate['distanceFromSearchMeters'] ?? null)
+            ? max(0, (int) round((float) $candidate['distanceFromSearchMeters']))
+            : null;
+        if ($discovered) {
+            $reasonCodes[] = 'named_walk';
+        }
+        if ($distanceFromSearch !== null && $distanceFromSearch <= 10000) {
+            $reasonCodes[] = 'nearby_start';
+        }
+
+        $score = 80 - min(45, (int) round($durationDifference * 80));
         if ($shape === $requestedShape) {
             $score += 8;
         }
         if ($shape === 'out-back') {
             $score += 4;
+        }
+        if ($discovered) {
+            $score += max(1, 8 - (2 * max(1, (int) ($candidate['discoveryRank'] ?? 3))));
+        }
+        if ($distanceFromSearch !== null && $distanceFromSearch <= 10000) {
+            $score += max(1, 6 - (int) floor($distanceFromSearch / 2000));
         }
 
         $candidate['durationSeconds'] = $durationSeconds;
@@ -165,12 +182,28 @@ final class RouteSelectionEngine
         $candidate['suitabilityVerified'] = false;
         $candidate['baselineScore'] = max(0, min(100, $score));
         $candidate['reasonCodes'] = array_values(array_unique($reasonCodes));
+        $candidate['distanceFromSearchMeters'] = $distanceFromSearch;
+        $candidate['discoverySources'] = $this->validSources($candidate['discoverySources'] ?? []);
         $candidate['unknowns'] = array_values(array_unique(array_merge(
             is_array($candidate['unknowns'] ?? null) ? $candidate['unknowns'] : [],
             self::UNKNOWN_FACTS
         )));
         $candidate['terrain'] = 'Surface, hills, access, and current conditions are not verified';
         return $candidate;
+    }
+
+    private function validSources(mixed $sources): array
+    {
+        if (!is_array($sources)) return [];
+        $valid = [];
+        foreach (array_slice($sources, 0, 5) as $source) {
+            if (!is_array($source)) continue;
+            $url = (string) ($source['url'] ?? '');
+            $title = trim((string) ($source['title'] ?? 'Walking source'));
+            if (!str_starts_with($url, 'https://') || strlen($url) > 1000) continue;
+            $valid[] = ['title' => mb_substr($title, 0, 160), 'url' => $url];
+        }
+        return $valid;
     }
 
     private function validGeometry(mixed $geometry): bool

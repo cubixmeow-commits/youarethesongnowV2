@@ -19,6 +19,7 @@ FirstRuck is an actively developed beginner rucking product. The team has chosen
 - Non-sensitive onboarding answers and journal summaries persist locally. Photos and interrupted recording state use IndexedDB. The safety response is memory-only.
 - The PHP recommendation engine and seeded demonstration route data still exist.
 - A server-side route-selection pipeline validates and scores map-derived candidates, then optionally uses the bounded Gemini/Groq adapter to reorder eligible IDs. Rules remain the fallback and suitability unknowns remain visible.
+- When enabled, Gemini Google Search grounding can discover cited nearby named walking areas from a generalized location; Geoapify must resolve them nearby and calculate pedestrian geometry before display. Generic map candidates remain the fallback.
 - The complete mobile web experience is published to GitHub `main` and prepared for Hostinger deployment.
 
 ## Not connected yet
@@ -27,7 +28,7 @@ FirstRuck is an actively developed beginner rucking product. The team has chosen
 - User accounts, cross-device sync, server journal storage, or production analytics
 - A public or friends-only community feed
 - Live AI advice during a walk
-- Configured live-provider validation and production evidence for the route-selection pipeline
+- Configured live-provider validation and production evidence for grounded discovery and the route-selection pipeline
 - Verified route surface, hill suitability, access, closures, crossings, weather, or trail authority data
 - Background GPS, offline maps, turn-by-turn navigation, HealthKit, Apple Watch, or notifications
 - A production-complete Flutter app

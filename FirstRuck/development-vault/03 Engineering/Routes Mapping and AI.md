@@ -19,13 +19,16 @@ Mapping is disabled by default. Copy `config.example.php` to protected `var/conf
 
 It uses session CSRF for writes, a six-request-per-minute search/route limit, a tile-session limit, and a SQLite global daily provider budget. The daily cap is 10,800 internal units, corresponding to 2,700 provider credits under the current accounting assumption.
 
-`Geoapify::routes()` generates at most three pedestrian candidates around the chosen point and filters them to the requested 10–30 minute target. It supports out-and-back or short-loop geometry. Output is always `verified: false` and lists unknown access, closures, sidewalks/crossings, surface, hills, and weather.
+For AI-enabled searches, `WalkDiscovery` sends Gemini only a generalized area label and non-sensitive route preferences. Gemini must use Google Search grounding and return named public walking-area leads with HTTPS citations. Results are cached by generalized area and preferences for 24 hours by default. Exact coordinates never enter its prompt. Geoapify then resolves each name with a proximity bias, rejects results more than 25 km from the requested area, and builds at most one pedestrian candidate near each of the first three names. The UI says this may not reproduce an official named trail and exposes the grounding sources.
+
+If grounded discovery is unavailable, ungrounded, exhausted, or produces no usable geographic matches, `Geoapify::routes()` generates at most three generic pedestrian candidates around the chosen point. Both paths filter to the requested 10–30 minute target and support out-and-back or short-loop geometry. Output is always `verified: false` and lists unknown access, closures, sidewalks/crossings, surface, hills, and weather.
 
 ## Current selection pipeline
 
 ```text
 User constraints and chosen area
-  -> geographic candidate generation
+  -> grounded named-place discovery (optional)
+  -> Geoapify place resolution and pedestrian candidate generation
   -> source, geometry, duration, distance, and freshness normalization
   -> deterministic hard eligibility filters
   -> deterministic scoring baseline
@@ -35,7 +38,7 @@ User constraints and chosen area
 
 `src/Coaching/RouteSelectionEngine.php` now implements this pipeline for the web prototype. It accepts up to six provider candidates, rejects stale or malformed records and large duration mismatches, assigns approved source-bound reason codes, ranks with rules, and sends at most three candidates to `RouteCoach`. The response distinguishes structurally verified provider facts from unverified suitability. Access, closures, crossings, surface, hills, and weather remain explicit unknowns.
 
-An LLM must never create geometry or assert safety facts. It receives only eligible internal route IDs, deterministic baseline scores, and approved reason codes. Gemini is attempted first and Groq second. Invalid output, missing configuration, exhausted daily call allowance, or provider failure preserves the rules-based order. Coordinates, health answers, journal content, and user prose are never sent to the LLM.
+An LLM must never create geometry or assert safety facts. Route ranking receives only eligible internal route IDs, deterministic baseline scores, and approved reason codes. Gemini is attempted first and Groq second. Invalid output, missing configuration, exhausted daily call allowance, or provider failure preserves the rules-based order. Exact coordinates, health answers, journal content, and user prose are never sent to the LLM. The generalized area label is sent only to grounded walk discovery.
 
 ## RouteCoach
 
@@ -43,7 +46,7 @@ An LLM must never create geometry or assert safety facts. It receives only eligi
 
 The existing mapping route endpoint now invokes the selector. When deployed inside YouAreTheSongNow, FirstRuck reuses the protected root `GEMINI_API_KEY` and `GEMINI_MODEL`; it does not copy those values into FirstRuck. The separate `route_ai_enabled` flag and daily call allowance still control FirstRuck. Do not describe AI route coaching as live until a configured deployment and provider test confirm it.
 
-The current AI step ranks already-generated candidates; it does not discover or invent geography. The next route-quality slice must use geographic place and route evidence to generate meaningful park, greenway, or trail candidates before Gemini ranks them.
+The route endpoint can now use Gemini grounding to discover named-place leads before Geoapify generates geometry. This remains an evaluation slice until live provider tests confirm response compatibility, latency, quota use, and candidate quality across several kinds of locations.
 
 ## Evidence still needed
 

@@ -15,6 +15,8 @@ final class RouteCoach
         'hill_match' => 'Fits the elevation limit in your plan.',
         'shape_match' => 'Matches your preferred route shape.',
         'pedestrian_network' => 'Calculated on the mapping provider’s pedestrian network.',
+        'named_walk' => 'Web search identified a named walking area near your search.',
+        'nearby_start' => 'Its mapped start is near your searched area.',
     ];
 
     public function __construct(private array $config = [], private ?\Closure $transport = null) {}

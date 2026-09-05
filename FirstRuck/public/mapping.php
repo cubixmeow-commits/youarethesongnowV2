@@ -2,9 +2,11 @@
 declare(strict_types=1);
 require_once dirname(__DIR__).'/src/bootstrap.php';
 require_once FIRST_RUCK_ROOT.'/src/Mapping/Geoapify.php';
+require_once FIRST_RUCK_ROOT.'/src/Coaching/WalkDiscovery.php';
 require_once FIRST_RUCK_ROOT.'/src/Coaching/RouteCoach.php';
 require_once FIRST_RUCK_ROOT.'/src/Coaching/RouteSelectionEngine.php';
 use FirstRuck\Mapping\Geoapify;
+use FirstRuck\Coaching\WalkDiscovery;
 use FirstRuck\Coaching\RouteCoach;
 use FirstRuck\Coaching\RouteSelectionEngine;
 header('Cache-Control: no-store');
@@ -14,8 +16,10 @@ $config=is_file(FIRST_RUCK_ROOT.'/var/config.php')?require FIRST_RUCK_ROOT.'/var
 $key=(string)($config['geoapify_key']??getenv('FIRST_RUCK_GEOAPIFY_KEY')?:'');
 $enabled=$key!==''&&($config['maps_enabled']??false)===true;
 $aiEnabled=($config['route_ai_enabled']??false)===true;
-$geminiKey=(string)($config['gemini_key']??(getenv('FIRST_RUCK_GEMINI_KEY')?:getenv('GEMINI_API_KEY')?:''));
-$geminiModel=(string)($config['gemini_model']??(getenv('FIRST_RUCK_GEMINI_MODEL')?:getenv('GEMINI_MODEL')?:'gemini-3.6-flash'));
+$geminiKey=trim((string)($config['gemini_key']??''));
+if($geminiKey==='')$geminiKey=(string)(getenv('FIRST_RUCK_GEMINI_KEY')?:getenv('GEMINI_API_KEY')?:'');
+$geminiModel=trim((string)($config['gemini_model']??''));
+if($geminiModel==='')$geminiModel=(string)(getenv('FIRST_RUCK_GEMINI_MODEL')?:getenv('GEMINI_MODEL')?:'gemini-3.6-flash');
 $groqKey=(string)($config['groq_key']??getenv('FIRST_RUCK_GROQ_KEY')?:'');
 $groqModel=(string)($config['groq_model']??getenv('FIRST_RUCK_GROQ_MODEL')?:'');
 $aiConfigured=($geminiKey!==''&&$geminiModel!=='')||($groqKey!==''&&$groqModel!=='');
@@ -45,6 +49,26 @@ function reserve_ai_calls(int $requested, int $dailyLimit): bool {
         if($db->inTransaction())$db->rollBack();
         return false;
     }
+}
+function cached_walk_discovery(WalkDiscovery $discovery,string $area,array $preferences,int $ttl): array {
+    $fallback=['mode'=>'unavailable','walks'=>[],'sources'=>[]];
+    if($area==='')return $fallback;
+    $cacheInput=[mb_strtolower($area),$preferences['minutes']??null,$preferences['shape']??null,$preferences['surface']??null,$preferences['hillComfort']??null];
+    $cacheKey=hash('sha256',json_encode($cacheInput,JSON_THROW_ON_ERROR));
+    $db=first_ruck_database();
+    $db->exec('CREATE TABLE IF NOT EXISTS walk_discovery_cache (cache_key TEXT PRIMARY KEY, payload TEXT NOT NULL, checked_at INTEGER NOT NULL)');
+    $q=$db->prepare('SELECT payload FROM walk_discovery_cache WHERE cache_key=? AND checked_at>=?');
+    $q->execute([$cacheKey,time()-max(300,min(604800,$ttl))]);
+    $cached=$q->fetchColumn();
+    if(is_string($cached)){
+        try{$decoded=json_decode($cached,true,16,JSON_THROW_ON_ERROR);if(is_array($decoded))return $decoded;}catch(Throwable){}
+    }
+    $result=$discovery->discover($area,$preferences);
+    if(($result['walks']??[])!==[]){
+        $q=$db->prepare('INSERT INTO walk_discovery_cache(cache_key,payload,checked_at) VALUES (?,?,?) ON CONFLICT(cache_key) DO UPDATE SET payload=excluded.payload,checked_at=excluded.checked_at');
+        $q->execute([$cacheKey,json_encode($result,JSON_THROW_ON_ERROR|JSON_UNESCAPED_SLASHES),time()]);
+    }
+    return $result;
 }
 try{
     $action=(string)($_GET['action']??'bootstrap');
@@ -77,24 +101,42 @@ try{
     if($action==='routes'){
         [$lat,$lon]=Geoapify::coordinate($input['latitude']??null,$input['longitude']??null);
         $minutes=max(10,min(30,(int)($input['minutes']??15)));$shape=in_array($input['shape']??'', ['short-loop','out-back'],true)?$input['shape']:'out-back';
-        reserve(36);
-        $candidates=$client->routes($lat,$lon,$minutes,$shape);
-        $aiConfig=[
-            'enabled'=>$aiEnabled && $aiConfigured && reserve_ai_calls(2,max(1,(int)($config['route_ai_daily_call_limit']??50))),
-            'geminiKey'=>$geminiKey,
-            'geminiModel'=>$geminiModel,
-            'groqKey'=>$groqKey,
-            'groqModel'=>$groqModel,
-        ];
-        session_write_close();
-        $selection=(new RouteSelectionEngine(new RouteCoach($aiConfig)))->select($candidates,[
+        $preferences=[
             'minutes'=>$minutes,
             'shape'=>$shape,
             'surface'=>mb_substr(trim((string)($input['surface']??'either')),0,40),
             'hillComfort'=>mb_substr(trim((string)($input['hillComfort']??'gentle')),0,40),
             'priority'=>mb_substr(trim((string)($input['priority']??'repeatability')),0,40),
-        ]);
-        reply(['ok'=>true,'routes'=>$selection['routes'],'selectionMode'=>$selection['mode'],'message'=>$selection['message']]);
+        ];
+        reserve(60);
+        $aiAuthorized=$aiEnabled&&$aiConfigured&&reserve_ai_calls(2,max(1,(int)($config['route_ai_daily_call_limit']??50)));
+        // Always derive the LLM label from reverse geocoding. The browser's
+        // label could contain an exact address even when the UI asks for an area.
+        $area='';
+        try{$area=$client->reverseArea($lat,$lon);}catch(Throwable){}
+        $discovered=['mode'=>'unavailable','walks'=>[],'sources'=>[]];
+        $discoveryAttempted=$aiAuthorized&&$geminiKey!==''&&$geminiModel!==''&&$area!=='';
+        if($discoveryAttempted){
+            $discovered=cached_walk_discovery(new WalkDiscovery([
+                'enabled'=>true,'geminiKey'=>$geminiKey,'geminiModel'=>$geminiModel,
+            ]),$area,$preferences,(int)($config['route_discovery_cache_seconds']??86400));
+        }
+        $candidates=($discovered['walks']??[])===[]?[]:$client->namedRoutes(
+            $discovered['walks'],$lat,$lon,$minutes,$shape,$discovered['sources']??[]
+        );
+        if($candidates===[])$candidates=$client->routes($lat,$lon,$minutes,$shape);
+        $aiConfig=[
+            'enabled'=>$aiAuthorized,
+            'geminiKey'=>$geminiKey,
+            'geminiModel'=>$geminiModel,
+            // A grounded Gemini discovery plus one ranking call exhausts this
+            // request's two-call allowance; do not add a third Groq attempt.
+            'groqKey'=>$discoveryAttempted?'':$groqKey,
+            'groqModel'=>$discoveryAttempted?'':$groqModel,
+        ];
+        session_write_close();
+        $selection=(new RouteSelectionEngine(new RouteCoach($aiConfig)))->select($candidates,$preferences);
+        reply(['ok'=>true,'routes'=>$selection['routes'],'selectionMode'=>$selection['mode'],'discoveryMode'=>$discovered['mode']??'unavailable','message'=>$selection['message']]);
     }
     reply(['ok'=>false,'error'=>'Unknown map action.'],404);
 }catch(InvalidArgumentException $e){reply(['ok'=>false,'error'=>$e->getMessage()],422);}catch(Throwable){reply(['ok'=>false,'error'=>'Map search could not finish. Try again later.'],502);}

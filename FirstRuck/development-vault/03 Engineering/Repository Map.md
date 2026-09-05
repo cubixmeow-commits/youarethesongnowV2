@@ -32,5 +32,6 @@ Use this map before searching source.
 - Change question catalog: `onboarding-lab/js/screens.js`
 - Change web asset exposure: `public/asset.php`
 - Change map API: `public/mapping.php`, then `src/Mapping/Geoapify.php`
+- Change grounded named-walk discovery: `src/Coaching/WalkDiscovery.php`
 - Change bounded AI ranking: `src/Coaching/RouteCoach.php`
 - Change Flutter presentation: `mobile/lib/`

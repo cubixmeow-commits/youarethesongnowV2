@@ -41,6 +41,16 @@ selected($result['routes'][0]['suitabilityVerified'] === false, 'selection never
 selected(in_array('current access', $result['routes'][0]['unknowns'], true), 'unknown access remains visible');
 selected(in_array('pedestrian_network', $result['routes'][0]['reasonCodes'], true), 'only approved source-bound reasons are produced');
 
+$named = candidate('named', 1200);
+$named['discoveryMode'] = 'gemini-search';
+$named['discoveryRank'] = 1;
+$named['distanceFromSearchMeters'] = 1200;
+$named['discoverySources'] = [['title' => 'City source', 'url' => 'https://example.org/walk']];
+$namedResult = $engine->select([$named], ['minutes' => 20, 'shape' => 'out-back']);
+selected(in_array('named_walk', $namedResult['routes'][0]['reasonCodes'], true), 'grounded named-place reason remains source-bound');
+selected(in_array('nearby_start', $namedResult['routes'][0]['reasonCodes'], true), 'mapped proximity is an approved reason');
+selected($namedResult['routes'][0]['discoverySources'][0]['url'] === 'https://example.org/walk', 'validated discovery citation reaches the UI');
+
 $stale = candidate('stale', 1200);$stale['checkedAt'] = time() - 90000;
 selected($engine->select([$stale], ['minutes' => 20])['routes'] === [], 'stale route is ineligible');
 
