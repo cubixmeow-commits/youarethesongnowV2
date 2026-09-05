@@ -26,7 +26,12 @@ final class Geoapify
     public function routes(float $lat,float $lon,int $minutes,string $shape): array
     {
         [$lat,$lon]=self::coordinate($lat,$lon);
-        $target=max(10,min(30,$minutes))*60; $radius=$target*0.85/2; $routes=[]; $seen=[];
+        $target=max(10,min(30,$minutes))*60;
+        $targetDistance=$target*0.85;
+        // Out-and-back covers about two radii. The triangular circuit below
+        // covers about 3.64 radii (r + the 110-degree chord + r).
+        $radius=$targetDistance/($shape==='short-loop'?3.64:2);
+        $routes=[]; $seen=[];
         foreach ([25,145,265] as $index=>$bearing) {
             $a=deg2rad($bearing);
             $endLat=$lat+cos($a)*$radius/111320;
@@ -41,7 +46,7 @@ final class Geoapify
             try {
                 $json=$this->get('api.geoapify.com','/v1/routing',['waypoints'=>$waypoints,'mode'=>'walk','format'=>'geojson']);
                 $f=$json['features'][0]??null; $p=$f['properties']??[];$distance=(float)($p['distance']??0);$duration=(float)($p['time']??0);
-                if (!$f||$distance<=0||$duration<=0||$duration>$target||$distance>$target*1.4) continue;
+                if (!$f||$distance<=0||$duration<=0||$duration>$target*1.15||$distance>$target*1.4) continue;
                 $geometry=$f['geometry']??null;
                 if (!is_array($geometry)||!in_array($geometry['type']??'', ['LineString','MultiLineString'],true)) continue;
                 $id='geo-'.substr(hash('sha256',json_encode($geometry)),0,16);if(isset($seen[$id]))continue;$seen[$id]=true;

@@ -2,6 +2,10 @@
 
 Record changes that alter current product behavior, architecture, contracts, decisions, deployment, or roadmap. Keep entries brief; Git holds file-level history.
 
+## 2026-09-05
+
+- Corrected Geoapify short-loop candidate sizing after the first live Goleta search returned no routes; circuit waypoints now account for their three-leg geometry and the provider prefilter matches the selector's 15% duration tolerance.
+
 ## 2026-09-04
 
 - Established the original PHP/SQLite beginner plan prototype, seeded demonstration routes, onboarding research lab, brand system, and early Flutter iOS shell.
