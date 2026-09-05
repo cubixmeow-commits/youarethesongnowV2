@@ -40,6 +40,12 @@ FirstRuck is an actively developed beginner rucking product. The team has chosen
 - Demo recordings remain labelled through reflection and export.
 - Fitness rules are conservative prototype rules awaiting qualified review.
 
+## Public web entry (2026-09-05)
+
+- `/FirstRuck/` serves the promotional landing page.
+- `/FirstRuck/app/` serves the interactive mobile web demo previously at the FirstRuck root.
+- Shared `asset.php`, `mapping.php`, and `api.php` endpoints remain at `/FirstRuck/`.
+
 ## Current headline
 
 “A little weight goes a long way.”

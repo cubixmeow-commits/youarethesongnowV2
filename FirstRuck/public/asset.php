@@ -24,6 +24,19 @@ $assets['firstruck-mark.svg']=['path'=>$root.'/brand/assets/logo/firstruck-mark.
 $assets['maplibre.js']=['path'=>__DIR__.'/assets/vendor/maplibre/maplibre-gl.js','type'=>'text/javascript; charset=utf-8'];
 $assets['maplibre.css']=['path'=>__DIR__.'/assets/vendor/maplibre/maplibre-gl.css','type'=>'text/css; charset=utf-8'];
 
+// Marketing landing page (optimized derivatives under public/assets/landing/)
+foreach ([
+    'landing.css' => ['path' => __DIR__ . '/assets/landing/landing.css', 'type' => 'text/css; charset=utf-8'],
+    'landing-hero.jpg' => ['path' => __DIR__ . '/assets/landing/hero.jpg', 'type' => 'image/jpeg'],
+    'landing-route.jpg' => ['path' => __DIR__ . '/assets/landing/route.jpg', 'type' => 'image/jpeg'],
+    'landing-pack.jpg' => ['path' => __DIR__ . '/assets/landing/pack.jpg', 'type' => 'image/jpeg'],
+    'landing-complete.jpg' => ['path' => __DIR__ . '/assets/landing/complete.jpg', 'type' => 'image/jpeg'],
+    'landing-community.jpg' => ['path' => __DIR__ . '/assets/landing/community.jpg', 'type' => 'image/jpeg'],
+    'landing-kip.png' => ['path' => __DIR__ . '/assets/landing/kip.png', 'type' => 'image/png'],
+] as $name => $meta) {
+    $assets[$name] = $meta;
+}
+
 $name = (string) ($_GET['file'] ?? '');
 if (!isset($assets[$name]) || !is_file($assets[$name]['path'])) {
     http_response_code(404);

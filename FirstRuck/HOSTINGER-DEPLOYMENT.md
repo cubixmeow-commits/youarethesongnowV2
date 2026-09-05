@@ -7,7 +7,7 @@ The deployable web root is the repository's `public/` directory. FirstRuck is se
 1. Connect the GitHub repository and deploy the `main` branch.
 2. Keep the complete repository checkout together; the small files under `public/FirstRuck/` load the application from `FirstRuck/public/`.
 3. Set the site's document root to the repository's `public/` directory.
-4. Visit `https://your-domain.example/FirstRuck/`.
+4. Visit `https://your-domain.example/FirstRuck/` for the landing page and `https://your-domain.example/FirstRuck/app/` for the interactive demo.
 5. Use PHP 8.1 or newer with SQLite, cURL and JSON enabled.
 6. Give PHP write access to `FirstRuck/var/` so the app can create its local SQLite state.
 

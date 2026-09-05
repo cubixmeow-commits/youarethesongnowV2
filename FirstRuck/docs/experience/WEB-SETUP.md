@@ -1,6 +1,6 @@
 # FirstRuck mobile web review
 
-The main `/FirstRuck/` entry now uses the shared experience UI. Run `php -S 127.0.0.1:8098 -t public` from the repository root and visit http://127.0.0.1:8098/FirstRuck/. The separate design lab is still at port 8097 when serving the FirstRuck directory.
+The main `/FirstRuck/` entry now uses the shared experience UI. Run `php -S 127.0.0.1:8098 -t public` from the repository root and visit http://127.0.0.1:8098/FirstRuck/ for the landing page and http://127.0.0.1:8098/FirstRuck/app/ for the interactive demo. The separate design lab is still at port 8097 when serving the FirstRuck directory.
 
 ## Optional live mapping
 

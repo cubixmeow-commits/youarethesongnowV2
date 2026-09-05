@@ -6,7 +6,7 @@ The current app uses PHP, vanilla JavaScript, CSS, browser storage, and SQLite. 
 
 ## Entry and asset flow
 
-`FirstRuck/public/index.php` outputs the main mobile app. It loads only files allowed by `FirstRuck/public/asset.php`, which maps friendly asset names to the shared experience, original model/catalog, photography, logo, mascot, and MapLibre bundle. Mutable review assets use revalidation headers so normal refreshes show current edits.
+`FirstRuck/public/index.php` outputs the marketing landing page. `FirstRuck/public/app/index.php` outputs the main mobile app demo. It loads only files allowed by `FirstRuck/public/asset.php`, which maps friendly asset names to the shared experience, original model/catalog, photography, logo, mascot, and MapLibre bundle. Mutable review assets use revalidation headers so normal refreshes show current edits.
 
 The repository-level `public/FirstRuck/index.php`, `asset.php`, `api.php`, and `mapping.php` are small Hostinger bridges to the canonical files. Do not duplicate application logic into the bridge.
 

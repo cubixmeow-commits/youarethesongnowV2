@@ -29,7 +29,7 @@ Flutter
 ## Web ownership
 
 - `experience-lab/` owns the shared current interface, flow, local storage helpers, and browser behavior.
-- `public/index.php` is the canonical PHP-served mobile web entry and loads allowlisted shared assets through `public/asset.php`.
+- `public/index.php` is the marketing landing page; `public/app/index.php` is the canonical PHP-served mobile web demo and loads allowlisted shared assets through `public/asset.php`.
 - Repository-level `public/FirstRuck/` contains deployment bridges for the shared Hostinger web root.
 - `onboarding-lab/` is the older research prototype and deterministic model source. It is not the current UI.
 

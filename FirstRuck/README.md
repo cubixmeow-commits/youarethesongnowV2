@@ -37,7 +37,7 @@ php tests/run.php
 
 The existing repository-style Hostinger deployment can serve the prototype at:
 
-`https://youarethesongnow.com/FirstRuck/`
+`https://youarethesongnow.com/FirstRuck/` (landing) and `https://youarethesongnow.com/FirstRuck/app/` (demo)
 
 Hostinger's root rewrite sends `/FirstRuck/` into `repo V2/public/FirstRuck`, where a small deployment bridge loads the application from `FirstRuck/public`. The First Ruck root `.htaccess` blocks web access to application internals. Keep `FirstRuck/var` writable by PHP. Runtime SQLite files and provider secrets are ignored by Git.
 
