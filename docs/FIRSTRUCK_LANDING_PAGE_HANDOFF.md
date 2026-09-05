@@ -89,6 +89,11 @@ Internal demo links that assumed the demo lived at `./` were updated only where 
 
 Browser Playwright `mobile-web.cjs` was path-updated but not re-run here (requires local Chrome/Playwright paths from the original machine).
 
+## Follow-up fixes (2026-09-05)
+
+- Centered the final “Ready when you are” card: `.final-cta` had a margin shorthand that cleared `.shell`’s `margin-inline: auto` and left-aligned the block.
+- Added filemtime cache-busting on landing asset URLs (`asset.php?file=…&v=<mtime>`). Versioned landing assets are served with long-lived `Cache-Control: immutable`; demo/experience assets stay `no-cache` for design review.
+
 ## Remaining issues / next steps
 
 1. Re-run `FirstRuck/experience-lab/tests/mobile-web.cjs` on a machine with Playwright + Chrome against `/FirstRuck/app/`.
