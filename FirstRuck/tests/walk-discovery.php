@@ -35,6 +35,7 @@ $transport = function (string $url, array $payload, array $headers) use (&$captu
 $service = new WalkDiscovery(['enabled' => true, 'geminiKey' => 'fixture', 'geminiModel' => 'gemini-test'], $transport);
 $result = $service->discover('Goleta, CA 93117, United States', ['minutes' => 15, 'shape' => 'short-loop']);
 discovered($result['mode'] === 'gemini-search', 'grounded discovery is accepted');
+discovered($result['status'] === 'grounded-walks-found', 'successful discovery status is explicit');
 discovered($result['walks'][0]['name'] === 'Lake Los Carneros', 'named walk is normalized');
 discovered(count($result['sources']) === 1, 'grounding source is retained');
 discovered($captured['payload']['tools'] === [['type' => 'google_search']], 'Google Search grounding is required');
@@ -43,5 +44,6 @@ discovered(!str_contains($captured['payload']['input'], '34.428') && !str_contai
 
 $ungrounded = new WalkDiscovery(['enabled' => true, 'geminiKey' => 'fixture', 'geminiModel' => 'gemini-test'],
     fn (): array => ['output_text' => json_encode(['walks' => [['name' => 'Invented Walk', 'locality' => 'Nowhere', 'kind' => 'walking-area']]])]);
-discovered($ungrounded->discover('Goleta, CA', [])['walks'] === [], 'ungrounded suggestions are rejected');
-
+$ungroundedResult = $ungrounded->discover('Goleta, CA', []);
+discovered($ungroundedResult['walks'] === [], 'ungrounded suggestions are rejected');
+discovered($ungroundedResult['status'] === 'no-grounding-sources', 'ungrounded fallback explains its stage safely');

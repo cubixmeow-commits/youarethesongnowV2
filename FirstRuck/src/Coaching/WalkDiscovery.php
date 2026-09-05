@@ -17,7 +17,7 @@ final class WalkDiscovery
 
     public function discover(string $area, array $preferences): array
     {
-        $fallback = ['mode' => 'unavailable', 'walks' => [], 'sources' => []];
+        $fallback = ['mode' => 'unavailable', 'status' => 'disabled-or-unconfigured', 'walks' => [], 'sources' => []];
         $area = self::singleLine($area, 160);
         $key = (string) ($this->config['geminiKey'] ?? '');
         $model = (string) ($this->config['geminiModel'] ?? '');
@@ -53,7 +53,7 @@ final class WalkDiscovery
                 ? ($this->transport)(self::URL, $payload, ['x-goog-api-key: ' . $key])
                 : self::post($payload, $key);
             $sources = self::sources($response);
-            if ($sources === []) return $fallback;
+            if ($sources === []) return [...$fallback, 'status' => 'no-grounding-sources'];
             $decoded = self::decode($response);
             $walks = [];
             foreach (array_slice(is_array($decoded['walks'] ?? null) ? $decoded['walks'] : [], 0, 5) as $index => $walk) {
@@ -64,9 +64,11 @@ final class WalkDiscovery
                 if ($name === '' || !in_array($kind, ['park-loop','greenway','waterfront','nature-trail','walking-area'], true)) continue;
                 $walks[] = ['name' => $name, 'locality' => $locality, 'kind' => $kind, 'discoveryRank' => $index + 1];
             }
-            return $walks === [] ? $fallback : ['mode' => 'gemini-search', 'walks' => $walks, 'sources' => $sources];
+            return $walks === []
+                ? [...$fallback, 'status' => 'no-structured-walks']
+                : ['mode' => 'gemini-search', 'status' => 'grounded-walks-found', 'walks' => $walks, 'sources' => $sources];
         } catch (\Throwable) {
-            return $fallback;
+            return [...$fallback, 'status' => 'provider-or-response-error'];
         }
     }
 

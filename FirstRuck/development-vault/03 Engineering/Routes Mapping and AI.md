@@ -23,6 +23,8 @@ For AI-enabled searches, `WalkDiscovery` sends Gemini only a generalized area la
 
 If grounded discovery is unavailable, ungrounded, exhausted, or produces no usable geographic matches, `Geoapify::routes()` generates at most three generic pedestrian candidates around the chosen point. Both paths filter to the requested 10–30 minute target and support out-and-back or short-loop geometry. Output is always `verified: false` and lists unknown access, closures, sidewalks/crossings, surface, hills, and weather.
 
+The route response includes a non-sensitive `discoveryStatus` stage code so configuration, grounding, response parsing, and map-resolution failures can be distinguished without exposing prompts, provider bodies, credentials, coordinates, or user data.
+
 ## Current selection pipeline
 
 ```text

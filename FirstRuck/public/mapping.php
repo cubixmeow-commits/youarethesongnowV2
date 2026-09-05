@@ -72,7 +72,7 @@ function cached_walk_discovery(WalkDiscovery $discovery,string $area,array $pref
 }
 try{
     $action=(string)($_GET['action']??'bootstrap');
-    if($action==='bootstrap')reply(['ok'=>true,'enabled'=>$enabled,'csrf'=>$_SESSION['map_csrf'],'provider'=>'Geoapify','routeSelection'=>$aiEnabled?'ai-assisted-with-rules-fallback':'rules','message'=>$enabled?'Ready to search.':'Live maps are not connected yet. You can explore example routes.']);
+    if($action==='bootstrap')reply(['ok'=>true,'enabled'=>$enabled,'csrf'=>$_SESSION['map_csrf'],'provider'=>'Geoapify','routeSelection'=>$aiEnabled?'ai-assisted-with-rules-fallback':'rules','walkDiscovery'=>$aiEnabled&&$geminiKey!==''&&$geminiModel!==''?'configured':($aiEnabled?'gemini-unconfigured':'disabled'),'message'=>$enabled?'Ready to search.':'Live maps are not connected yet. You can explore example routes.']);
     if(!$enabled)reply(['ok'=>false,'error'=>'Live maps are not connected yet.'],503);
     if($action==='tile'){
         $z=filter_var($_GET['z']??null,FILTER_VALIDATE_INT);$x=filter_var($_GET['x']??null,FILTER_VALIDATE_INT);$y=filter_var($_GET['y']??null,FILTER_VALIDATE_INT);
@@ -114,7 +114,7 @@ try{
         // label could contain an exact address even when the UI asks for an area.
         $area='';
         try{$area=$client->reverseArea($lat,$lon);}catch(Throwable){}
-        $discovered=['mode'=>'unavailable','walks'=>[],'sources'=>[]];
+        $discovered=['mode'=>'unavailable','status'=>$aiAuthorized?'no-general-area':'disabled-or-budget-exhausted','walks'=>[],'sources'=>[]];
         $discoveryAttempted=$aiAuthorized&&$geminiKey!==''&&$geminiModel!==''&&$area!=='';
         if($discoveryAttempted){
             $discovered=cached_walk_discovery(new WalkDiscovery([
@@ -124,6 +124,7 @@ try{
         $candidates=($discovered['walks']??[])===[]?[]:$client->namedRoutes(
             $discovered['walks'],$lat,$lon,$minutes,$shape,$discovered['sources']??[]
         );
+        if(($discovered['walks']??[])!==[]&&$candidates===[])$discovered['status']='grounded-walks-not-mappable';
         if($candidates===[])$candidates=$client->routes($lat,$lon,$minutes,$shape);
         $aiConfig=[
             'enabled'=>$aiAuthorized,
@@ -136,7 +137,7 @@ try{
         ];
         session_write_close();
         $selection=(new RouteSelectionEngine(new RouteCoach($aiConfig)))->select($candidates,$preferences);
-        reply(['ok'=>true,'routes'=>$selection['routes'],'selectionMode'=>$selection['mode'],'discoveryMode'=>$discovered['mode']??'unavailable','message'=>$selection['message']]);
+        reply(['ok'=>true,'routes'=>$selection['routes'],'selectionMode'=>$selection['mode'],'discoveryMode'=>$discovered['mode']??'unavailable','discoveryStatus'=>$discovered['status']??'unavailable','message'=>$selection['message']]);
     }
     reply(['ok'=>false,'error'=>'Unknown map action.'],404);
 }catch(InvalidArgumentException $e){reply(['ok'=>false,'error'=>$e->getMessage()],422);}catch(Throwable){reply(['ok'=>false,'error'=>'Map search could not finish. Try again later.'],502);}
