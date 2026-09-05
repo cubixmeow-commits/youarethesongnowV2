@@ -20,7 +20,7 @@ When `FirstRuck/public` is the document root instead, the same split is `/` and 
 ### Added
 - `FirstRuck/public/app/index.php` — relocated demo shell with parent-relative asset/API paths
 - `public/FirstRuck/app/index.php` — Hostinger bridge into the demo shell
-- `FirstRuck/public/assets/landing/` — optimized JPEG/PNG derivatives + `landing.css`
+- `FirstRuck/public/assets/landing/` — optimized JPEG/PNG derivatives (`hero.jpg`, `route.jpg`, `kip.png`, …) + `landing.css`
 - `docs/FIRSTRUCK_LANDING_PAGE_HANDOFF.md` — this note
 
 ### Modified

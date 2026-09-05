@@ -46,9 +46,16 @@ if (!isset($assets[$name]) || !is_file($assets[$name]['path'])) {
 }
 
 header('Content-Type: ' . $assets[$name]['type']);
-// This review build changes frequently. Force browsers to revalidate assets so
-// an ordinary refresh always picks up the latest copy and design edits.
-header('Cache-Control: no-cache, must-revalidate');
-header('Pragma: no-cache');
+// Landing assets are requested with a filemtime `v` query. When present, allow
+// long-lived caching; URL changes whenever the file changes. Demo/experience
+// assets keep no-cache so design review refreshes stay immediate.
+$isVersionedLanding = ($name === 'landing.css' || str_starts_with($name, 'landing-'))
+    && isset($_GET['v']) && $_GET['v'] !== '';
+if ($isVersionedLanding) {
+    header('Cache-Control: public, max-age=31536000, immutable');
+} else {
+    header('Cache-Control: no-cache, must-revalidate');
+    header('Pragma: no-cache');
+}
 header('X-Content-Type-Options: nosniff');
 if ($name === 'experience.css') { echo str_replace('../brand/assets/photography/hero-beginner-greenway.png', 'asset.php?file=hero-beginner-greenway.png', file_get_contents($assets[$name]['path'])); } else { readfile($assets[$name]['path']); }
