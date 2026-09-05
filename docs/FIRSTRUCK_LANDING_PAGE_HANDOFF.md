@@ -20,7 +20,7 @@ When `FirstRuck/public` is the document root instead, the same split is `/` and 
 ### Added
 - `FirstRuck/public/app/index.php` — relocated demo shell with parent-relative asset/API paths
 - `public/FirstRuck/app/index.php` — Hostinger bridge into the demo shell
-- `FirstRuck/public/assets/landing/` — optimized JPEG/PNG derivatives + `landing.css`
+- `FirstRuck/public/assets/landing/` — optimized JPEG/PNG derivatives (`hero.jpg`, `route.jpg`, `kip.png`, …) + `landing.css`
 - `docs/FIRSTRUCK_LANDING_PAGE_HANDOFF.md` — this note
 
 ### Modified
@@ -88,6 +88,11 @@ Internal demo links that assumed the demo lived at `./` were updated only where 
 - `node --test` experience flow + onboarding suites — pass (28 tests)
 
 Browser Playwright `mobile-web.cjs` was path-updated but not re-run here (requires local Chrome/Playwright paths from the original machine).
+
+## Follow-up fixes (2026-09-05)
+
+- Centered the final “Ready when you are” card: `.final-cta` had a margin shorthand that cleared `.shell`’s `margin-inline: auto` and left-aligned the block.
+- Added filemtime cache-busting on landing asset URLs (`asset.php?file=…&v=<mtime>`). Versioned landing assets are served with long-lived `Cache-Control: immutable`; demo/experience assets stay `no-cache` for design review.
 
 ## Remaining issues / next steps
 

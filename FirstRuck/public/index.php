@@ -9,7 +9,30 @@ header('Cache-Control: public, max-age=300');
 $demoPath = 'app/';
 $title = 'FirstRuck · A first ruck built around you';
 $description = 'FirstRuck helps beginners prepare for a gentle first ruck, choose a manageable route, record the walk, and keep the memory in a personal field journal — with Kip along the way.';
-$canonical = null; // Hostinger path varies; omit hard-coded host.
+
+/**
+ * Build an asset.php URL with a filemtime cache-buster.
+ * When the source file changes, the query string changes and browsers fetch the new copy.
+ */
+$asset = static function (string $file): string {
+    static $paths = null;
+    if ($paths === null) {
+        $root = dirname(__DIR__);
+        $paths = [
+            'landing.css' => __DIR__ . '/assets/landing/landing.css',
+            'landing-hero.jpg' => __DIR__ . '/assets/landing/hero.jpg',
+            'landing-route.jpg' => __DIR__ . '/assets/landing/route.jpg',
+            'landing-pack.jpg' => __DIR__ . '/assets/landing/pack.jpg',
+            'landing-complete.jpg' => __DIR__ . '/assets/landing/complete.jpg',
+            'landing-community.jpg' => __DIR__ . '/assets/landing/community.jpg',
+            'landing-kip.png' => __DIR__ . '/assets/landing/kip.png',
+            'firstruck-mark.svg' => $root . '/brand/assets/logo/firstruck-mark.svg',
+        ];
+    }
+    $path = $paths[$file] ?? '';
+    $version = ($path !== '' && is_file($path)) ? (string) filemtime($path) : '1';
+    return 'asset.php?file=' . rawurlencode($file) . '&v=' . rawurlencode($version);
+};
 ?>
 <!doctype html>
 <html lang="en">
@@ -22,14 +45,14 @@ $canonical = null; // Hostinger path varies; omit hard-coded host.
   <meta property="og:type" content="website">
   <meta property="og:title" content="<?= htmlspecialchars($title, ENT_QUOTES, 'UTF-8') ?>">
   <meta property="og:description" content="<?= htmlspecialchars($description, ENT_QUOTES, 'UTF-8') ?>">
-  <meta property="og:image" content="asset.php?file=landing-hero.jpg">
+  <meta property="og:image" content="<?= htmlspecialchars($asset('landing-hero.jpg'), ENT_QUOTES, 'UTF-8') ?>">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="<?= htmlspecialchars($title, ENT_QUOTES, 'UTF-8') ?>">
   <meta name="twitter:description" content="<?= htmlspecialchars($description, ENT_QUOTES, 'UTF-8') ?>">
-  <meta name="twitter:image" content="asset.php?file=landing-hero.jpg">
+  <meta name="twitter:image" content="<?= htmlspecialchars($asset('landing-hero.jpg'), ENT_QUOTES, 'UTF-8') ?>">
   <title><?= htmlspecialchars($title, ENT_QUOTES, 'UTF-8') ?></title>
-  <link rel="icon" href="asset.php?file=firstruck-mark.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="asset.php?file=landing.css">
+  <link rel="icon" href="<?= htmlspecialchars($asset('firstruck-mark.svg'), ENT_QUOTES, 'UTF-8') ?>" type="image/svg+xml">
+  <link rel="stylesheet" href="<?= htmlspecialchars($asset('landing.css'), ENT_QUOTES, 'UTF-8') ?>">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -37,7 +60,7 @@ $canonical = null; // Hostinger path varies; omit hard-coded host.
   <header class="site-header">
     <div class="shell nav">
       <a class="brand" href="./" aria-label="FirstRuck home">
-        <img src="asset.php?file=firstruck-mark.svg" width="28" height="34" alt="">
+        <img src="<?= htmlspecialchars($asset('firstruck-mark.svg'), ENT_QUOTES, 'UTF-8') ?>" width="28" height="34" alt="">
         <div>FirstRuck<span>Field guide for first rucks</span></div>
       </a>
       <nav class="nav-links" aria-label="Page">
@@ -63,11 +86,11 @@ $canonical = null; // Hostinger path varies; omit hard-coded host.
       </div>
 
       <div class="hero-visual" aria-hidden="true">
-        <img class="hero-photo" src="asset.php?file=landing-hero.jpg" width="1200" height="800" alt="" fetchpriority="high">
-        <img class="kip-float" src="asset.php?file=landing-kip.png" width="280" height="280" alt="">
+        <img class="hero-photo" src="<?= htmlspecialchars($asset('landing-hero.jpg'), ENT_QUOTES, 'UTF-8') ?>" width="1200" height="800" alt="" fetchpriority="high">
+        <img class="kip-float" src="<?= htmlspecialchars($asset('landing-kip.png'), ENT_QUOTES, 'UTF-8') ?>" width="280" height="280" alt="">
         <div class="phone-card">
           <div class="notch"><span></span></div>
-          <img src="asset.php?file=landing-route.jpg" width="440" height="550" alt="">
+          <img src="<?= htmlspecialchars($asset('landing-route.jpg'), ENT_QUOTES, 'UTF-8') ?>" width="440" height="550" alt="">
           <div class="caption">
             <strong>Neighbourhood greenway</strong>
             Example starter route in the live demo
@@ -137,7 +160,7 @@ $canonical = null; // Hostinger path varies; omit hard-coded host.
     <section class="shell section" id="demo" aria-labelledby="demo-title">
       <div class="feature">
         <div class="feature-media">
-          <img src="asset.php?file=landing-complete.jpg" width="1000" height="750" alt="Walker finishing a gentle outdoor path lined with trees" loading="lazy">
+          <img src="<?= htmlspecialchars($asset('landing-complete.jpg'), ENT_QUOTES, 'UTF-8') ?>" width="1000" height="750" alt="Walker finishing a gentle outdoor path lined with trees" loading="lazy">
         </div>
         <div class="feature-copy">
           <p class="pill">Featured demo</p>
