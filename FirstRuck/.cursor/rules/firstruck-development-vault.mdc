@@ -1,0 +1,6 @@
+---
+description: Required FirstRuck project context and update discipline
+alwaysApply: true
+---
+
+Before planning or editing FirstRuck, follow `FirstRuck/AGENTS.md` and read `FirstRuck/development-vault/START HERE.md` plus its required current-project notes. Read task-specific notes from the vault instead of scanning the entire app. Update the vault whenever implementation changes current status, architecture, accepted decisions, external contracts, testing, deployment, or roadmap priorities.

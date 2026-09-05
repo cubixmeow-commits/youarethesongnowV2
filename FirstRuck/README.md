@@ -2,16 +2,21 @@
 
 First Ruck is a web-first prototype for a personalized beginner rucking coach. The web experience establishes the product, interaction, backend contract, and design system before the Flutter/Dart iOS client is built.
 
-## First prototype
+## Development context
 
-- 12-step beginner onboarding
-- Deterministic readiness profile and starter-session recommendation
-- Ranked demonstration routes with transparent match reasons
-- Responsive mobile-app shell for browser review
-- PHP 8.2+ backend and SQLite persistence
-- Provider-neutral seams for future trail-data and AI integrations
+Start with [`development-vault/START HERE.md`](development-vault/START%20HERE.md) before planning or changing FirstRuck. The vault contains the maintained current status, product direction, architecture, roadmap, accepted decisions, safety boundaries, testing, deployment, and LLM handoff rules. GPT, Cursor, and other development tools should follow [`AGENTS.md`](AGENTS.md).
 
-The seeded routes are explicitly demonstration data. The next geographic slice will replace them with verified candidates from OpenStreetMap, NPS, USFS, elevation, and weather providers. AI will rank and explain verified candidates; it will not invent routes.
+## Current build
+
+- 26-screen progressive onboarding with field-note breaks and Kip the wombat
+- Deterministic readiness profile, conservative starter plan, and transparent example routes
+- Today, Routes, foreground recording, reflection, Journal, Journey, local photos, and shareable postcards
+- Optional MapLibre and Geoapify place search, tiles, and pedestrian route candidates
+- PHP and SQLite backend with protected provider configuration and explicit spending limits
+- Isolated, bounded Gemini/Groq route-ranking adapter with deterministic fallback
+- Early Flutter iOS shell awaiting parity with the refined web experience
+
+Seeded routes are explicitly demonstration data. Geoapify routes are map-derived candidates with suitability unknowns, not verified recommendations. The production route pipeline must validate facts such as access, closures, surface, hills, crossings, elevation, weather, and freshness before optional AI ranking. AI will not invent routes.
 
 ## Run locally
 
