@@ -5,6 +5,8 @@
 @media(forced-colors:active){.choice:has(input:checked){border:3px solid Highlight}.primary,.secondary{border:1px solid ButtonText}}
 /* Keep the face in frame when adapting the portrait asset to Today. */
 .today-photo{object-position:center 25%}
+/* Keep the pack lesson focused on the face, straps and chest buckle. */
+.pack-fit-photo{object-position:center top}
 /* Keep the welcome promise to two balanced lines, including narrow phones. */
 .hero-copy h1{font-size:clamp(40px,11vw,45px);line-height:1.03;letter-spacing:-1.7px;text-wrap:balance}
 /* Main mobile web application; the lab retains its review shell. */
